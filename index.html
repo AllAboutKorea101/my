@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gateway to Korea | Homestay, Learn Korean & Culture Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Noto Serif KR for elegant headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Noto Serif KR', 'serif'],
+                    },
+                    colors: {
+                        dc: {
+                            teal: '#0D5D4E',      /* Dancheong Pine Green */
+                            tealLight: '#14826E',
+                            red: '#BA2A20',       /* Dancheong Vermillion */
+                            redLight: '#D83A30',
+                            gold: '#DAA520',      /* Dancheong Ochre Gold */
+                            goldLight: '#F3BE32',
+                            bgWarm: '#F5F2EB',    /* Premium Hanji Warm Gray/Beige */
+                            bgCard: '#FFFFFF',
+                            darkCharcoal: '#22201E', /* Soft Black Charcoal */
+                            subtleGray: '#EAE5DB'
+                        }
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 30px -10px rgba(13, 93, 78, 0.12)',
+                        'hover': '0 20px 40px -15px rgba(186, 42, 32, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F2EB;
+            background-image: radial-gradient(#e5dec9 0.75px, transparent 0.75px), radial-gradient(#e5dec9 0.75px, #F5F2EB 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .dancheong-pattern {
+            background: repeating-linear-gradient(
+                45deg,
+                #0D5D4E,
+                #0D5D4E 10px,
+                #BA2A20 10px,
+                #BA2A20 20px,
+                #DAA520 20px,
+                #DAA520 30px,
+                #22201E 30px,
+                #22201E 40px
+            );
+        }
+
+        /* Smooth expandable transitions */
+        .listing-collapse {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .listing-collapse.open {
+            max-height: 2500px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="text-dc-darkCharcoal min-h-screen flex flex-col antialiased selection:bg-dc-teal selection:text-white">
+
+    <!-- Top Dancheong Traditional Color Accent Border -->
+    <div class="h-3 w-full dancheong-pattern"></div>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 md:py-12">
+        
+        <!-- Header / Hero Section -->
+        <header class="text-center mb-10 md:mb-16 relative">
+            <div class="inline-flex items-center justify-center space-x-2 px-4 py-1.5 rounded-full bg-white border border-dc-subtleGray text-dc-teal text-xs font-semibold uppercase tracking-wider mb-4 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-dc-red animate-pulse"></span>
+                <span>All About Korea 101</span>
+            </div>
+            
+            <h1 class="font-serif font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-dc-darkCharcoal tracking-tight leading-tight mb-4">
+                Welcome to your ultimate <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-dc-teal to-dc-red">gateway to Korea!</span>
+            </h1>
+            
+            <p class="text-base sm:text-lg text-gray-600 max-w-xl mx-auto font-sans leading-relaxed mb-8">
+                Experience everything from cozy premium stays in Seoul and outdoor mountain adventures, to personalized 1:1 Korean tutoring and interactive study resources.
+            </p>
+
+            <!-- Social Media Quick Access Icons -->
+            <div class="flex items-center justify-center gap-4">
+                <!-- YouTube -->
+                <a href="https://www.youtube.com/@AllAboutKorea101" target="_blank" rel="noopener noreferrer" 
+                   class="group flex items-center justify-center gap-3 px-6 py-3 rounded-2xl bg-[#FF0000] text-white hover:bg-red-700 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 text-sm font-semibold">
+                    <i class="fab fa-youtube text-lg group-hover:scale-110 transition-transform"></i>
+                    <span>YouTube</span>
+                </a>
+                
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/learnkoreanwithsanghoon/" target="_blank" rel="noopener noreferrer" 
+                   class="group flex items-center justify-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCB045] text-white hover:opacity-95 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 text-sm font-semibold">
+                    <i class="fab fa-instagram text-lg group-hover:scale-110 transition-transform"></i>
+                    <span>Instagram</span>
+                </a>
+            </div>
+            
+            <!-- Traditional Divider SVG -->
+            <div class="flex justify-center items-center my-8">
+                <div class="h-[1px] w-12 bg-dc-teal"></div>
+                <svg class="w-8 h-8 mx-3 text-dc-red" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+                <div class="h-[1px] w-12 bg-dc-teal"></div>
+            </div>
+        </header>
+
+        <!-- Interactive Gateway Grid -->
+        <div class="space-y-6">
+
+            <!-- 1. Homestay Category (Interactive Accordion) -->
+            <div class="bg-dc-bgCard border border-dc-subtleGray rounded-3xl overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500">
+                <!-- Main Header Trigger Card -->
+                <button onclick="toggleSection('homestay-listings', 'homestay-chevron')" class="w-full text-left focus:outline-none focus:ring-2 focus:ring-dc-teal focus:ring-offset-2 rounded-t-3xl transition-all">
+                    <div class="relative h-64 sm:h-80 md:h-96 w-full overflow-hidden">
+                        <!-- Main display image utilizing the first premium hosting room -->
+                        <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTE0MDg1NzIwMDUwNjQwMjM5Nw%3D%3D/original/9b8de9cf-819c-4a97-8ca9-5f727ff9b481.png?im_w=1440" 
+                             alt="Seoul Riverside Homestay Header" 
+                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/1200x600/0d5d4e/ffffff?text=Seoul+Riverside+Homestays'">
+                        <!-- Dark overlay gradient -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+                        <!-- Absolute traditional corner mark -->
+                        <div class="absolute top-4 left-4 border-l-2 border-t-2 border-dc-gold w-6 h-6"></div>
+                        <div class="absolute top-4 right-4 border-r-2 border-t-2 border-dc-gold w-6 h-6"></div>
+                        <!-- Content Inside Image -->
+                        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+                            <span class="inline-block px-3 py-1 bg-dc-teal text-white text-xs font-bold rounded-md tracking-wider uppercase mb-2">PREMIUM ACCOMMODATION</span>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="font-serif font-bold text-2xl sm:text-3xl tracking-tight text-white mb-2">1. Coziest Seoul Riverside Homestays</h2>
+                                    <p class="text-xs sm:text-sm text-gray-200 font-sans max-w-lg">Click here to reveal 3 premium Airbnb locations overlooking the Han River & quiet retro hideouts in central Seoul.</p>
+                                </div>
+                                <div class="bg-white/10 backdrop-blur-md p-3 rounded-full hover:bg-white/20 transition-colors">
+                                    <i id="homestay-chevron" class="fas fa-chevron-down text-lg text-dc-gold transform transition-transform duration-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Expandable Sub-listings for Homestay -->
+                <div id="homestay-listings" class="listing-collapse">
+                    <div class="p-6 md:p-8 bg-dc-bgWarm/40 border-t border-dc-subtleGray space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            
+                            <!-- Listing 1-1 -->
+                            <a href="https://airbnb.com/h/seoul-riverside-q" target="_blank" rel="noopener noreferrer" 
+                               class="group bg-white rounded-2xl overflow-hidden border border-dc-subtleGray/60 hover:border-dc-teal transition-all duration-300 shadow-sm hover:shadow-md flex flex-col h-full">
+                                <div class="relative h-48 overflow-hidden">
+                                    <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTE0MDg1NzIwMDUwNjQwMjM5Nw%3D%3D/original/9b8de9cf-819c-4a97-8ca9-5f727ff9b481.png?im_w=1440" 
+                                         alt="Seoul Riverside (Queen Bed Room)" 
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                         onerror="this.src='https://placehold.co/600x400/0d5d4e/ffffff?text=Queen+Bed+Room'">
+                                    <span class="absolute top-3 right-3 bg-dc-red text-white text-[10px] font-bold px-2 py-1 rounded">Han River View</span>
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="font-serif font-bold text-base text-dc-darkCharcoal group-hover:text-dc-teal transition-colors">Seoul Riverside (Queen Bed Room)</h3>
+                                        <p class="text-xs text-gray-500 mt-2 font-sans">A gorgeous high-rise view overlooking the majestic river. Beautiful minimalist interiors optimized for comfort.</p>
+                                    </div>
+                                    <div class="mt-4 flex items-center justify-between text-xs text-dc-teal font-semibold pt-3 border-t border-dc-subtleGray/50">
+                                        <span>airbnb.com/h/seoul-riverside-q</span>
+                                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <!-- Listing 1-2 -->
+                            <a href="https://airbnb.com/h/seoul-riverside" target="_blank" rel="noopener noreferrer" 
+                               class="group bg-white rounded-2xl overflow-hidden border border-dc-subtleGray/60 hover:border-dc-teal transition-all duration-300 shadow-sm hover:shadow-md flex flex-col h-full">
+                                <div class="relative h-48 overflow-hidden">
+                                    <img src="https://a0.muscache.com/im/pictures/miso/Hosting-1000245471684478912/original/765bc27e-2d5a-4cfa-8508-97145745ed3d.jpeg?im_w=1440" 
+                                         alt="Seoul Riverside (Super Single Bed Room)" 
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                         onerror="this.src='https://placehold.co/600x400/0d5d4e/ffffff?text=Super+Single+Bed'">
+                                    <span class="absolute top-3 right-3 bg-dc-teal text-white text-[10px] font-bold px-2 py-1 rounded">Cozy Single</span>
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="font-serif font-bold text-base text-dc-darkCharcoal group-hover:text-dc-teal transition-colors">Seoul Riverside (Super Single)</h3>
+                                        <p class="text-xs text-gray-500 mt-2 font-sans">Perfect for solo travelers looking to explore Seoul with quick access to central subway routes.</p>
+                                    </div>
+                                    <div class="mt-4 flex items-center justify-between text-xs text-dc-teal font-semibold pt-3 border-t border-dc-subtleGray/50">
+                                        <span>airbnb.com/h/seoul-riverside</span>
+                                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <!-- Listing 1-3 -->
+                            <a href="https://airbnb.com/h/retroseoul" target="_blank" rel="noopener noreferrer" 
+                               class="group bg-white rounded-2xl overflow-hidden border border-dc-subtleGray/60 hover:border-dc-teal transition-all duration-300 shadow-sm hover:shadow-md flex flex-col h-full">
+                                <div class="relative h-48 overflow-hidden">
+                                    <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTIwOTAxNDc3NTQ2NjQ1MDM0Ng%3D%3D/original/8f744057-5f73-44c0-9014-277e4e39887e.jpeg?im_w=1440" 
+                                         alt="Retro Seoul Cozy Hideout" 
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                         onerror="this.src='https://placehold.co/600x400/0d5d4e/ffffff?text=Retro+Seoul+Hideout'">
+                                    <span class="absolute top-3 right-3 bg-dc-gold text-white text-[10px] font-bold px-2 py-1 rounded">Vintage Vibe</span>
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="font-serif font-bold text-base text-dc-darkCharcoal group-hover:text-dc-teal transition-colors">Retro Seoul Cozy Hideout</h3>
+                                        <p class="text-xs text-gray-500 mt-2 font-sans">A retro-infused, nostalgic escape tucked safely away inside one of Seoul’s historic, charming neighborhoods.</p>
+                                    </div>
+                                    <div class="mt-4 flex items-center justify-between text-xs text-dc-teal font-semibold pt-3 border-t border-dc-subtleGray/50">
+                                        <span>airbnb.com/h/retroseoul</span>
+                                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Learn Korean Category (Interactive Accordion) -->
+            <div class="bg-dc-bgCard border border-dc-subtleGray rounded-3xl overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500">
+                <!-- Main Header Trigger Card -->
+                <button onclick="toggleSection('learn-listings', 'learn-chevron')" class="w-full text-left focus:outline-none focus:ring-2 focus:ring-dc-teal focus:ring-offset-2 rounded-t-3xl transition-all">
+                    <div class="relative h-64 sm:h-80 md:h-96 w-full overflow-hidden">
+                        <img src="https://substackcdn.com/image/fetch/$s_!mPmO!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F98c30b67-2e11-4b05-87cf-b189f21eba07_1376x768.jpeg" 
+                             alt="Learn Korean Header" 
+                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/1200x600/ba2a20/ffffff?text=Learn+Korean+Premium+Resources'">
+                        <!-- Dark overlay gradient -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+                        <!-- Absolute traditional corner mark -->
+                        <div class="absolute top-4 left-4 border-l-2 border-t-2 border-dc-gold w-6 h-6"></div>
+                        <div class="absolute top-4 right-4 border-r-2 border-t-2 border-dc-gold w-6 h-6"></div>
+                        <!-- Content Inside Image -->
+                        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+                            <span class="inline-block px-3 py-1 bg-dc-red text-white text-xs font-bold rounded-md tracking-wider uppercase mb-2">EDUCATIONAL HUB</span>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="font-serif font-bold text-2xl sm:text-3xl tracking-tight text-white mb-2">2. Comprehensive Korean Study Hubs</h2>
+                                    <p class="text-xs sm:text-sm text-gray-200 font-sans max-w-lg">Click here to access premium Substack newsletters and visual blogger study guides.</p>
+                                </div>
+                                <div class="bg-white/10 backdrop-blur-md p-3 rounded-full hover:bg-white/20 transition-colors">
+                                    <i id="learn-chevron" class="fas fa-chevron-down text-lg text-dc-gold transform transition-transform duration-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Expandable Sub-listings for Learn Korean -->
+                <div id="learn-listings" class="listing-collapse">
+                    <div class="p-6 md:p-8 bg-dc-bgWarm/40 border-t border-dc-subtleGray space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- Substack Listing -->
+                            <a href="https://substack.com/@sanghoonchung" target="_blank" rel="noopener noreferrer" 
+                               class="group bg-white rounded-2xl overflow-hidden border border-dc-subtleGray/60 hover:border-dc-teal transition-all duration-300 shadow-sm hover:shadow-md flex flex-col md:flex-row">
+                                <div class="relative w-full md:w-2/5 h-48 md:h-auto overflow-hidden">
+                                    <img src="https://substackcdn.com/image/fetch/$s_!mPmO!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F98c30b67-2e11-4b05-87cf-b189f21eba07_1376x768.jpeg" 
+                                         alt="Korean Substack Feed" 
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                         onerror="this.src='https://placehold.co/600x400/ba2a20/ffffff?text=Korean+Substack'">
+                                </div>
+                                <div class="p-5 flex-grow flex flex-col justify-between md:w-3/5">
+                                    <div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-dc-red bg-dc-red/10 px-2 py-0.5 rounded">Newsletter</span>
+                                        <h3 class="font-serif font-bold text-lg text-dc-darkCharcoal mt-2 group-hover:text-dc-teal transition-colors">Korean Substack by Sanghoon</h3>
+                                        <p class="text-xs text-gray-500 mt-2 font-sans">In-depth newsletters, cultural stories, phrase breakdowns, and vocabulary directly to your email inbox.</p>
+                                    </div>
+                                    <div class="mt-4 flex items-center justify-between text-xs text-dc-teal font-semibold pt-3 border-t border-dc-subtleGray/50">
+                                        <span>substack.com/@sanghoonchung</span>
+                                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <!-- Blog Listing -->
+                            <a href="https://korean101guide.blogspot.com/" target="_blank" rel="noopener noreferrer" 
+                               class="group bg-white rounded-2xl overflow-hidden border border-dc-subtleGray/60 hover:border-dc-teal transition-all duration-300 shadow-sm hover:shadow-md flex flex-col md:flex-row">
+                                <div class="relative w-full md:w-2/5 h-48 md:h-auto overflow-hidden">
+                                    <img src="https://blogger.googleusercontent.com/img/a/AVvXsEj-b0E4HKE8kIe56qOBY2_MnWK5lPxdyfnk3cG9DTl0ADKAcEnWypyfrsM7q_G4TE5PcDfmY2x3KvK0pr_9g3o2OMuJ9lWNxnb7NvRv1Zfa1t8ldg3xuDMqwvzQ5fPnugHwg3fZkBSFiDf5skLL-bkTlPg_EbdP_0xJ1THk77Tu2NBX7kGqEmNkQaEdBSdj=w640-h360-rw" 
+                                         alt="Korean 101 Blog" 
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                         onerror="this.src='https://placehold.co/600x400/ba2a20/ffffff?text=Korean+101+Blog'">
+                                </div>
+                                <div class="p-5 flex-grow flex flex-col justify-between md:w-3/5">
+                                    <div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-dc-teal bg-dc-teal/10 px-2 py-0.5 rounded">Blogger Site</span>
+                                        <h3 class="font-serif font-bold text-lg text-dc-darkCharcoal mt-2 group-hover:text-dc-teal transition-colors">Korean 101 Blog</h3>
+                                        <p class="text-xs text-gray-500 mt-2 font-sans">Explore categorized, bitesized, and visually appealing blog articles that make learning Hangul and Korean grammar fun and easy.</p>
+                                    </div>
+                                    <div class="mt-4 flex items-center justify-between text-xs text-dc-teal font-semibold pt-3 border-t border-dc-subtleGray/50">
+                                        <span>korean101guide.blogspot.com</span>
+                                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 1:1 Professional Korean Tutor -->
+            <div class="bg-dc-bgCard border border-dc-subtleGray rounded-3xl overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Image Area -->
+                    <div class="relative w-full md:w-2/5 h-56 md:h-auto min-h-[220px] overflow-hidden">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkIsxEJtbjb1uJSnYdXXQEBEFILZmMV4xYBK0M4qNFVu9i828s1I4vbuBZ&s=10" 
+                             alt="Sanghoon Chung Tutor Profile" 
+                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/600x400/0d5d4e/ffffff?text=1:1+Korean+Tutoring'">
+                        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/60 to-transparent"></div>
+                        <span class="absolute top-4 left-4 bg-dc-gold text-dc-darkCharcoal text-xs font-bold px-3 py-1 rounded-full shadow-md">Top Rated Tutor</span>
+                    </div>
+                    <!-- Details Area -->
+                    <div class="w-full md:w-3/5 p-6 md:p-8 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-dc-teal">Preply Professional Lesson</span>
+                            <h2 class="font-serif font-bold text-2xl tracking-tight text-dc-darkCharcoal mt-1 mb-3">5. 1:1 Professional Korean Tutoring</h2>
+                            <p class="text-sm text-gray-600 leading-relaxed font-sans mb-4">
+                                Book customized one-on-one sessions tailored directly to your current level. Get native pronunciation feedback, natural conversation practice, and dedicated grammar roadmaps.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-dc-subtleGray/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <span class="text-xs text-gray-400 font-sans italic">Classes hosted through Preply Platform</span>
+                            <a href="https://preply.com/ko/tutor/4855275" target="_blank" rel="noopener noreferrer" 
+                               class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-dc-teal text-white hover:bg-dc-tealLight transition-colors font-semibold text-sm shadow-sm active:translate-y-0.5">
+                                <span>Book Free Consult / Lessons</span>
+                                <i class="fas fa-calendar-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Korean Experience (Sunrise & Sunset Hike) -->
+            <div class="bg-dc-bgCard border border-dc-subtleGray rounded-3xl overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500">
+                <div class="flex flex-col md:flex-row-reverse">
+                    <!-- Image Area -->
+                    <div class="relative w-full md:w-2/5 h-56 md:h-auto min-h-[220px] overflow-hidden">
+                        <img src="https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=1/tour_img/0608aa16130b2dfb1440f28a174fa5816c137c45ee106eaa723e19ac9faaf2b7.jpeg" 
+                             alt="Seoul Sunset Mountain Summit Hike" 
+                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/600x400/ba2a20/ffffff?text=Seoul+Hike+Adventure'">
+                        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-l from-black/60 to-transparent"></div>
+                        <span class="absolute top-4 right-4 bg-dc-red text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Highly Rated Hike</span>
+                    </div>
+                    <!-- Details Area -->
+                    <div class="w-full md:w-3/5 p-6 md:p-8 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-dc-red">Local Outdoor Excursion</span>
+                            <h2 class="font-serif font-bold text-2xl tracking-tight text-dc-darkCharcoal mt-1 mb-3">6. Authentic Korean Mountain Adventure</h2>
+                            <p class="text-sm text-gray-600 leading-relaxed font-sans mb-4">
+                                Join our incredible hike: <strong class="text-dc-darkCharcoal font-semibold">Seoul Sunrise & Sunset Hike</strong>. Includes visits to mountain-top Buddhist temples, breathtaking cityscapes, and a genuine hearty K-Food feast afterward.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-dc-subtleGray/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <span class="text-xs text-gray-400 font-sans italic">Book via GetYourGuide</span>
+                            <a href="https://www.getyourguide.com/seoul-l197/seoul-sunrise-sunset-hike-temple-k-food-adventure-t911527/" target="_blank" rel="noopener noreferrer" 
+                               class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-dc-red text-white hover:bg-dc-redLight transition-colors font-semibold text-sm shadow-sm active:translate-y-0.5">
+                                <span>Reserve Tour Experience</span>
+                                <i class="fas fa-compass"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Others Hub Section -->
+            <div class="bg-dc-bgCard border border-dc-subtleGray rounded-3xl overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Image Area -->
+                    <div class="relative w-full md:w-2/5 h-48 md:h-auto min-h-[160px] overflow-hidden">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFR89CAiB6HQBjeNdFW1zKRFd1J_K5uXUA_94_gxpyQA&s=10" 
+                             alt="AllAboutKorea101 Github Repository Hub" 
+                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/600x400/22201e/ffffff?text=Github+Repository'">
+                        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/50 to-transparent"></div>
+                    </div>
+                    <!-- Details Area -->
+                    <div class="w-full md:w-3/5 p-6 md:p-8 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Resource Repository</span>
+                            <h2 class="font-serif font-bold text-xl tracking-tight text-dc-darkCharcoal mt-1 mb-2">7. AllAboutKorea101 Hub Site</h2>
+                            <p class="text-sm text-gray-600 font-sans">
+                                Visit our open-source collection page on Github, storing code, lists, useful files, and external links for easy reference.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-dc-subtleGray/60 flex items-center justify-between">
+                            <span class="text-xs text-gray-400 font-sans">github.com/allaboutkorea101</span>
+                            <a href="https://github.com/allaboutkorea101" target="_blank" rel="noopener noreferrer" 
+                               class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-dc-darkCharcoal text-white hover:bg-black transition-colors font-semibold text-sm shadow-sm">
+                                <span>Visit Repository</span>
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Inquiry/Contact Section -->
+        <section class="mt-16 md:mt-24 bg-gradient-to-br from-dc-teal to-dc-teal/80 rounded-3xl p-8 md:p-12 text-white text-center relative overflow-hidden shadow-premium">
+            <!-- Background Decorative Hanok Crest Silhouette / Motif inside CSS -->
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <i class="fas fa-infinity text-9xl"></i>
+            </div>
+            
+            <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md text-dc-gold text-xs font-bold rounded-md tracking-widest uppercase mb-4">Have Any Questions?</span>
+            <h2 class="font-serif font-bold text-3xl md:text-4xl text-white mb-4">Feel Free to Reach Out!</h2>
+            <p class="text-sm md:text-base text-gray-200 max-w-lg mx-auto mb-8 font-sans">
+                Whether you want to learn more about homestay listings, inquire about customized 1:1 tutoring, or book custom private tours around Seoul.
+            </p>
+
+            <!-- Custom Interactive Clipboard Copy Area -->
+            <div class="max-w-md mx-auto bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-dc-gold">
+                        <i class="fas fa-envelope text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[10px] text-white/70 uppercase font-sans tracking-wider">Email Address</p>
+                        <p class="text-sm font-semibold text-white tracking-wide">shchung0130@gmail.com</p>
+                    </div>
+                </div>
+                
+                <!-- Action copy button -->
+                <button onclick="copyToClipboard('shchung0130@gmail.com', this)" 
+                        class="w-full sm:w-auto px-5 py-2.5 bg-white text-dc-teal hover:bg-dc-gold hover:text-dc-darkCharcoal transition-all duration-300 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-white">
+                    <i class="fas fa-copy"></i>
+                    <span id="copy-btn-text">Copy Email</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-dc-darkCharcoal text-white mt-12 pt-10 pb-8 border-t border-dc-subtleGray/10">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            
+            <!-- Traditional Styled Crest / Monogram -->
+            <div class="inline-flex flex-col items-center mb-6">
+                <div class="w-12 h-12 rounded-full border-2 border-dc-gold flex items-center justify-center mb-2">
+                    <span class="font-serif text-dc-gold font-bold text-lg">韓</span>
+                </div>
+                <h3 class="font-serif font-bold text-lg tracking-wider text-dc-gold">All About Korea 101</h3>
+                <p class="text-xs text-gray-400">Discover Stay, Culture, and Language in South Korea</p>
+            </div>
+
+            <div class="flex items-center justify-center gap-6 mb-8 text-gray-400">
+                <a href="https://www.youtube.com/@AllAboutKorea101" target="_blank" rel="noopener noreferrer" class="hover:text-dc-red transition-colors">
+                    <i class="fab fa-youtube text-2xl"></i>
+                </a>
+                <a href="https://www.instagram.com/learnkoreanwithsanghoon/" target="_blank" rel="noopener noreferrer" class="hover:text-dc-red transition-colors">
+                    <i class="fab fa-instagram text-2xl"></i>
+                </a>
+                <a href="https://github.com/allaboutkorea101" target="_blank" rel="noopener noreferrer" class="hover:text-dc-red transition-colors">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+            </div>
+
+            <div class="text-xs text-gray-500 border-t border-gray-800 pt-6">
+                <p>&copy; 2026 All About Korea 101. Built with traditional Dancheong details. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Toast Notification -->
+    <div id="toast-notif" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 bg-dc-darkCharcoal text-white px-5 py-3 rounded-xl border border-dc-gold flex items-center gap-3 shadow-lg z-50">
+        <div class="w-6 h-6 rounded-full bg-dc-teal text-white flex items-center justify-center text-xs">
+            <i class="fas fa-check"></i>
+        </div>
+        <div>
+            <p class="text-xs font-semibold text-dc-gold">Copied successfully!</p>
+            <p class="text-[10px] text-gray-400">Email ready to paste.</p>
+        </div>
+    </div>
+
+    <!-- Scripts for Expandable Accordions & Clipboard Copy -->
+    <script>
+        // Toggle listings smooth animation
+        function toggleSection(sectionId, chevronId) {
+            const section = document.getElementById(sectionId);
+            const chevron = document.getElementById(chevronId);
+            
+            if (section.classList.contains('open')) {
+                section.classList.remove('open');
+                chevron.style.transform = 'rotate(0deg)';
+            } else {
+                section.classList.add('open');
+                chevron.style.transform = 'rotate(180deg)';
+                // Smooth scroll into target viewing context if it expands off-screen
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 300);
+            }
+        }
+
+        // Custom Safe Clipboard Copy function supporting inside frame environments
+        function copyToClipboard(text, buttonElement) {
+            // Backup styling element creation for text capture
+            const tempInput = document.createElement("textarea");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // Mobile compatibility
+            
+            try {
+                document.execCommand("copy");
+                
+                // Visual Button Text Swap Feedback
+                const btnText = buttonElement.querySelector("#copy-btn-text");
+                const originalText = btnText.innerText;
+                btnText.innerText = "Copied!";
+                buttonElement.classList.remove("bg-white", "text-dc-teal");
+                buttonElement.classList.add("bg-dc-gold", "text-dc-darkCharcoal");
+                
+                // Show floating Toast
+                const toast = document.getElementById("toast-notif");
+                toast.classList.remove("translate-y-20", "opacity-0");
+                toast.classList.add("translate-y-0", "opacity-100");
+                
+                setTimeout(() => {
+                    btnText.innerText = originalText;
+                    buttonElement.classList.add("bg-white", "text-dc-teal");
+                    buttonElement.classList.remove("bg-dc-gold", "text-dc-darkCharcoal");
+                }, 2000);
+
+                setTimeout(() => {
+                    toast.classList.add("translate-y-20", "opacity-0");
+                    toast.classList.remove("translate-y-0", "opacity-100");
+                }, 3500);
+
+            } catch (err) {
+                console.error("Unable to copy", err);
+            } finally {
+                document.body.removeChild(tempInput);
+            }
+        }
+    </script>
+</body>
+</html>
