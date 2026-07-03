@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>명목 GDP vs 실질 GDP · 영어 학습 웹앱</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --paper:#eceae2; --surface:#ffffff; --ink:#20242e; --muted:#6b7280;
+  --line:#e2e0d6; --primary:#274b7a; --primary-soft:#eaf0f7;
+  --accent:#0e9f8e; --accent-soft:#e2f4f1; --red:#d62828;
+  --easy:#2e9e5b; --medium:#c67a16; --hard:#c23b5b;
+  --ok:#e7f6ec; --okbd:#2e9e5b; --nobd:#d62828; --no:#fbeaea;
+  --radius:14px; --sh:0 1px 3px rgba(30,34,46,.07),0 6px 20px rgba(30,34,46,.05);
+  --font:'Pretendard Variable','Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px}
+h1,h2,p{margin:0}
+.wrap{max-width:940px;margin:0 auto;padding:0 16px}
+
+/* header */
+header{padding:34px 0 20px;border-bottom:1px solid var(--line);background:
+  radial-gradient(1200px 200px at 20% -40%, #dfe8f2 0%, transparent 60%),var(--paper)}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);font-weight:700}
+h1{font-size:29px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;line-height:1.25}
+h1 .hl{color:var(--primary)}
+.sub{color:var(--muted);font-size:14.5px;max-width:640px}
+.src{margin-top:12px;font-size:12.5px;color:var(--muted);background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:inline-block}
+
+/* tabs */
+.tabs{position:sticky;top:0;z-index:30;background:rgba(236,234,226,.9);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:8px 0}
+.tabs-inner{display:flex;gap:6px;overflow-x:auto;max-width:940px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:8px 15px;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;
+  white-space:nowrap;transition:.15s}
+.tab:hover{border-color:var(--primary)}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+main{padding:26px 0 90px}
+
+/* level band */
+.level-band{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding:14px 18px;border-radius:var(--radius);color:#fff;margin-bottom:20px;box-shadow:var(--sh)}
+.easy .level-band{background:linear-gradient(100deg,#2e9e5b,#37b06a)}
+.medium .level-band{background:linear-gradient(100deg,#c67a16,#dc9226)}
+.hard .level-band{background:linear-gradient(100deg,#c23b5b,#d5527040)}
+.hard .level-band{background:linear-gradient(100deg,#c23b5b,#d75270)}
+.listening .level-band{background:linear-gradient(100deg,#274b7a,#356299)}
+.writing .level-band{background:linear-gradient(100deg,#5b3ea8,#7758c9)}
+.level-name{font-size:22px;font-weight:800}
+.level-toeic{font-size:13.5px;opacity:.92}
+
+/* section titles */
+.sec-title{font-size:16.5px;font-weight:800;margin:30px 0 12px;padding-left:12px;
+  border-left:4px solid var(--primary);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.easy .sec-title{border-color:var(--easy)} .medium .sec-title{border-color:var(--medium)}
+.hard .sec-title{border-color:var(--hard)}
+.hint{font-size:12px;font-weight:500;color:var(--muted)}
+.pill{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-soft);
+  padding:2px 9px;border-radius:999px}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;font-size:14px;color:var(--muted);margin-bottom:8px}
+
+/* clickable words + tooltip */
+.w{cursor:pointer;border-radius:3px;transition:background .1s}
+.w:hover{background:#fff3c4}
+.gloss{border-bottom:1.5px dotted var(--primary);position:relative}
+.gloss:hover::after,.form-chip:hover::after{content:attr(data-tip);position:absolute;
+  left:50%;bottom:135%;transform:translateX(-50%);background:var(--ink);color:#fff;
+  padding:6px 10px;border-radius:8px;font-size:12.5px;font-weight:600;white-space:nowrap;
+  z-index:50;box-shadow:var(--sh);pointer-events:none}
+.gloss:hover::before{content:'';position:absolute;left:50%;bottom:120%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:var(--ink);z-index:50;pointer-events:none}
+.rd{color:var(--red);font-weight:800;cursor:pointer}
+.rd .w:hover{background:transparent}
+
+/* vocab table */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--sh)}
+table.vocab{border-collapse:collapse;width:100%;min-width:720px;font-size:14.5px}
+.vocab th{background:#f4f2ea;text-align:left;padding:11px 12px;font-weight:800;
+  font-size:13px;border-bottom:1px solid var(--line);white-space:nowrap}
+.vocab td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.vocab tr:last-child td{border-bottom:none}
+.c-word .headword{font-weight:800;font-size:16px}
+.c-ipa{color:var(--muted);white-space:nowrap;font-family:'Times New Roman',serif}
+.c-ko{white-space:nowrap;font-weight:600}
+.c-ex{min-width:220px}
+.ko-inline{color:var(--muted);font-size:13px}
+.tipwrap{position:relative;cursor:help}
+.tipwrap:hover::after{content:attr(data-tip);position:absolute;left:0;top:115%;
+  background:var(--ink);color:#fff;padding:6px 10px;border-radius:8px;font-size:12.5px;
+  white-space:normal;max-width:280px;z-index:50;box-shadow:var(--sh)}
+.c-forms{min-width:170px}
+.form{margin-bottom:6px}
+.form-chip{border:1px solid var(--line);background:#fbfaf6;border-radius:8px;padding:4px 9px;
+  font-size:13px;font-weight:700;cursor:pointer;position:relative}
+.form-chip .pos{color:var(--muted);font-weight:500;font-size:11.5px}
+.form-detail{display:none;margin-top:6px;padding:8px 10px;background:var(--accent-soft);
+  border-radius:8px;font-size:13px}
+.form-detail.open{display:block}
+.none{color:var(--muted)}
+
+/* grammar */
+.gram{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;box-shadow:var(--sh);margin-bottom:16px}
+.gram-head{font-size:17px;font-weight:800;margin-bottom:10px}
+.gram-explain{background:#fbfaf6;border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;font-size:14.5px;line-height:1.75}
+.gram-explain b{color:var(--primary)} .gram-explain .rd{cursor:default}
+.gram-sub{font-weight:800;font-size:14px;margin:16px 0 8px;color:var(--primary)}
+.gram-pair{margin-top:18px;padding-top:16px;border-top:2px dashed var(--line)}
+.pair-head{font-weight:800;color:var(--accent);margin-bottom:10px}
+.gex-row{display:grid;grid-template-columns:34px 1fr;gap:6px 8px;padding:8px 0;border-bottom:1px dashed var(--line);align-items:start}
+.gex-row:last-child{border-bottom:none}
+.gex-en{font-size:15px;grid-column:2}
+.gex-ko{grid-column:2;color:var(--muted);font-size:13px}
+.mini-play{grid-row:1/3;width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--accent-soft);color:var(--accent);font-size:12px;cursor:pointer}
+.mini-play:hover{background:var(--accent);color:#fff}
+
+/* exam */
+.exam{margin-top:18px;background:#f9f8f3;border:1px solid var(--line);border-radius:12px;padding:14px}
+.exam-title{font-weight:800;font-size:14.5px;margin-bottom:12px}
+.exq{padding:12px 0;border-bottom:1px dashed var(--line)}
+.exq:last-child{border-bottom:none}
+.exq-q{display:flex;gap:8px;align-items:flex-start;font-size:15px;font-weight:600;margin-bottom:8px}
+.exq-no{flex:0 0 auto;width:24px;height:24px;border-radius:6px;color:#fff;font-size:13px;
+  display:grid;place-items:center;font-weight:800}
+.exq-no.e{background:var(--easy)} .exq-no.m{background:var(--medium)} .exq-no.h{background:var(--hard)}
+.exq-text{flex:1}
+.tier-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap}
+.tier-badge.e{background:var(--easy)} .tier-badge.m{background:var(--medium)} .tier-badge.h{background:var(--hard)}
+
+/* hard words */
+.hardwords{margin-top:14px;background:#fff;border:1px dashed var(--line);border-radius:10px;padding:12px}
+.hw-title{font-weight:800;font-size:13.5px;margin-bottom:8px;color:var(--red)}
+.hw{font-size:14px;padding:3px 0}
+.hw-forms{color:var(--muted);font-size:12.5px}
+
+/* passage */
+.passage{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 18px;box-shadow:var(--sh)}
+.pass-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.pass-body{font-size:17px;line-height:2.05}
+.sent{}
+.sent-play{border:none;background:none;cursor:pointer;font-size:13px;opacity:.5;padding:0 3px}
+.sent-play:hover{opacity:1}
+.btn{border:1px solid var(--primary);background:var(--primary);color:#fff;padding:8px 14px;
+  border-radius:9px;font-weight:700;font-size:14px;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:#fff;color:var(--primary)}
+.btn.small{padding:6px 12px;font-size:13px}
+
+/* quiz */
+.quiz .sec-title{margin-top:34px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+  margin-bottom:12px;box-shadow:var(--sh)}
+.q-head{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}
+.q-no{flex:0 0 auto;background:var(--primary);color:#fff;font-weight:800;font-size:12.5px;
+  padding:3px 9px;border-radius:7px}
+.q-text{font-size:15.5px;font-weight:600;flex:1}
+.opts{display:flex;flex-direction:column;gap:8px}
+.mc.ox .opts{flex-direction:row}
+.opt{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);
+  background:#fbfaf6;border-radius:10px;padding:9px 12px;font-size:14.5px;cursor:pointer;transition:.12s;flex:1}
+.opt:hover{border-color:var(--primary);background:var(--primary-soft)}
+.optkey{flex:0 0 auto;width:24px;height:24px;border-radius:6px;background:#fff;border:1px solid var(--line);
+  display:grid;place-items:center;font-weight:800;font-size:13px}
+.mc.done .opt{cursor:default}
+.opt.correct{border-color:var(--okbd);background:var(--ok)}
+.opt.correct .optkey{background:var(--okbd);color:#fff;border-color:var(--okbd)}
+.opt.wrong{border-color:var(--nobd);background:var(--no)}
+.opt.wrong .optkey{background:var(--nobd);color:#fff;border-color:var(--nobd)}
+.explain,.reveal-box{display:none;margin-top:10px;background:#f4f7fb;border:1px solid #d9e4f0;
+  border-radius:10px;padding:11px 13px;font-size:14px}
+.explain.open,.reveal-box.open{display:block}
+.ko-lit{color:var(--primary);font-weight:600;margin-bottom:6px}
+.why{color:#374151}
+.ans-line{margin-bottom:6px}
+.short-input,.text-input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;
+  font-family:var(--font);font-size:14.5px;margin-bottom:8px;resize:vertical}
+.text-input{width:auto;min-width:180px;margin-right:8px;margin-bottom:0}
+.winput,.wcompose{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.wcompose{flex-direction:column;align-items:stretch}
+.check-msg{font-weight:700;font-size:14px}
+.check-msg.ok{color:var(--okbd)} .check-msg.no{color:var(--nobd)}
+
+/* literal 직독직해 */
+.lit{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px;box-shadow:var(--sh)}
+.litrow{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line)}
+.litrow:last-child{border-bottom:none}
+.chunks{display:flex;flex-wrap:wrap;gap:8px}
+.chunk{display:inline-flex;flex-direction:column;border:1px solid var(--line);border-radius:9px;
+  padding:5px 9px;cursor:pointer;background:#fbfaf6;transition:.12s}
+.chunk:hover{border-color:var(--accent);background:var(--accent-soft)}
+.chunk-en{font-size:14.5px;font-weight:600}
+.chunk-ko{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* listening */
+.listen-ctrl{display:flex;gap:8px;margin:4px 0 10px}
+.script-title{font-weight:800;margin-bottom:8px;color:var(--primary)}
+.lq .reveal-box{background:#fff}
+
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:26px 0 40px}
+
+@media (max-width:600px){
+  h1{font-size:23px} .pass-body{font-size:16px;line-height:1.95}
+  .mc.ox .opts{flex-direction:column}
+  .gloss:hover::after{white-space:normal;max-width:220px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* ===== 추가 기능 스타일 ===== */
+/* 예문 컨트롤(단어표 생활예문 + 다른 품사 예문) */
+.ex-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.ex-btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:3px 9px;
+  font-size:12px;font-weight:700;cursor:pointer;line-height:1.5;color:var(--primary);white-space:nowrap}
+.ex-btn:hover{border-color:var(--primary);background:var(--primary-soft)}
+.ex-btn.play{color:var(--accent)}
+.ex-btn.play:hover{background:var(--accent-soft);border-color:var(--accent)}
+.ex-en{flex:1 1 140px;min-width:120px}
+.ex-ko{display:none;flex-basis:100%;color:var(--muted);font-size:13px;margin-top:2px}
+.ex-ko.open{display:block}
+.fd-head{margin-bottom:6px}
+.fd-ex-label{font-size:11.5px;font-weight:800;color:var(--muted);margin-bottom:3px}
+
+/* 문법 예문 직독직해 해석 토글 */
+.gex-ko{display:none}
+.gex-ko.open{display:block}
+.gex-tr{margin-left:6px;vertical-align:middle}
+
+/* 단어 시험 */
+.vocabtest .level-band{background:linear-gradient(100deg,#0e9f8e,#14b8a6)}
+.vt-top{margin:2px 0 14px}
+.vt-ctrl{display:flex;gap:8px;margin:2px 0 10px;flex-wrap:wrap}
+.vt-ko{display:none;color:var(--primary);font-weight:600;margin:2px 0 10px}
+.vt-ko.open{display:block}
+.vt-q .q-text{font-family:inherit}
+
+/* 쓰기평가 제시 단어 */
+.wordbank{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0 10px;
+  padding:8px 10px;background:#f2effa;border:1px solid #e0d8f4;border-radius:10px}
+.wb-label{font-size:12px;font-weight:800;color:#5b3ea8;margin-right:2px}
+.wb-chip{border:1px solid #d9cef0;background:#fff;border-radius:999px;padding:3px 10px;
+  font-size:13px;font-weight:700;color:#4b2fa0;cursor:pointer}
+.wb-chip:hover{background:#efeaff}
+
+/* 듣기 발음 선택 (탭 왼쪽) */
+.voice-ctrl{display:flex;align-items:center;gap:7px;flex:0 0 auto;padding-right:8px;margin-right:2px;border-right:1px solid var(--line)}
+.vc-label{font-size:11.5px;font-weight:800;color:var(--muted);white-space:nowrap}
+.vc-group{display:flex;gap:2px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:2px}
+.vc-btn{border:none;background:none;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;white-space:nowrap}
+.vc-btn:hover{background:var(--primary-soft)}
+.vc-btn.active{background:var(--primary);color:#fff}
+@media (max-width:600px){ .vc-label{display:none} .vc-btn{padding:5px 7px;font-size:11.5px} }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">English for TOEIC · Nominal vs Real GDP</div>
+    <h1>반도체가 키운 <span class="hl">명목 GDP</span> <br>난이도별 영어 학습 웹앱</h1>
+    <p class="sub">원문 기사(‘반도체 호황에 명목 GDP 50년 만에 최고 성장’, 2026·6·10 한국경제신문)를 토대로 EASY·MEDIUM·HARD 3단계 지문, 단어표·문법·확인문제·직독직해, 그리고 듣기·쓰기 평가까지 한 곳에 담았습니다. 단어와 문장을 누르면 실제 영국식(영국 발음) 영어가 재생됩니다.</p>
+    <div class="src">🔊 발음은 브라우저 음성(TTS)으로 재생 · 상단에서 <b>미국/영국 · 여성/남성</b> 선택 (기본: 영국·여성) · Chrome/Edge/Safari 권장</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <div class="voice-ctrl" title="듣기 발음 선택">
+      <span class="vc-label">🔊 발음</span>
+      <div class="vc-group" data-vgroup="accent">
+        <button class="vc-btn" data-vset="accent:US">🇺🇸 미국</button>
+        <button class="vc-btn active" data-vset="accent:GB">🇬🇧 영국</button>
+      </div>
+      <div class="vc-group" data-vgroup="gender">
+        <button class="vc-btn active" data-vset="gender:female">여성</button>
+        <button class="vc-btn" data-vset="gender:male">남성</button>
+      </div>
+    </div>
+    <button class="tab" data-pane="easy">EASY · 200</button>
+    <button class="tab" data-pane="medium">MEDIUM · 300</button>
+    <button class="tab" data-pane="hard">HARD · 700</button>
+    <button class="tab" data-pane="listening">🎧 듣기평가</button>
+    <button class="tab" data-pane="writing">✍️ 쓰기평가</button>
+    <button class="tab" data-pane="vocabtest">📝 단어시험</button>
+  </div>
+</nav>
+
+<main><div class="wrap" id="app"></div></main>
+
+<footer>명목 GDP vs 실질 GDP · 영어 학습 웹앱 — 모든 발음은 Web Speech API로 재생됩니다.</footer>
+
+<script>
+/* =========================================================================
+   DATA — 원본 기사(‘반도체 호황에 명목 GDP 50년 만에 최고 성장’)를 소스로 난이도별 영어 학습 콘텐츠
+   문자열은 모두 백틱(`)을 사용 → 아포스트로피/따옴표 안전
+   red: 해당 예문에서 빨간색으로 강조할 문구(정확히 일치)
+   ========================================================================= */
+const DATA = {
+  levels: {
+    /* ============================== EASY ============================== */
+    easy: {
+      title: `EASY`,
+      toeic: `토익 200점 수준 · 10문장`,
+      quizType: `OX 퀴즈`,
+      passage: [
+        { en:`Korea's economy grew very fast in early 2026.`,
+          chunks:[[`Korea's economy`,`한국 경제는`],[`grew very fast`,`매우 빠르게 성장했다`],[`in early 2026.`,`2026년 초에`]] },
+        { en:`The nominal GDP rose by more than ten percent.`,
+          chunks:[[`The nominal GDP`,`명목 GDP는`],[`rose`,`올랐다`],[`by more than ten percent.`,`10퍼센트 넘게`]] },
+        { en:`This was the biggest rise in about fifty years.`,
+          chunks:[[`This was`,`이것은 ~였다`],[`the biggest rise`,`가장 큰 상승`],[`in about fifty years.`,`약 50년 만에`]] },
+        { en:`Nominal GDP uses this year's prices.`,
+          chunks:[[`Nominal GDP`,`명목 GDP는`],[`uses`,`사용한다`],[`this year's prices.`,`올해의 가격을`]] },
+        { en:`Real GDP uses old, fixed prices.`,
+          chunks:[[`Real GDP`,`실질 GDP는`],[`uses`,`사용한다`],[`old, fixed prices.`,`고정된 옛 가격을`]] },
+        { en:`So nominal GDP can go up when prices rise.`,
+          chunks:[[`So`,`그래서`],[`nominal GDP can go up`,`명목 GDP는 오를 수 있다`],[`when prices rise.`,`가격이 오를 때`]] },
+        { en:`This year, chip prices rose a lot.`,
+          chunks:[[`This year,`,`올해`],[`chip prices`,`반도체 가격은`],[`rose a lot.`,`많이 올랐다`]] },
+        { en:`AI needs many computer chips.`,
+          chunks:[[`AI`,`AI는`],[`needs`,`필요로 한다`],[`many computer chips.`,`많은 컴퓨터 칩을`]] },
+        { en:`Korea sells and exports many chips to the world.`,
+          chunks:[[`Korea`,`한국은`],[`sells and exports`,`판다, 그리고 수출한다`],[`many chips`,`많은 칩을`],[`to the world.`,`세계에`]] },
+        { en:`Higher chip prices made the economy look bigger.`,
+          chunks:[[`Higher chip prices`,`더 높은 칩 가격은`],[`made the economy`,`경제를 만들었다`],[`look bigger.`,`더 커 보이게`]] }
+      ],
+      vocab: [
+        { w:`price`, ipa:`[praɪs]`, ko:`가격`,
+          ex:{en:`The price went up.`, ko:`그 가격이 올랐다.`},
+          forms:[ {w:`pricey`, pos:`형용사`, ipa:`[ˈpraɪsi]`, ko:`값비싼`, ex:{en:`This shop is a bit pricey.`, ko:`이 가게는 조금 비싸다.`}} ] },
+        { w:`rise`, ipa:`[raɪz]`, ko:`오르다`,
+          ex:{en:`Prices rise every year.`, ko:`가격은 매년 오른다.`},
+          forms:[ {w:`rising`, pos:`형용사`, ipa:`[ˈraɪzɪŋ]`, ko:`오르는`, ex:{en:`Rising prices help sellers.`, ko:`오르는 가격은 판매자에게 유리하다.`}} ] },
+        { w:`sell`, ipa:`[sel]`, ko:`팔다`,
+          ex:{en:`They sell chips to many countries.`, ko:`그들은 많은 나라에 칩을 판다.`},
+          forms:[ {w:`seller`, pos:`명사`, ipa:`[ˈselə]`, ko:`판매자`, ex:{en:`Korea is a big chip seller.`, ko:`한국은 큰 칩 판매국이다.`}} ] },
+        { w:`export`, ipa:`[ɪkˈspɔːt]`, ko:`수출하다`,
+          ex:{en:`Korea exports many chips.`, ko:`한국은 많은 칩을 수출한다.`},
+          forms:[ {w:`export`, pos:`명사`, ipa:`[ˈekspɔːt]`, ko:`수출(품)`, ex:{en:`Chips are a top export.`, ko:`칩은 최대 수출품이다.`}} ] },
+        { w:`chip`, ipa:`[tʃɪp]`, ko:`(반도체) 칩`,
+          ex:{en:`This chip is very small.`, ko:`이 칩은 매우 작다.`},
+          forms:[ {w:`chipmaker`, pos:`명사`, ipa:`[ˈtʃɪpmeɪkə]`, ko:`반도체 제조사`, ex:{en:`Korea is a leading chipmaker.`, ko:`한국은 선도적인 반도체 제조국이다.`}} ] }
+      ],
+      grammar: [
+        {
+          title:`비교급 (Comparative) ↔ 최상급 (Superlative)`,
+          explain:`비교급은 <b>둘을 비교</b>할 때 써요. 짧은 형용사·부사에는 <b>-er</b>를, 긴 단어에는 앞에 <b>more</b>를 붙이고, 뒤에 <b>than(~보다)</b>을 자주 함께 써요. 예: “Chip prices are <span class="rd">higher</span> than before.(칩 가격이 이전보다 더 높다)”. 규칙: high → high<span class="rd">er</span>, expensive → <span class="rd">more</span> expensive.`,
+          examples:[
+            {en:`Chip prices are <r>higher</r> than last year.`, ko:`칩 가격이 / 더 높다 / 작년보다.`},
+            {en:`Nominal GDP grew <r>faster</r> than real GDP.`, ko:`명목 GDP는 / 더 빠르게 성장했다 / 실질 GDP보다.`},
+            {en:`Export prices rose <r>more</r> than import prices.`, ko:`수출 가격이 / 더 많이 올랐다 / 수입 가격보다.`},
+            {en:`This rise is <r>bigger</r> than before.`, ko:`이 상승은 / 더 크다 / 이전보다.`},
+            {en:`Korea now sells <r>more</r> chips than ever.`, ko:`한국은 이제 / 판다 / 더 많은 칩을 / 그 어느 때보다.`}
+          ],
+          pair:{
+            title:`최상급 (Superlative)`,
+            diff:`최상급은 <b>셋 이상 중에서 가장 ~한 것</b>을 말할 때 써요. 앞에 <b>the</b>를 붙이고 <b>-est</b> 또는 <b>the most</b>를 써요. 차이: <b>비교급</b> “higher than(~보다 더 높은)”은 <b>둘</b> 비교이고, <b>최상급</b> “the highest(가장 높은)”은 <b>전체 중 1등</b>이에요. 규칙: high → <span class="rd">the highest</span>, expensive → <span class="rd">the most</span> expensive.`,
+            examples:[
+              {en:`It was <r>the fastest</r> growth in fifty years.`, ko:`그것은 ~였다 / 가장 빠른 성장 / 50년 만에.`},
+              {en:`GNI rose at <r>the highest</r> rate on record.`, ko:`GNI는 올랐다 / 가장 높은 증가율로 / 통계 이후.`},
+              {en:`This was <r>the biggest</r> rise since 1976.`, ko:`이것은 ~였다 / 가장 큰 상승 / 1976년 이후.`},
+              {en:`Korea is one of <r>the largest</r> chip makers.`, ko:`한국은 ~이다 / 가장 큰 칩 제조국 중 하나.`},
+              {en:`AI needs <r>the most</r> advanced chips.`, ko:`AI는 / 필요로 한다 / 가장 첨단인 칩을.`}
+            ]
+          },
+          exam:[
+            {q:`Chip prices are ___ than last year.`, choices:[`high`,`higher`,`highest`,`more high`], answer:1, ex:`둘을 비교 + than → 비교급 higher.`, tier:`쉬움`},
+            {q:`It was the ___ growth in fifty years.`, choices:[`fast`,`faster`,`fastest`,`most fast`], answer:2, ex:`셋 이상 중 1등 + the → 최상급 fastest.`, tier:`쉬움`},
+            {q:`Real GDP grew ___ than nominal GDP.`, choices:[`slow`,`slower`,`slowest`,`more slow`], answer:1, ex:`than → 비교급 slower.`, tier:`쉬움`},
+            {q:`This is the ___ rise since 1976.`, choices:[`big`,`bigger`,`biggest`,`most big`], answer:2, ex:`the + 최상급 → biggest (big→biggest).`, tier:`쉬움`},
+            {q:`Export prices rose ___ than import prices.`, choices:[`much`,`more`,`most`,`many`], answer:1, ex:`than → 비교급 more.`, tier:`쉬움`},
+            {q:`Seoul chips are ___ than before. (expensive)`, choices:[`expensiver`,`more expensive`,`most expensive`,`expensivest`], answer:1, ex:`긴 형용사는 -er 대신 more expensive.`, tier:`중간`},
+            {q:`GNI rose at the ___ rate on record. (high)`, choices:[`higher`,`highest`,`more high`,`most high`], answer:1, ex:`the + 최상급 → the highest.`, tier:`중간`},
+            {q:`고르시오: “한국은 세계에서 가장 큰 메모리 생산국 중 하나다.”`, choices:[`Korea is a bigger memory producer.`,`Korea is one of the largest memory producers in the world.`,`Korea is large memory producer.`,`Korea is more large producer.`], answer:1, ex:`‘가장 ~한 것 중 하나’ → one of the + 최상급 + 복수명사.`, tier:`중간`},
+            {q:`틀린 문장을 고르시오.`, choices:[`Prices are higher than before.`,`This is the most fast chip.`,`Chips are more expensive now.`,`It was the biggest rise.`], answer:1, ex:`fast는 짧은 단어 → the fastest. most fast는 틀림.`, tier:`어려움`},
+            {q:`빈칸 조합: “Nominal GDP grew ___ than real GDP, and it was ___ jump of all.”`, choices:[`faster / the biggest`,`fast / big`,`fastest / bigger`,`more fast / most big`], answer:0, ex:`than → 비교급 faster, of all → 최상급 the biggest.`, tier:`어려움`}
+          ],
+          hardWords:[
+            {w:`than`, ipa:`[ðæn]`, ko:`~보다`, forms:[]},
+            {w:`rate`, ipa:`[reɪt]`, ko:`비율, 증가율`, forms:[]},
+            {w:`advanced`, ipa:`[ədˈvɑːnst]`, ko:`첨단의, 진보한`, forms:[{w:`advance`, pos:`동사`, ipa:`[ədˈvɑːns]`, ko:`발전하다`, ex:{en:`Chip technology advances fast.`, ko:`칩 기술은 빠르게 발전한다.`}}]}
+          ]
+        }
+      ],
+      quiz:[
+        { type:`ox`, q:`Nominal GDP uses this year's prices.`, ko:`명목 GDP는 / 사용한다 / 올해의 가격을.`, answer:true,
+          ex:`본문 “Nominal GDP uses this year's prices.” → 명목 GDP는 그 해의 가격을 쓰므로 참(O). 실질 GDP는 고정된 옛 가격을 씁니다.` },
+        { type:`ox`, q:`Real GDP goes up when only prices rise.`, ko:`실질 GDP는 / 오른다 / 가격만 오를 때.`, answer:false,
+          ex:`실질 GDP는 고정 가격을 쓰기 때문에 가격만 올라도 오르지 않습니다. 오르는 것은 명목 GDP이므로 거짓(X).` },
+        { type:`ox`, q:`Korea makes very few chips.`, ko:`한국은 / 만든다 / 아주 적은 칩을.`, answer:false,
+          ex:`본문 “Korea sells and exports many chips to the world.” → 한국은 칩을 많이 만들어 파므로 거짓(X).` }
+      ]
+    },
+
+    /* ============================== MEDIUM ============================== */
+    medium: {
+      title: `MEDIUM`,
+      toeic: `토익 300점 수준 · 7문장`,
+      quizType: `4지선다 객관식`,
+      passage:[
+        { en:`In the first quarter of 2026, Korea's nominal GDP grew 10.5% from the previous quarter.`,
+          chunks:[[`In the first quarter of 2026,`,`2026년 1분기에`],[`Korea's nominal GDP`,`한국의 명목 GDP는`],[`grew 10.5%`,`10.5% 성장했다`],[`from the previous quarter.`,`전 분기 대비`]] },
+        { en:`This was the fastest growth since the first quarter of 1976.`,
+          chunks:[[`This was`,`이것은 ~였다`],[`the fastest growth`,`가장 빠른 성장`],[`since the first quarter of 1976.`,`1976년 1분기 이후`]] },
+        { en:`Nominal GDP multiplies this year's output by this year's prices, while real GDP applies base-year prices.`,
+          chunks:[[`Nominal GDP`,`명목 GDP는`],[`multiplies this year's output`,`올해 생산량을 곱한다`],[`by this year's prices,`,`올해 가격에`],[`while real GDP`,`반면 실질 GDP는`],[`applies base-year prices.`,`기준연도 가격을 적용한다`]] },
+        { en:`Because chip export prices jumped, the gap between nominal and real GDP grew wide.`,
+          chunks:[[`Because chip export prices jumped,`,`칩 수출 가격이 급등했기 때문에`],[`the gap`,`그 격차는`],[`between nominal and real GDP`,`명목과 실질 GDP 사이의`],[`grew wide.`,`크게 벌어졌다`]] },
+        { en:`The expansion of AI pushed demand for advanced memory chips far above supply.`,
+          chunks:[[`The expansion of AI`,`AI의 확대는`],[`pushed demand`,`수요를 밀어 올렸다`],[`for advanced memory chips`,`첨단 메모리 칩에 대한`],[`far above supply.`,`공급을 훨씬 웃돌게`]] },
+        { en:`As a major memory-chip producer, Korea benefited directly from the higher prices.`,
+          chunks:[[`As a major memory-chip producer,`,`주요 메모리 반도체 생산국으로서`],[`Korea benefited directly`,`한국은 직접 혜택을 봤다`],[`from the higher prices.`,`더 높은 가격에서`]] },
+        { en:`Real national income (GNI) also rose 9.2%, the highest rate on record.`,
+          chunks:[[`Real national income (GNI)`,`실질 국민총소득(GNI)도`],[`also rose 9.2%,`,`9.2% 올랐다`],[`the highest rate on record.`,`통계 작성 이후 최고 증가율로`]] }
+      ],
+      vocab:[
+        { w:`nominal`, ipa:`[ˈnɒmɪnl]`, ko:`명목상의`,
+          ex:{en:`Nominal GDP includes price changes.`, ko:`명목 GDP는 가격 변동을 포함한다.`},
+          forms:[ {w:`nominally`, pos:`부사`, ipa:`[ˈnɒmɪnəli]`, ko:`명목상`, ex:{en:`Wages rose nominally, not really.`, ko:`임금은 실질이 아니라 명목상 올랐다.`}} ] },
+        { w:`previous`, ipa:`[ˈpriːviəs]`, ko:`이전의`,
+          ex:{en:`Sales beat the previous year.`, ko:`매출이 전년을 앞질렀다.`},
+          forms:[ {w:`previously`, pos:`부사`, ipa:`[ˈpriːviəsli]`, ko:`이전에`, ex:{en:`Prices were previously stable.`, ko:`가격은 이전에는 안정적이었다.`}} ] },
+        { w:`quarter`, ipa:`[ˈkwɔːtə]`, ko:`분기`,
+          ex:{en:`GDP grew in the first quarter.`, ko:`GDP가 1분기에 성장했다.`},
+          forms:[ {w:`quarterly`, pos:`형용사`, ipa:`[ˈkwɔːtəli]`, ko:`분기별의`, ex:{en:`We check quarterly results.`, ko:`우리는 분기별 실적을 확인한다.`}} ] },
+        { w:`demand`, ipa:`[dɪˈmɑːnd]`, ko:`수요`,
+          ex:{en:`Demand for chips is strong.`, ko:`칩에 대한 수요가 강하다.`},
+          forms:[ {w:`demand`, pos:`동사`, ipa:`[dɪˈmɑːnd]`, ko:`요구하다`, ex:{en:`Buyers demand faster chips.`, ko:`구매자들은 더 빠른 칩을 요구한다.`}} ] },
+        { w:`supply`, ipa:`[səˈplaɪ]`, ko:`공급`,
+          ex:{en:`Supply could not meet demand.`, ko:`공급이 수요를 따라가지 못했다.`},
+          forms:[ {w:`supplier`, pos:`명사`, ipa:`[səˈplaɪə]`, ko:`공급자`, ex:{en:`Korea is a key chip supplier.`, ko:`한국은 핵심 칩 공급자다.`}} ] },
+        { w:`producer`, ipa:`[prəˈdjuːsə]`, ko:`생산자, 생산국`,
+          ex:{en:`Korea is a top chip producer.`, ko:`한국은 최상위 칩 생산국이다.`},
+          forms:[ {w:`produce`, pos:`동사`, ipa:`[prəˈdjuːs]`, ko:`생산하다`, ex:{en:`They produce memory chips.`, ko:`그들은 메모리 칩을 생산한다.`}}, {w:`production`, pos:`명사`, ipa:`[prəˈdʌkʃn]`, ko:`생산(량)`, ex:{en:`Chip production rose slightly.`, ko:`칩 생산량은 소폭 늘었다.`}} ] },
+        { w:`growth`, ipa:`[ɡrəʊθ]`, ko:`성장`,
+          ex:{en:`The growth was very fast.`, ko:`그 성장은 매우 빨랐다.`},
+          forms:[ {w:`grow`, pos:`동사`, ipa:`[ɡrəʊ]`, ko:`성장하다`, ex:{en:`The economy grew quickly.`, ko:`경제가 빠르게 성장했다.`}} ] },
+        { w:`expansion`, ipa:`[ɪkˈspænʃn]`, ko:`확대, 팽창`,
+          ex:{en:`AI expansion boosted demand.`, ko:`AI 확대가 수요를 끌어올렸다.`},
+          forms:[ {w:`expand`, pos:`동사`, ipa:`[ɪkˈspænd]`, ko:`확대하다`, ex:{en:`The AI market keeps expanding.`, ko:`AI 시장은 계속 확대되고 있다.`}} ] }
+      ],
+      grammar:[
+        {
+          title:`현재완료 (Present Perfect) ↔ 과거 시제 (Past Simple)`,
+          explain:`현재완료는 <b>과거에 시작된 일이 지금까지 이어지거나 지금에 영향을 줄 때</b> 써요. 모양은 <b>have/has + 과거분사(p.p.)</b>예요. “AI <span class="rd">has created</span> huge demand.(AI가 큰 수요를 만들어 왔다 → 지금도 그 수요가 있다)” 주어가 3인칭 단수면 <b>has</b>, 나머지는 <b>have</b>를 써요.`,
+          examples:[
+            {en:`AI <r>has created</r> huge demand for chips.`, ko:`AI는 / 만들어 냈다 / 큰 수요를 / 칩에 대한.`},
+            {en:`Chip prices <r>have risen</r> sharply this year.`, ko:`칩 가격이 / 올랐다 / 가파르게 / 올해.`},
+            {en:`Korea <r>has become</r> a top chip producer.`, ko:`한국은 / 되었다 / 최고 칩 생산국이.`},
+            {en:`Demand <r>has grown</r> faster than supply.`, ko:`수요가 / 자라났다 / 공급보다 빠르게.`},
+            {en:`The gap <r>has widened</r> recently.`, ko:`그 격차가 / 벌어졌다 / 최근에.`}
+          ],
+          pair:{
+            title:`과거 시제 (Past Simple)`,
+            diff:`과거 시제는 <b>이미 끝난 과거의 한 시점</b>을 말할 때 써요. 보통 <b>동사 + -ed</b>(또는 불규칙 과거형)이고, <b>last quarter, in 1976, yesterday</b> 같은 <b>명확한 과거 시점</b>과 함께 써요. 차이: <b>현재완료</b> “prices <span class="rd">have risen</span>”은 ‘지금까지 이어짐’, <b>과거</b> “prices <span class="rd">rose</span> last quarter”는 ‘그때 끝난 일’이에요. 명확한 과거 시점이 있으면 과거 시제!`,
+            examples:[
+              {en:`Nominal GDP <r>rose</r> 10.5% last quarter.`, ko:`명목 GDP는 / 올랐다 / 10.5% / 지난 분기에.`},
+              {en:`The last record <r>came</r> in 1976.`, ko:`지난 기록은 / 나왔다 / 1976년에.`},
+              {en:`Chip prices <r>jumped</r> early this year.`, ko:`칩 가격이 / 급등했다 / 올해 초에.`},
+              {en:`Korea <r>benefited</r> from higher prices.`, ko:`한국은 / 혜택을 봤다 / 더 높은 가격에서.`},
+              {en:`GNI <r>reached</r> a record high.`, ko:`GNI는 / 도달했다 / 사상 최고치에.`}
+            ]
+          },
+          exam:[
+            {q:`AI ___ huge demand for chips.`, choices:[`create`,`creates`,`has created`,`creating`], answer:2, ex:`지금까지 이어지는 결과 → 현재완료 has created.`, tier:`쉬움`},
+            {q:`Nominal GDP ___ 10.5% last quarter.`, choices:[`rises`,`has risen`,`rose`,`rise`], answer:2, ex:`last quarter(명확한 과거) → 과거 rose.`, tier:`쉬움`},
+            {q:`Korea ___ a top producer.`, choices:[`become`,`has become`,`becoming`,`becomes`], answer:1, ex:`지금 상태로 이어짐 → has become.`, tier:`쉬움`},
+            {q:`The last record ___ in 1976.`, choices:[`comes`,`has come`,`came`,`come`], answer:2, ex:`in 1976(과거 시점) → came.`, tier:`쉬움`},
+            {q:`Chip prices ___ sharply this year.`, choices:[`rise`,`have risen`,`will rise`,`risen`], answer:1, ex:`this year(지금 포함, 이어짐) → have risen.`, tier:`쉬움`},
+            {q:`빈칸: “Demand ___ faster than supply since January.”`, choices:[`grew`,`has grown`,`grows`,`growing`], answer:1, ex:`since January(과거~현재) → 현재완료 has grown.`, tier:`중간`},
+            {q:`고르시오(자연스러운 문장):`, choices:[`I have seen him yesterday.`,`I saw him yesterday.`,`I seen him yesterday.`,`I have saw him yesterday.`], answer:1, ex:`yesterday(과거) → 과거 saw. 현재완료는 yesterday와 함께 쓸 수 없음.`, tier:`중간`},
+            {q:`Korea ___ from higher prices in Q1.`, choices:[`has benefited`,`benefits`,`benefited`,`benefit`], answer:2, ex:`in Q1(끝난 과거) → 과거 benefited.`, tier:`중간`},
+            {q:`틀린 문장을 고르시오.`, choices:[`Prices have risen a lot recently.`,`GDP grew 10.5% last quarter.`,`AI has changed the market in 2010.`,`Demand has grown since then.`], answer:2, ex:`in 2010(명확한 과거 시점)에는 현재완료 불가 → changed(과거). recently·since then은 현재완료 가능.`, tier:`어려움`},
+            {q:`빈칸 조합: “Chip prices ___ in 2024, and they ___ high ever since.”`, choices:[`fell / have stayed`,`have fallen / stayed`,`fall / stay`,`have fallen / have stay`], answer:0, ex:`in 2024=과거 fell, ever since(그 이후 지금까지)=현재완료 have stayed.`, tier:`어려움`}
+          ],
+          hardWords:[
+            {w:`recently`, ipa:`[ˈriːsntli]`, ko:`최근에`, forms:[]},
+            {w:`record`, ipa:`[ˈrekɔːd]`, ko:`기록, 최고치`, forms:[]},
+            {w:`since`, ipa:`[sɪns]`, ko:`~ 이후로`, forms:[]}
+          ]
+        }
+      ],
+      quiz:[
+        { type:`mc`, q:`By how much did nominal GDP grow from the previous quarter?`, ko:`명목 GDP는 / 전 분기 대비 / 얼마나 성장했는가?`,
+          choices:[`9.2%`,`10.5%`,`13.0%`,`17.1%`], answer:1,
+          ex:`본문 “grew 10.5% from the previous quarter” → 전 분기 대비 10.5%. 9.2%는 실질 GNI, 17.1%는 전년 동기 대비, 13.0%는 1976년 수치이므로 혼동하지 마세요.` },
+        { type:`mc`, q:`Why did the gap between nominal and real GDP grow wide?`, ko:`명목과 실질 GDP의 격차가 / 왜 크게 벌어졌는가?`,
+          choices:[`Chip output fell sharply.`,`Chip export prices jumped.`,`Interest rates were cut.`,`The base year changed.`], answer:1,
+          ex:`본문 “Because chip export prices jumped, the gap ... grew wide.” → 칩 수출 가격 급등이 원인. 실질 GDP는 가격 변동을 빼기 때문에 명목과의 차이가 커집니다.` },
+        { type:`mc`, q:`What happened to real national income (GNI)?`, ko:`실질 국민총소득(GNI)에 / 무슨 일이 있었는가?`,
+          choices:[`It fell for the first time.`,`It stayed flat.`,`It rose 9.2%, a record high.`,`It rose 22%.`], answer:2,
+          ex:`본문 “Real national income (GNI) also rose 9.2%, the highest rate on record.” → 9.2% 상승으로 사상 최고 증가율.` }
+      ]
+    },
+
+    /* ============================== HARD ============================== */
+    hard:{
+      title:`HARD`,
+      toeic:`토익 700점 수준 · 5문장`,
+      quizType:`주관식`,
+      passage:[
+        { en:`Whereas real GDP strips out price changes to isolate output—rising only about 1.8 percent—nominal GDP also captures price shifts, which is why it surged by 10.5 percent.`,
+          chunks:[[`Whereas real GDP`,`실질 GDP는 ~인 반면`],[`strips out price changes`,`가격 변동을 제거한다`],[`to isolate output—`,`생산량만 분리하려고`],[`rising only about 1.8 percent—`,`약 1.8퍼센트만 오르며`],[`nominal GDP also captures price shifts,`,`명목 GDP는 가격 변동까지 담아낸다`],[`which is why it surged by 10.5 percent.`,`그래서 10.5퍼센트 급등했다`]] },
+        { en:`The gap arose because the recent boom stemmed less from higher production than from the steep rise in the prices Korea could charge for its semiconductors.`,
+          chunks:[[`The gap arose`,`그 격차가 생겼다`],[`because the recent boom`,`최근의 호황이`],[`stemmed less from higher production`,`생산 증가보다는`],[`than from the steep rise in the prices`,`가격의 가파른 상승에서 비롯됐기 때문에`],[`Korea could charge for its semiconductors.`,`한국이 반도체에 매길 수 있는`]] },
+        { en:`Because AI has driven demand for high-bandwidth memory far beyond available supply, chip prices climbed, and Korea—one of the world's leading memory producers—reaped the benefit directly.`,
+          chunks:[[`Because AI has driven demand`,`AI가 수요를 몰아왔기 때문에`],[`for high-bandwidth memory`,`고대역폭 메모리에 대한`],[`far beyond available supply,`,`가용 공급을 훨씬 넘어서`],[`chip prices climbed,`,`칩 가격이 올랐고`],[`and Korea—one of the world's leading memory producers—`,`세계 유수의 메모리 생산국인 한국은`],[`reaped the benefit directly.`,`그 혜택을 직접 거뒀다`]] },
+        { en:`The same dynamic lifted real national income, as improving terms of trade let the country import more goods in exchange for the same volume of exports.`,
+          chunks:[[`The same dynamic`,`같은 흐름이`],[`lifted real national income,`,`실질 국민소득을 끌어올렸다`],[`as improving terms of trade`,`교역조건이 개선되면서`],[`let the country import more goods`,`더 많은 수입품을 사들이게 했다`],[`in exchange for the same volume of exports.`,`같은 양의 수출로`]] },
+        { en:`In short, when export prices outpace import prices, a nation's measured economic size and its people's purchasing power can both expand, even if physical output barely moves.`,
+          chunks:[[`In short,`,`요컨대`],[`when export prices outpace import prices,`,`수출 가격이 수입 가격을 앞지를 때`],[`a nation's measured economic size`,`한 나라의 측정된 경제 규모와`],[`and its people's purchasing power`,`국민의 구매력이`],[`can both expand,`,`둘 다 커질 수 있다`],[`even if physical output barely moves.`,`실제 생산량이 거의 변하지 않아도`]] }
+      ],
+      vocab:[
+        { w:`diverge`, ipa:`[daɪˈvɜːdʒ]`, ko:`갈라지다, 벌어지다`,
+          ex:{en:`The two figures diverge sharply.`, ko:`두 수치가 크게 벌어진다.`},
+          forms:[ {w:`divergence`, pos:`명사`, ipa:`[daɪˈvɜːdʒəns]`, ko:`괴리, 격차`, ex:{en:`There is a wide divergence between them.`, ko:`둘 사이에 큰 괴리가 있다.`}} ] },
+        { w:`isolate`, ipa:`[ˈaɪsəleɪt]`, ko:`분리하다, 따로 떼다`,
+          ex:{en:`Real GDP isolates output changes.`, ko:`실질 GDP는 생산량 변화만 분리한다.`},
+          forms:[ {w:`isolation`, pos:`명사`, ipa:`[ˌaɪsəˈleɪʃn]`, ko:`분리, 고립`, ex:{en:`Study the effect in isolation.`, ko:`그 효과를 따로 떼어 연구하라.`}} ] },
+        { w:`surge`, ipa:`[sɜːdʒ]`, ko:`급증하다; 급증`,
+          ex:{en:`Nominal GDP surged this quarter.`, ko:`명목 GDP가 이번 분기에 급증했다.`},
+          forms:[ {w:`surge`, pos:`명사`, ipa:`[sɜːdʒ]`, ko:`급등, 급증`, ex:{en:`There was a surge in demand.`, ko:`수요의 급증이 있었다.`}} ] },
+        { w:`semiconductor`, ipa:`[ˌsemikənˈdʌktə]`, ko:`반도체`,
+          ex:{en:`Korea leads in semiconductors.`, ko:`한국은 반도체에서 앞선다.`},
+          forms:[] },
+        { w:`discrepancy`, ipa:`[dɪsˈkrepənsi]`, ko:`괴리, 불일치`,
+          ex:{en:`The discrepancy puzzled analysts.`, ko:`그 괴리가 분석가들을 당황케 했다.`},
+          forms:[] },
+        { w:`terms of trade`, ipa:`[ˌtɜːmz əv ˈtreɪd]`, ko:`교역조건`,
+          ex:{en:`The terms of trade improved.`, ko:`교역조건이 개선됐다.`},
+          forms:[] },
+        { w:`purchasing power`, ipa:`[ˈpɜːtʃəsɪŋ ˌpaʊə]`, ko:`구매력`,
+          ex:{en:`Real income means purchasing power.`, ko:`실질 소득은 구매력을 뜻한다.`},
+          forms:[ {w:`purchase`, pos:`동사/명사`, ipa:`[ˈpɜːtʃəs]`, ko:`구매(하다)`, ex:{en:`They can purchase more imports.`, ko:`그들은 더 많은 수입품을 살 수 있다.`}} ] },
+        { w:`outpace`, ipa:`[ˌaʊtˈpeɪs]`, ko:`앞지르다`,
+          ex:{en:`Export prices outpace import prices.`, ko:`수출 가격이 수입 가격을 앞지른다.`},
+          forms:[] },
+        { w:`reap`, ipa:`[riːp]`, ko:`거두다, 얻다`,
+          ex:{en:`Korea reaped the benefit.`, ko:`한국은 그 이득을 거뒀다.`},
+          forms:[] },
+        { w:`competitiveness`, ipa:`[kəmˈpetətɪvnəs]`, ko:`경쟁력`,
+          ex:{en:`Chip competitiveness drove the gains.`, ko:`반도체 경쟁력이 그 성과를 이끌었다.`},
+          forms:[ {w:`competitive`, pos:`형용사`, ipa:`[kəmˈpetətɪv]`, ko:`경쟁력 있는`, ex:{en:`Korean chips are highly competitive.`, ko:`한국 반도체는 매우 경쟁력이 높다.`}} ] }
+      ],
+      grammar:[
+        {
+          title:`대조의 while·whereas (~인 반면) ↔ 양보의 although·even if (비록 ~일지라도)`,
+          explain:`두 사실을 <b>맞대어 비교</b>할 때는 <b>while</b> 또는 <b>whereas(~인 반면)</b>를 써요. 두 절의 내용이 <b>서로 대조</b>됩니다. 예: “<span class="rd">Whereas</span> real GDP removes prices, nominal GDP keeps them.(실질 GDP는 가격을 빼는 반면, 명목 GDP는 그것을 남긴다)”. while은 ‘~하는 동안’이라는 시간 뜻도 있지만, 여기서는 두 대상을 <b>대조</b>하는 접속사예요.`,
+          examples:[
+            {en:`<r>Whereas</r> real GDP strips out prices, nominal GDP includes them.`, ko:`실질 GDP는 가격을 빼는 반면, / 명목 GDP는 그것을 포함한다.`},
+            {en:`Nominal GDP surged, <r>while</r> real output barely moved.`, ko:`명목 GDP는 급등했다 / 실질 생산량은 거의 움직이지 않은 반면.`},
+            {en:`<r>Whereas</r> supply stayed flat, demand soared.`, ko:`공급은 정체된 반면, / 수요는 치솟았다.`},
+            {en:`Prices rose fast, <r>while</r> production rose slowly.`, ko:`가격은 빠르게 올랐다 / 생산은 느리게 오른 반면.`},
+            {en:`<r>Whereas</r> exports gained, imports lagged.`, ko:`수출은 늘어난 반면, / 수입은 뒤처졌다.`}
+          ],
+          pair:{
+            title:`양보의 although / even if (비록 ~일지라도)`,
+            diff:`양보는 <b>앞 내용에도 불구하고 결과가 예상과 다를 때</b> 써요. <b>although / even though(비록 ~이지만)</b>는 <b>사실</b>에, <b>even if(설령 ~일지라도)</b>는 <b>가정</b>에 써요. 차이: <b>대조</b>(while/whereas)는 ‘A는 이렇고 B는 저렇다’처럼 <b>둘을 나란히 비교</b>, <b>양보</b>(although/even if)는 ‘A인데도 (뜻밖에) B다’처럼 <b>예상을 뒤집는</b> 느낌이에요.`,
+            examples:[
+              {en:`<r>Although</r> output barely rose, nominal GDP jumped.`, ko:`생산량은 거의 오르지 않았지만, / 명목 GDP는 급등했다.`},
+              {en:`The economy looks bigger <r>even if</r> real output is flat.`, ko:`경제는 더 커 보인다 / 설령 실질 생산이 정체되어도.`},
+              {en:`<r>Even though</r> real GDP grew little, income rose.`, ko:`실질 GDP는 거의 안 컸지만, / 소득은 올랐다.`},
+              {en:`<r>Although</r> prices fell later, the record stood.`, ko:`가격은 나중에 떨어졌지만, / 그 기록은 유지됐다.`},
+              {en:`Trade helps <r>even if</r> exports stay the same.`, ko:`교역은 도움이 된다 / 설령 수출이 같더라도.`}
+            ]
+          },
+          exam:[
+            {q:`___ real GDP removes prices, nominal GDP keeps them.`, choices:[`Because`,`Whereas`,`So`,`Unless`], answer:1, ex:`두 절이 서로 대조 → whereas(~인 반면).`, tier:`쉬움`},
+            {q:`___ output barely rose, nominal GDP jumped.`, choices:[`Although`,`So`,`Because`,`Unless`], answer:0, ex:`적게 올랐는데 급등(예상 뒤집음) → 양보 although.`, tier:`쉬움`},
+            {q:`Prices rose fast, ___ production rose slowly.`, choices:[`although`,`while`,`because`,`if`], answer:1, ex:`두 사실을 나란히 대조 → while(~인 반면).`, tier:`쉬움`},
+            {q:`The economy looks bigger ___ real output is flat.`, choices:[`even if`,`because`,`so`,`and`], answer:0, ex:`가정적 양보(설령 ~해도) → even if.`, tier:`쉬움`},
+            {q:`___ real GDP grew little, income still rose.`, choices:[`Even though`,`So`,`Because`,`Unless`], answer:0, ex:`사실 양보(거의 안 컸는데도) → even though.`, tier:`쉬움`},
+            {q:`빈칸으로 <b>대조</b>가 아닌 것을 고르시오.`, choices:[`Whereas supply was flat, demand soared.`,`While exports gained, imports lagged.`,`Although prices rose, output was flat.`,`Whereas A fell, B climbed.`], answer:2, ex:`although는 대조가 아니라 ‘양보’. 나머지는 두 사실을 나란히 비교하는 대조.`, tier:`중간`},
+            {q:`자연스러운 문장을 고르시오.`, choices:[`Although it was cheap, but I didn't buy it.`,`Although it was cheap, I didn't buy it.`,`Although it was cheap so I bought it.`,`Although cheap, but I bought.`], answer:1, ex:`although 뒤에 but을 또 쓰지 않음. although + 절, (콤마) 주절.`, tier:`중간`},
+            {q:`빈칸: “___ the method changes, the answer stays the same.”`, choices:[`Even if`,`Whereas`,`Because`,`So`], answer:0, ex:`설령 방법이 바뀌어도 결과 동일 → even if(가정적 양보).`, tier:`중간`},
+            {q:`틀린 문장을 고르시오.`, choices:[`Whereas real GDP rose 1.8%, nominal GDP rose 10.5%.`,`Although the gap was wide, it made sense.`,`Even if prices doubled, output was the same.`,`Although prices rose, but GDP fell.`], answer:3, ex:`although와 but을 함께 쓸 수 없음 → 하나만. “Although prices rose, GDP fell.”`, tier:`어려움`},
+            {q:`빈칸 조합: “___ real output barely moved, nominal GDP jumped, ___ higher prices lifted the figure.”`, choices:[`Even though / because`,`Because / although`,`While / so`,`Whereas / whereas`], answer:0, ex:`앞은 예상을 뒤집는 양보(Even though), 뒤는 이유(because 더 높은 가격이 수치를 끌어올림).`, tier:`어려움`}
+          ],
+          hardWords:[
+            {w:`whereas`, ipa:`[weərˈæz]`, ko:`~인 반면`, forms:[]},
+            {w:`although`, ipa:`[ɔːlˈðəʊ]`, ko:`비록 ~이지만`, forms:[]},
+            {w:`flat`, ipa:`[flæt]`, ko:`변동 없는, 정체된`, forms:[]},
+            {w:`barely`, ipa:`[ˈbeəli]`, ko:`거의 ~않다`, forms:[]}
+          ]
+        }
+      ],
+      quiz:[
+        { type:`short`, q:`According to the passage, why can nominal and real GDP diverge sharply?`, ko:`본문에 따르면 / 명목과 실질 GDP는 / 왜 크게 벌어질 수 있는가?`,
+          answer:`Because real GDP removes price changes (using base-year prices) while nominal GDP includes them (실질은 가격 변동을 빼고, 명목은 포함하기 때문).`,
+          ex:`본문 “real GDP strips out price changes ... nominal GDP also captures price shifts.” → 실질은 가격 변동을 제거해 생산량만 보고, 명목은 가격 변동까지 담기 때문에 둘이 크게 갈립니다.` },
+        { type:`short`, q:`What mainly caused the recent surge in nominal GDP?`, ko:`최근 명목 GDP 급등의 / 주된 원인은 무엇인가?`,
+          answer:`The steep rise in semiconductor prices, rather than higher production (생산 증가보다 반도체 가격의 급등).`,
+          ex:`본문 “the recent boom stemmed less from higher production than from the steep rise in the prices ... for its semiconductors.” → 생산량 증가가 아니라 반도체 ‘가격’ 상승이 핵심.` },
+        { type:`short`, q:`How did improving terms of trade affect real national income?`, ko:`교역조건 개선은 / 실질 국민소득에 / 어떤 영향을 주었나?`,
+          answer:`It let Korea import more goods for the same volume of exports, raising real income (같은 수출로 더 많은 수입이 가능해져 실질 소득이 늘었다).`,
+          ex:`본문 “improving terms of trade let the country import more goods in exchange for the same volume of exports.” → 수출가가 수입가보다 더 올라, 같은 양을 수출하고도 더 많이 수입할 수 있게 되어 실질 소득이 증가.` }
+      ]
+    }
+  },
+
+  /* ============================== 듣기 평가 (10) ============================== */
+  listening:{
+    scripts:{
+      A:{ title:`Script A — Nominal vs Real GDP`,
+        sents:[
+          { en:`Korea's nominal GDP grew sharply in early 2026.`, chunks:[[`Korea's nominal GDP`,`한국의 명목 GDP는`],[`grew sharply`,`가파르게 성장했다`],[`in early 2026.`,`2026년 초에`]] },
+          { en:`It rose 10.5 percent from the previous quarter.`, chunks:[[`It rose 10.5 percent`,`그것은 10.5퍼센트 올랐다`],[`from the previous quarter.`,`전 분기 대비`]] },
+          { en:`That was the fastest growth in about fifty years.`, chunks:[[`That was the fastest growth`,`그것은 가장 빠른 성장이었다`],[`in about fifty years.`,`약 50년 만에`]] },
+          { en:`Nominal GDP counts this year's prices.`, chunks:[[`Nominal GDP counts`,`명목 GDP는 반영한다`],[`this year's prices.`,`올해의 가격을`]] },
+          { en:`Real GDP uses fixed base-year prices.`, chunks:[[`Real GDP uses`,`실질 GDP는 쓴다`],[`fixed base-year prices.`,`고정된 기준연도 가격을`]] },
+          { en:`So a jump in prices can lift nominal GDP alone.`, chunks:[[`So a jump in prices`,`그래서 가격의 급등은`],[`can lift nominal GDP alone.`,`명목 GDP만 끌어올릴 수 있다`]] }
+        ] },
+      B:{ title:`Script B — Chips and AI`,
+        sents:[
+          { en:`AI has created huge demand for memory chips.`, chunks:[[`AI has created`,`AI가 만들어 냈다`],[`huge demand`,`거대한 수요를`],[`for memory chips.`,`메모리 칩에 대한`]] },
+          { en:`Demand rose far above supply.`, chunks:[[`Demand rose`,`수요가 올랐다`],[`far above supply.`,`공급을 훨씬 웃돌게`]] },
+          { en:`So chip prices climbed quickly.`, chunks:[[`So chip prices`,`그래서 칩 가격이`],[`climbed quickly.`,`빠르게 올랐다`]] },
+          { en:`Korea is a leading maker of memory chips.`, chunks:[[`Korea is`,`한국은 ~이다`],[`a leading maker`,`선도적인 제조국`],[`of memory chips.`,`메모리 칩의`]] },
+          { en:`Higher chip prices helped the whole economy.`, chunks:[[`Higher chip prices`,`더 높은 칩 가격이`],[`helped the whole economy.`,`경제 전체를 도왔다`]] }
+        ] },
+      C:{ title:`Script C — Income and Trade`,
+        sents:[
+          { en:`Real national income also jumped in early 2026.`, chunks:[[`Real national income`,`실질 국민소득도`],[`also jumped`,`급증했다`],[`in early 2026.`,`2026년 초에`]] },
+          { en:`It rose 9.2 percent, a record high.`, chunks:[[`It rose 9.2 percent,`,`그것은 9.2퍼센트 올랐다`],[`a record high.`,`사상 최고치로`]] },
+          { en:`This happened because terms of trade improved.`, chunks:[[`This happened because`,`이는 ~때문에 일어났다`],[`terms of trade improved.`,`교역조건이 개선됐기`]] },
+          { en:`Export prices rose faster than import prices.`, chunks:[[`Export prices`,`수출 가격이`],[`rose faster`,`더 빠르게 올랐다`],[`than import prices.`,`수입 가격보다`]] },
+          { en:`So Korea could buy more imports with the same exports.`, chunks:[[`So Korea could buy`,`그래서 한국은 살 수 있었다`],[`more imports`,`더 많은 수입품을`],[`with the same exports.`,`같은 수출로`]] },
+          { en:`Higher chip prices lifted people's real income.`, chunks:[[`Higher chip prices`,`더 높은 칩 가격이`],[`lifted people's real income.`,`국민의 실질 소득을 끌어올렸다`]] }
+        ] }
+    },
+    questions:[
+      { tier:`Easy`, script:`A`, play:`It rose 10.5 percent from the previous quarter.`,
+        q:`How much did nominal GDP rise from the previous quarter?`, choices:[`1.8 percent`,`9.2 percent`,`10.5 percent`,`17.1 percent`], answer:2,
+        ex:`들은 문장 그대로: rose 10.5 percent from the previous quarter.` },
+      { tier:`Easy`, script:`A`, play:`Real GDP uses fixed base-year prices.`,
+        q:`What does real GDP use?`, choices:[`This year's prices`,`Fixed base-year prices`,`Future prices`,`Export prices`], answer:1,
+        ex:`실질 GDP는 고정된 기준연도 가격을 사용합니다.` },
+      { tier:`Easy`, script:`B`, play:`AI has created huge demand for memory chips.`,
+        q:`What created huge demand for memory chips?`, choices:[`AI`,`Oil`,`Tourism`,`Farming`], answer:0,
+        ex:`들은 문장: AI가 메모리 칩 수요를 만들어 냈습니다.` },
+      { tier:`Easy`, script:`C`, play:`It rose 9.2 percent, a record high.`,
+        q:`How much did real national income rise?`, choices:[`5.0 percent`,`9.2 percent`,`10.5 percent`,`13.0 percent`], answer:1,
+        ex:`9.2 percent, 사상 최고치.` },
+      { tier:`Medium`, script:`A`, play:`So a jump in prices can lift nominal GDP alone.`,
+        q:`Why can a price jump lift nominal GDP alone?`, choices:[`Because it uses fixed prices`,`Because it counts this year's prices`,`Because output doubled`,`Because supply rose`], answer:1,
+        ex:`명목 GDP는 그 해의 가격을 반영하므로 가격만 올라도 오를 수 있습니다.` },
+      { tier:`Medium`, script:`B`, play:`Demand rose far above supply.`,
+        q:`Why did chip prices climb quickly?`, choices:[`Supply rose above demand`,`Demand rose far above supply`,`The government set prices`,`Chips were banned`], answer:1,
+        ex:`수요가 공급을 크게 웃돌아 가격이 빠르게 올랐습니다.` },
+      { tier:`Medium`, script:`C`, play:`This happened because terms of trade improved.`,
+        q:`Why did real national income rise?`, choices:[`Taxes were cut`,`Terms of trade improved`,`Wages were frozen`,`Imports were banned`], answer:1,
+        ex:`교역조건 개선이 실질 소득 상승의 원인입니다.` },
+      { tier:`Hard`, script:`B`, play:`Korea is a leading maker of memory chips.`,
+        q:`What is Korea's role in memory chips?`, choices:[`A small buyer`,`A leading maker`,`A late starter`,`A minor seller`], answer:1,
+        ex:`한국은 메모리 칩의 선도적 제조국입니다.` },
+      { tier:`Hard`, script:`C`, play:`Export prices rose faster than import prices.`,
+        q:`What does "terms of trade improved" mean here?`, choices:[`Import prices rose faster`,`Export prices rose faster than import prices`,`Both prices fell`,`Prices stayed equal`], answer:1,
+        ex:`수출 가격이 수입 가격보다 더 빨리 오른 것이 교역조건 개선입니다.` },
+      { tier:`Hard`, script:`C`, play:`So Korea could buy more imports with the same exports.`,
+        q:`What could Korea do with the same exports?`, choices:[`Buy fewer imports`,`Buy more imports`,`Stop trading`,`Raise taxes`], answer:1,
+        ex:`같은 양을 수출하고도 더 많은 수입품을 살 수 있게 되었습니다.` }
+    ]
+  },
+
+  /* ============================== 쓰기 평가 (10) ============================== */
+  writing:[
+    { tier:`Easy`, type:`choice`, sentence:`Chip prices are ___ than last year.`, choices:[`high`,`higher`,`highest`,`more high`], answer:1, ko:`칩 가격이 작년보다 더 높다.`,
+      ex:`둘을 비교 + than → 비교급 higher.` },
+    { tier:`Easy`, type:`choice`, sentence:`It was the ___ growth in fifty years.`, choices:[`fast`,`faster`,`fastest`,`most fast`], answer:2, ko:`그것은 50년 만에 가장 빠른 성장이었다.`,
+      ex:`셋 이상 중 1등 + the → 최상급 fastest.` },
+    { tier:`Easy`, type:`choice`, sentence:`Real GDP grew ___ than nominal GDP.`, choices:[`slow`,`slower`,`slowest`,`more slow`], answer:1, ko:`실질 GDP는 명목 GDP보다 더 느리게 성장했다.`,
+      ex:`than → 비교급 slower.` },
+    { tier:`Easy`, type:`choice`, sentence:`This is the ___ rise since 1976.`, choices:[`big`,`bigger`,`biggest`,`most big`], answer:2, ko:`이것은 1976년 이후 가장 큰 상승이다.`,
+      ex:`the + 최상급 → biggest.` },
+    { tier:`Medium`, type:`input`, sentence:`AI ___ huge demand for chips. (create, 현재완료)`, answer:`has created`, ko:`AI가 칩에 대한 큰 수요를 만들어 왔다.`,
+      ex:`지금까지 이어지는 결과 → 현재완료 has created.` },
+    { tier:`Medium`, type:`input`, sentence:`Nominal GDP ___ 10.5% last quarter. (rise, 과거)`, answer:`rose`, ko:`명목 GDP는 지난 분기에 10.5% 올랐다.`,
+      ex:`last quarter(명확한 과거) → 과거 rose.` },
+    { tier:`Medium`, type:`input`, sentence:`Chip prices ___ sharply since January. (rise, 현재완료)`, answer:`have risen`, ko:`칩 가격이 1월 이후로 가파르게 올랐다.`,
+      ex:`since January(과거~현재) → 현재완료 have risen.` },
+    { tier:`Medium`, type:`input`, sentence:`The last record ___ in 1976. (come, 과거)`, answer:`came`, ko:`지난 기록은 1976년에 나왔다.`,
+      ex:`in 1976(명확한 과거) → 과거 came.` },
+    { tier:`Hard`, type:`compose`, prompt:`다음을 영어로 쓰세요: “실질 GDP는 가격을 빼는 반면, 명목 GDP는 그것을 포함한다.”`,
+      model:`Whereas real GDP strips out prices, nominal GDP includes them.`, words:[`whereas`,`real`,`gdp`,`strips`,`out`,`prices`,`nominal`,`includes`,`them`], ko:`힌트: “Whereas A ~, B ~” (대조) 구조를 사용해 보세요.`,
+      ex:`모범답안: Whereas real GDP strips out prices, nominal GDP includes them. / While real GDP removes price changes, nominal GDP keeps them. 두 사실을 나란히 대조합니다.` },
+    { tier:`Hard`, type:`compose`, prompt:`다음을 영어로 쓰세요: “생산량이 거의 오르지 않았지만, 명목 GDP는 급등했다.”`,
+      model:`Although output barely rose, nominal GDP jumped.`, words:[`although`,`output`,`barely`,`rose`,`nominal`,`gdp`,`jumped`], ko:`힌트: “Although ~, 주절” (양보) 구조. although와 but을 함께 쓰지 마세요.`,
+      ex:`모범답안: Although output barely rose, nominal GDP jumped. / Even though real output hardly moved, nominal GDP surged. 예상을 뒤집는 양보 구문입니다.` }
+  ]
+};
+
+if (typeof module !== 'undefined') module.exports = DATA;
+
+</script>
+<script>
+/* =========================================================================
+   APP — 렌더링 + TTS + 인터랙션
+   ========================================================================= */
+'use strict';
+
+/* ---------- TTS (Web Speech API) ---------- */
+/* 듣기 발음 설정: accent='GB'|'US', gender='female'|'male' (기본: 영국·여성) */
+const VOICE_PREFS = { accent: 'GB', gender: 'female' };
+const FEMALE_HINTS = /female|woman|Samantha|Victoria|Kate|Serena|Sonia|Libby|Fiona|Karen|Moira|Tessa|Zira|Hazel|Susan|Catherine|Ava|Allison|Joanna|Salli|Kendra|Emma|Amy|Aria|Jenny|Michelle|Google UK English Female|Google US English/i;
+const MALE_HINTS = /male|Daniel|Arthur|Ryan|Oliver|George|Alex|Fred|Thomas|David|Mark|Guy|Brian|Matthew|Joey|Rishi|Google UK English Male/i;
+function currentLang() { return VOICE_PREFS.accent === 'US' ? 'en-US' : 'en-GB'; }
+function pickVoice() {
+  if (!('speechSynthesis' in window)) return null;
+  const vs = speechSynthesis.getVoices();
+  const lang = currentLang();
+  let pool = vs.filter(v => new RegExp(lang, 'i').test(v.lang));
+  if (!pool.length) pool = vs.filter(v => /^en/i.test(v.lang));
+  if (!pool.length) pool = vs.slice();
+  const female = VOICE_PREFS.gender === 'female';
+  const want = female ? FEMALE_HINTS : MALE_HINTS;
+  const anti = female ? MALE_HINTS : FEMALE_HINTS;
+  return pool.find(v => want.test(v.name) && !anti.test(v.name)) ||
+         pool.find(v => want.test(v.name)) ||
+         pool.find(v => !anti.test(v.name)) ||
+         pool[0] || null;
+}
+if ('speechSynthesis' in window) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+}
+function speak(text, rate) {
+  if (!('speechSynthesis' in window) || !text) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = currentLang();
+  u.rate = rate || 0.94;
+  u.pitch = 1;
+  const v = pickVoice();
+  if (v) u.voice = v;
+  speechSynthesis.speak(u);
+}
+function stopSpeak() { if ('speechSynthesis' in window) speechSynthesis.cancel(); }
+
+/* ---------- helpers ---------- */
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function stripTags(s) { return String(s).replace(/<[^>]+>/g, ''); }
+let _uid = 0;
+function uid() { return 'x' + (++_uid); }
+
+/* ---------- glossary (단어 → 발음기호·뜻) ---------- */
+const GLOSS = {};
+function addGloss(w, ipa, ko) {
+  if (!w) return;
+  const k = w.toLowerCase();
+  if (!GLOSS[k]) GLOSS[k] = { ipa: ipa || '', ko: ko || '' };
+}
+function buildGloss() {
+  Object.values(DATA.levels).forEach(L => {
+    L.vocab.forEach(v => {
+      addGloss(v.w, v.ipa, v.ko);
+      (v.forms || []).forEach(f => addGloss(f.w, f.ipa, f.ko));
+    });
+    L.grammar.forEach(g => (g.hardWords || []).forEach(h => {
+      addGloss(h.w, h.ipa, h.ko);
+      (h.forms || []).forEach(f => addGloss(f.w, f.ipa, f.ko));
+    }));
+  });
+}
+
+/* wordify: 영어 텍스트의 각 단어를 클릭 발음 + (사전에 있으면) tooltip 처리 */
+function wordify(text) {
+  return esc(text).replace(/([A-Za-z][A-Za-z'\u2019\-]*)/g, m => {
+    const key = m.toLowerCase().replace(/['\u2019]s$/, '');
+    const g = GLOSS[key];
+    const say = m.replace(/[\u2019]/g, "'");
+    if (g) {
+      return '<span class="w gloss" data-say="' + esc(say) +
+        '" data-tip="' + esc(g.ipa + '  ' + g.ko) + '">' + m + '</span>';
+    }
+    return '<span class="w" data-say="' + esc(say) + '">' + m + '</span>';
+  });
+}
+/* 문법 예문: <r>..</r> → 빨간 강조, 그 외 단어는 클릭 발음 */
+function renderGrammarSentence(en) {
+  const parts = en.split(/(<r>.*?<\/r>)/g);
+  return parts.map(p => {
+    const mm = p.match(/^<r>(.*?)<\/r>$/);
+    if (mm) return '<span class="rd" data-say="' + esc(stripTags(mm[1])) + '">' + wordifyInner(mm[1]) + '</span>';
+    return wordify(p);
+  }).join('');
+}
+function wordifyInner(text) { // red 안쪽: 발음은 부모가 담당, 그냥 표시
+  return esc(text);
+}
+
+/* ---------- MC / OX 공통 렌더 ---------- */
+function mcHtml(choices, answer, explain, koPrompt) {
+  const id = uid();
+  const opts = choices.map((c, i) =>
+    '<button class="opt" data-idx="' + i + '">' +
+    '<span class="optkey">' + String.fromCharCode(65 + i) + '</span>' +
+    '<span>' + wordify(c) + '</span></button>'
+  ).join('');
+  return '<div class="mc" data-ans="' + answer + '">' +
+    '<div class="opts">' + opts + '</div>' +
+    '<div class="explain">' +
+      (koPrompt ? '<div class="ko-lit">📖 ' + esc(koPrompt) + '</div>' : '') +
+      '<div class="why">' + explain + '</div></div></div>';
+}
+function oxHtml(answer, explain, koPrompt) {
+  const ansIdx = answer ? 0 : 1;
+  return '<div class="mc ox" data-ans="' + ansIdx + '">' +
+    '<div class="opts">' +
+      '<button class="opt" data-idx="0"><span class="optkey">O</span><span>맞다</span></button>' +
+      '<button class="opt" data-idx="1"><span class="optkey">X</span><span>틀리다</span></button>' +
+    '</div>' +
+    '<div class="explain">' +
+      (koPrompt ? '<div class="ko-lit">📖 ' + esc(koPrompt) + '</div>' : '') +
+      '<div class="why">' + explain + '</div></div></div>';
+}
+
+/* ---------- 직독직해 (chunks) ---------- */
+function literalHtml(sents) {
+  return '<div class="lit">' + sents.map(s => {
+    const chunks = s.chunks.map(c =>
+      '<span class="chunk" data-say="' + esc(stripTags(c[0])) + '">' +
+        '<span class="chunk-en">' + esc(c[0]) + '</span>' +
+        '<span class="chunk-ko">' + esc(c[1]) + '</span></span>'
+    ).join('');
+    return '<div class="litrow"><button class="mini-play" data-say="' + esc(s.en) +
+      '" title="문장 듣기">▶</button><div class="chunks">' + chunks + '</div></div>';
+  }).join('') + '</div>';
+}
+
+/* ---------- 예문 셀(재생 + 해석 버튼 공통) ---------- */
+function exampleCellHtml(en, ko) {
+  const rid = uid();
+  return '<div class="ex-line">' +
+    '<button class="ex-btn play" data-say="' + esc(en) + '" title="문장 듣기">🔊 재생</button>' +
+    '<button class="ex-btn tr" data-reveal="' + rid + '" title="직독직해 보기">해석</button>' +
+    '<span class="ex-en">' + wordify(en) + '</span>' +
+    '<span class="ex-ko" id="' + rid + '">— ' + esc(ko) + '</span></div>';
+}
+
+/* ---------- 단어표 ---------- */
+function vocabTableHtml(vocab) {
+  const rows = vocab.map(v => {
+    const forms = (v.forms && v.forms.length)
+      ? v.forms.map(f => {
+          const fid = uid();
+          return '<div class="form">' +
+            '<button class="form-chip" data-reveal="' + fid + '" data-tip="' + esc(f.ipa + '  ' + f.ko) + '">' +
+              esc(f.w) + ' <span class="pos">' + esc(f.pos) + '</span></button>' +
+            '<div class="form-detail" id="' + fid + '">' +
+              '<div class="fd-head"><b>' + esc(f.w) + '</b> ' + esc(f.ipa) + ' · ' + esc(f.ko) + '</div>' +
+              '<div class="fd-ex-label">예문</div>' + exampleCellHtml(f.ex.en, f.ex.ko) +
+            '</div></div>';
+        }).join('')
+      : '<span class="none">—</span>';
+    return '<tr>' +
+      '<td class="c-word"><span class="w gloss headword" data-say="' + esc(v.w) +
+        '" data-tip="' + esc(v.ipa + '  ' + v.ko) + '">' + esc(v.w) + '</span></td>' +
+      '<td class="c-ipa">' + esc(v.ipa) + '</td>' +
+      '<td class="c-ko">' + esc(v.ko) + '</td>' +
+      '<td class="c-ex">' + exampleCellHtml(v.ex.en, v.ex.ko) + '</td>' +
+      '<td class="c-forms">' + forms + '</td>' +
+    '</tr>';
+  }).join('');
+  return '<div class="table-wrap"><table class="vocab">' +
+    '<thead><tr><th>단어</th><th>발음기호</th><th>뜻</th><th>생활 예문 <span class="hint">(🔊=듣기 · 해석=직독직해)</span></th><th>다른 품사 <span class="hint">(탭하면 상세)</span></th></tr></thead>' +
+    '<tbody>' + rows + '</tbody></table></div>';
+}
+
+/* ---------- 문법 ---------- */
+function hardWordsHtml(list) {
+  if (!list || !list.length) return '';
+  return '<div class="hardwords"><div class="hw-title">예문 속 어려운 단어</div>' +
+    list.map(h => {
+      const forms = (h.forms && h.forms.length)
+        ? ' <span class="hw-forms">(' + h.forms.map(f =>
+            '<span class="w gloss" data-say="' + esc(f.w) + '" data-tip="' + esc(f.ipa + '  ' + f.ko) +
+            '">' + esc(f.w) + '</span> ' + esc(f.pos)).join(', ') + ')</span>'
+        : '';
+      return '<div class="hw"><span class="w gloss" data-say="' + esc(h.w) + '" data-tip="' +
+        esc(h.ipa + '  ' + h.ko) + '"><b>' + esc(h.w) + '</b></span> ' +
+        esc(h.ipa) + ' : ' + esc(h.ko) + forms + '</div>';
+    }).join('') + '</div>';
+}
+function grammarExamplesHtml(examples) {
+  return '<div class="gex">' + examples.map(ex => {
+    const rid = uid();
+    return '<div class="gex-row"><button class="mini-play" data-say="' + esc(stripTags(ex.en.replace(/<\/?r>/g, ''))) +
+      '" title="예문 듣기">▶</button>' +
+      '<div class="gex-en">' + renderGrammarSentence(ex.en) +
+        ' <button class="ex-btn tr gex-tr" data-reveal="' + rid + '" title="직독직해 보기">해석</button></div>' +
+      '<div class="gex-ko" id="' + rid + '">' + esc(ex.ko) + '</div></div>';
+  }).join('') + '</div>';
+}
+function examHtml(exam) {
+  const tierClass = t => t === '쉬움' ? 'e' : (t === '중간' ? 'm' : 'h');
+  return '<div class="exam"><div class="exam-title">🏫 학교 시험 예상문제 <span class="hint">(1~5 쉬움 · 6~8 중간 · 9~10 어려움)</span></div>' +
+    exam.map((q, i) =>
+      '<div class="exq"><div class="exq-q"><span class="exq-no ' + tierClass(q.tier) + '">' + (i + 1) + '</span>' +
+        '<span class="exq-text">' + wordify(q.q) + '</span><span class="tier-badge ' + tierClass(q.tier) + '">' + q.tier + '</span></div>' +
+        mcHtml(q.choices, q.answer, q.ex, '') + '</div>'
+    ).join('') + '</div>';
+}
+function grammarHtml(grammar) {
+  return grammar.map(g =>
+    '<div class="gram">' +
+      '<div class="gram-head">📚 ' + esc(g.title) + '</div>' +
+      '<div class="gram-explain">' + g.explain + '</div>' +
+      '<div class="gram-sub">✏️ 예문 5개</div>' + grammarExamplesHtml(g.examples) +
+      '<div class="gram-pair"><div class="pair-head">🔁 짝이 되는 문법 — ' + esc(g.pair.title) + '</div>' +
+        '<div class="gram-explain">' + g.pair.diff + '</div>' +
+        '<div class="gram-sub">✏️ 예문 5개</div>' + grammarExamplesHtml(g.pair.examples) + '</div>' +
+      examHtml(g.exam) +
+      hardWordsHtml(g.hardWords) +
+    '</div>'
+  ).join('');
+}
+
+/* ---------- 지문(본문) ---------- */
+function passageHtml(sents) {
+  const id = uid();
+  const body = sents.map(s =>
+    '<span class="sent"><button class="sent-play" data-say="' + esc(s.en) + '" title="문장 듣기">🔊</button>' +
+    wordify(s.en) + ' </span>'
+  ).join('');
+  const full = sents.map(s => s.en).join(' ');
+  return '<div class="passage">' +
+    '<div class="pass-ctrl">' +
+      '<button class="btn play-all" data-say="' + esc(full) + '">▶ 본문 전체 듣기</button>' +
+      '<button class="btn ghost" onclick="stopSpeak()">■ 정지</button>' +
+      '<span class="hint">단어=클릭 발음 · 🔊=문장 듣기</span>' +
+    '</div>' +
+    '<p class="pass-body" id="' + id + '">' + body + '</p></div>';
+}
+
+/* ---------- 확인 문제 ---------- */
+function quizHtml(quiz, quizType) {
+  return '<div class="quiz"><div class="sec-title">③ 확인 문제 <span class="pill">' + esc(quizType) + '</span></div>' +
+    quiz.map((q, i) => {
+      let inner;
+      if (q.type === 'ox') inner = oxHtml(q.answer, q.ex, q.ko);
+      else if (q.type === 'mc') inner = mcHtml(q.choices, q.answer, q.ex, q.ko);
+      else { // short
+        const rid = uid();
+        inner = '<div class="short">' +
+          '<textarea class="short-input" rows="2" placeholder="영어 또는 한국어로 답을 적어 보세요"></textarea>' +
+          '<button class="btn small" data-reveal="' + rid + '">모범답안 보기</button>' +
+          '<div class="reveal-box" id="' + rid + '">' +
+            '<div class="ans-line"><b>모범답안:</b> ' + esc(q.answer) + '</div>' +
+            (q.ko ? '<div class="ko-lit">📖 ' + esc(q.ko) + '</div>' : '') +
+            '<div class="why">' + q.ex + '</div></div></div>';
+      }
+      return '<div class="q"><div class="q-head"><span class="q-no">Q' + (i + 1) + '</span>' +
+        '<span class="q-text">' + wordify(q.q) + '</span></div>' + inner + '</div>';
+    }).join('') + '</div>';
+}
+
+/* ---------- 레벨 섹션 전체 ---------- */
+function renderLevel(key) {
+  const L = DATA.levels[key];
+  return '<section class="level ' + key + '" data-pane="' + key + '">' +
+    '<div class="level-band"><span class="level-name">' + esc(L.title) + '</span>' +
+      '<span class="level-toeic">' + esc(L.toeic) + '</span></div>' +
+
+    '<div class="sec-title">② 단어표 <span class="hint">본문보다 먼저 학습</span></div>' +
+    vocabTableHtml(L.vocab) +
+
+    '<div class="sec-title">⑤ 문법 정리</div>' +
+    grammarHtml(L.grammar) +
+
+    '<div class="sec-title">① 본문 <span class="hint">넘버링 없는 문단형 · 듣기 지원</span></div>' +
+    passageHtml(L.passage) +
+
+    quizHtml(L.quiz, L.quizType) +
+
+    '<div class="sec-title">④ 본문 + 직독직해 <span class="hint">끊어읽기 · 조각 클릭=발음</span></div>' +
+    literalHtml(L.passage) +
+  '</section>';
+}
+
+/* ---------- 듣기 평가 ---------- */
+function renderListening() {
+  const LT = DATA.listening;
+  const tierClass = t => t === 'Easy' ? 'e' : (t === 'Medium' ? 'm' : 'h');
+  const qs = LT.questions.map((q, i) => {
+    const sid = uid();
+    const script = LT.scripts[q.script];
+    const full = script.sents.map(s => s.en).join(' ');
+    return '<div class="q lq">' +
+      '<div class="q-head"><span class="q-no">' + (i + 1) + '</span>' +
+        '<span class="tier-badge ' + tierClass(q.tier) + '">' + q.tier + '</span>' +
+        '<span class="q-text">' + wordify(q.q) + '</span></div>' +
+      '<div class="listen-ctrl">' +
+        '<button class="btn small" data-say="' + esc(full) + '">🎧 전체 스크립트 듣기</button>' +
+        '<button class="btn small ghost" data-say="' + esc(q.play) + '">🔁 핵심 문장</button>' +
+        '<button class="btn small ghost" data-reveal="' + sid + '">원문 보기</button></div>' +
+      mcHtml(q.choices, q.answer, q.ex, '') +
+      '<div class="reveal-box" id="' + sid + '"><div class="script-title">' + esc(script.title) + '</div>' +
+        literalHtml(script.sents) + '</div>' +
+    '</div>';
+  }).join('');
+  return '<section class="level listening" data-pane="listening">' +
+    '<div class="level-band"><span class="level-name">🎧 듣기 평가</span>' +
+      '<span class="level-toeic">10문제 · Easy 4 / Medium 3 / Hard 3</span></div>' +
+    '<p class="note"><b>🎧 전체 스크립트 듣기</b>로 지문 전체를 듣고 정답을 고르세요. <b>🔁 핵심 문장</b>은 문제와 관련된 문장만 다시 들려줍니다. <b>원문 보기</b>로 스크립트·직독직해·단어 발음을 확인할 수 있어요.</p>' +
+    qs + '</section>';
+}
+
+/* ---------- 쓰기 평가 ---------- */
+function renderWriting() {
+  const tierClass = t => t === 'Easy' ? 'e' : (t === 'Medium' ? 'm' : 'h');
+  const qs = DATA.writing.map((q, i) => {
+    let body;
+    if (q.type === 'choice') {
+      body = mcHtml(q.choices, q.answer, q.ex, q.ko);
+    } else if (q.type === 'input') {
+      const iid = uid(), rid = uid();
+      body = '<div class="winput">' +
+        '<input class="text-input" id="' + iid + '" type="text" placeholder="정답 입력" autocomplete="off">' +
+        '<button class="btn small" data-check="' + iid + '" data-answer="' + esc(q.answer) + '" data-rid="' + rid + '">확인</button>' +
+        '<span class="check-msg" id="msg-' + iid + '"></span>' +
+        '<div class="reveal-box" id="' + rid + '">' +
+          '<div class="ans-line"><b>정답:</b> ' + esc(q.answer) + '</div>' +
+          '<div class="ko-lit">📖 ' + esc(q.ko) + '</div><div class="why">' + q.ex + '</div></div></div>';
+    } else { // compose
+      const rid = uid();
+      const bank = (q.words && q.words.length)
+        ? '<div class="wordbank"><span class="wb-label">제시 단어</span>' +
+            q.words.map(w => '<span class="wb-chip w" data-say="' + esc(w) + '">' + esc(w) + '</span>').join('') +
+          '</div>'
+        : '';
+      body = '<div class="wcompose">' +
+        '<div class="ko-lit">' + esc(q.ko) + '</div>' + bank +
+        '<textarea class="short-input" rows="2" placeholder="여기에 영작하세요"></textarea>' +
+        '<button class="btn small" data-reveal="' + rid + '">모범답안 보기</button>' +
+        '<div class="reveal-box" id="' + rid + '">' +
+          '<div class="ans-line"><b>모범답안:</b> ' + wordify(q.model) + '</div>' +
+          '<div class="why">' + q.ex + '</div></div></div>';
+    }
+    const label = q.type === 'compose' ? q.prompt : (q.sentence || '');
+    return '<div class="q"><div class="q-head"><span class="q-no">' + (i + 1) + '</span>' +
+      '<span class="tier-badge ' + tierClass(q.tier) + '">' + q.tier + '</span>' +
+      '<span class="q-text">' + (q.type === 'compose' ? esc(label) : wordify(label)) + '</span></div>' +
+      body + '</div>';
+  }).join('');
+  return '<section class="level writing" data-pane="writing">' +
+    '<div class="level-band"><span class="level-name">✍️ 쓰기 평가</span>' +
+      '<span class="level-toeic">10문제 · 객관식 4 / 입력 4 / 영작 2</span></div>' +
+    qs + '</section>';
+}
+
+/* ---------- 단어 시험 ---------- */
+let VT_POOL = null;
+function collectVocabPool() {
+  const seen = {}, pool = [];
+  const add = (word, en, ko) => {
+    const k = (en || '').toLowerCase();
+    if (!word || !en || seen[k]) return;
+    seen[k] = 1; pool.push({ word: word, en: en, ko: ko });
+  };
+  Object.values(DATA.levels).forEach(L => {
+    (L.vocab || []).forEach(v => {
+      add(v.w, v.ex.en, v.ex.ko);
+      (v.forms || []).forEach(f => add(f.w, f.ex.en, f.ex.ko));
+    });
+  });
+  return pool;
+}
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function escapeReg(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function makeBlank(en, word) {
+  const re = new RegExp('\\b(' + escapeReg(word) + '(?:s|es|ing|ed|d)?)\\b', 'i');
+  const m = en.match(re);
+  if (!m) return null;
+  return { surface: m[1], text: en.replace(re, '( ______ )') };
+}
+function capLike(sample, word) {
+  return /^[A-Z]/.test(sample) ? word.charAt(0).toUpperCase() + word.slice(1) : word;
+}
+function vocabTestCardHtml(item, idx, pool) {
+  const b = makeBlank(item.en, item.word);
+  if (!b) return '';
+  const others = shuffle(pool.filter(p => p.word.toLowerCase() !== item.word.toLowerCase()));
+  const picks = [];
+  for (let i = 0; i < others.length && picks.length < 3; i++) {
+    const w = capLike(b.surface, others[i].word);
+    if (w.toLowerCase() === b.surface.toLowerCase()) continue;
+    if (picks.some(p => p.toLowerCase() === w.toLowerCase())) continue;
+    picks.push(w);
+  }
+  const choices = shuffle([b.surface].concat(picks));
+  const ansIdx = choices.indexOf(b.surface);
+  const koRid = uid();
+  const explain = '정답: <b>' + esc(b.surface) + '</b> — ' + esc(item.ko);
+  return '<div class="q vt-q">' +
+    '<div class="q-head"><span class="q-no">Q' + (idx + 1) + '</span>' +
+      '<span class="q-text">' + wordify(b.text) + '</span></div>' +
+    '<div class="vt-ctrl">' +
+      '<button class="btn small" data-say="' + esc(item.en) + '">🎧 듣기</button>' +
+      '<button class="btn small ghost" data-reveal="' + koRid + '">해석</button></div>' +
+    '<div class="vt-ko" id="' + koRid + '">📖 ' + esc(item.ko) + '</div>' +
+    mcHtml(choices, ansIdx, explain, '') + '</div>';
+}
+function vocabTestBodyHtml() {
+  const items = shuffle(VT_POOL.slice()).filter(it => makeBlank(it.en, it.word)).slice(0, 20);
+  return items.map((it, i) => vocabTestCardHtml(it, i, VT_POOL)).join('');
+}
+function renderVocabTest() {
+  if (!VT_POOL) VT_POOL = collectVocabPool();
+  return '<section class="level vocabtest" data-pane="vocabtest">' +
+    '<div class="level-band"><span class="level-name">📝 단어 시험</span>' +
+      '<span class="level-toeic">단어표의 단어와 다른 품사로 만든 빈칸 문제 · 20문항</span></div>' +
+    '<p class="note">실생활 문장의 <b>괄호</b>에 알맞은 단어를 고르세요. <b>🎧 듣기</b>로 문장을 듣고, <b>해석</b> 버튼으로 직독직해(뜻)를 확인할 수 있어요.</p>' +
+    '<div class="vt-top"><button class="btn small" data-action="vt-reshuffle">🔀 새 문제 세트</button></div>' +
+    '<div id="vtBody">' + vocabTestBodyHtml() + '</div></section>';
+}
+
+/* ---------- 탭 전환 ---------- */
+function showPane(name) {
+  stopSpeak();
+  document.querySelectorAll('.level').forEach(s =>
+    s.style.display = (s.dataset.pane === name ? 'block' : 'none'));
+  document.querySelectorAll('.tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.pane === name));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- 이벤트 위임 ---------- */
+function wireEvents() {
+  document.addEventListener('click', e => {
+    // 발음
+    const say = e.target.closest('[data-say]');
+    if (say) { speak(say.getAttribute('data-say')); return; }
+    // 듣기 발음 선택 (미/영 · 여/남)
+    const vset = e.target.closest('[data-vset]');
+    if (vset) {
+      const kv = vset.getAttribute('data-vset').split(':');
+      VOICE_PREFS[kv[0]] = kv[1];
+      const grp = vset.parentElement;
+      grp.querySelectorAll('.vc-btn').forEach(b => b.classList.toggle('active', b === vset));
+      speak(VOICE_PREFS.accent === 'US' ? 'Hello, this is the American voice.' : 'Hello, this is the British voice.');
+      return;
+    }
+    // 단어시험 새 문제 세트
+    const act = e.target.closest('[data-action]');
+    if (act) {
+      if (act.getAttribute('data-action') === 'vt-reshuffle') {
+        const vb = document.getElementById('vtBody');
+        if (vb) vb.innerHTML = vocabTestBodyHtml();
+      }
+      return;
+    }
+    // 탭
+    const tab = e.target.closest('.tab');
+    if (tab) { showPane(tab.dataset.pane); return; }
+    // 객관식/OX
+    const opt = e.target.closest('.opt');
+    if (opt) {
+      const box = opt.closest('.mc');
+      if (box.classList.contains('done')) return;
+      box.classList.add('done');
+      const ans = +box.dataset.ans;
+      const opts = box.querySelectorAll('.opt');
+      opts.forEach((o, i) => { if (i === ans) o.classList.add('correct'); });
+      if (+opt.dataset.idx !== ans) opt.classList.add('wrong');
+      const ex = box.querySelector('.explain');
+      if (ex) ex.classList.add('open');
+      return;
+    }
+    // 정답/원문 펼치기
+    const rv = e.target.closest('[data-reveal]');
+    if (rv) {
+      const t = document.getElementById(rv.getAttribute('data-reveal'));
+      if (t) { t.classList.toggle('open'); rv.classList.toggle('active'); }
+      return;
+    }
+    // 입력형 채점
+    const ck = e.target.closest('[data-check]');
+    if (ck) {
+      const inp = document.getElementById(ck.getAttribute('data-check'));
+      const ans = ck.getAttribute('data-answer').trim().toLowerCase();
+      const user = (inp.value || '').trim().toLowerCase().replace(/[.]/g, '');
+      const msg = document.getElementById('msg-' + inp.id);
+      const ok = user === ans;
+      msg.textContent = ok ? '✅ 정답!' : '❌ 다시 확인해 보세요';
+      msg.className = 'check-msg ' + (ok ? 'ok' : 'no');
+      const box = document.getElementById(ck.getAttribute('data-rid'));
+      if (box) box.classList.add('open');
+      return;
+    }
+  });
+
+  // 해석(직독직해) 클릭 표시 — 문장 해석 토글
+  document.addEventListener('click', e => {
+    const lit = e.target.closest('.tipwrap');
+    if (lit && e.target.classList.contains('ko-inline')) return;
+  });
+}
+
+/* ---------- init ---------- */
+function init() {
+  buildGloss();
+  const app = document.getElementById('app');
+  app.innerHTML =
+    renderLevel('easy') + renderLevel('medium') + renderLevel('hard') +
+    renderListening() + renderWriting() + renderVocabTest();
+  wireEvents();
+  showPane('easy');
+  // 음성 목록 로드 유도
+  if ('speechSynthesis' in window) { speechSynthesis.getVoices(); }
+}
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>
