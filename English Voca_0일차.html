@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>필수 영단어 20 · 중1–대1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --paper:#EDF0F3;--surface:#FFFFFF;--surface-2:#F6F8FA;
+    --ink:#16233B;--ink-soft:#3C4A63;--muted:#68758B;--line:#E1E6EC;
+    --brand:#12324F;
+    --syn:#0E7C6B;--syn-bg:#E3F3EF;--ant:#C23B4B;--ant-bg:#FBE7E9;--form:#6B4FBB;--form-bg:#EEE9FA;
+    --ok:#0E7C6B;--ok-bg:#E3F3EF;--no:#C23B4B;--no-bg:#FBE7E9;
+    --shadow:0 1px 2px rgba(22,35,59,.06),0 8px 24px rgba(22,35,59,.06);
+    --shadow-lg:0 12px 40px rgba(22,35,59,.18);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .serif{font-family:"Newsreader",serif;}
+
+  header{max-width:1120px;margin:0 auto;padding:40px 20px 6px;}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;}
+  h1{font-family:"Newsreader",serif;font-weight:600;font-size:clamp(28px,5vw,44px);line-height:1.1;margin:0;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--syn);}
+  .sub{color:var(--ink-soft);margin:12px 0 0;max-width:56ch;font-size:15px;}
+
+  /* Top bar */
+  .controls{position:sticky;top:0;z-index:40;background:rgba(237,240,243,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-top:20px;}
+  .controls-inner{max-width:1120px;margin:0 auto;padding:11px 20px;display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;justify-content:space-between;}
+  .ctl-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ctl-label{font-size:12px;font-weight:600;color:var(--muted);}
+  .seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px;}
+  .seg button{border:0;background:transparent;color:var(--ink-soft);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;padding:5px 13px;border-radius:999px;transition:.15s;}
+  .seg button[aria-pressed="true"]{background:var(--brand);color:#fff;}
+  .menu{display:flex;flex-wrap:wrap;gap:5px;}
+  .menu button{border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:10px;transition:.14s;}
+  .menu button:hover{border-color:var(--brand);color:var(--brand);}
+  .menu button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand);}
+
+  main{max-width:1120px;margin:0 auto;padding:18px 20px 80px;}
+  .view[hidden]{display:none;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);margin:2px 2px 16px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+  /* Word cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px 20px 18px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;}
+  .card::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--lv);}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .badge{font-size:11.5px;font-weight:800;color:#fff;background:var(--lv);padding:3px 9px;border-radius:7px;white-space:nowrap;}
+  .headword{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .headword .w{font-family:"Newsreader",serif;font-weight:600;font-size:29px;line-height:1;}
+  .headword .pos{font-size:12.5px;font-weight:700;color:var(--syn);background:var(--syn-bg);padding:2px 7px;border-radius:6px;}
+  .ipa{font-family:"Newsreader",serif;font-style:italic;color:var(--muted);font-size:16px;}
+  .tts-row{display:flex;flex-wrap:wrap;gap:6px;}
+  .tts{display:inline-flex;align-items:center;gap:5px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);font-family:inherit;font-size:12px;font-weight:700;padding:5px 9px;border-radius:9px;transition:.14s;}
+  .tts:hover{border-color:var(--brand);color:var(--brand);}
+  .tts:active{transform:translateY(1px);}
+  .tts.speaking{background:var(--brand);color:#fff;border-color:var(--brand);}
+  .divider{height:1px;background:var(--line);margin:2px 0;}
+  .meanings{display:flex;flex-direction:column;gap:12px;}
+  .mrow{display:flex;flex-direction:column;gap:5px;}
+  .mhead{display:flex;align-items:center;gap:8px;}
+  .mnum{font-family:"Newsreader",serif;font-style:italic;font-size:13px;color:var(--muted);min-width:16px;}
+  .mkr{font-weight:700;font-size:14.5px;}
+  .ex{font-family:"Newsreader",serif;font-size:15.5px;line-height:1.45;}
+  .ex b{font-weight:600;color:var(--syn);}
+  .play-ex{border:0;background:transparent;cursor:pointer;color:var(--muted);padding:2px;border-radius:6px;display:inline-flex;line-height:0;}
+  .play-ex:hover{color:var(--brand);}
+  .lit{display:flex;flex-wrap:wrap;align-items:center;padding-left:24px;}
+  .lit .seg-k{color:var(--ink-soft);font-size:13.5px;padding:1px 8px;}
+  .lit .slash{color:var(--syn);opacity:.5;font-weight:700;}
+  .rel{display:flex;flex-direction:column;gap:8px;margin-top:2px;}
+  .rel-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+  .rel-tag{font-size:11px;font-weight:800;min-width:52px;color:var(--muted);}
+  .word-chip{cursor:pointer;font-family:inherit;font-weight:600;font-size:12.5px;border-radius:999px;padding:4px 11px;border:1px solid;transition:.14s;line-height:1.2;}
+  .word-chip:hover{transform:translateY(-1px);}
+  .word-chip:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+  .word-chip.syn{color:var(--syn);background:var(--syn-bg);border-color:transparent;}
+  .word-chip.ant{color:var(--ant);background:var(--ant-bg);border-color:transparent;}
+  .word-chip.form{color:var(--form);background:var(--form-bg);border-color:transparent;}
+
+  /* Popover */
+  .pop{position:fixed;z-index:100;width:min(340px,calc(100vw - 24px));background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);padding:16px 16px 15px;opacity:0;transform:translateY(6px) scale(.98);pointer-events:none;transition:.16s;}
+  .pop.show{opacity:1;transform:none;pointer-events:auto;}
+  .pop-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+  .pop-word{font-family:"Newsreader",serif;font-weight:600;font-size:22px;}
+  .pop-kind{font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;}
+  .pop-ipa{font-family:"Newsreader",serif;font-style:italic;color:var(--muted);font-size:15px;white-space:nowrap;}
+  .pop-kr{font-weight:700;font-size:14.5px;margin:6px 0 10px;}
+  .pop-ex-tr{color:var(--muted);font-size:12.5px;margin:2px 0 0;}
+  .pop-ex{font-family:"Newsreader",serif;font-size:15px;line-height:1.45;margin:0 0 8px;}
+  .pop-ex b{font-weight:600;}
+  .pop-lit{display:flex;flex-wrap:wrap;font-size:13px;}
+  .pop-lit .seg-k{color:var(--ink-soft);padding:1px 7px;}
+  .pop-lit .slash{opacity:.5;font-weight:700;}
+  .pop-btns{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+  .pop-btn{display:inline-flex;align-items:center;gap:7px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);font-family:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:10px;}
+  .pop-btn:hover{border-color:var(--brand);color:var(--brand);}
+  .pop-close{position:absolute;top:10px;right:10px;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px;}
+
+  /* Shared section heading */
+  .sec-head{margin:2px 0 16px;}
+  .sec-head h2{font-family:"Newsreader",serif;font-weight:600;font-size:26px;margin:0;}
+  .sec-head p{margin:6px 0 0;color:var(--ink-soft);font-size:14px;}
+
+  /* Reading */
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:24px;margin-bottom:18px;}
+  .passage{font-family:"Newsreader",serif;font-size:18px;line-height:1.9;color:var(--ink);}
+  .passage b{font-weight:600;color:var(--syn);}
+  .passage .s{margin-right:2px;}
+  .toolbtn{display:inline-flex;align-items:center;gap:7px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);font-family:inherit;font-size:13px;font-weight:700;padding:7px 13px;border-radius:10px;margin-top:14px;}
+  .toolbtn:hover{border-color:var(--brand);color:var(--brand);}
+  .passage-tr{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);color:var(--ink-soft);font-size:14.5px;line-height:1.8;}
+  /* clickable words in passage */
+  .passage .rw,.tr-en .rw{cursor:pointer;border-radius:4px;padding:0 .5px;transition:background .12s;}
+  .passage .rw:hover,.tr-en .rw:hover{background:var(--syn-bg);}
+  .passage .rw.b,.tr-en .rw.b{font-weight:600;color:var(--syn);}
+  .passage .rw.no,.tr-en .rw.no{cursor:default;}
+  .passage .rw.no:hover,.tr-en .rw.no:hover{background:transparent;}
+  .passage .s.cur{background:#FFF4CE;border-radius:6px;box-shadow:0 0 0 3px #FFF4CE;}
+  /* sentence-by-sentence interpretation */
+  .tr-nav{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;}
+  .tr-btn2{display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);font-family:inherit;font-size:13px;font-weight:700;padding:6px 12px;border-radius:9px;}
+  .tr-btn2:hover:not(:disabled){border-color:var(--brand);color:var(--brand);}
+  .tr-btn2:disabled{opacity:.4;cursor:default;}
+  .tr-count{font-weight:800;font-size:13px;color:var(--muted);min-width:52px;text-align:center;}
+  .tr-en{font-family:"Newsreader",serif;font-size:18px;line-height:1.7;color:var(--ink);margin-bottom:12px;}
+  .tr-lit{display:flex;flex-wrap:wrap;gap:9px 12px;margin-bottom:14px;padding:13px;background:var(--surface-2);border-radius:12px;}
+  .tr-chunk{display:flex;flex-direction:column;gap:2px;}
+  .tr-chunk .en{font-family:"Newsreader",serif;font-size:15px;color:var(--ink);line-height:1.3;}
+  .tr-chunk .ko{font-size:12.5px;color:var(--syn);font-weight:600;}
+  .tr-full{font-size:14.5px;color:var(--ink-soft);line-height:1.75;}
+  .tr-full b{color:var(--brand);font-weight:800;margin-right:6px;}
+
+  /* MCQ (reading + quiz) */
+  .q{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 16px;margin-bottom:14px;}
+  .q-num{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.04em;margin-bottom:8px;}
+  .q-stem{font-size:15.5px;font-weight:600;margin-bottom:6px;line-height:1.5;}
+  .q-stem.serif-ex{font-family:"Newsreader",serif;font-weight:500;font-size:17px;}
+  .blank{display:inline-block;min-width:74px;text-align:center;border-bottom:2px solid var(--syn);color:var(--syn);font-weight:600;}
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+  .opt{display:flex;align-items:center;gap:10px;text-align:left;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:inherit;font-size:14.5px;padding:11px 13px;border-radius:11px;transition:.12s;}
+  .opt .k{font-weight:800;color:var(--muted);font-size:12.5px;min-width:16px;}
+  .opt:hover:not(:disabled){border-color:var(--brand);}
+  .opt:disabled{cursor:default;}
+  .opt.correct{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);font-weight:700;}
+  .opt.wrong{background:var(--no-bg);border-color:var(--no);color:var(--no);font-weight:700;}
+  .opt.correct .k,.opt.wrong .k{color:inherit;}
+  .q-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .q-tr-btn,.q-spk{border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:9px;display:inline-flex;align-items:center;gap:6px;}
+  .q-tr-btn:hover,.q-spk:hover{border-color:var(--brand);color:var(--brand);}
+  .q-tr{margin-top:8px;color:var(--ink-soft);font-size:14px;padding:8px 11px;background:var(--surface-2);border-radius:9px;}
+  .q-fb{margin-top:10px;font-size:13.5px;font-weight:700;padding:9px 12px;border-radius:9px;}
+  .q-fb.ok{background:var(--ok-bg);color:var(--ok);}
+  .q-fb.no{background:var(--no-bg);color:var(--no);}
+  .q-ex{font-weight:500;color:var(--ink-soft);font-size:13px;margin-top:4px;}
+
+  /* Quiz score bar */
+  .scorebar{position:sticky;top:56px;z-index:30;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .scorebar .big{font-family:"Newsreader",serif;font-size:22px;font-weight:600;}
+  .progress{flex:1;min-width:120px;height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;}
+  .progress i{display:block;height:100%;width:0;background:var(--syn);transition:width .3s;}
+
+  /* Notebook */
+  .nb-empty{background:var(--surface);border:1px dashed var(--line);border-radius:16px;padding:40px 20px;text-align:center;color:var(--muted);}
+  .nb-item{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--no);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;margin-bottom:12px;}
+  .nb-item .nb-ex{font-family:"Newsreader",serif;font-size:16px;margin-bottom:6px;}
+  .nb-item .nb-ex b{color:var(--ok);font-weight:600;}
+  .nb-tag{font-size:12px;font-weight:700;}
+  .nb-tag .x{color:var(--no);}
+  .nb-tag .o{color:var(--ok);}
+  .nb-tr{color:var(--muted);font-size:13px;margin-top:5px;}
+
+  /* Word sheet layout */
+  .word-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+  .word-actions .toolbtn{margin-top:0;}
+  .word-note{color:var(--muted);font-size:12.5px;}
+  #word-sheet{background:#fff;color:#16233B;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);
+    max-width:100%;margin:0 auto;padding:24px;}
+  #word-sheet .list-box{font-size:14px;line-height:1.5;}
+  #word-sheet .pw{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line);}
+  #word-sheet .pw-h{font-weight:800;font-size:16px;}
+  #word-sheet .pw-h i{font-style:italic;color:#68758B;font-weight:400;font-size:14px;}
+  #word-sheet .pw-h em{font-style:normal;color:#0E7C6B;font-weight:700;font-size:.9em;}
+  #word-sheet .m{margin:4px 0 4px 8px;}
+  #word-sheet .m b{color:#16233B;}
+  #word-sheet .m .en{color:#16233B;}
+  #word-sheet .m .tr{color:#8892a3;}
+  #word-sheet .rel{margin:6px 0 0 8px;font-size:13px;}
+  #word-sheet .rel .r{display:block;margin-bottom:2px;}
+  #word-sheet .rel .lab{font-weight:800;}
+  #word-sheet .rel .s{color:#0E7C6B;}
+  #word-sheet .rel .a{color:#C23B4B;}
+  #word-sheet .rel .f{color:#6B4FBB;}
+
+  footer{max-width:1120px;margin:0 auto;padding:0 20px 60px;color:var(--muted);font-size:12.5px;}
+
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr;}
+    .pop{left:12px!important;right:12px!important;width:auto;bottom:12px!important;top:auto!important;}
+    .controls-inner{justify-content:flex-start;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">중1 → 대1 · 필수 어휘 20</p>
+  <h1 class="serif">쉬워 보이는 단어의 <em>진짜</em> 뜻까지</h1>
+  <p class="sub">생활 영어 예문과 빈도순 뜻풀이, 직독직해를 한 카드에. 발음은 영국·미국 × 남·여로 듣고, 관련어를 누르면 뜻·예문이 펼쳐집니다. 위 메뉴로 단어·Word저장·독해·퀴즈·오답노트를 오갈 수 있습니다.</p>
+</header>
+
+<div class="controls">
+  <div class="controls-inner">
+    <div class="ctl-group">
+      <span class="ctl-label">예문 발음</span>
+      <div class="seg" id="accentSeg">
+        <button data-accent="US" aria-pressed="true">미국</button>
+        <button data-accent="GB" aria-pressed="false">영국</button>
+      </div>
+      <div class="seg" id="genderSeg">
+        <button data-gender="F" aria-pressed="true">여성</button>
+        <button data-gender="M" aria-pressed="false">남성</button>
+      </div>
+    </div>
+    <div class="menu" id="menu">
+      <button data-view="words" aria-pressed="true">단어</button>
+      <button data-view="wordexport" aria-pressed="false">WORD저장</button>
+      <button data-view="reading" aria-pressed="false">독해</button>
+      <button data-view="quiz" aria-pressed="false">퀴즈</button>
+      <button data-view="notebook" aria-pressed="false">오답노트</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- WORDS -->
+  <section class="view" id="view-words">
+    <div class="legend">
+      <span><i class="dot" style="background:var(--syn)"></i> 동의어</span>
+      <span><i class="dot" style="background:var(--ant)"></i> 반의어</span>
+      <span><i class="dot" style="background:var(--form)"></i> 다른 품사</span>
+      <span style="color:var(--ink-soft)">관련어를 누르면 뜻·예문·직독직해가 나타나고 예문도 들을 수 있습니다</span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- WORD EXPORT -->
+  <section class="view" id="view-wordexport" hidden>
+    <div class="word-actions">
+      <button class="toolbtn" id="downloadWordBtn">📝 WORD 파일로 저장 (.doc)</button>
+      <span class="word-note">아래의 단어장 데이터가 Microsoft Word 문서 파일(.doc)로 저장 및 다운로드됩니다.</span>
+    </div>
+    <div id="word-sheet"></div>
+  </section>
+
+  <!-- READING -->
+  <section class="view" id="view-reading" hidden>
+    <div class="sec-head"><h2 class="serif">독해</h2><p>앞 단어들(동의어·반의어·다른 품사 포함)을 활용한 고1 수준 7문장 지문입니다.</p></div>
+    <div class="panel">
+      <div class="passage" id="passage"></div>
+      <button class="toolbtn" id="trBtn">지문 해석 보기</button>
+      <div class="passage-tr" id="passageTr" hidden></div>
+    </div>
+    <div id="readingQuestions"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="view" id="view-quiz" hidden>
+    <div class="sec-head"><h2 class="serif">퀴즈</h2><p>단어 페이지의 모든 단어를 빈칸(괄호형)으로 출제합니다. 답을 고르면 바꿀 수 없고, 틀리면 정답을 알려줍니다.</p></div>
+    <div class="scorebar">
+      <span class="big"><span id="scoreNow">0</span> / <span id="scoreTotal">0</span></span>
+      <div class="progress"><i id="progressBar"></i></div>
+      <span class="pdf-note"><span id="answeredCount">0</span>문항 완료 · 오답 <span id="wrongCount">0</span></span>
+    </div>
+    <div id="quizList"></div>
+  </section>
+
+  <!-- NOTEBOOK -->
+  <section class="view" id="view-notebook" hidden>
+    <div class="sec-head"><h2 class="serif">오답노트</h2><p>퀴즈에서 틀린 문항만 모아 보여줍니다.</p></div>
+    <div id="notebook"></div>
+  </section>
+</main>
+
+<footer>
+  발음은 브라우저·기기에 설치된 음성(Web Speech)을 사용합니다. 영국/미국·남/여 음성이 없으면 가장 가까운 음성으로 대체됩니다. Chrome·Edge·최신 모바일 브라우저에서 가장 잘 동작합니다.
+</footer>
+
+<div class="pop" id="pop" role="dialog" aria-modal="false"></div>
+
+<script>
+/* ============ 관련어 사전 ============ */
+const REF={
+  operate:{kr:"운영하다·작동하다",en:"They <b>operate</b> several stores.",lit:["그들은","운영한다","여러 매장을"],tr:"그들은 여러 매장을 운영한다."},
+  manage:{kr:"관리하다·운영하다",en:"She <b>manages</b> a big team.",lit:["그녀는","관리한다","큰 팀을"],tr:"그녀는 큰 팀을 관리한다."},
+  runner:{kr:"주자·달리는 사람 (n.)",en:"He's a fast <b>runner</b>.",lit:["그는","이다","빠른 주자"],tr:"그는 빠른 주자다."},
+  obtain:{kr:"얻다·획득하다",en:"You can <b>obtain</b> tickets online.",lit:["너는","얻을 수 있다","표를","온라인에서"],tr:"온라인에서 표를 얻을 수 있다."},
+  understand:{kr:"이해하다",en:"I <b>understand</b> how you feel.",lit:["나는","이해한다","네가 어떻게 느끼는지"],tr:"네 기분 이해해."},
+  lose:{kr:"잃다·지다",en:"Don't <b>lose</b> your ticket.",lit:["잃지 마","너의 표를"],tr:"표 잃어버리지 마."},
+  create:{kr:"창조하다·만들다",en:"She loves to <b>create</b> art.",lit:["그녀는","좋아한다","창작하기를","예술을"],tr:"그녀는 예술 창작을 좋아한다."},
+  earn:{kr:"(돈을) 벌다",en:"He <b>earns</b> a good salary.",lit:["그는","번다","좋은 급여를"],tr:"그는 급여를 잘 번다."},
+  maker:{kr:"만드는 사람·제조사 (n.)",en:"It's a popular phone <b>maker</b>.",lit:["그곳은","이다","인기 있는 휴대폰 제조사"],tr:"그곳은 인기 있는 휴대폰 제조사다."},
+  give:{kr:"주다",en:"<b>Give</b> me a call later.",lit:["줘","나에게","전화를","나중에"],tr:"나중에 전화해."},
+  fix:{kr:"고치다·수리하다",en:"Can you <b>fix</b> my bike?",lit:["고쳐줄 수 있어","내 자전거를"],tr:"내 자전거 고쳐줄 수 있어?"},
+  keep:{kr:"유지하다·지키다",en:"<b>Keep</b> your promise.",lit:["지켜","너의 약속을"],tr:"약속 지켜."},
+  broken:{kr:"부서진·고장난 (adj.)",en:"The printer is <b>broken</b> again.",lit:["프린터가","이다","또 고장난"],tr:"프린터가 또 고장 났어."},
+  grip:{kr:"꽉 잡다·쥐다",en:"<b>Grip</b> the handle tightly.",lit:["꽉 잡아","손잡이를","단단히"],tr:"손잡이를 꽉 잡아."},
+  release:{kr:"풀어주다·놓아주다",en:"<b>Release</b> the button slowly.",lit:["놓아","버튼을","천천히"],tr:"버튼을 천천히 놓아."},
+  expand:{kr:"확장하다·넓히다",en:"They plan to <b>expand</b> the business.",lit:["그들은","계획한다","확장하기를","사업을"],tr:"그들은 사업을 확장할 계획이다."},
+  decline:{kr:"감소하다·거절하다",en:"Sales started to <b>decline</b>.",lit:["매출이","시작했다","감소하기"],tr:"매출이 감소하기 시작했다."},
+  development:{kr:"발전·개발 (n.)",en:"The app is still in <b>development</b>.",lit:["그 앱은","있다","아직 개발 중에"],tr:"그 앱은 아직 개발 중이다."},
+  enhance:{kr:"향상시키다·높이다",en:"Good sleep can <b>enhance</b> your mood.",lit:["좋은 수면은","향상시킬 수 있다","너의 기분을"],tr:"잘 자면 기분이 좋아질 수 있다."},
+  worsen:{kr:"악화시키다",en:"The weather is going to <b>worsen</b>.",lit:["날씨가","악화될 것이다"],tr:"날씨가 악화될 것이다."},
+  improvement:{kr:"개선·향상 (n.)",en:"There's room for <b>improvement</b>.",lit:["있다","여지가","개선의"],tr:"개선의 여지가 있다."},
+  recognize:{kr:"알아보다·인식하다",en:"I didn't <b>recognize</b> you at first.",lit:["나는","못 알아봤다","너를","처음에"],tr:"처음엔 널 못 알아봤어."},
+  realization:{kr:"깨달음·실현 (n.)",en:"It was a sudden <b>realization</b>.",lit:["그것은","이었다","갑작스러운 깨달음"],tr:"그것은 갑작스러운 깨달음이었다."},
+  accomplish:{kr:"완수하다·성취하다",en:"We <b>accomplished</b> a lot today.",lit:["우리는","해냈다","많은 것을","오늘"],tr:"우리는 오늘 많은 것을 해냈다."},
+  fail:{kr:"실패하다",en:"Don't be afraid to <b>fail</b>.",lit:["두려워하지 마","실패하는 것을"],tr:"실패를 두려워하지 마."},
+  achievement:{kr:"업적·성취 (n.)",en:"Graduating was a big <b>achievement</b>.",lit:["졸업은","이었다","큰 성취"],tr:"졸업은 큰 성취였다."},
+  contemplate:{kr:"심사숙고하다",en:"He's <b>contemplating</b> a new job.",lit:["그는","심사숙고하고 있다","새 직장을"],tr:"그는 새 직장을 진지하게 고민 중이다."},
+  considerable:{kr:"상당한 (adj.)",en:"It took <b>considerable</b> effort.",lit:["그것은","들었다","상당한 노력이"],tr:"상당한 노력이 들었다."},
+  irresponsible:{kr:"무책임한 (adj.)",en:"That was really <b>irresponsible</b>.",lit:["그것은","이었다","정말 무책임한"],tr:"그건 정말 무책임했어."},
+  responsibility:{kr:"책임 (n.)",en:"It's my <b>responsibility</b>.",lit:["그것은","이다","나의 책임"],tr:"그건 내 책임이야."},
+  collective:{kr:"집단의·공동의 (adj.)",en:"It was a <b>collective</b> effort.",lit:["그것은","이었다","공동의 노력"],tr:"그것은 공동의 노력이었다."},
+  individually:{kr:"개별적으로 (adv.)",en:"Please answer <b>individually</b>.",lit:["답해 주세요","개별적으로"],tr:"개별적으로 답해 주세요."},
+  notable:{kr:"주목할 만한 (adj.)",en:"She made a <b>notable</b> achievement.",lit:["그녀는","냈다","주목할 만한 성과를"],tr:"그녀는 주목할 만한 성과를 냈다."},
+  insignificant:{kr:"사소한·미미한 (adj.)",en:"The difference is <b>insignificant</b>.",lit:["그 차이는","이다","사소한"],tr:"그 차이는 사소하다."},
+  significance:{kr:"중요성·의의 (n.)",en:"Everyone understood its <b>significance</b>.",lit:["모두가","이해했다","그것의 중요성을"],tr:"모두가 그 중요성을 이해했다."},
+  found:{kr:"설립하다",en:"They <b>founded</b> the club in 1995.",lit:["그들은","설립했다","그 클럽을","1995년에"],tr:"그들은 1995년에 그 클럽을 설립했다."},
+  abolish:{kr:"폐지하다",en:"They decided to <b>abolish</b> the rule.",lit:["그들은","결정했다","폐지하기로","그 규칙을"],tr:"그들은 그 규칙을 폐지하기로 했다."},
+  establishment:{kr:"설립·기관 (n.)",en:"The <b>establishment</b> of the school took years.",lit:["그 학교의 설립은","걸렸다","수년이"],tr:"그 학교의 설립에는 수년이 걸렸다."},
+  viewpoint:{kr:"관점·시각 (n.)",en:"Share your <b>viewpoint</b> with us.",lit:["나눠 줘","너의 관점을","우리와"],tr:"네 관점을 우리와 나눠 줘."},
+  thorough:{kr:"철저한·빈틈없는 (adj.)",en:"She did a <b>thorough</b> job.",lit:["그녀는","했다","철저한 일을"],tr:"그녀는 빈틈없이 일을 해냈다."},
+  partial:{kr:"부분적인 (adj.)",en:"We got a <b>partial</b> refund.",lit:["우리는","받았다","부분적인 환불을"],tr:"우리는 부분 환불을 받았다."},
+  comprehend:{kr:"이해하다·파악하다 (v.)",en:"It's hard to <b>comprehend</b> at first.",lit:["어렵다","이해하기","처음에"],tr:"처음엔 이해하기 어렵다."},
+  unavoidable:{kr:"피할 수 없는 (adj.)",en:"The delay was <b>unavoidable</b>.",lit:["그 지연은","이었다","피할 수 없는"],tr:"그 지연은 피할 수 없었다."},
+  avoidable:{kr:"피할 수 있는 (adj.)",en:"That mistake was <b>avoidable</b>.",lit:["그 실수는","이었다","피할 수 있는"],tr:"그 실수는 피할 수 있었다."},
+  inevitably:{kr:"필연적으로·불가피하게 (adv.)",en:"Prices <b>inevitably</b> go up.",lit:["가격은","필연적으로","오른다"],tr:"가격은 필연적으로 오른다."},
+  differentiate:{kr:"구별하다·구분하다 (v.)",en:"It's hard to <b>differentiate</b> the two.",lit:["어렵다","구분하기","그 둘을"],tr:"그 둘을 구분하기 어렵다."},
+  distinct:{kr:"뚜렷한·구별되는 (adj.)",en:"They have <b>distinct</b> styles.",lit:["그들은","가지고 있다","뚜렷한 스타일을"],tr:"그들은 뚜렷한 스타일을 가지고 있다."},
+  vague:{kr:"모호한·막연한 (adj.)",en:"His plan is still <b>vague</b>.",lit:["그의 계획은","여전히","막연한"],tr:"그의 계획은 여전히 막연하다."},
+  clear:{kr:"명확한·분명한 (adj.)",en:"Give me a <b>clear</b> answer.",lit:["줘","명확한 답을"],tr:"명확한 답을 줘."},
+  ambiguity:{kr:"모호함·애매함 (n.)",en:"Try to avoid <b>ambiguity</b>.",lit:["피하려고 해","모호함을"],tr:"모호함을 피하려고 해."}
+};
+
+/* ============ 메인 단어 ============ */
+const LV_COLORS={"중1":"#3E9B6C","중2":"#3F9D9A","중3":"#4A86C4","고1":"#5A6FD0","고2":"#7A5BC9","고3":"#A94FB0","대1":"#C24A78"};
+const M=(kr,en,lit,tr)=>({kr,en,lit,tr});
+const DATA=[
+ {lv:"중1",w:"run",pos:"v.",ipa:"/rʌn/",m:[
+   M("달리다","I try to <b>run</b> every morning.",["나는","달리려고 한다","매일 아침"],"나는 매일 아침 달리려고 한다."),
+   M("운영하다","My uncle <b>runs</b> a coffee shop.",["나의 삼촌은","운영한다","커피숍을"],"우리 삼촌은 커피숍을 운영한다."),
+   M("작동하다","My phone <b>runs</b> really slow lately.",["나의 폰은","작동한다","정말 느리게","요즘"],"내 폰이 요즘 정말 느리게 돌아간다."),
+   M("흐르다·틀어놓다","You left the water <b>running</b>.",["너는","틀어놨다","물을","흐르게"],"너 물을 틀어놨잖아.")],
+   syn:["operate","manage"],ant:[],form:["runner(n.)"]},
+ {lv:"중1",w:"get",pos:"v.",ipa:"/ɡet/",m:[
+   M("얻다·받다","I <b>got</b> a new phone for my birthday.",["나는","받았다","새 폰을","생일에"],"나는 생일 선물로 새 폰을 받았다."),
+   M("도착하다","Text me when you <b>get</b> home.",["문자해","네가","도착하면","집에"],"집에 도착하면 문자해."),
+   M("이해하다","Sorry, I didn't <b>get</b> that.",["미안","나는","이해 못 했다","그것을"],"미안, 못 알아들었어."),
+   M("~하게 되다","It's <b>getting</b> dark outside.",["밖이","되고 있다","어두워지게"],"밖이 어두워지고 있어.")],
+   syn:["obtain","understand"],ant:["lose"],form:[]},
+ {lv:"중1",w:"make",pos:"v.",ipa:"/meɪk/",m:[
+   M("만들다","Let's <b>make</b> some cookies.",["만들자","약간의","쿠키를"],"우리 쿠키 좀 만들자."),
+   M("~하게 만들다","That song <b>makes</b> me happy.",["그 노래는","만든다","나를","행복하게"],"그 노래는 나를 행복하게 해."),
+   M("(돈을) 벌다","She <b>makes</b> good money at her job.",["그녀는","번다","좋은 돈을","직장에서"],"그녀는 직장에서 돈을 잘 번다."),
+   M("(결정을) 내리다","You need to <b>make</b> a decision.",["너는","내려야 한다","결정을"],"너는 결정을 내려야 해.")],
+   syn:["create","earn"],ant:[],form:["maker(n.)"]},
+ {lv:"중2",w:"take",pos:"v.",ipa:"/teɪk/",m:[
+   M("가져가다·데려가다","<b>Take</b> an umbrella, it might rain.",["가져가","우산을","비 올지도 몰라"],"우산 가져가, 비 올지도 몰라."),
+   M("(시간이) 걸리다","It <b>takes</b> about an hour to get there.",["걸린다","약 한 시간이","거기 가는 데"],"거기 가는 데 한 시간쯤 걸려."),
+   M("(수업을) 듣다","I'm <b>taking</b> a coding class this year.",["나는","듣고 있다","코딩 수업을","올해"],"나는 올해 코딩 수업을 듣고 있어."),
+   M("(약을) 복용하다","<b>Take</b> this medicine twice a day.",["복용해","이 약을","하루에 두 번"],"이 약을 하루에 두 번 복용해.")],
+   syn:[],ant:["give"],form:[]},
+ {lv:"중2",w:"break",pos:"v.",ipa:"/breɪk/",m:[
+   M("부수다·깨뜨리다","Be careful not to <b>break</b> the glass.",["조심해","깨지 않게","유리를"],"유리 깨지 않게 조심해."),
+   M("(약속을) 어기다","He always <b>breaks</b> his promises.",["그는","항상","어긴다","약속을"],"그는 항상 약속을 어긴다."),
+   M("(기록을) 깨다","She <b>broke</b> the school record.",["그녀는","깼다","학교 기록을"],"그녀는 학교 기록을 깼다."),
+   M("휴식 (n.)","Let's take a quick <b>break</b>.",["갖자","짧은 휴식을"],"잠깐 쉬자.")],
+   syn:[],ant:["fix","keep"],form:["broken(adj.)"]},
+ {lv:"중2",w:"hold",pos:"v.",ipa:"/hoʊld/",m:[
+   M("잡다·들다","Can you <b>hold</b> this for a second?",["잡아줄래","이것을","잠깐"],"이것 좀 잠깐 들고 있어 줄래?"),
+   M("유지하다·가만히 있다","<b>Hold</b> still while I take the photo.",["유지해","가만히","내가 사진 찍는 동안"],"사진 찍는 동안 가만히 있어."),
+   M("(회의를) 개최하다","We're <b>holding</b> a meeting tomorrow.",["우리는","개최한다","회의를","내일"],"우리는 내일 회의를 연다."),
+   M("수용하다","This room <b>holds</b> about fifty people.",["이 방은","수용한다","약 50명을"],"이 방은 약 50명을 수용한다.")],
+   syn:["grip","keep"],ant:["release"],form:[]},
+ {lv:"중3",w:"develop",pos:"v.",ipa:"/dɪˈveləp/",m:[
+   M("발전시키다·기르다","Reading helps you <b>develop</b> your vocabulary.",["독서는","돕는다","네가 발전시키도록","어휘력을"],"독서는 어휘력을 기르는 데 도움이 된다."),
+   M("개발하다","Our team is <b>developing</b> a new app.",["우리 팀은","개발하고 있다","새 앱을"],"우리 팀은 새 앱을 개발하고 있다.")],
+   syn:["expand"],ant:["decline"],form:["development(n.)"]},
+ {lv:"중3",w:"improve",pos:"v.",ipa:"/ɪmˈpruːv/",m:[
+   M("개선하다·향상시키다","I want to <b>improve</b> my English.",["나는","향상시키고 싶다","나의 영어를"],"나는 영어 실력을 향상시키고 싶다."),
+   M("나아지다","Practice will <b>improve</b> your skills.",["연습은","향상시킬 것이다","네 실력을"],"연습은 네 실력을 향상시킬 것이다.")],
+   syn:["enhance"],ant:["worsen"],form:["improvement(n.)"]},
+ {lv:"중3",w:"realize",pos:"v.",ipa:"/ˈriːəlaɪz/",m:[
+   M("깨닫다","I just <b>realized</b> I forgot my keys.",["나는","방금 깨달았다","내가 열쇠를 두고 온 것을"],"방금 열쇠를 두고 온 걸 깨달았어."),
+   M("실현하다·이루다","She finally <b>realized</b> her dream.",["그녀는","마침내 실현했다","그녀의 꿈을"],"그녀는 마침내 꿈을 이뤘다.")],
+   syn:["recognize"],ant:[],form:["realization(n.)"]},
+ {lv:"고1",w:"achieve",pos:"v.",ipa:"/əˈtʃiːv/",m:[
+   M("성취하다·이루다","He worked hard to <b>achieve</b> his goal.",["그는","열심히 했다","성취하려고","그의 목표를"],"그는 목표를 이루려고 열심히 노력했다."),
+   M("달성하다","Together we <b>achieved</b> a lot.",["함께","우리는","이뤘다","많은 것을"],"우리는 함께 많은 것을 이뤘다.")],
+   syn:["accomplish"],ant:["fail"],form:["achievement(n.)"]},
+ {lv:"고1",w:"consider",pos:"v.",ipa:"/kənˈsɪdər/",m:[
+   M("고려하다","Please <b>consider</b> my idea.",["고려해 주세요","저의 아이디어를"],"제 아이디어를 고려해 주세요."),
+   M("~로 여기다","I <b>consider</b> her my best friend.",["나는","여긴다","그녀를","가장 친한 친구로"],"나는 그녀를 가장 친한 친구로 여긴다.")],
+   syn:["contemplate"],ant:[],form:["considerable(adj.)"]},
+ {lv:"고1",w:"responsible",pos:"adj.",ipa:"/rɪˈspɑːnsəbl/",m:[
+   M("책임이 있는","You're <b>responsible</b> for your own choices.",["너는","책임이 있다","너 자신의 선택에"],"너는 네 선택에 책임이 있다."),
+   M("책임감 있는","She's a very <b>responsible</b> student.",["그녀는","이다","매우 책임감 있는 학생"],"그녀는 매우 책임감 있는 학생이다.")],
+   syn:[],ant:["irresponsible"],form:["responsibility(n.)"]},
+ {lv:"고1",w:"individual",pos:"n./adj.",ipa:"/ˌɪndɪˈvɪdʒuəl/",m:[
+   M("개인 (n.)","Every <b>individual</b> has rights.",["모든 개인은","가진다","권리를"],"모든 개인은 권리를 가진다."),
+   M("개개의 (adj.)","We offer <b>individual</b> lessons.",["우리는","제공한다","개개의 수업을"],"우리는 개인 맞춤 수업을 제공한다.")],
+   syn:[],ant:["collective"],form:["individually(adv.)"]},
+ {lv:"고2",w:"significant",pos:"adj.",ipa:"/sɪɡˈnɪfɪkənt/",m:[
+   M("중요한","This is a <b>significant</b> moment.",["이것은","이다","중요한 순간"],"이것은 중요한 순간이다."),
+   M("상당한","There's been a <b>significant</b> improvement.",["있었다","상당한 개선이"],"상당한 개선이 있었다.")],
+   syn:["notable"],ant:["insignificant"],form:["significance(n.)"]},
+ {lv:"고2",w:"establish",pos:"v.",ipa:"/ɪˈstæblɪʃ/",m:[
+   M("설립하다","They <b>established</b> the company in 2010.",["그들은","설립했다","회사를","2010년에"],"그들은 2010년에 회사를 설립했다."),
+   M("확립하다·세우다","We need to <b>establish</b> clear rules.",["우리는","확립할 필요가 있다","명확한 규칙을"],"우리는 명확한 규칙을 세울 필요가 있다.")],
+   syn:["found"],ant:["abolish"],form:["establishment(n.)"]},
+ {lv:"고2",w:"perspective",pos:"n.",ipa:"/pərˈspektɪv/",m:[
+   M("관점","From my <b>perspective</b>, it's a good deal.",["내 관점에서는","그것은","좋은 거래이다"],"내 관점에서는 괜찮은 거래야."),
+   M("시각","Try to see it from a different <b>perspective</b>.",["시도해 봐","그것을 보려고","다른 시각에서"],"다른 시각에서 그것을 보려고 해 봐.")],
+   syn:["viewpoint"],ant:[],form:[]},
+ {lv:"고3",w:"comprehensive",pos:"adj.",ipa:"/ˌkɑːmprɪˈhensɪv/",m:[
+   M("포괄적인","We need a <b>comprehensive</b> plan.",["우리는","필요하다","포괄적인 계획이"],"우리는 포괄적인 계획이 필요하다."),
+   M("종합적인","The book gives a <b>comprehensive</b> overview.",["그 책은","제공한다","종합적인 개요를"],"그 책은 종합적인 개요를 제공한다.")],
+   syn:["thorough"],ant:["partial"],form:["comprehend(v.)"]},
+ {lv:"고3",w:"inevitable",pos:"adj.",ipa:"/ɪnˈevɪtəbl/",m:[
+   M("불가피한","Change is <b>inevitable</b>.",["변화는","불가피하다"],"변화는 불가피하다.")],
+   syn:["unavoidable"],ant:["avoidable"],form:["inevitably(adv.)"]},
+ {lv:"고3",w:"distinguish",pos:"v.",ipa:"/dɪˈstɪŋɡwɪʃ/",m:[
+   M("구별하다","I can't <b>distinguish</b> the twins.",["나는","구별할 수 없다","그 쌍둥이를"],"나는 그 쌍둥이를 구별할 수 없다.")],
+   syn:["differentiate"],ant:[],form:["distinct(adj.)"]},
+ {lv:"대1",w:"ambiguous",pos:"adj.",ipa:"/æmˈbɪɡjuəs/",m:[
+   M("모호한","His answer was pretty <b>ambiguous</b>.",["그의 대답은","이었다","꽤 모호한"],"그의 대답은 꽤 모호했다."),
+   M("애매한","The rules here are a bit <b>ambiguous</b>.",["여기 규칙은","이다","좀 애매한"],"여기 규칙은 좀 애매하다.")],
+   syn:["vague"],ant:["clear"],form:["ambiguity(n.)"]}
+];
+
+/* ============ 음성 ============ */
+let VOICES=[];
+function loadVoices(){VOICES=window.speechSynthesis?speechSynthesis.getVoices():[];}
+loadVoices();
+if(window.speechSynthesis) speechSynthesis.onvoiceschanged=loadVoices;
+const FEMALE=["female","woman","samantha","victoria","kate","serena","sonia","aria","jenny","zira","susan","fiona","moira","tessa","karen","hazel","catherine","libby","maisie","emily","ava","allison","joanna","salli","kimberly","amy","emma","google uk english female","google us english"];
+const MALE=["male","man","daniel","alex","fred","oliver","george","ryan","guy","david","mark","arthur","thomas","james","brian","matthew","joey","justin","google uk english male"];
+function pickVoice(accent,gender){
+  if(!VOICES.length) loadVoices();
+  const pref=accent==="GB"?"en-gb":"en-us";
+  const want=gender==="F"?FEMALE:MALE, other=gender==="F"?MALE:FEMALE;
+  let best=null,bs=-1;
+  for(const v of VOICES){
+    const lang=(v.lang||"").toLowerCase().replace("_","-"), name=(v.name||"").toLowerCase();
+    let s=0;
+    if(lang.startsWith(pref)) s+=5; else if(lang.startsWith("en")) s+=1;
+    if(want.some(k=>name.includes(k))) s+=3;
+    if(other.some(k=>name.includes(k))) s-=2;
+    if(name.includes("google")) s+=.5;
+    if(s>bs){bs=s;best=v;}
+  }
+  return best;
+}
+const stripTags=h=>h.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
+function speak(text,accent,gender,btn){
+  if(!window.speechSynthesis){alert("이 브라우저는 음성 재생을 지원하지 않습니다.");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(stripTags(text));
+  const v=pickVoice(accent,gender);
+  if(v){u.voice=v;u.lang=v.lang;} else {u.lang=accent==="GB"?"en-GB":"en-US";}
+  u.rate=.94;
+  if(btn){btn.classList.add("speaking");u.onend=u.onerror=()=>btn.classList.remove("speaking");}
+  speechSynthesis.speak(u);
+}
+
+const state={accent:"US",gender:"F"};
+const svgSpk='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>';
+const svgSpkSm='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>';
+
+/* ============ 단어 카드 ============ */
+function litHTML(arr,cls){return `<div class="${cls}">`+arr.map((s,i)=>(i?'<span class="slash">/</span>':'')+`<span class="seg-k">${s}</span>`).join("")+`</div>`;}
+function relLine(tag,cls,words){
+  if(!words||!words.length) return "";
+  const chips=words.map(label=>{
+    const key=label.replace(/\(.*\)/,"").trim().toLowerCase();
+    return `<button class="word-chip ${cls}" data-key="${key}" data-kind="${cls}">${label}</button>`;
+  }).join("");
+  return `<div class="rel-line"><span class="rel-tag">${tag}</span>${chips}</div>`;
+}
+function cardHTML(d){
+  const meanings=d.m.map((mm,i)=>`
+    <div class="mrow">
+      <div class="mhead"><span class="mnum">${i+1}</span><span class="mkr">${mm.kr}</span></div>
+      <div class="ex">${mm.en} <button class="play-ex" title="예문 듣기" data-ex="${encodeURIComponent(mm.en)}">${svgSpk}</button></div>
+      ${litHTML(mm.lit,"lit")}
+    </div>`).join("");
+  return `<article class="card" style="--lv:${LV_COLORS[d.lv]}">
+    <div class="card-top">
+      <div class="headword"><span class="w serif">${d.w}</span><span class="pos">${d.pos}</span><span class="ipa">${d.ipa}</span></div>
+      <span class="badge">${d.lv}</span>
+    </div>
+    <div class="tts-row">
+      <button class="tts" data-w="${d.w}" data-a="GB" data-g="F"><span class="flag">🇬🇧</span>여</button>
+      <button class="tts" data-w="${d.w}" data-a="GB" data-g="M"><span class="flag">🇬🇧</span>남</button>
+      <button class="tts" data-w="${d.w}" data-a="US" data-g="F"><span class="flag">🇺🇸</span>여</button>
+      <button class="tts" data-w="${d.w}" data-a="US" data-g="M"><span class="flag">🇺🇸</span>남</button>
+    </div>
+    <div class="divider"></div>
+    <div class="meanings">${meanings}</div>
+    <div class="rel">${relLine("동의어","syn",d.syn)}${relLine("반의어","ant",d.ant)}${relLine("다른 품사","form",d.form)}</div>
+  </article>`;
+}
+document.getElementById("grid").innerHTML=DATA.map(cardHTML).join("");
+
+/* 발음 토글 */
+function bindSeg(id,key){
+  const seg=document.getElementById(id);
+  seg.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state[key]=b.dataset[key];[...seg.children].forEach(c=>c.setAttribute("aria-pressed",c===b));});
+}
+bindSeg("accentSeg","accent");bindSeg("genderSeg","gender");
+
+/* ============ 팝오버 ============ */
+const pop=document.getElementById("pop");let popOpen=false;
+function openPop(chip){
+  const key=chip.dataset.key,kind=chip.dataset.kind,r=REF[key];if(!r)return;
+  const label={syn:"동의어",ant:"반의어",form:"다른 품사"}[kind];
+  const col={syn:"var(--syn)",ant:"var(--ant)",form:"var(--form)"}[kind];
+  const bg={syn:"var(--syn-bg)",ant:"var(--ant-bg)",form:"var(--form-bg)"}[kind];
+  pop.innerHTML=`<button class="pop-close" aria-label="닫기">&times;</button>
+    <div class="pop-top"><span class="pop-word serif" style="color:${col}">${chip.textContent}</span><span class="pop-kind" style="color:${col};background:${bg}">${label}</span></div>
+    <div class="pop-kr">${r.kr}</div>
+    <div class="pop-ex">${r.en}</div>
+    ${litHTML(r.lit,"pop-lit")}
+    <div class="pop-btns">
+      <button class="pop-btn" data-play-word="${key}">${svgSpkSm} 단어 발음</button>
+      <button class="pop-btn" data-play-ex="${encodeURIComponent(r.en)}">${svgSpkSm} 예문 듣기</button>
+    </div>`;
+  pop.querySelector(".pop-close").onclick=closePop;
+  pop.querySelector("[data-play-word]").onclick=e=>{e.stopPropagation();speak(key,state.accent,state.gender,null);};
+  pop.querySelector("[data-play-ex]").onclick=e=>{e.stopPropagation();speak(decodeURIComponent(e.currentTarget.dataset.playEx),state.accent,state.gender,null);};
+  pop.classList.add("show");popOpen=true;positionPop(chip);
+}
+function positionPop(chip){
+  if(window.innerWidth<=640)return;
+  const cr=chip.getBoundingClientRect(),pw=pop.offsetWidth,ph=pop.offsetHeight;
+  let left=Math.max(12,Math.min(cr.left,window.innerWidth-pw-12)),top=cr.bottom+8;
+  if(top+ph>window.innerHeight-12) top=cr.top-ph-8;
+  pop.style.left=left+"px";pop.style.top=Math.max(12,top)+"px";
+}
+function closePop(){pop.classList.remove("show");popOpen=false;}
+window.addEventListener("resize",()=>{if(popOpen)closePop();});
+window.addEventListener("scroll",()=>{if(popOpen)closePop();},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&popOpen)closePop();});
+
+/* 전역 클릭 */
+document.addEventListener("click",e=>{
+  const tts=e.target.closest(".tts"); if(tts){speak(tts.dataset.w,tts.dataset.a,tts.dataset.g,tts);return;}
+  const pex=e.target.closest(".play-ex"); if(pex){speak(decodeURIComponent(pex.dataset.ex),state.accent,state.gender,null);return;}
+  const chip=e.target.closest(".word-chip"); if(chip){openPop(chip);return;}
+  const rw=e.target.closest(".rw"); if(rw){ if(rw.dataset.w&&PASSAGE_GLOSS[rw.dataset.w]) openWordPop(rw); else closePop(); return; }
+  if(popOpen && !e.target.closest("#pop") && !e.target.closest(".word-chip") && !e.target.closest(".rw")) closePop();
+});
+
+/* ============ 메뉴 전환 ============ */
+const menu=document.getElementById("menu");
+let quizBuilt=false;
+menu.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const v=b.dataset.view;
+  [...menu.children].forEach(c=>c.setAttribute("aria-pressed",c===b));
+  document.querySelectorAll(".view").forEach(s=>s.hidden=(s.id!=="view-"+v));
+  if(v==="quiz"&&!quizBuilt){buildQuiz();quizBuilt=true;}
+  if(v==="notebook") renderNotebook();
+  window.scrollTo({top:0,behavior:"instant"});
+});
+
+/* ============ WORD 문서 생성 및 저장 ============ */
+function buildWordView(){
+  const parts=DATA.map(d=>{
+    const meanings=d.m.map(mm=>`<div class="m"><b>${mm.kr}</b> · <span class="en">${stripTags(mm.en)}</span> <span class="tr">${mm.tr}</span></div>`).join("");
+    const relOne=(arr,cls,tag)=>arr.map(label=>{
+      const key=label.replace(/\(.*\)/,"").trim().toLowerCase();const r=REF[key];if(!r)return "";
+      return `<span class="r"><span class="lab ${cls}">${tag} ${label}</span> ${r.kr} · ${stripTags(r.en)}</span>`;
+    }).join("");
+    const rel=`<div class="rel">${relOne(d.syn,"s","[동]")}${relOne(d.ant,"a","[반]")}${relOne(d.form,"f","[품]")}</div>`;
+    return `<div class="pw"><div class="pw-h">${d.w} <i>${d.ipa}</i> <em>${d.pos}</em> <i>· ${d.lv}</i></div>${meanings}${rel}</div>`;
+  }).join("");
+  document.getElementById("word-sheet").innerHTML=`<div class="list-box">${parts}</div>`;
+}
+
+function downloadWordFile() {
+  const content = document.getElementById("word-sheet").innerHTML;
+  
+  // Word 파일 전용 스타일을 포함한 HTML 구조 정의
+  const htmlString = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+    <head>
+      <title>필수 영단어 20</title>
+      <style>
+        body { font-family: 'Malgun Gothic', 'Arial', sans-serif; line-height: 1.5; color: #16233B; }
+        .list-box { width: 100%; }
+        .pw { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px dashed #E1E6EC; }
+        .pw-h { font-weight: bold; font-size: 16pt; color: #12324F; }
+        .pw-h i { font-style: italic; color: #68758B; font-weight: normal; font-size: 11pt; }
+        .pw-h em { font-style: normal; color: #0E7C6B; font-weight: bold; font-size: 12pt; }
+        .m { margin: 4px 0 4px 15px; font-size: 11pt; }
+        .m b { color: #16233B; }
+        .m .en { color: #16233B; font-weight: 500; }
+        .m .tr { color: #68758B; }
+        .rel { margin: 8px 0 0 15px; font-size: 10pt; color: #3C4A63; }
+        .rel .r { display: block; margin-bottom: 2px; }
+        .rel .lab { font-weight: bold; }
+        .rel .s { color: #0E7C6B; }
+        .rel .a { color: #C23B4B; }
+        .rel .f { color: #6B4FBB; }
+      </style>
+    </head>
+    <body>
+      <h2>필수 영단어 20 목록</h2>
+      ${content}
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob(['\ufeff' + htmlString], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '필수영단어20_단어장.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+buildWordView();
+document.getElementById("downloadWordBtn").addEventListener("click", downloadWordFile);
+
+/* ============ 독해 ============ */
+const READING={
+ passage:[
+  "Last spring, Mina decided to <b>run</b> a small online store she had <b>founded</b> herself, and she soon had to <b>operate</b> and <b>manage</b> every part of it alone.",
+  "At first the work felt <b>ambiguous</b> and <b>vague</b>, but she made a <b>clear</b> plan, set <b>distinct</b> goals, and learned to <b>distinguish</b> what was truly <b>significant</b> from what was <b>insignificant</b>.",
+  "To <b>develop</b> her skills, <b>improve</b> her service, and <b>expand</b> her tiny business, she <b>took</b> a <b>comprehensive</b> course, kept a <b>thorough</b> notebook, and tried to <b>understand</b> and <b>create</b> what customers really wanted from their <b>perspective</b> and <b>viewpoint</b>.",
+  "She could not always <b>get</b> everything right; sometimes a package <b>broke</b>, a promise had to be re-<b>made</b>, and a plan turned out to be <b>broken</b>, yet she refused to <b>fail</b> or <b>give</b> up.",
+  "Being <b>responsible</b>, she never acted in an <b>irresponsible</b> way, because she believed <b>responsibility</b> mattered more than any quick money she might <b>earn</b> or <b>make</b>.",
+  "Over months she began to <b>achieve</b> small wins and <b>realize</b> a quiet <b>realization</b>: real <b>improvement</b> and <b>development</b> are slow but <b>inevitable</b> if you <b>hold</b> on, <b>keep</b> going, and <b>consider</b> each mistake a <b>considerable</b> lesson rather than a failure.",
+  "Today Mina can <b>operate</b> the shop with a calm <b>grip</b>, <b>recognize</b> and <b>distinguish</b> her own growth clearly, <b>establish</b> trust with buyers, and <b>accomplish</b> goals \u2014 proof that steady effort, taken <b>individually</b> day by day, brings <b>notable</b>, <b>significant</b> results."
+ ],
+ tr:[
+  "지난봄, 미나는 자신이 직접 세운 작은 온라인 상점을 운영하기로 결심했고, 곧 그 모든 부분을 혼자서 운영하고 관리해야 했다.",
+  "처음에 그 일은 모호하고 막연하게 느껴졌지만, 그녀는 명확한 계획을 세우고 뚜렷한 목표를 정했으며, 진짜 중요한 것과 사소한 것을 구별하는 법을 배웠다.",
+  "실력을 키우고 서비스를 개선하며 작은 사업을 확장하기 위해, 그녀는 종합적인 강좌를 듣고 빈틈없는 노트를 유지했으며, 고객이 그들의 관점과 시각에서 진정으로 원하는 것을 이해하고 만들어내려 애썼다.",
+  "그녀가 항상 모든 것을 제대로 해낼 수는 없었다. 때로는 택배가 부서지고, 약속을 다시 해야 했으며, 계획이 어그러지기도 했지만, 그녀는 실패하거나 포기하기를 거부했다.",
+  "책임감이 있었기에 그녀는 결코 무책임하게 행동하지 않았는데, 벌거나 만들어낼 수 있는 어떤 빠른 돈보다 책임이 더 중요하다고 믿었기 때문이다.",
+  "여러 달에 걸쳐 그녀는 작은 성취를 이루기 시작했고 조용한 깨달음에 이르렀다. 버티고 계속 나아가며 각각의 실수를 실패가 아니라 상당한 교훈으로 여긴다면, 진정한 향상과 발전은 더디지만 반드시 찾아온다는 것이다.",
+  "오늘날 미나는 침착하게 상점을 운영하고, 자신의 성장을 분명히 알아보고 구별하며, 구매자들과 신뢰를 쌓고, 목표를 이뤄낸다. 이는 하루하루 개별적으로 쌓은 꾸준한 노력이 주목할 만하고 중요한 결과를 가져온다는 증거다."
+ ],
+ questions:[
+  {q:"이 글의 주제로 가장 적절한 것은?",
+   opts:["온라인 쇼핑몰에서 물건을 싸게 사는 방법","꾸준한 노력과 책임감으로 작은 사업을 키워 성취를 이룬 과정","광고로 빠르게 돈을 버는 전략","친구들과 함께 창업할 때 겪는 갈등"],
+   ans:1, ex:"글은 미나가 혼자 사업을 운영하며 노력과 책임으로 성장·성취해 가는 과정을 다룹니다."},
+  {q:"글의 내용과 일치하는 것은?",
+   opts:["미나는 사업을 남에게 맡겨 운영했다.","미나는 처음부터 모든 것이 명확하게 느껴졌다.","미나는 어려움을 겪어도 포기하지 않았다.","미나는 빠른 돈이 책임보다 중요하다고 믿었다."],
+   ans:2, ex:"4·5문장에서 그녀는 실패·포기를 거부했고, 책임을 돈보다 중요하게 여겼습니다."},
+  {q:"지문에 쓰인 significant와 의미가 가장 가까운 단어는?",
+   opts:["notable","insignificant","vague","partial"],
+   ans:0, ex:"significant(중요한)의 동의어는 notable(주목할 만한)입니다. insignificant는 반의어."},
+  {q:"빈칸에 들어갈 말로 가장 적절한 것은?  \u201cReal growth is slow but ______; if you keep going, it will surely come.\u201d",
+   opts:["inevitable","avoidable","broken","ambiguous"],
+   ans:0, ex:"'느리지만 반드시 온다'는 맥락이므로 inevitable(불가피한)이 적절합니다."}
+ ]
+};
+
+/* 문장별 직독직해 (원문 어순 청크) */
+READING.lit=[
+ [["Last spring,","지난봄,"],["Mina decided","미나는 결심했다"],["to run a small online store","작은 온라인 상점을 운영하기로"],["she had founded herself,","자신이 직접 세운"],["and she soon had to","그리고 그녀는 곧 ~해야 했다"],["operate and manage","운영하고 관리하는 것을"],["every part of it","그 모든 부분을"],["alone.","혼자서."]],
+ [["At first","처음에는"],["the work felt","그 일이 느껴졌다"],["ambiguous and vague,","모호하고 막연하게,"],["but she made a clear plan,","그러나 그녀는 명확한 계획을 세웠고,"],["set distinct goals,","뚜렷한 목표를 정했으며,"],["and learned to distinguish","그리고 구별하는 법을 배웠다"],["what was truly significant","진정으로 중요한 것을"],["from what was insignificant.","사소한 것으로부터."]],
+ [["To develop her skills,","실력을 키우기 위해,"],["improve her service,","서비스를 개선하고,"],["and expand her tiny business,","작은 사업을 확장하기 위해,"],["she took a comprehensive course,","그녀는 종합적인 강좌를 들었고,"],["kept a thorough notebook,","빈틈없는 노트를 유지했으며,"],["and tried to understand and create","이해하고 만들어내려 애썼다"],["what customers really wanted","고객이 진정으로 원하는 것을"],["from their perspective and viewpoint.","그들의 관점과 시각에서."]],
+ [["She could not always","그녀가 항상 ~할 수는 없었다"],["get everything right;","모든 것을 제대로 해내는 것을;"],["sometimes a package broke,","때로는 택배가 부서졌고,"],["a promise had to be re-made,","약속을 다시 해야 했으며,"],["and a plan turned out to be broken,","계획이 어그러지기도 했지만,"],["yet she refused","그러나 그녀는 거부했다"],["to fail or give up.","실패하거나 포기하기를."]],
+ [["Being responsible,","책임감이 있었기에,"],["she never acted","그녀는 결코 행동하지 않았다"],["in an irresponsible way,","무책임한 방식으로,"],["because she believed","왜냐하면 그녀는 믿었기 때문이다"],["responsibility mattered more","책임이 더 중요하다고"],["than any quick money","어떤 빠른 돈보다도"],["she might earn or make.","그녀가 벌거나 만들어낼 수 있는."]],
+ [["Over months","여러 달에 걸쳐"],["she began to achieve small wins","그녀는 작은 성취를 이루기 시작했고"],["and realize a quiet realization:","조용한 깨달음에 이르렀다:"],["real improvement and development","진정한 향상과 발전은"],["are slow but inevitable","더디지만 반드시 찾아온다"],["if you hold on, keep going,","버티고 계속 나아가며,"],["and consider each mistake","각각의 실수를 여긴다면"],["a considerable lesson","상당한 교훈으로"],["rather than a failure.","실패가 아니라."]],
+ [["Today Mina can operate the shop","오늘날 미나는 상점을 운영할 수 있다"],["with a calm grip,","차분히 장악하며,"],["recognize and distinguish","알아보고 구별하며"],["her own growth clearly,","자신의 성장을 분명히,"],["establish trust with buyers,","구매자들과 신뢰를 쌓고,"],["and accomplish goals \u2014","목표를 이뤄낸다 \u2014"],["proof that steady effort,","이는 꾸준한 노력이,"],["taken individually day by day,","하루하루 개별적으로 쌓여,"],["brings notable, significant results.","주목할 만하고 중요한 결과를 가져온다는 증거다."]]
+];
+
+/* 지문 단어 사전: [발음기호, 뜻, 예문(영), 예문(한)] */
+const PASSAGE_GLOSS={
+ last:["/læst/","지난·마지막의","I saw her last week.","지난주에 그녀를 봤다."],
+ spring:["/sprɪŋ/","봄","Flowers bloom in spring.","봄에 꽃이 핀다."],
+ mina:["/ˈmiːnə/","미나 (사람 이름)","Mina runs a small store.","미나는 작은 가게를 운영한다."],
+ decided:["/dɪˈsaɪdɪd/","결정했다 (decide)","She decided to leave.","그녀는 떠나기로 결정했다."],
+ to:["/tuː/","~로·~하기 위해","I want to go home.","나는 집에 가고 싶다."],
+ run:["/rʌn/","운영하다·달리다","He runs a coffee shop.","그는 커피숍을 운영한다."],
+ a:["/ə/","하나의 (부정관사)","I need a pen.","펜 하나가 필요하다."],
+ small:["/smɔːl/","작은","a small room","작은 방"],
+ online:["/ˈɑːnˌlaɪn/","온라인의","an online store","온라인 상점"],
+ store:["/stɔːr/","상점·가게","a clothing store","옷 가게"],
+ she:["/ʃiː/","그녀","She is very kind.","그녀는 매우 친절하다."],
+ had:["/hæd/","가졌다·했다 (have 과거)","She had a good idea.","그녀는 좋은 생각이 있었다."],
+ founded:["/ˈfaʊndɪd/","설립했다 (found)","They founded a club.","그들은 클럽을 설립했다."],
+ herself:["/hɜːrˈself/","그녀 자신","She fixed it herself.","그녀는 그것을 직접 고쳤다."],
+ and:["/ænd/","그리고","you and me","너와 나"],
+ soon:["/suːn/","곧","I will call you soon.","곧 전화할게."],
+ operate:["/ˈɑːpəreɪt/","운영하다·작동하다","They operate a factory.","그들은 공장을 운영한다."],
+ manage:["/ˈmænɪdʒ/","관리하다·운영하다","She manages a big team.","그녀는 큰 팀을 관리한다."],
+ every:["/ˈevri/","모든","every single day","하루도 빠짐없이"],
+ part:["/pɑːrt/","부분","a part of the plan","계획의 일부"],
+ of:["/ʌv/","~의","a cup of tea","차 한 잔"],
+ it:["/ɪt/","그것","It really works.","그것은 정말 작동한다."],
+ alone:["/əˈloʊn/","혼자","She did it alone.","그녀는 혼자 그것을 했다."],
+ at:["/æt/","~에서·~에","at first","처음에는"],
+ first:["/fɜːrst/","처음·첫째","the first day","첫날"],
+ the:["/ðə/","그 (정관사)","the sun","태양"],
+ work:["/wɜːrk/","일·작업","hard work","힘든 일"],
+ felt:["/felt/","느꼈다 (feel)","I felt tired.","나는 피곤함을 느꼈다."],
+ ambiguous:["/æmˈbɪɡjuəs/","모호한","an ambiguous answer","모호한 대답"],
+ vague:["/veɪɡ/","막연한·모호한","a vague idea","막연한 생각"],
+ but:["/bʌt/","그러나","small but strong","작지만 강한"],
+ made:["/meɪd/","만들었다 (make)","She made a cake.","그녀는 케이크를 만들었다."],
+ clear:["/klɪr/","명확한","a clear answer","명확한 대답"],
+ plan:["/plæn/","계획","a good plan","좋은 계획"],
+ set:["/set/","정하다·설정하다","set a goal","목표를 정하다"],
+ distinct:["/dɪˈstɪŋkt/","뚜렷한·구별되는","distinct colors","뚜렷한 색들"],
+ goals:["/ɡoʊlz/","목표들","reach your goals","목표를 이루다"],
+ learned:["/lɜːrnd/","배웠다 (learn)","I learned a lot.","나는 많이 배웠다."],
+ distinguish:["/dɪˈstɪŋɡwɪʃ/","구별하다","distinguish right from wrong","옳고 그름을 구별하다"],
+ what:["/wʌt/","무엇·~한 것","what you want","네가 원하는 것"],
+ was:["/wʌz/","이었다 (be 과거)","It was cold.","날이 추웠다."],
+ truly:["/ˈtruːli/","진정으로","truly happy","진정으로 행복한"],
+ significant:["/sɪɡˈnɪfɪkənt/","중요한·상당한","a significant change","중요한 변화"],
+ from:["/frʌm/","~로부터","from home","집에서부터"],
+ insignificant:["/ˌɪnsɪɡˈnɪfɪkənt/","사소한·미미한","an insignificant detail","사소한 세부 사항"],
+ develop:["/dɪˈveləp/","발전시키다·개발하다","develop a new skill","새 기술을 기르다"],
+ her:["/hɜːr/","그녀의","her notebook","그녀의 공책"],
+ skills:["/skɪlz/","기술·실력","language skills","언어 실력"],
+ improve:["/ɪmˈpruːv/","향상시키다","improve your English","영어를 향상시키다"],
+ service:["/ˈsɜːrvɪs/","서비스","great service","훌륭한 서비스"],
+ expand:["/ɪkˈspænd/","확장하다","expand a business","사업을 확장하다"],
+ tiny:["/ˈtaɪni/","아주 작은","a tiny room","아주 작은 방"],
+ business:["/ˈbɪznəs/","사업","a small business","작은 사업"],
+ took:["/tʊk/","가져갔다·(수업을) 들었다 (take)","I took a class.","나는 수업을 들었다."],
+ comprehensive:["/ˌkɑːmprɪˈhensɪv/","종합적인·포괄적인","a comprehensive course","종합적인 강좌"],
+ course:["/kɔːrs/","강좌·과정","an online course","온라인 강좌"],
+ kept:["/kept/","유지했다 (keep)","She kept a diary.","그녀는 일기를 계속 썼다."],
+ thorough:["/ˈθɜːroʊ/","철저한·빈틈없는","a thorough check","철저한 점검"],
+ notebook:["/ˈnoʊtbʊk/","공책·노트","write in a notebook","공책에 적다"],
+ tried:["/traɪd/","시도했다·애썼다 (try)","She tried her best.","그녀는 최선을 다했다."],
+ understand:["/ˌʌndərˈstænd/","이해하다","I understand you.","나는 너를 이해한다."],
+ create:["/kriˈeɪt/","만들어내다·창조하다","create something new","새로운 것을 만들다"],
+ customers:["/ˈkʌstəmərz/","고객들","happy customers","만족한 고객들"],
+ really:["/ˈrɪəli/","정말로","really good food","정말 맛있는 음식"],
+ wanted:["/ˈwɑːntɪd/","원했다 (want)","She wanted more time.","그녀는 더 많은 시간을 원했다."],
+ their:["/ðer/","그들의","their opinions","그들의 의견"],
+ perspective:["/pərˈspektɪv/","관점","from my perspective","내 관점에서는"],
+ viewpoint:["/ˈvjuːpɔɪnt/","시각·관점","share your viewpoint","네 관점을 나누다"],
+ could:["/kʊd/","~할 수 있었다","I could swim then.","그때 나는 수영할 수 있었다."],
+ not:["/nɑːt/","~아니다","not right now","지금은 아니다"],
+ always:["/ˈɔːlweɪz/","항상","always on time","항상 정시에"],
+ get:["/ɡet/","얻다·~하게 되다","get everything right","모든 것을 제대로 하다"],
+ everything:["/ˈevriθɪŋ/","모든 것","everything is fine","다 괜찮다"],
+ right:["/raɪt/","옳은·제대로","the right answer","정답"],
+ sometimes:["/ˈsʌmtaɪmz/","때때로","sometimes it rains","가끔 비가 온다"],
+ package:["/ˈpækɪdʒ/","소포·택배","the package arrived","택배가 도착했다"],
+ broke:["/broʊk/","부서졌다·깨졌다 (break)","The glass broke.","유리가 깨졌다."],
+ promise:["/ˈpɑːmɪs/","약속","keep a promise","약속을 지키다"],
+ be:["/biː/","~이다·되다","be honest","정직해라"],
+ turned:["/tɜːrnd/","바뀌었다·돌았다 (turn); turn out ~로 드러나다","It turned out fine.","결국 괜찮게 됐다."],
+ out:["/aʊt/","밖으로; turn out 판명되다","go out for a walk","산책하러 나가다"],
+ broken:["/ˈbroʊkən/","고장난·부서진","a broken phone","고장난 휴대폰"],
+ yet:["/jet/","그러나·아직","not ready yet","아직 준비 안 됨"],
+ refused:["/rɪˈfjuːzd/","거부했다 (refuse)","She refused to quit.","그녀는 그만두기를 거부했다."],
+ fail:["/feɪl/","실패하다","do not be afraid to fail","실패를 두려워하지 마"],
+ or:["/ɔːr/","또는","tea or coffee","차 또는 커피"],
+ give:["/ɡɪv/","주다; give up 포기하다","give me a hand","나 좀 도와줘"],
+ up:["/ʌp/","위로; give up 포기하다","stand up","일어서다"],
+ being:["/ˈbiːɪŋ/","~인 상태로 (be의 -ing)","being honest helps","정직한 것이 도움이 된다"],
+ responsible:["/rɪˈspɑːnsəbl/","책임감 있는·책임이 있는","a responsible person","책임감 있는 사람"],
+ never:["/ˈnevər/","결코 ~않다","never give up","절대 포기하지 마"],
+ acted:["/ˈæktɪd/","행동했다 (act)","He acted quickly.","그는 빠르게 행동했다."],
+ in:["/ɪn/","~안에·~하게","in a kind way","친절한 방식으로"],
+ an:["/ən/","하나의 (모음 앞)","an apple","사과 하나"],
+ irresponsible:["/ˌɪrɪˈspɑːnsəbl/","무책임한","irresponsible behavior","무책임한 행동"],
+ way:["/weɪ/","방식·길","in a good way","좋은 방식으로"],
+ because:["/bɪˈkɔːz/","왜냐하면·~때문에","because it is late","늦었기 때문에"],
+ believed:["/bɪˈliːvd/","믿었다 (believe)","She believed in herself.","그녀는 자신을 믿었다."],
+ responsibility:["/rɪˌspɑːnsəˈbɪləti/","책임","take responsibility","책임을 지다"],
+ mattered:["/ˈmætərd/","중요했다 (matter)","It mattered to her.","그것은 그녀에게 중요했다."],
+ more:["/mɔːr/","더","more time","더 많은 시간"],
+ than:["/ðæn/","~보다","bigger than before","전보다 큰"],
+ any:["/ˈeni/","어떤·조금도","any question","어떤 질문이든"],
+ quick:["/kwɪk/","빠른","a quick reply","빠른 답장"],
+ money:["/ˈmʌni/","돈","save money","돈을 모으다"],
+ might:["/maɪt/","~일지도 모른다","It might rain.","비가 올지도 모른다."],
+ earn:["/ɜːrn/","(돈을) 벌다","earn a living","생계를 벌다"],
+ make:["/meɪk/","만들다·(돈을) 벌다","make good money","돈을 잘 벌다"],
+ over:["/ˈoʊvər/","~에 걸쳐·위에","over many years","여러 해에 걸쳐"],
+ months:["/mʌnθs/","달·개월","for three months","석 달 동안"],
+ began:["/bɪˈɡæn/","시작했다 (begin)","It began to rain.","비가 오기 시작했다."],
+ achieve:["/əˈtʃiːv/","성취하다·이루다","achieve a goal","목표를 이루다"],
+ wins:["/wɪnz/","승리·성과","small wins add up","작은 성과가 쌓인다"],
+ realize:["/ˈriːəlaɪz/","깨닫다·실현하다","I realize it now.","이제 그것을 깨닫는다."],
+ quiet:["/ˈkwaɪët/","조용한","a quiet moment","조용한 순간"],
+ realization:["/ˌriːələˈzeɪʃən/","깨달음·실현","a sudden realization","갑작스러운 깨달음"],
+ real:["/rɪəl/","진짜의·진정한","real progress","진정한 발전"],
+ improvement:["/ɪmˈpruːvmənt/","향상·개선","room for improvement","개선의 여지"],
+ development:["/dɪˈveləpmənt/","발전·개발","steady development","꾸준한 발전"],
+ are:["/ɑːr/","~이다 (be 복수)","They are ready.","그들은 준비됐다."],
+ slow:["/sloʊ/","느린","a slow start","느린 시작"],
+ inevitable:["/ɪnˈevɪtəbl/","불가피한·필연적인","change is inevitable","변화는 불가피하다"],
+ if:["/ɪf/","만약 ~라면","if you try","만약 네가 노력한다면"],
+ you:["/juː/","너·너희","you can do it","너는 할 수 있다"],
+ hold:["/hoʊld/","잡다; hold on 버티다","hold on tight","꽉 붙잡아"],
+ on:["/ɑːn/","~위에; hold on 버티다","on the desk","책상 위에"],
+ keep:["/kiːp/","유지하다; keep going 계속하다","keep going","계속 나아가"],
+ going:["/ˈɡoʊɪŋ/","가는 중 (go의 -ing)","keep going forward","계속 앞으로 나아가다"],
+ consider:["/kənˈsɪdər/","여기다·고려하다","consider it done","다 된 걸로 여겨라"],
+ each:["/iːtʃ/","각각의","each student","각 학생"],
+ mistake:["/mɪˈsteɪk/","실수","a small mistake","작은 실수"],
+ considerable:["/kənˈsɪdərəbl/","상당한","considerable effort","상당한 노력"],
+ lesson:["/ˈlesən/","교훈·수업","learn a lesson","교훈을 얻다"],
+ rather:["/ˈræðər/","오히려·차라리","rather than that","그것보다는 오히려"],
+ failure:["/ˈfeɪljər/","실패","fear of failure","실패에 대한 두려움"],
+ today:["/təˈdeɪ/","오늘·오늘날","today is sunny","오늘은 맑다"],
+ can:["/kæn/","~할 수 있다","I can help you.","도와줄 수 있어."],
+ shop:["/ʃɑːp/","가게","a small shop","작은 가게"],
+ with:["/wɪð/","~와 함께·~으로","with friends","친구들과 함께"],
+ calm:["/kɑːm/","침착한·차분한","stay calm","침착함을 유지해라"],
+ grip:["/ɡrɪp/","쥐는 힘·장악","a firm grip","단단한 쥠"],
+ recognize:["/ˈrekəɡnaɪz/","알아보다·인식하다","I recognize you.","너를 알아본다."],
+ own:["/oʊn/","자신의","my own room","나만의 방"],
+ growth:["/ɡroʊθ/","성장","personal growth","개인의 성장"],
+ clearly:["/ˈklɪrli/","분명히·명확히","speak clearly","분명히 말하다"],
+ establish:["/ɪˈstæblɪʃ/","확립하다·설립하다","establish trust","신뢰를 쌓다"],
+ trust:["/trʌst/","신뢰","build trust","신뢰를 쌓다"],
+ buyers:["/ˈbaɪərz/","구매자들","attract buyers","구매자를 끌어들이다"],
+ accomplish:["/əˈkɑːmplɪʃ/","완수하다·성취하다","accomplish a task","과업을 완수하다"],
+ proof:["/pruːf/","증거","clear proof","명확한 증거"],
+ that:["/ðæt/","저·~라는 것","the proof that it works","그것이 통한다는 증거"],
+ steady:["/ˈstedi/","꾸준한","steady effort","꾸준한 노력"],
+ effort:["/ˈefərt/","노력","make an effort","노력하다"],
+ taken:["/ˈteɪkən/","취해진 (take의 과거분사)","steps taken so far","지금까지 취해진 조치"],
+ individually:["/ˌɪndɪˈvɪdʒuəli/","개별적으로","answer individually","개별적으로 답하다"],
+ day:["/deɪ/","하루·날","a sunny day","맑은 날"],
+ by:["/baɪ/","~에 의해·~씩; day by day 하루하루","day by day","하루하루"],
+ brings:["/brɪŋz/","가져온다 (bring)","Hard work brings results.","노력은 결과를 가져온다."],
+ notable:["/ˈnoʊtəbl/","주목할 만한","a notable result","주목할 만한 결과"],
+ results:["/rɪˈzʌlts/","결과","good results","좋은 결과"]
+};
+
+/* 문장을 클릭 가능한 단어 단위로 렌더 (원문 <b> 강조 유지) */
+function rwHTML(sentenceHTML){
+  let bold=false,out="";
+  sentenceHTML.split(/(<\/?b>)/).forEach(seg=>{
+    if(seg==="<b>"){bold=true;return;}
+    if(seg==="</b>"){bold=false;return;}
+    out+=seg.replace(/[A-Za-z]+(?:['\-][A-Za-z]+)*/g,m=>{
+      const key=m.toLowerCase(),has=!!PASSAGE_GLOSS[key];
+      return `<span class="rw${bold?" b":""}${has?"":" no"}" data-w="${key}">${m}</span>`;
+    });
+  });
+  return out;
+}
+
+/* 단어 클릭 시 팝오버: 뜻·발음기호·예문 + 단어/예문 듣기 */
+function openWordPop(el){
+  const key=el.dataset.w,disp=el.textContent,g=PASSAGE_GLOSS[key];if(!g)return;
+  const ipa=g[0],kr=g[1],exEn=g[2],exTr=g[3];
+  pop.innerHTML=`<button class="pop-close" aria-label="닫기">&times;</button>
+    <div class="pop-top"><span class="pop-word serif">${disp}</span>${ipa?`<span class="pop-ipa">${ipa}</span>`:""}</div>
+    <div class="pop-kr">${kr}</div>
+    ${exEn?`<div class="pop-ex">${exEn}</div><div class="pop-ex-tr">${exTr}</div>`:""}
+    <div class="pop-btns">
+      <button class="pop-btn" data-pw>${svgSpkSm} 단어 발음</button>
+      ${exEn?`<button class="pop-btn" data-pe>${svgSpkSm} 예문 듣기</button>`:""}
+    </div>`;
+  pop.querySelector(".pop-close").onclick=closePop;
+  pop.querySelector("[data-pw]").onclick=ev=>{ev.stopPropagation();speak(key,state.accent,state.gender,null);};
+  const pe=pop.querySelector("[data-pe]");if(pe)pe.onclick=ev=>{ev.stopPropagation();speak(exEn,state.accent,state.gender,null);};
+  pop.classList.add("show");popOpen=true;positionPop(el);
+}
+
+(function renderReading(){
+  const passEl=document.getElementById("passage");
+  passEl.innerHTML=READING.passage.map((s,i)=>`<span class="s" data-si="${i}">${rwHTML(s)}</span>`).join(" ");
+  const trBtn=document.getElementById("trBtn"),trBox=document.getElementById("passageTr");
+  let ci=0;
+  function highlight(){passEl.querySelectorAll(".s").forEach(s=>s.classList.toggle("cur",+s.dataset.si===ci));}
+  function renderTr(){
+    const en=READING.passage[ci],lit=READING.lit[ci]||[],full=READING.tr[ci]||"";
+    const chunks=lit.map(p=>`<div class="tr-chunk"><span class="en">${p[0]}</span><span class="ko">${p[1]}</span></div>`).join("");
+    const n=READING.passage.length;
+    trBox.innerHTML=`
+      <div class="tr-nav">
+        <button class="tr-btn2 tr-prev" ${ci===0?"disabled":""} aria-label="이전 문장">◀</button>
+        <span class="tr-count">${ci+1} / ${n}</span>
+        <button class="tr-btn2 tr-next" ${ci===n-1?"disabled":""} aria-label="다음 문장">▶</button>
+        <button class="tr-btn2 tr-listen">${svgSpkSm} 문장 듣기</button>
+      </div>
+      <div class="tr-en serif">${rwHTML(en)}</div>
+      <div class="tr-lit">${chunks}</div>
+      <div class="tr-full"><b>해석</b>${full}</div>`;
+    trBox.querySelector(".tr-prev").onclick=()=>{if(ci>0){ci--;renderTr();}};
+    trBox.querySelector(".tr-next").onclick=()=>{if(ci<n-1){ci++;renderTr();}};
+    trBox.querySelector(".tr-listen").onclick=e=>speak(stripTags(en),state.accent,state.gender,e.currentTarget);
+    highlight();
+  }
+  trBtn.onclick=()=>{
+    const h=trBox.hasAttribute("hidden");
+    if(h){trBox.removeAttribute("hidden");trBtn.textContent="지문 해석 닫기";renderTr();if(trBox.scrollIntoView)trBox.scrollIntoView({behavior:"smooth",block:"nearest"});}
+    else{trBox.setAttribute("hidden","");trBtn.textContent="지문 해석 보기";passEl.querySelectorAll(".s.cur").forEach(s=>s.classList.remove("cur"));}
+  };
+  const wrap=document.getElementById("readingQuestions");
+  wrap.innerHTML=READING.questions.map((q,i)=>`
+    <div class="q" data-ri="${i}">
+      <div class="q-num">독해 문제 ${i+1}</div>
+      <div class="q-stem">${q.q}</div>
+      <div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${"ABCD"[k]}</span><span>${o}</span></button>`).join("")}</div>
+      <div class="q-fb" hidden></div>
+    </div>`).join("");
+  wrap.querySelectorAll(".q").forEach(qEl=>{
+    const i=+qEl.dataset.ri,q=READING.questions[i];let done=false;
+    qEl.querySelectorAll(".opt").forEach(opt=>{
+      opt.addEventListener("click",()=>{
+        if(done)return;done=true;
+        const k=+opt.dataset.k,correct=k===q.ans;
+        qEl.querySelectorAll(".opt").forEach(o=>{o.disabled=true;const kk=+o.dataset.k;if(kk===q.ans)o.classList.add("correct");});
+        if(!correct)opt.classList.add("wrong");
+        const fb=qEl.querySelector(".q-fb");fb.hidden=false;fb.className="q-fb "+(correct?"ok":"no");
+        fb.innerHTML=(correct?"정답입니다! ":`오답입니다. 정답: ${"ABCD"[q.ans]}. `)+`<div class="q-ex">${q.ex}</div>`;
+      });
+    });
+  });
+})();
+
+/* ============ 퀴즈 ============ */
+const wrong=[];
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function blankHTML(en){return en.replace(/<b>.*?<\/b>/,'<span class="blank">(&nbsp;&nbsp;______&nbsp;&nbsp;)</span>');}
+let QUIZ=[];
+function buildQuiz(){
+  const items=[];
+  DATA.forEach(d=>{const ex=d.m[0];items.push({ans:d.w,en:ex.en,tr:ex.tr});});
+  Object.keys(REF).forEach(k=>{const r=REF[k];items.push({ans:k,en:r.en,tr:r.tr});});
+  const pool=[...new Set(items.map(i=>i.ans))];
+  items.forEach(it=>{
+    const opts=new Set([it.ans]);
+    while(opts.size<4){opts.add(pool[Math.floor(Math.random()*pool.length)]);}
+    it.options=shuffle([...opts]);
+  });
+  QUIZ=items;
+  document.getElementById("scoreTotal").textContent=items.length;
+  const list=document.getElementById("quizList");
+  list.innerHTML=items.map((it,i)=>`
+    <div class="q" data-qi="${i}">
+      <div class="q-num">Q ${i+1} / ${items.length}</div>
+      <div class="q-stem serif-ex">${blankHTML(it.en)}</div>
+      <div class="opts">${it.options.map((o,k)=>`<button class="opt" data-o="${o}"><span class="k">${"ABCD"[k]}</span><span>${o}</span></button>`).join("")}</div>
+      <div class="q-tools no-print">
+        <button class="q-tr-btn">예문 번역 보기</button>
+        <button class="q-spk">${svgSpkSm} 예문 듣기</button>
+      </div>
+      <div class="q-tr" hidden>${it.tr}</div>
+      <div class="q-fb" hidden></div>
+    </div>`).join("");
+
+  let answered=0,score=0;
+  const scoreNow=document.getElementById("scoreNow"),answeredCount=document.getElementById("answeredCount"),
+        wrongCount=document.getElementById("wrongCount"),bar=document.getElementById("progressBar");
+  list.querySelectorAll(".q").forEach(qEl=>{
+    const i=+qEl.dataset.qi,it=QUIZ[i];let done=false;
+    qEl.querySelector(".q-tr-btn").addEventListener("click",()=>{
+      const box=qEl.querySelector(".q-tr"),btn=qEl.querySelector(".q-tr-btn"),h=box.hasAttribute("hidden");
+      if(h){box.removeAttribute("hidden");btn.textContent="번역 숨기기";}else{box.setAttribute("hidden","");btn.textContent="예문 번역 보기";}
+    });
+    qEl.querySelector(".q-spk").addEventListener("click",e=>speak(it.en,state.accent,state.gender,e.currentTarget));
+    qEl.querySelectorAll(".opt").forEach(opt=>{
+      opt.addEventListener("click",()=>{
+        if(done)return;done=true;answered++;
+        const chosen=opt.dataset.o,correct=chosen===it.ans;
+        qEl.querySelectorAll(".opt").forEach(o=>{o.disabled=true;if(o.dataset.o===it.ans)o.classList.add("correct");});
+        if(!correct)opt.classList.add("wrong");
+        const fb=qEl.querySelector(".q-fb");fb.hidden=false;fb.className="q-fb "+(correct?"ok":"no");
+        fb.innerHTML=correct?"정답입니다!":`오답입니다. 정답: <b>${it.ans}</b>`;
+        if(correct){score++;}else{wrong.push({en:it.en,tr:it.tr,ans:it.ans,chosen});}
+        scoreNow.textContent=score;answeredCount.textContent=answered;wrongCount.textContent=wrong.length;
+        bar.style.width=(answered/QUIZ.length*100)+"%";
+      });
+    });
+  });
+}
+
+/* ============ 오답노트 ============ */
+function renderNotebook(){
+  const box=document.getElementById("notebook");
+  if(!wrong.length){box.innerHTML=`<div class="nb-empty">아직 오답이 없습니다. 퀴즈에서 틀린 문항이 여기에 모입니다.</div>`;return;}
+  box.innerHTML=wrong.map((w,i)=>{
+    const filled=w.en.replace(/<b>.*?<\/b>/,`<b>${w.ans}</b>`);
+    return `<div class="nb-item">
+      <div class="q-num">오답 ${i+1}</div>
+      <div class="nb-ex">${filled}</div>
+      <div class="nb-tag"><span class="x">내 답: ${w.chosen}</span> &nbsp;·&nbsp; <span class="o">정답: ${w.ans}</span></div>
+      <div class="nb-tr">${w.tr}</div>
+    </div>`;
+  }).join("");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI와 일자리 · 영어 학습 웹앱</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --paper:#eceae2; --surface:#ffffff; --ink:#20242e; --muted:#6b7280;
+  --line:#e2e0d6; --primary:#274b7a; --primary-soft:#eaf0f7;
+  --accent:#0e9f8e; --accent-soft:#e2f4f1; --red:#d62828;
+  --easy:#2e9e5b; --medium:#c67a16; --hard:#c23b5b;
+  --ok:#e7f6ec; --okbd:#2e9e5b; --nobd:#d62828; --no:#fbeaea;
+  --radius:14px; --sh:0 1px 3px rgba(30,34,46,.07),0 6px 20px rgba(30,34,46,.05);
+  --font:'Pretendard Variable','Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px}
+h1,h2,p{margin:0}
+.wrap{max-width:940px;margin:0 auto;padding:0 16px}
+
+/* header */
+header{padding:34px 0 20px;border-bottom:1px solid var(--line);background:
+  radial-gradient(1200px 200px at 20% -40%, #dfe8f2 0%, transparent 60%),var(--paper)}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);font-weight:700}
+h1{font-size:29px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;line-height:1.25}
+h1 .hl{color:var(--primary)}
+.sub{color:var(--muted);font-size:14.5px;max-width:640px}
+.src{margin-top:12px;font-size:12.5px;color:var(--muted);background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:inline-block}
+
+/* tabs */
+.tabs{position:sticky;top:0;z-index:30;background:rgba(236,234,226,.9);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:8px 0}
+.tabs-inner{display:flex;gap:6px;overflow-x:auto;max-width:940px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:8px 15px;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;
+  white-space:nowrap;transition:.15s}
+.tab:hover{border-color:var(--primary)}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+main{padding:26px 0 90px}
+
+/* level band */
+.level-band{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding:14px 18px;border-radius:var(--radius);color:#fff;margin-bottom:20px;box-shadow:var(--sh)}
+.easy .level-band{background:linear-gradient(100deg,#2e9e5b,#37b06a)}
+.medium .level-band{background:linear-gradient(100deg,#c67a16,#dc9226)}
+.hard .level-band{background:linear-gradient(100deg,#c23b5b,#d5527040)}
+.hard .level-band{background:linear-gradient(100deg,#c23b5b,#d75270)}
+.listening .level-band{background:linear-gradient(100deg,#274b7a,#356299)}
+.writing .level-band{background:linear-gradient(100deg,#5b3ea8,#7758c9)}
+.level-name{font-size:22px;font-weight:800}
+.level-toeic{font-size:13.5px;opacity:.92}
+
+/* section titles */
+.sec-title{font-size:16.5px;font-weight:800;margin:30px 0 12px;padding-left:12px;
+  border-left:4px solid var(--primary);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.easy .sec-title{border-color:var(--easy)} .medium .sec-title{border-color:var(--medium)}
+.hard .sec-title{border-color:var(--hard)}
+.hint{font-size:12px;font-weight:500;color:var(--muted)}
+.pill{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-soft);
+  padding:2px 9px;border-radius:999px}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;font-size:14px;color:var(--muted);margin-bottom:8px}
+
+/* clickable words + tooltip */
+.w{cursor:pointer;border-radius:3px;transition:background .1s}
+.w:hover{background:#fff3c4}
+.gloss{border-bottom:1.5px dotted var(--primary);position:relative}
+.gloss:hover::after,.form-chip:hover::after{content:attr(data-tip);position:absolute;
+  left:50%;bottom:135%;transform:translateX(-50%);background:var(--ink);color:#fff;
+  padding:6px 10px;border-radius:8px;font-size:12.5px;font-weight:600;white-space:nowrap;
+  z-index:50;box-shadow:var(--sh);pointer-events:none}
+.gloss:hover::before{content:'';position:absolute;left:50%;bottom:120%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:var(--ink);z-index:50;pointer-events:none}
+.rd{color:var(--red);font-weight:800;cursor:pointer}
+.rd .w:hover{background:transparent}
+
+/* vocab table */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--sh)}
+table.vocab{border-collapse:collapse;width:100%;min-width:720px;font-size:14.5px}
+.vocab th{background:#f4f2ea;text-align:left;padding:11px 12px;font-weight:800;
+  font-size:13px;border-bottom:1px solid var(--line);white-space:nowrap}
+.vocab td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.vocab tr:last-child td{border-bottom:none}
+.c-word .headword{font-weight:800;font-size:16px}
+.c-ipa{color:var(--muted);white-space:nowrap;font-family:'Times New Roman',serif}
+.c-ko{white-space:nowrap;font-weight:600}
+.c-ex{min-width:220px}
+.ko-inline{color:var(--muted);font-size:13px}
+.tipwrap{position:relative;cursor:help}
+.tipwrap:hover::after{content:attr(data-tip);position:absolute;left:0;top:115%;
+  background:var(--ink);color:#fff;padding:6px 10px;border-radius:8px;font-size:12.5px;
+  white-space:normal;max-width:280px;z-index:50;box-shadow:var(--sh)}
+.c-forms{min-width:170px}
+.form{margin-bottom:6px}
+.form-chip{border:1px solid var(--line);background:#fbfaf6;border-radius:8px;padding:4px 9px;
+  font-size:13px;font-weight:700;cursor:pointer;position:relative}
+.form-chip .pos{color:var(--muted);font-weight:500;font-size:11.5px}
+.form-detail{display:none;margin-top:6px;padding:8px 10px;background:var(--accent-soft);
+  border-radius:8px;font-size:13px}
+.form-detail.open{display:block}
+.none{color:var(--muted)}
+
+/* grammar */
+.gram{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;box-shadow:var(--sh);margin-bottom:16px}
+.gram-head{font-size:17px;font-weight:800;margin-bottom:10px}
+.gram-explain{background:#fbfaf6;border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;font-size:14.5px;line-height:1.75}
+.gram-explain b{color:var(--primary)} .gram-explain .rd{cursor:default}
+.gram-sub{font-weight:800;font-size:14px;margin:16px 0 8px;color:var(--primary)}
+.gram-pair{margin-top:18px;padding-top:16px;border-top:2px dashed var(--line)}
+.pair-head{font-weight:800;color:var(--accent);margin-bottom:10px}
+.gex-row{display:grid;grid-template-columns:34px 1fr;gap:6px 8px;padding:8px 0;border-bottom:1px dashed var(--line);align-items:start}
+.gex-row:last-child{border-bottom:none}
+.gex-en{font-size:15px;grid-column:2}
+.gex-ko{grid-column:2;color:var(--muted);font-size:13px}
+.mini-play{grid-row:1/3;width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--accent-soft);color:var(--accent);font-size:12px;cursor:pointer}
+.mini-play:hover{background:var(--accent);color:#fff}
+
+/* exam */
+.exam{margin-top:18px;background:#f9f8f3;border:1px solid var(--line);border-radius:12px;padding:14px}
+.exam-title{font-weight:800;font-size:14.5px;margin-bottom:12px}
+.exq{padding:12px 0;border-bottom:1px dashed var(--line)}
+.exq:last-child{border-bottom:none}
+.exq-q{display:flex;gap:8px;align-items:flex-start;font-size:15px;font-weight:600;margin-bottom:8px}
+.exq-no{flex:0 0 auto;width:24px;height:24px;border-radius:6px;color:#fff;font-size:13px;
+  display:grid;place-items:center;font-weight:800}
+.exq-no.e{background:var(--easy)} .exq-no.m{background:var(--medium)} .exq-no.h{background:var(--hard)}
+.exq-text{flex:1}
+.tier-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap}
+.tier-badge.e{background:var(--easy)} .tier-badge.m{background:var(--medium)} .tier-badge.h{background:var(--hard)}
+
+/* hard words */
+.hardwords{margin-top:14px;background:#fff;border:1px dashed var(--line);border-radius:10px;padding:12px}
+.hw-title{font-weight:800;font-size:13.5px;margin-bottom:8px;color:var(--red)}
+.hw{font-size:14px;padding:3px 0}
+.hw-forms{color:var(--muted);font-size:12.5px}
+
+/* passage */
+.passage{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 18px;box-shadow:var(--sh)}
+.pass-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.pass-body{font-size:17px;line-height:2.05}
+.sent{}
+.sent-play{border:none;background:none;cursor:pointer;font-size:13px;opacity:.5;padding:0 3px}
+.sent-play:hover{opacity:1}
+.btn{border:1px solid var(--primary);background:var(--primary);color:#fff;padding:8px 14px;
+  border-radius:9px;font-weight:700;font-size:14px;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:#fff;color:var(--primary)}
+.btn.small{padding:6px 12px;font-size:13px}
+
+/* quiz */
+.quiz .sec-title{margin-top:34px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+  margin-bottom:12px;box-shadow:var(--sh)}
+.q-head{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}
+.q-no{flex:0 0 auto;background:var(--primary);color:#fff;font-weight:800;font-size:12.5px;
+  padding:3px 9px;border-radius:7px}
+.q-text{font-size:15.5px;font-weight:600;flex:1}
+.opts{display:flex;flex-direction:column;gap:8px}
+.mc.ox .opts{flex-direction:row}
+.opt{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);
+  background:#fbfaf6;border-radius:10px;padding:9px 12px;font-size:14.5px;cursor:pointer;transition:.12s;flex:1}
+.opt:hover{border-color:var(--primary);background:var(--primary-soft)}
+.optkey{flex:0 0 auto;width:24px;height:24px;border-radius:6px;background:#fff;border:1px solid var(--line);
+  display:grid;place-items:center;font-weight:800;font-size:13px}
+.mc.done .opt{cursor:default}
+.opt.correct{border-color:var(--okbd);background:var(--ok)}
+.opt.correct .optkey{background:var(--okbd);color:#fff;border-color:var(--okbd)}
+.opt.wrong{border-color:var(--nobd);background:var(--no)}
+.opt.wrong .optkey{background:var(--nobd);color:#fff;border-color:var(--nobd)}
+.explain,.reveal-box{display:none;margin-top:10px;background:#f4f7fb;border:1px solid #d9e4f0;
+  border-radius:10px;padding:11px 13px;font-size:14px}
+.explain.open,.reveal-box.open{display:block}
+.ko-lit{color:var(--primary);font-weight:600;margin-bottom:6px}
+.why{color:#374151}
+.ans-line{margin-bottom:6px}
+.short-input,.text-input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;
+  font-family:var(--font);font-size:14.5px;margin-bottom:8px;resize:vertical}
+.text-input{width:auto;min-width:180px;margin-right:8px;margin-bottom:0}
+.winput,.wcompose{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.wcompose{flex-direction:column;align-items:stretch}
+.check-msg{font-weight:700;font-size:14px}
+.check-msg.ok{color:var(--okbd)} .check-msg.no{color:var(--nobd)}
+
+/* literal 직독직해 */
+.lit{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px;box-shadow:var(--sh)}
+.litrow{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line)}
+.litrow:last-child{border-bottom:none}
+.chunks{display:flex;flex-wrap:wrap;gap:8px}
+.chunk{display:inline-flex;flex-direction:column;border:1px solid var(--line);border-radius:9px;
+  padding:5px 9px;cursor:pointer;background:#fbfaf6;transition:.12s}
+.chunk:hover{border-color:var(--accent);background:var(--accent-soft)}
+.chunk-en{font-size:14.5px;font-weight:600}
+.chunk-ko{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* listening */
+.listen-ctrl{display:flex;gap:8px;margin:4px 0 10px}
+.script-title{font-weight:800;margin-bottom:8px;color:var(--primary)}
+.lq .reveal-box{background:#fff}
+
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:26px 0 40px}
+
+@media (max-width:600px){
+  h1{font-size:23px} .pass-body{font-size:16px;line-height:1.95}
+  .mc.ox .opts{flex-direction:column}
+  .gloss:hover::after{white-space:normal;max-width:220px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* ===== 추가 기능 스타일 ===== */
+/* 예문 컨트롤(단어표 생활예문 + 다른 품사 예문) */
+.ex-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.ex-btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:3px 9px;
+  font-size:12px;font-weight:700;cursor:pointer;line-height:1.5;color:var(--primary);white-space:nowrap}
+.ex-btn:hover{border-color:var(--primary);background:var(--primary-soft)}
+.ex-btn.play{color:var(--accent)}
+.ex-btn.play:hover{background:var(--accent-soft);border-color:var(--accent)}
+.ex-en{flex:1 1 140px;min-width:120px}
+.ex-ko{display:none;flex-basis:100%;color:var(--muted);font-size:13px;margin-top:2px}
+.ex-ko.open{display:block}
+.fd-head{margin-bottom:6px}
+.fd-ex-label{font-size:11.5px;font-weight:800;color:var(--muted);margin-bottom:3px}
+
+/* 문법 예문 직독직해 해석 토글 */
+.gex-ko{display:none}
+.gex-ko.open{display:block}
+.gex-tr{margin-left:6px;vertical-align:middle}
+
+/* 단어 시험 */
+.vocabtest .level-band{background:linear-gradient(100deg,#0e9f8e,#14b8a6)}
+.vt-top{margin:2px 0 14px}
+.vt-ctrl{display:flex;gap:8px;margin:2px 0 10px;flex-wrap:wrap}
+.vt-ko{display:none;color:var(--primary);font-weight:600;margin:2px 0 10px}
+.vt-ko.open{display:block}
+.vt-q .q-text{font-family:inherit}
+
+/* 쓰기평가 제시 단어 */
+.wordbank{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0 10px;
+  padding:8px 10px;background:#f2effa;border:1px solid #e0d8f4;border-radius:10px}
+.wb-label{font-size:12px;font-weight:800;color:#5b3ea8;margin-right:2px}
+.wb-chip{border:1px solid #d9cef0;background:#fff;border-radius:999px;padding:3px 10px;
+  font-size:13px;font-weight:700;color:#4b2fa0;cursor:pointer}
+.wb-chip:hover{background:#efeaff}
+
+/* 듣기 발음 선택 (탭 왼쪽) */
+.voice-ctrl{display:flex;align-items:center;gap:7px;flex:0 0 auto;padding-right:8px;margin-right:2px;border-right:1px solid var(--line)}
+.vc-label{font-size:11.5px;font-weight:800;color:var(--muted);white-space:nowrap}
+.vc-group{display:flex;gap:2px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:2px}
+.vc-btn{border:none;background:none;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;white-space:nowrap}
+.vc-btn:hover{background:var(--primary-soft)}
+.vc-btn.active{background:var(--primary);color:#fff}
+@media (max-width:600px){ .vc-label{display:none} .vc-btn{padding:5px 7px;font-size:11.5px} }
+
+/* 오답 노트 */
+.wn-count{display:inline-block;min-width:18px;text-align:center;background:#d62828;color:#fff;
+  border-radius:999px;font-size:11px;font-weight:800;padding:1px 6px;margin-left:2px}
+.tab.active .wn-count{background:#fff;color:#d62828}
+.wrongnote .level-band{background:linear-gradient(100deg,#c23b5b,#d75270)}
+.wn-empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;
+  padding:22px;text-align:center;color:var(--muted);font-size:14.5px;line-height:1.9}
+.wn-q{border-left:4px solid var(--hard)}
+.wn-cleared{margin-top:8px;color:var(--okbd);font-weight:700;font-size:13px}
+.mastered{opacity:.75}
+
+/* 단어 클릭 툴팁 */
+#gtip{position:absolute;z-index:200;display:none;background:var(--ink);color:#fff;
+  padding:8px 11px;border-radius:10px;box-shadow:var(--sh);font-size:13px;font-weight:600;
+  max-width:270px;line-height:1.55}
+#gtip .gt-ipa{font-family:'Times New Roman',serif;opacity:.95;margin-right:6px}
+#gtip .gt-pos{display:inline-block;background:rgba(255,255,255,.22);border-radius:6px;
+  padding:1px 6px;font-size:11px;font-weight:800;margin-right:6px}
+#gtip .gt-ko{font-weight:700}
+/* 단어표 1열 품사 뱃지 */
+.hw-pos{display:inline-block;background:var(--primary-soft);color:var(--primary);
+  border-radius:6px;padding:1px 7px;font-size:11px;font-weight:800;margin-left:5px;vertical-align:middle}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">English for TOEIC · AI &amp; the Future of Work</div>
+    <h1>AI가 <span class="hl">직장 동료</span>가 되는 시대 <br>난이도별 영어 학습 웹앱</h1>
+    <p class="sub">원문 기사(‘AI가 직장 동료가 되고 있다’)를 토대로 EASY·MEDIUM·HARD 3단계 지문, 단어표·문법·확인문제·직독직해, 그리고 듣기·쓰기 평가까지 한 곳에 담았습니다. 단어와 문장을 누르면 실제 영국식(영국 발음) 영어가 재생됩니다.</p>
+    <div class="src">🔊 발음은 브라우저 음성(TTS)으로 재생 · 상단에서 <b>미국/영국 · 여성/남성</b> 선택 (기본: 영국·여성) · Chrome/Edge/Safari 권장</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <div class="voice-ctrl" title="듣기 발음 선택">
+      <span class="vc-label">🔊 발음</span>
+      <div class="vc-group" data-vgroup="accent">
+        <button class="vc-btn" data-vset="accent:US">🇺🇸 미국</button>
+        <button class="vc-btn active" data-vset="accent:GB">🇬🇧 영국</button>
+      </div>
+      <div class="vc-group" data-vgroup="gender">
+        <button class="vc-btn active" data-vset="gender:female">여성</button>
+        <button class="vc-btn" data-vset="gender:male">남성</button>
+      </div>
+    </div>
+    <button class="tab" data-pane="easy">EASY · 200</button>
+    <button class="tab" data-pane="medium">MEDIUM · 300</button>
+    <button class="tab" data-pane="hard">HARD · 700</button>
+    <button class="tab" data-pane="listening">🎧 듣기평가</button>
+    <button class="tab" data-pane="writing">✍️ 쓰기평가</button>
+    <button class="tab" data-pane="vocabtest">📝 단어시험</button>
+    <button class="tab" data-pane="wrongnote">📕 오답노트 <span class="wn-count" id="wnCount">0</span></button>
+  </div>
+</nav>
+
+<main><div class="wrap" id="app"></div></main>
+
+<footer>AI &amp; the Future of Work · 영어 학습 웹앱 — 모든 발음은 Web Speech API로 재생됩니다.</footer>
+
+<script>
+/* =========================================================================
+   DATA — 원본 기사(‘AI가 직장 동료가 되다’)를 소스로 난이도별 영어 학습 콘텐츠
+   문자열은 모두 백틱(`)을 사용 → 아포스트로피/따옴표 안전
+   red: 해당 예문에서 빨간색으로 강조할 문구(정확히 일치)
+   ========================================================================= */
+const DATA = {
+  levels: {
+    /* ============================== EASY ============================== */
+    easy: {
+      title: `EASY`,
+      toeic: `토익 200점 수준 · 10문장`,
+      quizType: `OX 퀴즈`,
+      passage: [
+        { en:`AI is now working with people in many jobs.`,
+          chunks:[[`AI`,`AI는`],[`is now working`,`지금 함께 일하고 있다`],[`with people`,`사람들과`],[`in many jobs.`,`많은 직업에서`]] },
+        { en:`Some news shows use an AI anchor.`,
+          chunks:[[`Some news shows`,`몇몇 뉴스 프로그램은`],[`use`,`사용한다`],[`an AI anchor.`,`AI 앵커를`]] },
+        { en:`The AI anchor reads short news at the end of the show.`,
+          chunks:[[`The AI anchor`,`그 AI 앵커는`],[`reads`,`읽는다`],[`short news`,`짧은 뉴스를`],[`at the end of the show.`,`프로그램 끝부분에서`]] },
+        { en:`AI can also make music.`,
+          chunks:[[`AI`,`AI는`],[`can also make`,`또한 만들 수 있다`],[`music.`,`음악을`]] },
+        { en:`Every day, people upload many AI songs online.`,
+          chunks:[[`Every day,`,`매일`],[`people`,`사람들은`],[`upload`,`올린다`],[`many AI songs`,`많은 AI 노래를`],[`online.`,`온라인에`]] },
+        { en:`In one test, most people could not tell AI music from human music.`,
+          chunks:[[`In one test,`,`한 테스트에서`],[`most people`,`대부분의 사람들은`],[`could not tell`,`구별하지 못했다`],[`AI music from human music.`,`AI 음악과 사람 음악을`]] },
+        { en:`AI also helps teachers in schools.`,
+          chunks:[[`AI`,`AI는`],[`also helps`,`또한 돕는다`],[`teachers`,`교사들을`],[`in schools.`,`학교에서`]] },
+        { en:`It gives extra lessons to students who need help.`,
+          chunks:[[`It`,`그것은`],[`gives`,`준다`],[`extra lessons`,`추가 수업을`],[`to students`,`학생들에게`],[`who need help.`,`도움이 필요한`]] },
+        { en:`But the teacher still helps students feel happy and try hard.`,
+          chunks:[[`But`,`하지만`],[`the teacher`,`교사는`],[`still helps`,`여전히 돕는다`],[`students`,`학생들이`],[`feel happy and try hard.`,`행복을 느끼고 열심히 하도록`]] },
+        { en:`AI does not take our jobs; it changes them.`,
+          chunks:[[`AI`,`AI는`],[`does not take`,`빼앗지 않는다`],[`our jobs;`,`우리 일자리를`],[`it changes them.`,`그것을 바꾼다`]] }
+      ],
+      vocab: [
+        { w:`anchor`, pos:`명사`, ipa:`[ˈæŋkə]`, ko:`앵커, 뉴스 진행자`,
+          ex:{en:`The news anchor read the headlines.`, ko:`그 뉴스 앵커가 헤드라인을 읽었다.`},
+          forms:[ {w:`anchor`, pos:`동사`, ipa:`[ˈæŋkə]`, ko:`고정하다, 닻을 내리다`, ex:{en:`We anchor the boat to the dock.`, ko:`우리는 배를 부두에 고정한다.`}} ] },
+        { w:`upload`, pos:`동사`, ipa:`[ˌʌpˈləʊd]`, ko:`올리다, 업로드하다`,
+          ex:{en:`I upload photos every day.`, ko:`나는 매일 사진을 올린다.`},
+          forms:[ {w:`upload`, pos:`명사`, ipa:`[ˈʌpləʊd]`, ko:`업로드(된 파일)`, ex:{en:`The upload finished in seconds.`, ko:`그 업로드는 몇 초 만에 끝났다.`}} ] },
+        { w:`extra`, pos:`형용사`, ipa:`[ˈekstrə]`, ko:`추가의, 여분의`,
+          ex:{en:`I need extra time.`, ko:`나는 추가 시간이 필요하다.`},
+          forms:[ {w:`extra`, pos:`명사`, ipa:`[ˈekstrə]`, ko:`추가되는 것`, ex:{en:`Keep a few extras just in case.`, ko:`만일을 위해 여분을 몇 개 챙겨 둬.`}} ] },
+        { w:`human`, pos:`형용사/명사`, ipa:`[ˈhjuːmən]`, ko:`인간의; 인간`,
+          ex:{en:`Humans need water.`, ko:`인간은 물이 필요하다.`},
+          forms:[ {w:`humanity`, pos:`명사`, ipa:`[hjuːˈmænəti]`, ko:`인류, 인간성`, ex:{en:`The story shows the best of humanity.`, ko:`그 이야기는 인류의 가장 좋은 면을 보여 준다.`}} ] },
+        { w:`online`, pos:`부사/형용사`, ipa:`[ˌɒnˈlaɪn]`, ko:`온라인으로, 온라인의`,
+          ex:{en:`I study English online.`, ko:`나는 영어를 온라인으로 공부한다.`},
+          forms:[ {w:`offline`, pos:`부사/형용사`, ipa:`[ˌɒfˈlaɪn]`, ko:`오프라인으로`, ex:{en:`Let's talk about it offline.`, ko:`그건 따로 만나서 얘기하자.`}} ] }
+      ],
+      grammar: [
+        {
+          title:`현재 시제 (Present Simple) ↔ 현재진행 (Present Continuous)`,
+          explain:`‘현재 시제’는 <b>늘·자주·항상 일어나는 일</b>을 말할 때 써요. 예를 들어 “AI <span class="rd">helps</span> teachers.(AI는 교사를 돕는다)”처럼요. 주어가 he/she/it(3인칭 단수)이면 동사 뒤에 <b>-s</b>를 붙여요 → help → help<span class="rd">s</span>. 아주 쉽게 말하면, ‘매일 하는 습관’은 현재 시제예요.`,
+          examples:[
+            {en:`AI <r>helps</r> teachers in schools.`, ko:`AI는 / 돕는다 / 교사들을 / 학교에서.`},
+            {en:`The anchor <r>reads</r> the news every night.`, ko:`그 앵커는 / 읽는다 / 뉴스를 / 매일 밤.`},
+            {en:`People <r>upload</r> songs online.`, ko:`사람들은 / 올린다 / 노래를 / 온라인에.`},
+            {en:`My mother <r>works</r> at a bank.`, ko:`내 어머니는 / 일한다 / 은행에서.`},
+            {en:`Water <r>boils</r> at 100 degrees.`, ko:`물은 / 끓는다 / 100도에서.`}
+          ],
+          pair:{
+            title:`현재진행 (Present Continuous)`,
+            diff:`현재진행은 <b>지금 이 순간 하고 있는 일</b>이에요. 모양은 <b>be동사(am/is/are) + 동사-ing</b> 예요. 차이: “AI <span class="rd">helps</span> teachers”는 <b>평소·습관</b>(항상 돕는다)이고, “AI <span class="rd">is helping</span> teachers”는 <b>바로 지금</b> 돕고 있다는 뜻이에요.`,
+            examples:[
+              {en:`AI <r>is helping</r> teachers right now.`, ko:`AI는 / 돕고 있다 / 교사들을 / 바로 지금.`},
+              {en:`The anchor <r>is reading</r> the news now.`, ko:`그 앵커는 / 읽고 있다 / 뉴스를 / 지금.`},
+              {en:`People <r>are uploading</r> songs at this moment.`, ko:`사람들은 / 올리고 있다 / 노래를 / 이 순간에.`},
+              {en:`She <r>is working</r> today.`, ko:`그녀는 / 일하고 있다 / 오늘.`},
+              {en:`The water <r>is boiling</r> now.`, ko:`그 물은 / 끓고 있다 / 지금.`}
+            ]
+          },
+          exam:[
+            {q:`He ___ to school every day.`, choices:[`go`,`goes`,`going`,`is go`], answer:1, ex:`주어 He(3인칭 단수) + 습관(every day) → 현재 시제 goes.`, tier:`쉬움`},
+            {q:`They ___ music online.`, choices:[`uploads`,`upload`,`is upload`,`uploading`], answer:1, ex:`주어 They는 복수 → -s 없이 upload.`, tier:`쉬움`},
+            {q:`Water ___ at 100 degrees.`, choices:[`boil`,`boils`,`boiling`,`are boil`], answer:1, ex:`변하지 않는 사실 → 현재 시제, 3인칭 단수 boils.`, tier:`쉬움`},
+            {q:`The anchor ___ the news every night.`, choices:[`read`,`reads`,`reading`,`are read`], answer:1, ex:`every night(습관) + 단수 → reads.`, tier:`쉬움`},
+            {q:`My mother ___ at a bank.`, choices:[`work`,`working`,`works`,`are work`], answer:2, ex:`3인칭 단수 → works.`, tier:`쉬움`},
+            {q:`Look! AI ___ a song right now.`, choices:[`make`,`makes`,`is making`,`made`], answer:2, ex:`right now(지금) → 현재진행 is making.`, tier:`중간`},
+            {q:`Right now, students ___ in the library.`, choices:[`study`,`studies`,`are studying`,`studied`], answer:2, ex:`Right now + 복수 → are studying.`, tier:`중간`},
+            {q:`고르시오: “그녀는 지금 일하고 있다.”`, choices:[`She works now.`,`She is working now.`,`She work now.`,`She working now.`], answer:1, ex:`지금 하는 일 → be + -ing = is working.`, tier:`중간`},
+            {q:`틀린 곳을 고른 문장은?`, choices:[`He plays soccer on Sundays.`,`They are watching TV now.`,`She is go to school.`,`Water boils at 100 degrees.`], answer:2, ex:`is go → is going 또는 goes. be동사 뒤엔 반드시 -ing.`, tier:`어려움`},
+            {q:`빈칸: “Usually she reads books, but today she ___ a movie.”`, choices:[`watches`,`is watching`,`watch`,`watched`], answer:1, ex:`Usually(습관)=현재시제, but today(지금)=현재진행 is watching. 두 시제 대비.`, tier:`어려움`}
+          ],
+          hardWords:[
+            {w:`degree`, ipa:`[dɪˈɡriː]`, ko:`(온도의) 도, 정도`, forms:[]},
+            {w:`library`, ipa:`[ˈlaɪbrəri]`, ko:`도서관`, forms:[]},
+            {w:`usually`, ipa:`[ˈjuːʒuəli]`, ko:`보통, 대개`, forms:[{w:`usual`, pos:`형용사`, ipa:`[ˈjuːʒuəl]`, ko:`평소의`, ex:{en:`This is my usual seat.`, ko:`이건 내 평소 자리다.`}}]}
+          ]
+        }
+      ],
+      quiz:[
+        { type:`ox`, q:`AI can make music.`, ko:`AI는 / 만들 수 있다 / 음악을.`, answer:true,
+          ex:`본문 “AI can also make music.” → AI는 음악을 만들 수 있으므로 참(O).` },
+        { type:`ox`, q:`Most people could easily tell AI music from human music.`, ko:`대부분의 사람들은 / 쉽게 구별할 수 있었다 / AI 음악과 사람 음악을.`, answer:false,
+          ex:`본문은 “could not tell(구별하지 못했다)”라고 했으므로 거짓(X). ‘not’을 놓치면 실수합니다.` },
+        { type:`ox`, q:`AI takes all our jobs.`, ko:`AI는 / 빼앗는다 / 우리의 모든 일자리를.`, answer:false,
+          ex:`본문 “AI does not take our jobs; it changes them.” → 빼앗는 게 아니라 바꾼다고 했으므로 거짓(X).` }
+      ]
+    },
+
+    /* ============================== MEDIUM ============================== */
+    medium: {
+      title: `MEDIUM`,
+      toeic: `토익 300점 수준 · 7문장`,
+      quizType: `4지선다 객관식`,
+      passage:[
+        { en:`Artificial intelligence has become a kind of coworker in many industries.`,
+          chunks:[[`Artificial intelligence`,`인공지능은`],[`has become`,`되었다`],[`a kind of coworker`,`일종의 동료가`],[`in many industries.`,`많은 산업에서`]] },
+        { en:`Several TV stations now use AI anchors to deliver standard news reports.`,
+          chunks:[[`Several TV stations`,`여러 방송사는`],[`now use`,`이제 사용한다`],[`AI anchors`,`AI 앵커를`],[`to deliver`,`전달하기 위해`],[`standard news reports.`,`정형화된 뉴스 리포트를`]] },
+        { en:`In the music world, about 34% of new tracks uploaded each day are created by AI.`,
+          chunks:[[`In the music world,`,`음악계에서`],[`about 34% of new tracks`,`신규 트랙의 약 34%가`],[`uploaded each day`,`매일 업로드되는`],[`are created`,`만들어진다`],[`by AI.`,`AI에 의해`]] },
+        { en:`During a blind test, 97% of listeners could not separate AI songs from human songs.`,
+          chunks:[[`During a blind test,`,`블라인드 테스트에서`],[`97% of listeners`,`청취자의 97%는`],[`could not separate`,`구분하지 못했다`],[`AI songs from human songs.`,`AI 노래와 사람 노래를`]] },
+        { en:`Schools use AI platforms that check each student's data and offer personalized lessons.`,
+          chunks:[[`Schools`,`학교는`],[`use AI platforms`,`AI 플랫폼을 사용한다`],[`that check`,`확인하는`],[`each student's data`,`학생 각각의 데이터를`],[`and offer`,`그리고 제공하는`],[`personalized lessons.`,`맞춤형 수업을`]] },
+        { en:`According to a global report, 22% of jobs will be created or lost within five years.`,
+          chunks:[[`According to a global report,`,`한 글로벌 보고서에 따르면`],[`22% of jobs`,`일자리의 22%가`],[`will be created or lost`,`창출되거나 사라질 것이다`],[`within five years.`,`5년 안에`]] },
+        { en:`Repetitive office jobs are shrinking, while AI experts and care workers are growing quickly.`,
+          chunks:[[`Repetitive office jobs`,`반복적인 사무직은`],[`are shrinking,`,`줄어들고 있다`],[`while`,`반면`],[`AI experts and care workers`,`AI 전문가와 돌봄 종사자는`],[`are growing quickly.`,`빠르게 늘고 있다`]] }
+      ],
+      vocab:[
+        { w:`industry`, pos:`명사`, ipa:`[ˈɪndəstri]`, ko:`산업, 업계`,
+          ex:{en:`The car industry is very big.`, ko:`자동차 산업은 매우 크다.`},
+          forms:[ {w:`industrial`, pos:`형용사`, ipa:`[ɪnˈdʌstriəl]`, ko:`산업의`, ex:{en:`The city has a large industrial zone.`, ko:`그 도시에는 큰 공업 지대가 있다.`}} ] },
+        { w:`deliver`, pos:`동사`, ipa:`[dɪˈlɪvə]`, ko:`전달하다, 배달하다`,
+          ex:{en:`They deliver pizza fast.`, ko:`그들은 피자를 빨리 배달한다.`},
+          forms:[ {w:`delivery`, pos:`명사`, ipa:`[dɪˈlɪvəri]`, ko:`배달, 전달`, ex:{en:`My package is out for delivery.`, ko:`내 소포가 배송 중이다.`}} ] },
+        { w:`standard`, pos:`형용사/명사`, ipa:`[ˈstændəd]`, ko:`표준의; 기준`,
+          ex:{en:`This is the standard size.`, ko:`이것이 표준 크기다.`},
+          forms:[ {w:`standardize`, pos:`동사`, ipa:`[ˈstændədaɪz]`, ko:`표준화하다`, ex:{en:`We should standardize the process.`, ko:`우리는 그 절차를 표준화해야 한다.`}} ] },
+        { w:`create`, pos:`동사`, ipa:`[kriˈeɪt]`, ko:`만들다, 창작하다`,
+          ex:{en:`She creates beautiful art.`, ko:`그녀는 아름다운 예술을 창작한다.`},
+          forms:[ {w:`creation`, pos:`명사`, ipa:`[kriˈeɪʃn]`, ko:`창작물, 창조`, ex:{en:`This dish is the chef's own creation.`, ko:`이 요리는 셰프만의 창작품이다.`}}, {w:`creative`, pos:`형용사`, ipa:`[kriˈeɪtɪv]`, ko:`창의적인`, ex:{en:`She has a very creative mind.`, ko:`그녀는 매우 창의적인 사고를 가졌다.`}} ] },
+        { w:`separate`, pos:`동사`, ipa:`[ˈsepəreɪt]`, ko:`구분하다, 분리하다`,
+          ex:{en:`Please separate the trash.`, ko:`쓰레기를 분리해 주세요.`},
+          forms:[ {w:`separation`, pos:`명사`, ipa:`[ˌsepəˈreɪʃn]`, ko:`분리, 구분`, ex:{en:`There is a clear separation of roles.`, ko:`역할의 명확한 구분이 있다.`}} ] },
+        { w:`personalized`, pos:`형용사`, ipa:`[ˈpɜːsənəlaɪzd]`, ko:`맞춤형의`,
+          ex:{en:`I got a personalized gift.`, ko:`나는 맞춤 선물을 받았다.`},
+          forms:[ {w:`personalize`, pos:`동사`, ipa:`[ˈpɜːsənəlaɪz]`, ko:`개인 맞춤화하다`, ex:{en:`You can personalize your profile.`, ko:`너는 네 프로필을 맞춤 설정할 수 있다.`}} ] },
+        { w:`repetitive`, pos:`형용사`, ipa:`[rɪˈpetətɪv]`, ko:`반복적인`,
+          ex:{en:`The work is repetitive.`, ko:`그 일은 반복적이다.`},
+          forms:[ {w:`repeat`, pos:`동사`, ipa:`[rɪˈpiːt]`, ko:`반복하다`, ex:{en:`Could you repeat that, please?`, ko:`다시 한 번 말씀해 주시겠어요?`}} ] },
+        { w:`shrink`, pos:`동사`, ipa:`[ʃrɪŋk]`, ko:`줄어들다`,
+          ex:{en:`Clothes shrink in hot water.`, ko:`옷은 뜨거운 물에서 줄어든다.`},
+          forms:[ {w:`shrinkage`, pos:`명사`, ipa:`[ˈʃrɪŋkɪdʒ]`, ko:`수축, 감소`, ex:{en:`Wash it in cold water to avoid shrinkage.`, ko:`줄어드는 것을 막으려면 찬물에 세탁해라.`}} ] }
+      ],
+      grammar:[
+        {
+          title:`능동태 (Active) ↔ 수동태 (Passive)`,
+          explain:`‘능동태’는 <b>주어가 직접 행동</b>하는 문장이에요. “AI <span class="rd">creates</span> music.(AI가 음악을 만든다)” ‘수동태’는 <b>주어가 행동을 당하는</b> 문장이고, 모양은 <b>be동사 + 과거분사(p.p.)</b>예요. “Music <span class="rd">is created</span> by AI.(음악이 AI에 의해 만들어진다)” 누가 했는지는 <b>by ~</b>로 붙여요.`,
+          examples:[
+            {en:`Music <r>is created</r> by AI.`, ko:`음악이 / 만들어진다 / AI에 의해.`},
+            {en:`The news <r>is delivered</r> by an anchor.`, ko:`뉴스가 / 전달된다 / 앵커에 의해.`},
+            {en:`Many jobs <r>will be created</r> soon.`, ko:`많은 일자리가 / 창출될 것이다 / 곧.`},
+            {en:`The test <r>was done</r> in eight countries.`, ko:`그 시험은 / 행해졌다 / 8개국에서.`},
+            {en:`The lessons <r>are offered</r> to students.`, ko:`그 수업들은 / 제공된다 / 학생들에게.`}
+          ],
+          pair:{
+            title:`능동태 (Active)`,
+            diff:`차이: <b>수동태</b> “Music <span class="rd">is created</span> by AI”는 ‘음악’이 주어이고 <b>당하는</b> 느낌, <b>능동태</b> “AI <span class="rd">creates</span> music”은 ‘AI’가 주어이고 <b>직접 하는</b> 느낌이에요. 행동을 한 대상을 강조하려면 능동태, 행동을 받는 대상을 강조하려면 수동태를 써요.`,
+            examples:[
+              {en:`AI <r>creates</r> music.`, ko:`AI가 / 만든다 / 음악을.`},
+              {en:`An anchor <r>delivers</r> the news.`, ko:`앵커가 / 전달한다 / 뉴스를.`},
+              {en:`Companies <r>will create</r> many jobs soon.`, ko:`회사들이 / 창출할 것이다 / 많은 일자리를 / 곧.`},
+              {en:`Researchers <r>did</r> the test in eight countries.`, ko:`연구자들이 / 했다 / 그 시험을 / 8개국에서.`},
+              {en:`Schools <r>offer</r> the lessons to students.`, ko:`학교가 / 제공한다 / 그 수업들을 / 학생들에게.`}
+            ]
+          },
+          exam:[
+            {q:`The song ___ by a student.`, choices:[`writes`,`is written`,`write`,`writing`], answer:1, ex:`곡이 ‘쓰여지는’ 대상 → 수동태 be + p.p. = is written.`, tier:`쉬움`},
+            {q:`능동태로 바꾸면? “The news is read by the anchor.”`, choices:[`The anchor reads the news.`,`The news reads the anchor.`,`The anchor is read the news.`,`The news is reading.`], answer:0, ex:`by 뒤의 the anchor가 주어로 → The anchor reads the news.`, tier:`쉬움`},
+            {q:`Pizza ___ by the shop every day.`, choices:[`deliver`,`delivers`,`is delivered`,`delivering`], answer:2, ex:`피자가 배달되는 대상 → is delivered.`, tier:`쉬움`},
+            {q:`The room ___ every morning.`, choices:[`cleans`,`is cleaned`,`clean`,`cleaning`], answer:1, ex:`방이 청소되는 대상 → is cleaned.`, tier:`쉬움`},
+            {q:`능동태 “She makes the cake.”의 수동태는?`, choices:[`The cake is made by her.`,`The cake makes her.`,`The cake is make by her.`,`She is made the cake.`], answer:0, ex:`목적어 the cake가 주어로, be + p.p. = is made, 행위자는 by her.`, tier:`쉬움`},
+            {q:`Many jobs ___ in the future.`, choices:[`will create`,`will be created`,`are creating`,`create`], answer:1, ex:`일자리가 ‘창출되는’ 대상 + 미래 → will be created.`, tier:`중간`},
+            {q:`빈칸: “English ___ in many countries.”`, choices:[`speaks`,`is spoken`,`speak`,`is speaking`], answer:1, ex:`영어가 ‘말해지는’ 대상 → is spoken.`, tier:`중간`},
+            {q:`수동태 “The letter was sent yesterday.”의 능동태로 알맞은 것은? (행위자 He)`, choices:[`He sends the letter yesterday.`,`He sent the letter yesterday.`,`He is sent the letter.`,`The letter sent he.`], answer:1, ex:`과거 수동태 → 과거 능동태 sent, 주어 He.`, tier:`중간`},
+            {q:`틀린 문장을 고르시오.`, choices:[`The book was read by many people.`,`The car is washed on Sundays.`,`The song is create by AI.`,`The test was done last week.`], answer:2, ex:`is create → is created. 수동태는 반드시 과거분사(p.p.).`, tier:`어려움`},
+            {q:`빈칸: “These lessons ___ to students, and they ___ them very much.” (수동/능동 대비)`, choices:[`offer / are liking`,`are offered / like`,`are offer / likes`,`offered / are liked`], answer:1, ex:`수업은 ‘제공되는’ 대상(수동 are offered), 학생은 ‘좋아하는’ 주체(능동 like).`, tier:`어려움`}
+          ],
+          hardWords:[
+            {w:`researcher`, ipa:`[rɪˈsɜːtʃə]`, ko:`연구자`, forms:[{w:`research`, pos:`명사`, ipa:`[rɪˈsɜːtʃ]`, ko:`연구`, ex:{en:`The research is new.`, ko:`그 연구는 새롭다.`}}]},
+            {w:`country`, ipa:`[ˈkʌntri]`, ko:`나라, 국가`, forms:[]},
+            {w:`future`, ipa:`[ˈfjuːtʃə]`, ko:`미래`, forms:[]}
+          ]
+        }
+      ],
+      quiz:[
+        { type:`mc`, q:`How many new tracks uploaded each day are created by AI?`, ko:`매일 업로드되는 신규 트랙 중 몇 %가 AI에 의해 만들어지는가?`,
+          choices:[`About 10%`,`About 22%`,`About 34%`,`About 97%`], answer:2,
+          ex:`본문 “about 34% of new tracks ... are created by AI” → 정답은 약 34%. 22%는 일자리 통계, 97%는 블라인드 테스트 수치이므로 혼동하지 마세요.` },
+        { type:`mc`, q:`What did the blind test show?`, ko:`블라인드 테스트는 / 무엇을 보여주었는가?`,
+          choices:[`AI songs were clearly worse.`,`97% could not separate AI songs from human songs.`,`Only experts liked AI songs.`,`Human songs were uploaded more.`], answer:1,
+          ex:`본문 “97% of listeners could not separate AI songs from human songs” → 청취자 97%가 구분하지 못함.` },
+        { type:`mc`, q:`According to the global report, what will happen to 22% of jobs within five years?`, ko:`글로벌 보고서에 따르면 / 5년 안에 일자리의 22%에 / 무슨 일이 일어나는가?`,
+          choices:[`They will all disappear.`,`They will be created or lost.`,`They will stay the same.`,`They will move abroad.`], answer:1,
+          ex:`본문 “22% of jobs will be created or lost within five years” → 새로 생기거나 사라짐(둘 다 가능).` }
+      ]
+    },
+
+    /* ============================== HARD ============================== */
+    hard:{
+      title:`HARD`,
+      toeic:`토익 700점 수준 · 5문장`,
+      quizType:`주관식`,
+      passage:[
+        { en:`As artificial intelligence increasingly functions as a professional collaborator, the boundary between human and machine responsibilities is being redrawn.`,
+          chunks:[[`As artificial intelligence`,`인공지능이`],[`increasingly functions`,`점점 더 기능함에 따라`],[`as a professional collaborator,`,`전문적인 협력자로서`],[`the boundary`,`그 경계는`],[`between human and machine responsibilities`,`인간과 기계의 책임 사이의`],[`is being redrawn.`,`다시 그려지고 있다`]] },
+        { en:`While AI now handles breaking news and formulaic reports, tasks requiring in-depth investigation remain within the domain of human reporters.`,
+          chunks:[[`While AI now handles`,`AI가 이제 처리하는 반면`],[`breaking news and formulaic reports,`,`속보와 정형화된 리포트를`],[`tasks`,`업무는`],[`requiring in-depth investigation`,`심층 취재를 요하는`],[`remain`,`남아 있다`],[`within the domain of human reporters.`,`인간 기자의 영역 안에`]] },
+        { en:`A joint study by Harvard and Boston Consulting Group found that those who benefited most from AI were individuals with deep domain knowledge.`,
+          chunks:[[`A joint study`,`한 공동 연구는`],[`by Harvard and Boston Consulting Group`,`하버드와 보스턴컨설팅그룹의`],[`found that`,`밝혀냈다`],[`those who benefited most from AI`,`AI로 가장 큰 이득을 본 사람들이`],[`were individuals`,`사람들이었다고`],[`with deep domain knowledge.`,`깊은 분야 지식을 가진`]] },
+        { en:`In other words, the decisive edge lies not in the technique of asking questions, but in the insight to know what is worth asking.`,
+          chunks:[[`In other words,`,`다시 말해`],[`the decisive edge`,`결정적인 우위는`],[`lies`,`있다`],[`not in the technique of asking questions,`,`질문하는 기술이 아니라`],[`but in the insight`,`통찰력에`],[`to know what is worth asking.`,`무엇을 물을 가치가 있는지 아는`]] },
+        { en:`Nevertheless, there is a genuine risk that AI could dismantle the systems that train junior workers into skilled professionals.`,
+          chunks:[[`Nevertheless,`,`그럼에도 불구하고`],[`there is a genuine risk`,`진짜 위험이 있다`],[`that AI could dismantle`,`AI가 해체할 수 있다는`],[`the systems`,`그 시스템을`],[`that train junior workers`,`신입을 길러내는`],[`into skilled professionals.`,`숙련된 전문가로`]] }
+      ],
+      vocab:[
+        { w:`artificial`, pos:`형용사`, ipa:`[ˌɑːtɪˈfɪʃl]`, ko:`인공적인`,
+          ex:{en:`This plant is artificial.`, ko:`이 식물은 인공이다.`},
+          forms:[ {w:`artificially`, pos:`부사`, ipa:`[ˌɑːtɪˈfɪʃəli]`, ko:`인공적으로`, ex:{en:`The prices were kept artificially low.`, ko:`가격이 인위적으로 낮게 유지되었다.`}} ] },
+        { w:`increasingly`, pos:`부사`, ipa:`[ɪnˈkriːsɪŋli]`, ko:`점점 더`,
+          ex:{en:`It is increasingly common.`, ko:`그것은 점점 더 흔하다.`},
+          forms:[ {w:`increase`, pos:`동사`, ipa:`[ɪnˈkriːs]`, ko:`증가하다`, ex:{en:`Prices increase every year.`, ko:`물가는 매년 오른다.`}} ] },
+        { w:`collaborator`, pos:`명사`, ipa:`[kəˈlæbəreɪtə]`, ko:`협력자`,
+          ex:{en:`He is my collaborator.`, ko:`그는 나의 협력자다.`},
+          forms:[ {w:`collaborate`, pos:`동사`, ipa:`[kəˈlæbəreɪt]`, ko:`협력하다`, ex:{en:`The two teams collaborate closely.`, ko:`두 팀은 긴밀히 협력한다.`}}, {w:`collaboration`, pos:`명사`, ipa:`[kəˌlæbəˈreɪʃn]`, ko:`협업`, ex:{en:`The album is a collaboration between two artists.`, ko:`그 앨범은 두 아티스트의 협업이다.`}} ] },
+        { w:`boundary`, pos:`명사`, ipa:`[ˈbaʊndri]`, ko:`경계`,
+          ex:{en:`This river is the boundary.`, ko:`이 강이 경계다.`},
+          forms:[ {w:`bound`, pos:`형용사`, ipa:`[baʊnd]`, ko:`~로 향하는; 경계를 이루는`, ex:{en:`This train is bound for Seoul.`, ko:`이 기차는 서울로 향한다.`}} ] },
+        { w:`responsibility`, pos:`명사`, ipa:`[rɪˌspɒnsəˈbɪləti]`, ko:`책임`,
+          ex:{en:`Safety is my responsibility.`, ko:`안전은 내 책임이다.`},
+          forms:[ {w:`responsible`, pos:`형용사`, ipa:`[rɪˈspɒnsəbl]`, ko:`책임이 있는`, ex:{en:`You are responsible for your own safety.`, ko:`너는 네 자신의 안전에 책임이 있다.`}} ] },
+        { w:`formulaic`, pos:`형용사`, ipa:`[ˌfɔːmjuˈleɪɪk]`, ko:`정형화된, 판에 박힌`,
+          ex:{en:`The story feels formulaic.`, ko:`그 이야기는 정형화된 느낌이다.`},
+          forms:[ {w:`formula`, pos:`명사`, ipa:`[ˈfɔːmjələ]`, ko:`공식`, ex:{en:`There is no magic formula for success.`, ko:`성공에 마법의 공식은 없다.`}} ] },
+        { w:`investigation`, pos:`명사`, ipa:`[ɪnˌvestɪˈɡeɪʃn]`, ko:`조사, 취재`,
+          ex:{en:`The investigation took months.`, ko:`그 조사는 몇 달이 걸렸다.`},
+          forms:[ {w:`investigate`, pos:`동사`, ipa:`[ɪnˈvestɪɡeɪt]`, ko:`조사하다`, ex:{en:`The police will investigate the case.`, ko:`경찰이 그 사건을 조사할 것이다.`}} ] },
+        { w:`domain`, pos:`명사`, ipa:`[dəʊˈmeɪn]`, ko:`영역, 분야`,
+          ex:{en:`That is his domain.`, ko:`그것은 그의 영역이다.`},
+          forms:[] },
+        { w:`decisive`, pos:`형용사`, ipa:`[dɪˈsaɪsɪv]`, ko:`결정적인`,
+          ex:{en:`It was a decisive win.`, ko:`그것은 결정적인 승리였다.`},
+          forms:[ {w:`decide`, pos:`동사`, ipa:`[dɪˈsaɪd]`, ko:`결정하다`, ex:{en:`I can't decide what to eat.`, ko:`나는 뭘 먹을지 결정하지 못하겠다.`}}, {w:`decision`, pos:`명사`, ipa:`[dɪˈsɪʒn]`, ko:`결정`, ex:{en:`That was a smart decision.`, ko:`그것은 현명한 결정이었다.`}} ] },
+        { w:`insight`, pos:`명사`, ipa:`[ˈɪnsaɪt]`, ko:`통찰력`,
+          ex:{en:`She has deep insight.`, ko:`그녀는 깊은 통찰이 있다.`},
+          forms:[ {w:`insightful`, pos:`형용사`, ipa:`[ˈɪnsaɪtfl]`, ko:`통찰력 있는`, ex:{en:`She gave an insightful answer.`, ko:`그녀는 통찰력 있는 답을 했다.`}} ] },
+        { w:`dismantle`, pos:`동사`, ipa:`[dɪsˈmæntl]`, ko:`해체하다`,
+          ex:{en:`They will dismantle the stage.`, ko:`그들은 무대를 해체할 것이다.`},
+          forms:[] }
+      ],
+      grammar:[
+        {
+          title:`관계대명사 who ↔ which/that (사람 ↔ 사물)`,
+          explain:`관계대명사는 <b>두 문장을 하나로 이어주는 접착제</b>예요. 앞의 명사를 꾸며 줍니다. 사람을 꾸미면 <b>who</b>, 사물을 꾸미면 <b>which</b>를 쓰고, 둘 다 <b>that</b>으로 바꿀 수 있어요. 예: “the people <span class="rd">who</span> use AI(AI를 쓰는 사람들)”, “the systems <span class="rd">that</span> train workers(노동자를 길러내는 시스템)”.`,
+          examples:[
+            {en:`The people <r>who</r> use AI learn faster.`, ko:`그 사람들은 / (AI를 쓰는) / 더 빨리 배운다.`},
+            {en:`I know a teacher <r>who</r> loves music.`, ko:`나는 안다 / 한 교사를 / (음악을 사랑하는).`},
+            {en:`Those <r>who</r> benefited most had deep knowledge.`, ko:`(가장 이득을 본) 사람들은 / 깊은 지식을 가졌다.`},
+            {en:`She is the reporter <r>who</r> wrote the story.`, ko:`그녀는 / 그 기자다 / (그 기사를 쓴).`},
+            {en:`Students <r>who</r> ask good questions improve.`, ko:`학생들은 / (좋은 질문을 하는) / 향상된다.`}
+          ],
+          pair:{
+            title:`which / that (사물)`,
+            diff:`차이: 꾸미는 대상이 <b>사람</b>이면 <span class="rd">who</span>, <b>사물·동물·개념</b>이면 <span class="rd">which</span>를 써요. <b>that</b>은 사람·사물 모두 가능해요. 예: “the systems <span class="rd">which</span> train workers = the systems <span class="rd">that</span> train workers”(사물), 하지만 “the people <span class="rd">who</span>”(사람)에는 which를 쓸 수 없어요.`,
+            examples:[
+              {en:`The system <r>which</r> trains workers is old.`, ko:`그 시스템은 / (노동자를 길러내는) / 오래됐다.`},
+              {en:`This is the app <r>that</r> creates music.`, ko:`이것은 / 그 앱이다 / (음악을 만드는).`},
+              {en:`The report <r>which</r> came out is important.`, ko:`그 보고서는 / (나온) / 중요하다.`},
+              {en:`Jobs <r>that</r> are repetitive are shrinking.`, ko:`일자리들은 / (반복적인) / 줄고 있다.`},
+              {en:`The book <r>that</r> I read was hard.`, ko:`그 책은 / (내가 읽은) / 어려웠다.`}
+            ]
+          },
+          exam:[
+            {q:`I have a friend ___ speaks English.`, choices:[`which`,`who`,`what`,`whose`], answer:1, ex:`꾸미는 대상이 사람(friend) → who.`, tier:`쉬움`},
+            {q:`This is the phone ___ takes great photos.`, choices:[`who`,`which`,`whom`,`where`], answer:1, ex:`사물(phone) → which(또는 that).`, tier:`쉬움`},
+            {q:`Students ___ study hard get better.`, choices:[`which`,`who`,`what`,`whose`], answer:1, ex:`사람(students) → who.`, tier:`쉬움`},
+            {q:`빈칸에 that을 쓸 수 없는 것은?`, choices:[`the man ___ called me`,`the car ___ I bought`,`the book ___ is on the desk`,`이 중 없음(모두 가능)`], answer:3, ex:`that은 사람·사물 모두 가능하므로 모두 쓸 수 있음.`, tier:`쉬움`},
+            {q:`The report ___ came out today is long.`, choices:[`who`,`which`,`whom`,`whose`], answer:1, ex:`사물(report) → which.`, tier:`쉬움`},
+            {q:`두 문장을 연결: “The people. + They use AI.” →`, choices:[`The people which use AI`,`The people who use AI`,`The people what use AI`,`The people whose use AI`], answer:1, ex:`사람 주어를 이어주는 주격 관계대명사 → who.`, tier:`중간`},
+            {q:`Those ___ benefited most had deep knowledge.`, choices:[`who`,`which`,`when`,`where`], answer:0, ex:`Those(=사람들) → who.`, tier:`중간`},
+            {q:`빈칸: “The systems ___ train workers may be dismantled.”`, choices:[`who`,`which`,`whose`,`whom`], answer:1, ex:`사물(systems) → which/that.`, tier:`중간`},
+            {q:`틀린 문장을 고르시오.`, choices:[`I met a doctor who helped me.`,`The song which AI made is popular.`,`The girl which sang is my friend.`,`Jobs that are repetitive are shrinking.`], answer:2, ex:`사람(the girl)에는 which 불가 → who 사용.`, tier:`어려움`},
+            {q:`빈칸 조합: “The reporter ___ wrote the story used data ___ AI collected.”`, choices:[`which / who`,`who / which`,`who / who`,`which / which`], answer:1, ex:`앞은 사람(reporter)=who, 뒤는 사물(data)=which.`, tier:`어려움`}
+          ],
+          hardWords:[
+            {w:`benefit`, ipa:`[ˈbenɪfɪt]`, ko:`이득을 보다; 이익`, forms:[{w:`beneficial`, pos:`형용사`, ipa:`[ˌbenɪˈfɪʃl]`, ko:`유익한`, ex:{en:`Exercise is beneficial.`, ko:`운동은 유익하다.`}}]},
+            {w:`knowledge`, ipa:`[ˈnɒlɪdʒ]`, ko:`지식`, forms:[]},
+            {w:`improve`, ipa:`[ɪmˈpruːv]`, ko:`향상되다, 개선하다`, forms:[{w:`improvement`, pos:`명사`, ipa:`[ɪmˈpruːvmənt]`, ko:`향상, 개선`, ex:{en:`There is big improvement.`, ko:`큰 향상이 있다.`}}]},
+            {w:`popular`, ipa:`[ˈpɒpjələ]`, ko:`인기 있는`, forms:[]}
+          ]
+        }
+      ],
+      quiz:[
+        { type:`short`, q:`According to the passage, which kind of news tasks still belong to human reporters?`, ko:`본문에 따르면 / 어떤 종류의 뉴스 업무가 / 여전히 인간 기자의 것인가?`,
+          answer:`Tasks requiring in-depth investigation (심층 취재를 요하는 업무).`,
+          ex:`본문 “tasks requiring in-depth investigation remain within the domain of human reporters.” → 심층 취재가 필요한 업무. AI는 속보·정형화된 리포트를 맡습니다.` },
+        { type:`short`, q:`In the Harvard/BCG study, who benefited most from AI?`, ko:`하버드·BCG 연구에서 / 누가 AI로 가장 큰 이득을 보았나?`,
+          answer:`Individuals with deep domain knowledge (깊은 분야 지식을 가진 사람들).`,
+          ex:`본문 “those who benefited most from AI were individuals with deep domain knowledge.” → 공학 기술이 아니라 ‘분야 지식’이 깊은 사람들.` },
+        { type:`short`, q:`What is the decisive competitive edge, according to the passage?`, ko:`본문에 따르면 / 결정적인 경쟁력은 무엇인가?`,
+          answer:`The insight to know what is worth asking (무엇을 물을 가치가 있는지 아는 통찰력).`,
+          ex:`본문 “the decisive edge lies not in the technique of asking questions, but in the insight to know what is worth asking.” → 질문 기술이 아니라 ‘무엇을 물을지 아는 안목’.` }
+      ]
+    }
+  },
+
+  /* ============================== 듣기 평가 (10) ============================== */
+  listening:{
+    questions:[
+      { tier:`Easy`, play:`It listens to the meeting and writes short notes.`,
+        q:`What does the AI helper do in meetings?`, choices:[`It writes short notes.`,`It books the room.`,`It calls the clients.`,`It pays the workers.`], answer:0,
+        ex:`회의를 듣고 짧은 메모를 작성 → It writes short notes.`,
+        script:{ title:`Script 1 — AI Meeting Notes`, sents:[
+          { en:`Many offices now use an AI helper for meetings.`, chunks:[[`Many offices now use`,`많은 사무실이 이제 쓴다`],[`an AI helper`,`AI 도우미를`],[`for meetings.`,`회의에`]] },
+          { en:`It listens to the meeting and writes short notes.`, chunks:[[`It listens to the meeting`,`그것은 회의를 듣고`],[`and writes short notes.`,`짧은 메모를 쓴다`]] },
+          { en:`The notes are ready right after the call.`, chunks:[[`The notes are ready`,`그 메모는 준비된다`],[`right after the call.`,`통화 직후에`]] },
+          { en:`So workers can review them before the next task.`, chunks:[[`So workers can review them`,`그래서 직원들은 그것을 검토할 수 있다`],[`before the next task.`,`다음 업무 전에`]] }
+        ] } },
+      { tier:`Easy`, play:`When you upload a photo, the app adds tags.`,
+        q:`What happens when you upload a photo?`, choices:[`The app deletes it.`,`The app adds tags.`,`The app prints it.`,`The app hides it.`], answer:1,
+        ex:`사진을 올리면 태그를 추가 → the app adds tags.`,
+        script:{ title:`Script 2 — Smart Photo App`, sents:[
+          { en:`A photo app uses AI to organize your pictures.`, chunks:[[`A photo app uses AI`,`한 사진 앱은 AI를 사용한다`],[`to organize your pictures.`,`네 사진을 정리하려고`]] },
+          { en:`When you upload a photo, the app adds tags.`, chunks:[[`When you upload a photo,`,`네가 사진을 올리면`],[`the app adds tags.`,`그 앱은 태그를 붙인다`]] },
+          { en:`Later you can search by place or by face.`, chunks:[[`Later you can search`,`나중에 너는 검색할 수 있다`],[`by place or by face.`,`장소나 얼굴로`]] },
+          { en:`This saves a lot of time.`, chunks:[[`This saves`,`이것은 절약한다`],[`a lot of time.`,`많은 시간을`]] }
+        ] } },
+      { tier:`Easy`, play:`If a problem is difficult, a human takes over.`,
+        q:`What happens when a problem is difficult?`, choices:[`The shop closes.`,`A human takes over.`,`The chatbot stops working.`,`The customer pays more.`], answer:1,
+        ex:`어려우면 사람이 넘겨받음 → a human takes over.`,
+        script:{ title:`Script 3 — Customer Service Chatbot`, sents:[
+          { en:`Many shops now use a chatbot for customer service.`, chunks:[[`Many shops now use a chatbot`,`많은 상점이 이제 챗봇을 쓴다`],[`for customer service.`,`고객 서비스에`]] },
+          { en:`The chatbot answers simple questions all day.`, chunks:[[`The chatbot answers`,`그 챗봇은 답한다`],[`simple questions all day.`,`간단한 질문에 하루 종일`]] },
+          { en:`If a problem is difficult, a human takes over.`, chunks:[[`If a problem is difficult,`,`문제가 어려우면`],[`a human takes over.`,`사람이 넘겨받는다`]] },
+          { en:`In this way, people and AI work together.`, chunks:[[`In this way,`,`이런 식으로`],[`people and AI work together.`,`사람과 AI가 함께 일한다`]] }
+        ] } },
+      { tier:`Easy`, play:`The tutor gives feedback on their speaking.`,
+        q:`What does the AI tutor give feedback on?`, choices:[`Their spelling`,`Their speaking`,`Their homework price`,`Their friends`], answer:1,
+        ex:`말하기에 피드백을 줌 → feedback on their speaking.`,
+        script:{ title:`Script 4 — AI Language Tutor`, sents:[
+          { en:`Some students learn languages online with an AI tutor.`, chunks:[[`Some students learn languages online`,`일부 학생은 온라인으로 언어를 배운다`],[`with an AI tutor.`,`AI 튜터와 함께`]] },
+          { en:`The tutor gives feedback on their speaking.`, chunks:[[`The tutor gives feedback`,`그 튜터는 피드백을 준다`],[`on their speaking.`,`그들의 말하기에 대해`]] },
+          { en:`It also repeats difficult words slowly.`, chunks:[[`It also repeats`,`그것은 또한 반복한다`],[`difficult words slowly.`,`어려운 단어를 천천히`]] },
+          { en:`Students practise a little every day.`, chunks:[[`Students practise`,`학생들은 연습한다`],[`a little every day.`,`매일 조금씩`]] }
+        ] } },
+      { tier:`Medium`, play:`Still, a person checks important contracts by hand.`,
+        q:`Who checks important contracts?`, choices:[`A robot`,`A person, by hand`,`No one`,`The customer`], answer:1,
+        ex:`중요 계약은 사람이 직접 확인 → a person checks ... by hand.`,
+        script:{ title:`Script 5 — Translation at Work`, sents:[
+          { en:`A global team uses AI to translate its messages.`, chunks:[[`A global team uses AI`,`한 글로벌 팀은 AI를 쓴다`],[`to translate its messages.`,`메시지를 번역하려고`]] },
+          { en:`Because members speak different languages, this helps a lot.`, chunks:[[`Because members speak different languages,`,`구성원들이 다른 언어를 쓰기 때문에`],[`this helps a lot.`,`이것은 큰 도움이 된다`]] },
+          { en:`Still, a person checks important contracts by hand.`, chunks:[[`Still, a person checks`,`그래도 사람이 확인한다`],[`important contracts by hand.`,`중요한 계약서를 직접`]] },
+          { en:`Machines are fast, but people catch small mistakes.`, chunks:[[`Machines are fast,`,`기계는 빠르다`],[`but people catch small mistakes.`,`하지만 사람은 작은 실수를 잡는다`]] }
+        ] } },
+      { tier:`Medium`, play:`However, the final choice is made by managers.`,
+        q:`Who makes the final choice in hiring?`, choices:[`The AI system`,`The applicants`,`The managers`,`The customers`], answer:2,
+        ex:`최종 선택은 관리자 → the final choice is made by managers.`,
+        script:{ title:`Script 6 — AI in Hiring`, sents:[
+          { en:`Some companies use AI to read job applications.`, chunks:[[`Some companies use AI`,`일부 회사는 AI를 쓴다`],[`to read job applications.`,`입사 지원서를 읽으려고`]] },
+          { en:`The system sorts the resumes that match the role.`, chunks:[[`The system sorts the resumes`,`그 시스템은 이력서를 분류한다`],[`that match the role.`,`그 직무에 맞는`]] },
+          { en:`However, the final choice is made by managers.`, chunks:[[`However, the final choice`,`하지만 최종 선택은`],[`is made by managers.`,`관리자들이 한다`]] },
+          { en:`AI narrows the list, but humans decide.`, chunks:[[`AI narrows the list,`,`AI는 목록을 좁힌다`],[`but humans decide.`,`하지만 사람이 결정한다`]] }
+        ] } },
+      { tier:`Medium`, play:`While the robots move the boxes, workers check the orders.`,
+        q:`What do the workers do while the robots move boxes?`, choices:[`They rest.`,`They check the orders.`,`They drive trucks.`,`They go home.`], answer:1,
+        ex:`로봇이 옮기는 동안 직원은 주문 확인 → workers check the orders.`,
+        script:{ title:`Script 7 — Robots in the Warehouse`, sents:[
+          { en:`In one warehouse, robots carry the heavy boxes.`, chunks:[[`In one warehouse,`,`한 창고에서`],[`robots carry the heavy boxes.`,`로봇이 무거운 상자를 나른다`]] },
+          { en:`While the robots move the boxes, workers check the orders.`, chunks:[[`While the robots move the boxes,`,`로봇이 상자를 옮기는 동안`],[`workers check the orders.`,`직원들은 주문을 확인한다`]] },
+          { en:`Since then, the number of injuries has dropped.`, chunks:[[`Since then,`,`그때 이후로`],[`the number of injuries has dropped.`,`부상 건수가 줄었다`]] },
+          { en:`New jobs now focus on managing the robots.`, chunks:[[`New jobs now focus on`,`새로운 일자리는 이제 초점을 둔다`],[`managing the robots.`,`로봇을 관리하는 데`]] }
+        ] } },
+      { tier:`Hard`, play:`Even so, the final diagnosis belongs to doctors, not software.`,
+        q:`According to the talk, who makes the final diagnosis?`, choices:[`The software`,`The patient`,`The doctors`,`The hospital app`], answer:2,
+        ex:`최종 진단은 의사의 몫 → belongs to doctors, not software.`,
+        script:{ title:`Script 8 — AI in Medicine`, sents:[
+          { en:`AI tools can now scan medical images very quickly.`, chunks:[[`AI tools can now scan`,`AI 도구는 이제 스캔할 수 있다`],[`medical images very quickly.`,`의료 영상을 매우 빠르게`]] },
+          { en:`Trained on millions of scans, they spot patterns that people might miss.`, chunks:[[`Trained on millions of scans,`,`수백만 건의 스캔으로 학습되어`],[`they spot patterns`,`그것들은 패턴을 찾아낸다`],[`that people might miss.`,`사람이 놓칠 수도 있는`]] },
+          { en:`Even so, the final diagnosis belongs to doctors, not software.`, chunks:[[`Even so, the final diagnosis`,`그렇더라도 최종 진단은`],[`belongs to doctors,`,`의사에게 속한다`],[`not software.`,`소프트웨어가 아니라`]] },
+          { en:`The tool suggests, but the doctor decides.`, chunks:[[`The tool suggests,`,`그 도구는 제안한다`],[`but the doctor decides.`,`하지만 의사가 결정한다`]] }
+        ] } },
+      { tier:`Hard`, play:`Knowing what to ask matters more than the tool itself.`,
+        q:`What matters more than the tool itself?`, choices:[`Typing speed`,`Knowing what to ask`,`Owning a computer`,`Working late`], answer:1,
+        ex:`무엇을 물을지 아는 것이 핵심 → knowing what to ask.`,
+        script:{ title:`Script 9 — The Right Question`, sents:[
+          { en:`A new report studied workers who use AI every day.`, chunks:[[`A new report studied workers`,`한 새 보고서는 노동자들을 연구했다`],[`who use AI every day.`,`매일 AI를 쓰는`]] },
+          { en:`Those who ask clear, specific questions get far better results.`, chunks:[[`Those who ask clear, specific questions`,`명확하고 구체적인 질문을 하는 사람들은`],[`get far better results.`,`훨씬 더 좋은 결과를 얻는다`]] },
+          { en:`Knowing what to ask matters more than the tool itself.`, chunks:[[`Knowing what to ask`,`무엇을 물을지 아는 것이`],[`matters more`,`더 중요하다`],[`than the tool itself.`,`도구 자체보다`]] },
+          { en:`In other words, good thinking still beats fast typing.`, chunks:[[`In other words,`,`다시 말해`],[`good thinking still beats`,`좋은 사고가 여전히 이긴다`],[`fast typing.`,`빠른 타이핑을`]] }
+        ] } },
+      { tier:`Hard`, play:`Artists who add a personal, original voice still stand out.`,
+        q:`Whose work still stands out?`, choices:[`Anyone using AI`,`Artists with an original voice`,`The fastest creators`,`Large studios only`], answer:1,
+        ex:`독창적 목소리를 더하는 예술가가 두드러짐 → an original voice still stand out.`,
+        script:{ title:`Script 10 — The Human Touch`, sents:[
+          { en:`AI can create songs and stories in seconds.`, chunks:[[`AI can create songs and stories`,`AI는 노래와 이야기를 만들 수 있다`],[`in seconds.`,`몇 초 만에`]] },
+          { en:`But much of this content feels formulaic and similar.`, chunks:[[`But much of this content`,`하지만 이 콘텐츠의 상당수는`],[`feels formulaic and similar.`,`판에 박히고 비슷하게 느껴진다`]] },
+          { en:`Artists who add a personal, original voice still stand out.`, chunks:[[`Artists who add a personal, original voice`,`개인적이고 독창적인 목소리를 더하는 예술가들은`],[`still stand out.`,`여전히 두드러진다`]] },
+          { en:`The rare human touch is what audiences remember.`, chunks:[[`The rare human touch`,`드문 인간적인 손길이`],[`is what audiences remember.`,`관객이 기억하는 것이다`]] }
+        ] } }
+    ]
+  },
+
+  /* ============================== 쓰기 평가 (10) ============================== */
+  writing:[
+    { tier:`Easy`, type:`choice`, sentence:`AI ___ music now.`, choices:[`make`,`makes`,`making`,`made`], answer:1, ko:`AI는 이제 음악을 만든다.`,
+      ex:`주어 AI(3인칭 단수) + 현재의 사실 → makes.` },
+    { tier:`Easy`, type:`choice`, sentence:`People ___ many songs online every day.`, choices:[`upload`,`uploads`,`is upload`,`uploaded`], answer:0, ko:`사람들은 매일 온라인에 많은 노래를 올린다.`,
+      ex:`주어 People(복수) → upload (-s 없음).` },
+    { tier:`Easy`, type:`choice`, sentence:`The AI anchor ___ the news at night.`, choices:[`read`,`reads`,`reading`,`are read`], answer:1, ko:`그 AI 앵커는 밤에 뉴스를 읽는다.`,
+      ex:`3인칭 단수 + 습관 → reads.` },
+    { tier:`Easy`, type:`choice`, sentence:`AI ___ take our jobs; it changes them.`, choices:[`do not`,`does not`,`is not`,`are not`], answer:1, ko:`AI는 우리 일자리를 빼앗지 않는다; 그것을 바꾼다.`,
+      ex:`주어 AI(단수)의 일반동사 부정 → does not.` },
+    { tier:`Medium`, type:`input`, sentence:`Music is ___ by AI. (create)`, answer:`created`, ko:`음악이 AI에 의해 만들어진다.`,
+      ex:`수동태 be + 과거분사 → created.` },
+    { tier:`Medium`, type:`input`, sentence:`The news is ___ by an anchor. (deliver)`, answer:`delivered`, ko:`뉴스가 앵커에 의해 전달된다.`,
+      ex:`수동태 → delivered.` },
+    { tier:`Medium`, type:`input`, sentence:`Students ___ ask good questions improve. (관계대명사)`, answer:`who`, ko:`좋은 질문을 하는 학생들은 향상된다.`,
+      ex:`사람(students)을 꾸미는 주격 관계대명사 → who (that도 가능).` },
+    { tier:`Medium`, type:`input`, sentence:`Repetitive office jobs are ___ . (shrink, 진행형)`, answer:`shrinking`, ko:`반복적인 사무직은 줄어들고 있다.`,
+      ex:`현재진행 be + -ing → shrinking.` },
+    { tier:`Hard`, type:`compose`, prompt:`다음을 영어로 쓰세요: “인간 기자를 필요로 하는 업무가 여전히 존재한다.”`,
+      model:`There are still tasks that need human reporters.`, words:[`there`,`are`,`still`,`tasks`,`that`,`need`,`human`,`reporters`], ko:`힌트: “tasks that need human reporters” (관계대명사 that) 구조를 사용해 보세요.`,
+      ex:`모범답안: There are still tasks that need human reporters. / Some tasks still require human reporters. 관계대명사 that로 ‘업무’를 꾸며 줍니다.` },
+    { tier:`Hard`, type:`compose`, prompt:`다음을 영어로 쓰세요: “무엇을 물어야 하는지 아는 것이 도구 자체보다 더 중요하다.”`,
+      model:`Knowing what to ask matters more than the tool itself.`, words:[`knowing`,`what`,`to`,`ask`,`matters`,`more`,`than`,`the`,`tool`,`itself`], ko:`힌트: “Knowing what to ask” (동명사 주어) + “matters more than ~” 구조.`,
+      ex:`모범답안: Knowing what to ask matters more than the tool itself. / It is more important to know what to ask than to have the tool.` }
+  ]
+};
+
+if (typeof module !== 'undefined') module.exports = DATA;
+
+</script>
+<script>
+/* =========================================================================
+   APP — 렌더링 + TTS + 인터랙션
+   ========================================================================= */
+'use strict';
+
+/* ---------- TTS (Web Speech API) ---------- */
+/* 듣기 발음 설정: accent='GB'|'US', gender='female'|'male' (기본: 영국·여성) */
+const VOICE_PREFS = { accent: 'GB', gender: 'female' };
+const FEMALE_HINTS = /female|woman|Samantha|Victoria|Kate|Serena|Sonia|Libby|Fiona|Karen|Moira|Tessa|Zira|Hazel|Susan|Catherine|Ava|Allison|Joanna|Salli|Kendra|Emma|Amy|Aria|Jenny|Michelle|Google UK English Female|Google US English/i;
+const MALE_HINTS = /male|Daniel|Arthur|Ryan|Oliver|George|Alex|Fred|Thomas|David|Mark|Guy|Brian|Matthew|Joey|Rishi|Google UK English Male/i;
+function currentLang() { return VOICE_PREFS.accent === 'US' ? 'en-US' : 'en-GB'; }
+function voiceScore(v) {
+  const n = v.name || '';
+  let s = 0;
+  if (/natural|neural|online|premium|enhanced|siri/i.test(n)) s += 6;
+  if (/google/i.test(n)) s += 4;
+  if (/microsoft/i.test(n)) s += 2;
+  if (/espeak|e-speak|compact|robo/i.test(n)) s -= 10;   // 노이즈/로봇 음성 강한 감점
+  if (v.localService === false) s += 1;                   // 클라우드 음성이 대체로 더 깨끗
+  return s;
+}
+function pickVoice() {
+  if (!('speechSynthesis' in window)) return null;
+  const vs = speechSynthesis.getVoices();
+  const lang = currentLang();
+  let pool = vs.filter(v => new RegExp(lang, 'i').test(v.lang));
+  if (!pool.length) pool = vs.filter(v => /^en/i.test(v.lang));
+  if (!pool.length) pool = vs.slice();
+  // 저품질(잡음/로봇) 음성 제외
+  const clean = pool.filter(v => !/espeak|e-speak|compact/i.test(v.name || ''));
+  const use = clean.length ? clean : pool;
+  const female = VOICE_PREFS.gender === 'female';
+  const want = female ? FEMALE_HINTS : MALE_HINTS;
+  const anti = female ? MALE_HINTS : FEMALE_HINTS;
+  const byScore = (a, b) => voiceScore(b) - voiceScore(a);
+  const genderMatch = use.filter(v => want.test(v.name) && !anti.test(v.name)).sort(byScore);
+  const notOpposite = use.filter(v => !anti.test(v.name)).sort(byScore);
+  const anyClear = use.slice().sort(byScore);
+  // 성별 일치 & 깨끗한 음성 → 없으면 반대 성별이 아닌 깨끗한 음성 → 없으면 가장 깨끗한 음성
+  return genderMatch[0] || notOpposite[0] || anyClear[0] || null;
+}
+if ('speechSynthesis' in window) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+}
+function speak(text, rate) {
+  if (!('speechSynthesis' in window) || !text) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = currentLang();
+  u.rate = rate || 0.94;
+  u.pitch = 1;
+  const v = pickVoice();
+  if (v) u.voice = v;
+  speechSynthesis.speak(u);
+}
+function stopSpeak() { if ('speechSynthesis' in window) speechSynthesis.cancel(); }
+
+/* ---------- 단어 클릭 툴팁 (발음기호·품사·뜻) ---------- */
+let GTIP = null;
+function ensureGtip() {
+  if (!GTIP) { GTIP = document.createElement('div'); GTIP.id = 'gtip'; document.body.appendChild(GTIP); }
+  return GTIP;
+}
+function hideGtip() { if (GTIP) GTIP.style.display = 'none'; }
+function showGtip(el) {
+  const tip = ensureGtip();
+  tip.innerHTML = '';
+  const mk = (cls, txt) => { const s = document.createElement('span'); s.className = cls; s.textContent = txt; return s; };
+  if (el.dataset.ipa) tip.appendChild(mk('gt-ipa', el.dataset.ipa));
+  if (el.dataset.pos) tip.appendChild(mk('gt-pos', el.dataset.pos));
+  tip.appendChild(mk('gt-ko', el.dataset.ko || ''));
+  tip.style.display = 'block';
+  const r = el.getBoundingClientRect();
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  const vw = document.documentElement.clientWidth;
+  let left = r.left + r.width / 2 - tw / 2 + window.scrollX;
+  left = Math.max(window.scrollX + 8, Math.min(left, window.scrollX + vw - tw - 8));
+  let top = r.top + window.scrollY - th - 10;
+  if (top < window.scrollY + 4) top = r.bottom + window.scrollY + 10;
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+}
+
+/* ---------- helpers ---------- */
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function stripTags(s) { return String(s).replace(/<[^>]+>/g, ''); }
+let _uid = 0;
+function uid() { return 'x' + (++_uid); }
+
+/* ---------- glossary (단어 → 발음기호·뜻) ---------- */
+const GLOSS = {};
+function addGloss(w, ipa, ko, pos) {
+  if (!w) return;
+  const k = w.toLowerCase();
+  if (!GLOSS[k]) GLOSS[k] = { ipa: ipa || '', ko: ko || '', pos: pos || '' };
+}
+function buildGloss() {
+  Object.values(DATA.levels).forEach(L => {
+    L.vocab.forEach(v => {
+      addGloss(v.w, v.ipa, v.ko, v.pos);
+      (v.forms || []).forEach(f => addGloss(f.w, f.ipa, f.ko, f.pos));
+    });
+    L.grammar.forEach(g => (g.hardWords || []).forEach(h => {
+      addGloss(h.w, h.ipa, h.ko, h.pos || '');
+      (h.forms || []).forEach(f => addGloss(f.w, f.ipa, f.ko, f.pos));
+    }));
+  });
+}
+
+/* wordify: 영어 텍스트의 각 단어를 클릭 발음 + (사전에 있으면) tooltip 처리 */
+function wordify(text) {
+  return esc(text).replace(/([A-Za-z][A-Za-z'\u2019\-]*)/g, m => {
+    const key = m.toLowerCase().replace(/['\u2019]s$/, '');
+    const g = GLOSS[key];
+    const say = m.replace(/[\u2019]/g, "'");
+    if (g) {
+      const posTip = g.pos ? '  (' + g.pos + ')' : '';
+      return '<span class="w gloss" data-say="' + esc(say) +
+        '" data-ipa="' + esc(g.ipa) + '" data-pos="' + esc(g.pos || '') + '" data-ko="' + esc(g.ko) +
+        '" data-tip="' + esc(g.ipa + posTip + '  ' + g.ko) + '">' + m + '</span>';
+    }
+    return '<span class="w" data-say="' + esc(say) + '">' + m + '</span>';
+  });
+}
+/* 문법 예문: <r>..</r> → 빨간 강조, 그 외 단어는 클릭 발음 */
+function renderGrammarSentence(en) {
+  const parts = en.split(/(<r>.*?<\/r>)/g);
+  return parts.map(p => {
+    const mm = p.match(/^<r>(.*?)<\/r>$/);
+    if (mm) return '<span class="rd" data-say="' + esc(stripTags(mm[1])) + '">' + wordifyInner(mm[1]) + '</span>';
+    return wordify(p);
+  }).join('');
+}
+function wordifyInner(text) { // red 안쪽: 발음은 부모가 담당, 그냥 표시
+  return esc(text);
+}
+
+/* ---------- MC / OX 공통 렌더 ---------- */
+function mcHtml(choices, answer, explain, koPrompt) {
+  const id = uid();
+  const opts = choices.map((c, i) =>
+    '<button class="opt" data-idx="' + i + '">' +
+    '<span class="optkey">' + String.fromCharCode(65 + i) + '</span>' +
+    '<span>' + wordify(c) + '</span></button>'
+  ).join('');
+  return '<div class="mc" data-ans="' + answer + '">' +
+    '<div class="opts">' + opts + '</div>' +
+    '<div class="explain">' +
+      (koPrompt ? '<div class="ko-lit">📖 ' + esc(koPrompt) + '</div>' : '') +
+      '<div class="why">' + explain + '</div></div></div>';
+}
+function oxHtml(answer, explain, koPrompt) {
+  const ansIdx = answer ? 0 : 1;
+  return '<div class="mc ox" data-ans="' + ansIdx + '">' +
+    '<div class="opts">' +
+      '<button class="opt" data-idx="0"><span class="optkey">O</span><span>맞다</span></button>' +
+      '<button class="opt" data-idx="1"><span class="optkey">X</span><span>틀리다</span></button>' +
+    '</div>' +
+    '<div class="explain">' +
+      (koPrompt ? '<div class="ko-lit">📖 ' + esc(koPrompt) + '</div>' : '') +
+      '<div class="why">' + explain + '</div></div></div>';
+}
+
+/* ---------- 직독직해 (chunks) ---------- */
+function literalHtml(sents) {
+  return '<div class="lit">' + sents.map(s => {
+    const chunks = s.chunks.map(c =>
+      '<span class="chunk" data-say="' + esc(stripTags(c[0])) + '">' +
+        '<span class="chunk-en">' + esc(c[0]) + '</span>' +
+        '<span class="chunk-ko">' + esc(c[1]) + '</span></span>'
+    ).join('');
+    return '<div class="litrow"><button class="mini-play" data-say="' + esc(s.en) +
+      '" title="문장 듣기">▶</button><div class="chunks">' + chunks + '</div></div>';
+  }).join('') + '</div>';
+}
+
+/* ---------- 예문 셀(재생 + 해석 버튼 공통) ---------- */
+function exampleCellHtml(en, ko) {
+  const rid = uid();
+  return '<div class="ex-line">' +
+    '<button class="ex-btn play" data-say="' + esc(en) + '" title="문장 듣기">🔊 재생</button>' +
+    '<button class="ex-btn tr" data-reveal="' + rid + '" title="직독직해 보기">해석</button>' +
+    '<span class="ex-en">' + wordify(en) + '</span>' +
+    '<span class="ex-ko" id="' + rid + '">— ' + esc(ko) + '</span></div>';
+}
+
+/* ---------- 단어표 ---------- */
+function vocabTableHtml(vocab) {
+  const rows = vocab.map(v => {
+    const forms = (v.forms && v.forms.length)
+      ? v.forms.map(f => {
+          const fid = uid();
+          return '<div class="form">' +
+            '<button class="form-chip" data-reveal="' + fid + '" data-tip="' + esc(f.ipa + '  ' + f.ko) + '">' +
+              esc(f.w) + ' <span class="pos">' + esc(f.pos) + '</span></button>' +
+            '<div class="form-detail" id="' + fid + '">' +
+              '<div class="fd-head"><b>' + esc(f.w) + '</b> ' + esc(f.ipa) + ' · ' + esc(f.ko) + '</div>' +
+              '<div class="fd-ex-label">예문</div>' + exampleCellHtml(f.ex.en, f.ex.ko) +
+            '</div></div>';
+        }).join('')
+      : '<span class="none">—</span>';
+    const hwPosTip = v.pos ? '  (' + v.pos + ')' : '';
+    return '<tr>' +
+      '<td class="c-word"><span class="w gloss headword" data-say="' + esc(v.w) +
+        '" data-ipa="' + esc(v.ipa) + '" data-pos="' + esc(v.pos || '') + '" data-ko="' + esc(v.ko) +
+        '" data-tip="' + esc(v.ipa + hwPosTip + '  ' + v.ko) + '">' + esc(v.w) + '</span>' +
+        (v.pos ? ' <span class="hw-pos">' + esc(v.pos) + '</span>' : '') + '</td>' +
+      '<td class="c-ipa">' + esc(v.ipa) + '</td>' +
+      '<td class="c-ko">' + esc(v.ko) + '</td>' +
+      '<td class="c-ex">' + exampleCellHtml(v.ex.en, v.ex.ko) + '</td>' +
+      '<td class="c-forms">' + forms + '</td>' +
+    '</tr>';
+  }).join('');
+  return '<div class="table-wrap"><table class="vocab">' +
+    '<thead><tr><th>단어</th><th>발음기호</th><th>뜻</th><th>생활 예문 <span class="hint">(🔊=듣기 · 해석=직독직해)</span></th><th>다른 품사 <span class="hint">(탭하면 상세)</span></th></tr></thead>' +
+    '<tbody>' + rows + '</tbody></table></div>';
+}
+
+/* ---------- 문법 ---------- */
+function hardWordsHtml(list) {
+  if (!list || !list.length) return '';
+  return '<div class="hardwords"><div class="hw-title">예문 속 어려운 단어</div>' +
+    list.map(h => {
+      const forms = (h.forms && h.forms.length)
+        ? ' <span class="hw-forms">(' + h.forms.map(f =>
+            '<span class="w gloss" data-say="' + esc(f.w) + '" data-tip="' + esc(f.ipa + '  ' + f.ko) +
+            '">' + esc(f.w) + '</span> ' + esc(f.pos)).join(', ') + ')</span>'
+        : '';
+      return '<div class="hw"><span class="w gloss" data-say="' + esc(h.w) +
+        '" data-ipa="' + esc(h.ipa) + '" data-pos="" data-ko="' + esc(h.ko) +
+        '" data-tip="' + esc(h.ipa + '  ' + h.ko) + '"><b>' + esc(h.w) + '</b></span> ' +
+        esc(h.ipa) + ' : ' + esc(h.ko) + forms + '</div>';
+    }).join('') + '</div>';
+}
+function grammarExamplesHtml(examples) {
+  return '<div class="gex">' + examples.map(ex => {
+    const rid = uid();
+    return '<div class="gex-row"><button class="mini-play" data-say="' + esc(stripTags(ex.en.replace(/<\/?r>/g, ''))) +
+      '" title="예문 듣기">▶</button>' +
+      '<div class="gex-en">' + renderGrammarSentence(ex.en) +
+        ' <button class="ex-btn tr gex-tr" data-reveal="' + rid + '" title="직독직해 보기">해석</button></div>' +
+      '<div class="gex-ko" id="' + rid + '">' + esc(ex.ko) + '</div></div>';
+  }).join('') + '</div>';
+}
+function examHtml(exam) {
+  const tierClass = t => t === '쉬움' ? 'e' : (t === '중간' ? 'm' : 'h');
+  return '<div class="exam"><div class="exam-title">🏫 학교 시험 예상문제 <span class="hint">(1~5 쉬움 · 6~8 중간 · 9~10 어려움)</span></div>' +
+    exam.map((q, i) =>
+      '<div class="exq"><div class="exq-q"><span class="exq-no ' + tierClass(q.tier) + '">' + (i + 1) + '</span>' +
+        '<span class="exq-text">' + wordify(q.q) + '</span><span class="tier-badge ' + tierClass(q.tier) + '">' + q.tier + '</span></div>' +
+        mcHtml(q.choices, q.answer, q.ex, '') + '</div>'
+    ).join('') + '</div>';
+}
+function grammarHtml(grammar) {
+  return grammar.map(g =>
+    '<div class="gram">' +
+      '<div class="gram-head">📚 ' + esc(g.title) + '</div>' +
+      '<div class="gram-explain">' + g.explain + '</div>' +
+      '<div class="gram-sub">✏️ 예문 5개</div>' + grammarExamplesHtml(g.examples) +
+      '<div class="gram-pair"><div class="pair-head">🔁 짝이 되는 문법 — ' + esc(g.pair.title) + '</div>' +
+        '<div class="gram-explain">' + g.pair.diff + '</div>' +
+        '<div class="gram-sub">✏️ 예문 5개</div>' + grammarExamplesHtml(g.pair.examples) + '</div>' +
+      examHtml(g.exam) +
+      hardWordsHtml(g.hardWords) +
+    '</div>'
+  ).join('');
+}
+
+/* ---------- 지문(본문) ---------- */
+function passageHtml(sents) {
+  const id = uid();
+  const body = sents.map(s =>
+    '<span class="sent"><button class="sent-play" data-say="' + esc(s.en) + '" title="문장 듣기">🔊</button>' +
+    wordify(s.en) + ' </span>'
+  ).join('');
+  const full = sents.map(s => s.en).join(' ');
+  return '<div class="passage">' +
+    '<div class="pass-ctrl">' +
+      '<button class="btn play-all" data-say="' + esc(full) + '">▶ 본문 전체 듣기</button>' +
+      '<button class="btn ghost" onclick="stopSpeak()">■ 정지</button>' +
+      '<span class="hint">단어=클릭 발음 · 🔊=문장 듣기</span>' +
+    '</div>' +
+    '<p class="pass-body" id="' + id + '">' + body + '</p></div>';
+}
+
+/* ---------- 확인 문제 ---------- */
+function quizHtml(quiz, quizType) {
+  return '<div class="quiz"><div class="sec-title">③ 확인 문제 <span class="pill">' + esc(quizType) + '</span></div>' +
+    quiz.map((q, i) => {
+      let inner;
+      if (q.type === 'ox') inner = oxHtml(q.answer, q.ex, q.ko);
+      else if (q.type === 'mc') inner = mcHtml(q.choices, q.answer, q.ex, q.ko);
+      else { // short
+        const rid = uid();
+        inner = '<div class="short">' +
+          '<textarea class="short-input" rows="2" placeholder="영어 또는 한국어로 답을 적어 보세요"></textarea>' +
+          '<button class="btn small" data-reveal="' + rid + '">모범답안 보기</button>' +
+          '<div class="reveal-box" id="' + rid + '">' +
+            '<div class="ans-line"><b>모범답안:</b> ' + esc(q.answer) + '</div>' +
+            (q.ko ? '<div class="ko-lit">📖 ' + esc(q.ko) + '</div>' : '') +
+            '<div class="why">' + q.ex + '</div></div></div>';
+      }
+      return '<div class="q"><div class="q-head"><span class="q-no">Q' + (i + 1) + '</span>' +
+        '<span class="q-text">' + wordify(q.q) + '</span></div>' + inner + '</div>';
+    }).join('') + '</div>';
+}
+
+/* ---------- 레벨 섹션 전체 ---------- */
+function renderLevel(key) {
+  const L = DATA.levels[key];
+  return '<section class="level ' + key + '" data-pane="' + key + '">' +
+    '<div class="level-band"><span class="level-name">' + esc(L.title) + '</span>' +
+      '<span class="level-toeic">' + esc(L.toeic) + '</span></div>' +
+
+    '<div class="sec-title">② 단어표 <span class="hint">본문보다 먼저 학습</span></div>' +
+    vocabTableHtml(L.vocab) +
+
+    '<div class="sec-title">⑤ 문법 정리</div>' +
+    grammarHtml(L.grammar) +
+
+    '<div class="sec-title">① 본문 <span class="hint">넘버링 없는 문단형 · 듣기 지원</span></div>' +
+    passageHtml(L.passage) +
+
+    quizHtml(L.quiz, L.quizType) +
+
+    '<div class="sec-title">④ 본문 + 직독직해 <span class="hint">끊어읽기 · 조각 클릭=발음</span></div>' +
+    literalHtml(L.passage) +
+  '</section>';
+}
+
+/* ---------- 듣기 평가 ---------- */
+function renderListening() {
+  const LT = DATA.listening;
+  const tierClass = t => t === 'Easy' ? 'e' : (t === 'Medium' ? 'm' : 'h');
+  const qs = LT.questions.map((q, i) => {
+    const sid = uid();
+    const script = q.script;
+    const full = script.sents.map(s => s.en).join(' ');
+    return '<div class="q lq">' +
+      '<div class="q-head"><span class="q-no">' + (i + 1) + '</span>' +
+        '<span class="tier-badge ' + tierClass(q.tier) + '">' + q.tier + '</span>' +
+        '<span class="q-text">' + wordify(q.q) + '</span></div>' +
+      '<div class="listen-ctrl">' +
+        '<button class="btn small" data-say="' + esc(full) + '">🎧 전체 스크립트 듣기</button>' +
+        '<button class="btn small ghost" data-say="' + esc(q.play) + '">🔁 핵심 문장</button>' +
+        '<button class="btn small ghost" data-reveal="' + sid + '">원문 보기</button></div>' +
+      mcHtml(q.choices, q.answer, q.ex, '') +
+      '<div class="reveal-box" id="' + sid + '"><div class="script-title">' + esc(script.title) + '</div>' +
+        literalHtml(script.sents) + '</div>' +
+    '</div>';
+  }).join('');
+  return '<section class="level listening" data-pane="listening">' +
+    '<div class="level-band"><span class="level-name">🎧 듣기 평가</span>' +
+      '<span class="level-toeic">10문제 · 문제마다 스크립트가 모두 다름 · Easy 4 / Medium 3 / Hard 3</span></div>' +
+    '<p class="note"><b>🎧 전체 스크립트 듣기</b>로 지문 전체를 듣고 정답을 고르세요. <b>🔁 핵심 문장</b>은 문제와 관련된 문장만 다시 들려줍니다. <b>원문 보기</b>로 스크립트·직독직해·단어 발음을 확인할 수 있어요.</p>' +
+    qs + '</section>';
+}
+
+/* ---------- 쓰기 평가 ---------- */
+function renderWriting() {
+  const tierClass = t => t === 'Easy' ? 'e' : (t === 'Medium' ? 'm' : 'h');
+  const qs = DATA.writing.map((q, i) => {
+    let body;
+    if (q.type === 'choice') {
+      body = mcHtml(q.choices, q.answer, q.ex, q.ko);
+    } else if (q.type === 'input') {
+      const iid = uid(), rid = uid();
+      body = '<div class="winput">' +
+        '<input class="text-input" id="' + iid + '" type="text" placeholder="정답 입력" autocomplete="off">' +
+        '<button class="btn small" data-check="' + iid + '" data-answer="' + esc(q.answer) + '" data-rid="' + rid + '">확인</button>' +
+        '<span class="check-msg" id="msg-' + iid + '"></span>' +
+        '<div class="reveal-box" id="' + rid + '">' +
+          '<div class="ans-line"><b>정답:</b> ' + esc(q.answer) + '</div>' +
+          '<div class="ko-lit">📖 ' + esc(q.ko) + '</div><div class="why">' + q.ex + '</div></div></div>';
+    } else { // compose
+      const rid = uid();
+      const bank = (q.words && q.words.length)
+        ? '<div class="wordbank"><span class="wb-label">제시 단어</span>' +
+            q.words.map(w => '<span class="wb-chip w" data-say="' + esc(w) + '">' + esc(w) + '</span>').join('') +
+          '</div>'
+        : '';
+      body = '<div class="wcompose">' +
+        '<div class="ko-lit">' + esc(q.ko) + '</div>' + bank +
+        '<textarea class="short-input" rows="2" placeholder="여기에 영작하세요"></textarea>' +
+        '<button class="btn small" data-reveal="' + rid + '">모범답안 보기</button>' +
+        '<div class="reveal-box" id="' + rid + '">' +
+          '<div class="ans-line"><b>모범답안:</b> ' + wordify(q.model) + '</div>' +
+          '<div class="why">' + q.ex + '</div></div></div>';
+    }
+    const label = q.type === 'compose' ? q.prompt : (q.sentence || '');
+    return '<div class="q"><div class="q-head"><span class="q-no">' + (i + 1) + '</span>' +
+      '<span class="tier-badge ' + tierClass(q.tier) + '">' + q.tier + '</span>' +
+      '<span class="q-text">' + (q.type === 'compose' ? esc(label) : wordify(label)) + '</span></div>' +
+      body + '</div>';
+  }).join('');
+  return '<section class="level writing" data-pane="writing">' +
+    '<div class="level-band"><span class="level-name">✍️ 쓰기 평가</span>' +
+      '<span class="level-toeic">10문제 · 객관식 4 / 입력 4 / 영작 2</span></div>' +
+    qs + '</section>';
+}
+
+/* ---------- 단어 시험 ---------- */
+/* 단어 시험 전용 문장: 단어표 1열 + 다른 품사(전 49개), 관계사/분사구문/조건·시간절 등 다양한 문법 */
+const VTEST = [
+  { word:`anchor`, pos:`명사`, en:`The anchor who reads the evening news is very calm.`, ko:`저녁 뉴스를 진행하는 그 앵커는 매우 침착하다.` },
+  { word:`anchor`, pos:`동사`, en:`Before the storm hits, we should anchor the boat.`, ko:`폭풍이 닥치기 전에, 우리는 배를 고정해야 한다.` },
+  { word:`upload`, pos:`동사`, en:`If you upload the file now, everyone can see it.`, ko:`지금 파일을 올리면, 모두가 그것을 볼 수 있다.` },
+  { word:`upload`, pos:`명사`, en:`The upload, which took only seconds, finished without errors.`, ko:`몇 초밖에 안 걸린 그 업로드는 오류 없이 끝났다.` },
+  { word:`extra`, pos:`형용사`, en:`When we are busy, we ask for extra help.`, ko:`우리는 바쁠 때, 추가 도움을 요청한다.` },
+  { word:`extra`, pos:`명사`, en:`Keeping some extras nearby, she felt well prepared.`, ko:`여분을 몇 개 가까이 두면서, 그녀는 잘 준비된 느낌이었다.` },
+  { word:`human`, pos:`형용사/명사`, en:`Robots that lack human warmth cannot fully replace teachers.`, ko:`인간적인 따뜻함이 없는 로봇은 교사를 완전히 대체할 수 없다.` },
+  { word:`humanity`, pos:`명사`, en:`Moved by compassion, the volunteers served humanity during the flood.`, ko:`연민에 이끌린 그 자원봉사자들은 홍수 동안 인류를 위해 봉사했다.` },
+  { word:`online`, pos:`부사/형용사`, en:`When the shop moved online, its sales grew quickly.`, ko:`그 가게가 온라인으로 옮기자, 매출이 빠르게 늘었다.` },
+  { word:`offline`, pos:`부사/형용사`, en:`If the server fails, the app still works offline.`, ko:`서버가 다운되어도, 그 앱은 오프라인에서도 작동한다.` },
+  { word:`industry`, pos:`명사`, en:`The music industry, which has changed a lot, now relies on streaming.`, ko:`많이 변한 음악 산업은 이제 스트리밍에 의존한다.` },
+  { word:`industrial`, pos:`형용사`, en:`Built a century ago, the industrial district is now full of cafes.`, ko:`한 세기 전에 지어진 그 공업 지구는 이제 카페로 가득하다.` },
+  { word:`deliver`, pos:`동사`, en:`The drivers who work at night deliver most of the packages.`, ko:`밤에 일하는 그 기사들이 대부분의 소포를 배달한다.` },
+  { word:`delivery`, pos:`명사`, en:`If it rains tomorrow, the delivery may be delayed.`, ko:`내일 비가 오면, 배송이 지연될 수 있다.` },
+  { word:`standard`, pos:`형용사/명사`, en:`When quality drops, we return to the standard everyone agreed on.`, ko:`품질이 떨어지면, 우리는 모두가 동의한 기준으로 돌아간다.` },
+  { word:`standardize`, pos:`동사`, en:`Managers who value fairness try to standardize the whole process.`, ko:`공정성을 중시하는 관리자들은 전체 절차를 표준화하려 한다.` },
+  { word:`create`, pos:`동사`, en:`Artists who think differently often create something new.`, ko:`다르게 생각하는 예술가들은 종종 새로운 것을 창작한다.` },
+  { word:`creation`, pos:`명사`, en:`Praised by critics, her latest creation sold out in a day.`, ko:`비평가들에게 찬사를 받은 그녀의 최신 창작물은 하루 만에 매진되었다.` },
+  { word:`creative`, pos:`형용사`, en:`When children play freely, they become more creative.`, ko:`아이들은 자유롭게 놀 때, 더 창의적이 된다.` },
+  { word:`separate`, pos:`동사`, en:`If you want to recycle, please separate the paper and the plastic.`, ko:`재활용하려면, 종이와 플라스틱을 분리해 주세요.` },
+  { word:`separation`, pos:`명사`, en:`The wall that stood for years marked the separation of the two areas.`, ko:`수년간 서 있던 그 벽은 두 지역의 분리를 나타냈다.` },
+  { word:`personalized`, pos:`형용사`, en:`Customers who sign up receive a personalized welcome message.`, ko:`가입하는 고객은 맞춤형 환영 메시지를 받는다.` },
+  { word:`personalize`, pos:`동사`, en:`If you log in, you can personalize the home screen.`, ko:`로그인하면, 홈 화면을 맞춤 설정할 수 있다.` },
+  { word:`repetitive`, pos:`형용사`, en:`The tasks that machines handle best are usually repetitive.`, ko:`기계가 가장 잘 처리하는 일은 대개 반복적이다.` },
+  { word:`repeat`, pos:`동사`, en:`When students do not understand, teachers repeat the key points.`, ko:`학생들이 이해하지 못할 때, 교사들은 핵심 요점을 반복한다.` },
+  { word:`shrink`, pos:`동사`, en:`If you wash wool in hot water, it will shrink.`, ko:`양모를 뜨거운 물에 빨면, 그것은 줄어들 것이다.` },
+  { word:`shrinkage`, pos:`명사`, en:`Stored in a dry room, the fabric showed very little shrinkage.`, ko:`건조한 방에 보관된 그 천은 수축이 거의 없었다.` },
+  { word:`artificial`, pos:`형용사`, en:`The flowers that decorate the lobby are actually artificial.`, ko:`로비를 장식하는 그 꽃들은 사실 인공이다.` },
+  { word:`artificially`, pos:`부사`, en:`When demand fell, the price was kept artificially high.`, ko:`수요가 떨어졌을 때, 가격이 인위적으로 높게 유지되었다.` },
+  { word:`increasingly`, pos:`부사`, en:`As technology spreads, remote work is becoming increasingly common.`, ko:`기술이 퍼지면서, 원격 근무가 점점 더 흔해지고 있다.` },
+  { word:`increase`, pos:`동사`, en:`If the team works overtime, output will increase.`, ko:`팀이 초과 근무를 하면, 생산량이 증가할 것이다.` },
+  { word:`collaborator`, pos:`명사`, en:`The designer who joined last year became my closest collaborator.`, ko:`작년에 합류한 그 디자이너는 나의 가장 가까운 협력자가 되었다.` },
+  { word:`collaborate`, pos:`동사`, en:`When deadlines are tight, departments collaborate more closely.`, ko:`마감이 촉박할 때, 부서들은 더 긴밀히 협력한다.` },
+  { word:`collaboration`, pos:`명사`, en:`Released last month, the collaboration between the two studios was a hit.`, ko:`지난달 공개된 그 두 스튜디오의 협업은 대성공이었다.` },
+  { word:`boundary`, pos:`명사`, en:`The fence that runs along the field marks the boundary.`, ko:`들판을 따라 이어진 그 울타리가 경계를 나타낸다.` },
+  { word:`bound`, pos:`형용사`, en:`Passengers who booked early boarded the train bound for Busan.`, ko:`일찍 예약한 승객들은 부산행 기차에 탑승했다.` },
+  { word:`responsibility`, pos:`명사`, en:`When a mistake happens, taking responsibility builds trust.`, ko:`실수가 생겼을 때, 책임을 지는 것이 신뢰를 쌓는다.` },
+  { word:`responsible`, pos:`형용사`, en:`The manager who signed the contract is responsible for the results.`, ko:`그 계약에 서명한 관리자가 결과에 책임이 있다.` },
+  { word:`formulaic`, pos:`형용사`, en:`Movies that follow the same pattern often feel formulaic.`, ko:`같은 패턴을 따르는 영화들은 종종 판에 박힌 느낌이다.` },
+  { word:`formula`, pos:`명사`, en:`If you are looking for success, there is no single formula.`, ko:`성공을 찾고 있다면, 단 하나의 공식은 없다.` },
+  { word:`investigation`, pos:`명사`, en:`Launched after the accident, the investigation lasted six months.`, ko:`그 사고 후 시작된 조사는 6개월간 이어졌다.` },
+  { word:`investigate`, pos:`동사`, en:`When something looks wrong, good reporters investigate it themselves.`, ko:`무언가 잘못되어 보일 때, 훌륭한 기자들은 스스로 그것을 조사한다.` },
+  { word:`domain`, pos:`명사`, en:`Problems that require deep judgment remain the domain of experts.`, ko:`깊은 판단이 필요한 문제들은 여전히 전문가의 영역이다.` },
+  { word:`decisive`, pos:`형용사`, en:`The goal that came late was the decisive moment of the match.`, ko:`늦게 터진 그 골이 경기의 결정적인 순간이었다.` },
+  { word:`decide`, pos:`동사`, en:`If the two sides disagree, the manager will decide.`, ko:`양측이 의견이 다르면, 관리자가 결정할 것이다.` },
+  { word:`decision`, pos:`명사`, en:`Made under pressure, the decision still proved correct.`, ko:`압박 속에서 내려진 그 결정은 그래도 옳은 것으로 드러났다.` },
+  { word:`insight`, pos:`명사`, en:`The mentor who guided us offered valuable insight.`, ko:`우리를 이끌어 준 그 멘토는 귀중한 통찰을 주었다.` },
+  { word:`insightful`, pos:`형용사`, en:`When she reviewed the data, her comments were remarkably insightful.`, ko:`그녀가 데이터를 검토했을 때, 그녀의 논평은 놀랄 만큼 통찰력 있었다.` },
+  { word:`dismantle`, pos:`동사`, en:`Once the show ended, workers began to dismantle the stage.`, ko:`공연이 끝나자, 인부들이 무대를 해체하기 시작했다.` }
+];
+let VT_POOL = null;
+const WRONG = new Set();
+function collectVocabPool() {
+  return VTEST.map((t, i) => ({ id: i, word: t.word, en: t.en, ko: t.ko, pos: t.pos || '' }));
+}
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function escapeReg(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function makeBlank(en, word) {
+  const re = new RegExp('\\b(' + escapeReg(word) + '(?:s|es|ing|ed|d)?)\\b', 'i');
+  const m = en.match(re);
+  if (!m) return null;
+  return { surface: m[1], text: en.replace(re, '( ______ )') };
+}
+function capLike(sample, word) {
+  return /^[A-Z]/.test(sample) ? word.charAt(0).toUpperCase() + word.slice(1) : word;
+}
+function vocabTestCardHtml(item, idx, pool, mode, vtid) {
+  const b = makeBlank(item.en, item.word);
+  if (!b) return '';
+  const others = shuffle(pool.filter(p => p.word.toLowerCase() !== item.word.toLowerCase()));
+  const picks = [];
+  for (let i = 0; i < others.length && picks.length < 3; i++) {
+    const w = capLike(b.surface, others[i].word);
+    if (w.toLowerCase() === b.surface.toLowerCase()) continue;
+    if (picks.some(p => p.toLowerCase() === w.toLowerCase())) continue;
+    picks.push(w);
+  }
+  const choices = shuffle([b.surface].concat(picks));
+  const ansIdx = choices.indexOf(b.surface);
+  const koRid = uid();
+  const explain = '정답: <b>' + esc(b.surface) + '</b> — ' + esc(item.ko);
+  const cls = (mode === 'wn') ? 'q wn-q' : 'q vt-q';
+  const idAttr = (vtid != null) ? vtid : (item.id != null ? item.id : '');
+  return '<div class="' + cls + '" data-vtid="' + idAttr + '">' +
+    '<div class="q-head"><span class="q-no">Q' + (idx + 1) + '</span>' +
+      '<span class="q-text">' + wordify(b.text) + '</span></div>' +
+    '<div class="vt-ctrl">' +
+      '<button class="btn small" data-say="' + esc(item.en) + '">🎧 듣기</button>' +
+      '<button class="btn small ghost" data-reveal="' + koRid + '">해석</button></div>' +
+    '<div class="vt-ko" id="' + koRid + '">📖 ' + esc(item.ko) + '</div>' +
+    mcHtml(choices, ansIdx, explain, '') + '</div>';
+}
+function vocabTestBodyHtml() {
+  const items = shuffle(VT_POOL.slice()).filter(it => makeBlank(it.en, it.word));
+  return items.map((it, i) => vocabTestCardHtml(it, i, VT_POOL, 'vt', it.id)).join('');
+}
+function renderVocabTest() {
+  if (!VT_POOL) VT_POOL = collectVocabPool();
+  return '<section class="level vocabtest" data-pane="vocabtest">' +
+    '<div class="level-band"><span class="level-name">📝 단어 시험</span>' +
+      '<span class="level-toeic">EASY·MEDIUM·HARD 단어표의 모든 단어 + 다른 품사 · 총 ' + VT_POOL.length + '문항</span></div>' +
+    '<p class="note">단어표 <b>1열과 다른 품사</b>에 나온 <b>모든 단어</b>로 만든 빈칸 문제예요(빠짐없이 ' + VT_POOL.length + '개). 문장의 괄호에 알맞은 단어를 고르세요. <b>🎧 듣기</b>로 문장을 듣고 <b>해석</b>으로 뜻을 확인하세요. 틀린 문제는 <b>📕 오답 노트</b>에 자동으로 모입니다.</p>' +
+    '<div class="vt-top"><button class="btn small" data-action="vt-reshuffle">🔀 순서 섞기 / 다시 풀기</button></div>' +
+    '<div id="vtBody">' + vocabTestBodyHtml() + '</div></section>';
+}
+
+/* ---------- 오답 노트 ---------- */
+function updateWrongBadge() {
+  const el = document.getElementById('wnCount');
+  if (el) el.textContent = WRONG.size;
+}
+function markMastered(card) {
+  card.classList.add('mastered');
+  if (!card.querySelector('.wn-cleared')) {
+    const s = document.createElement('div');
+    s.className = 'wn-cleared';
+    s.innerHTML = '✅ 정답! 오답 노트에서 제거되었어요. (새로고침하면 목록에서 사라집니다)';
+    card.appendChild(s);
+  }
+}
+function wrongNoteBodyHtml() {
+  const ids = Array.from(WRONG);
+  if (!ids.length) {
+    return '<div class="wn-empty">아직 틀린 문제가 없어요. 먼저 <b>📝 단어 시험</b>을 풀어 보세요! 🙂<br>틀린 문제가 생기면 이곳에 자동으로 모입니다.</div>';
+  }
+  return ids.map((id, i) => vocabTestCardHtml(VT_POOL[id], i, VT_POOL, 'wn', id)).join('');
+}
+function renderWrongNote() {
+  if (!VT_POOL) VT_POOL = collectVocabPool();
+  return '<section class="level wrongnote" data-pane="wrongnote">' +
+    '<div class="level-band"><span class="level-name">📕 오답 노트</span>' +
+      '<span class="level-toeic">단어 시험에서 틀린 문제만 다시 풀기</span></div>' +
+    '<p class="note"><b>단어 시험</b>에서 틀린 문제만 여기 모여요. 다시 풀어서 <b>정답</b>을 맞히면 오답 노트에서 빠집니다. 이 탭을 열 때마다 최신 오답으로 갱신됩니다.</p>' +
+    '<div class="vt-top"><button class="btn small" data-action="wn-refresh">🔄 새로고침</button> ' +
+      '<button class="btn small ghost" data-action="wn-clear">🗑️ 전체 지우기</button></div>' +
+    '<div id="wnBody">' + wrongNoteBodyHtml() + '</div></section>';
+}
+
+/* ---------- 탭 전환 ---------- */
+function showPane(name) {
+  stopSpeak();
+  if (name === 'wrongnote') {
+    const wb = document.getElementById('wnBody');
+    if (wb) wb.innerHTML = wrongNoteBodyHtml();
+    updateWrongBadge();
+  }
+  document.querySelectorAll('.level').forEach(s =>
+    s.style.display = (s.dataset.pane === name ? 'block' : 'none'));
+  document.querySelectorAll('.tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.pane === name));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- 이벤트 위임 ---------- */
+function wireEvents() {
+  document.addEventListener('click', e => {
+    // 발음
+    const say = e.target.closest('[data-say]');
+    if (say) {
+      speak(say.getAttribute('data-say'));
+      const g = e.target.closest('.gloss');
+      if (g) showGtip(g); else hideGtip();
+      return;
+    }
+    // 듣기 발음 선택 (미/영 · 여/남)
+    const vset = e.target.closest('[data-vset]');
+    if (vset) {
+      const kv = vset.getAttribute('data-vset').split(':');
+      VOICE_PREFS[kv[0]] = kv[1];
+      const grp = vset.parentElement;
+      grp.querySelectorAll('.vc-btn').forEach(b => b.classList.toggle('active', b === vset));
+      speak(VOICE_PREFS.accent === 'US' ? 'Hello, this is the American voice.' : 'Hello, this is the British voice.');
+      return;
+    }
+    // 단어시험 새 문제 세트
+    const act = e.target.closest('[data-action]');
+    if (act) {
+      const a = act.getAttribute('data-action');
+      if (a === 'vt-reshuffle') {
+        const vb = document.getElementById('vtBody');
+        if (vb) vb.innerHTML = vocabTestBodyHtml();
+      } else if (a === 'wn-refresh') {
+        const wb = document.getElementById('wnBody');
+        if (wb) wb.innerHTML = wrongNoteBodyHtml();
+        updateWrongBadge();
+      } else if (a === 'wn-clear') {
+        WRONG.clear();
+        const wb = document.getElementById('wnBody');
+        if (wb) wb.innerHTML = wrongNoteBodyHtml();
+        updateWrongBadge();
+      }
+      return;
+    }
+    // 탭
+    const tab = e.target.closest('.tab');
+    if (tab) { showPane(tab.dataset.pane); return; }
+    // 객관식/OX
+    const opt = e.target.closest('.opt');
+    if (opt) {
+      const box = opt.closest('.mc');
+      if (box.classList.contains('done')) return;
+      box.classList.add('done');
+      const ans = +box.dataset.ans;
+      const opts = box.querySelectorAll('.opt');
+      opts.forEach((o, i) => { if (i === ans) o.classList.add('correct'); });
+      const chosenWrong = (+opt.dataset.idx !== ans);
+      if (chosenWrong) opt.classList.add('wrong');
+      const ex = box.querySelector('.explain');
+      if (ex) ex.classList.add('open');
+      // 오답 노트 연동 (단어 시험 / 오답 노트)
+      const card = opt.closest('[data-vtid]');
+      if (card && card.dataset.vtid !== '') {
+        const id = +card.dataset.vtid;
+        if (card.classList.contains('wn-q')) {
+          if (!chosenWrong) { WRONG.delete(id); markMastered(card); }
+        } else if (card.classList.contains('vt-q')) {
+          if (chosenWrong) WRONG.add(id);
+        }
+        updateWrongBadge();
+      }
+      return;
+    }
+    // 정답/원문 펼치기
+    const rv = e.target.closest('[data-reveal]');
+    if (rv) {
+      const t = document.getElementById(rv.getAttribute('data-reveal'));
+      if (t) { t.classList.toggle('open'); rv.classList.toggle('active'); }
+      return;
+    }
+    // 입력형 채점
+    const ck = e.target.closest('[data-check]');
+    if (ck) {
+      const inp = document.getElementById(ck.getAttribute('data-check'));
+      const ans = ck.getAttribute('data-answer').trim().toLowerCase();
+      const user = (inp.value || '').trim().toLowerCase().replace(/[.]/g, '');
+      const msg = document.getElementById('msg-' + inp.id);
+      const ok = user === ans;
+      msg.textContent = ok ? '✅ 정답!' : '❌ 다시 확인해 보세요';
+      msg.className = 'check-msg ' + (ok ? 'ok' : 'no');
+      const box = document.getElementById(ck.getAttribute('data-rid'));
+      if (box) box.classList.add('open');
+      return;
+    }
+  });
+
+  // 단어 툴팁: 글로스 밖 클릭/스크롤 시 닫기
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.gloss') && !e.target.closest('#gtip')) hideGtip();
+  });
+  window.addEventListener('scroll', hideGtip, { passive: true });
+}
+
+/* ---------- init ---------- */
+function init() {
+  buildGloss();
+  const app = document.getElementById('app');
+  app.innerHTML =
+    renderLevel('easy') + renderLevel('medium') + renderLevel('hard') +
+    renderListening() + renderWriting() + renderVocabTest() + renderWrongNote();
+  wireEvents();
+  showPane('easy');
+  // 음성 목록 로드 유도
+  if ('speechSynthesis' in window) { speechSynthesis.getVoices(); }
+}
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>
