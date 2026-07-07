@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관계사절 마스터 · Relative Clauses (Unit 90–95)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Noto+Sans+KR:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17222E; --ink-soft:#4A5A68; --paper:#F4F6F5; --card:#FFFFFF;
+  --line:#DCE3E2; --teal:#0E7C86; --teal-d:#0A5C64; --teal-l:#E3F1F1;
+  --amber:#E08A2B; --amber-l:#FBEEDD; --rose:#C0455B; --rose-l:#FBE7EB;
+  --green:#2E8B57; --green-l:#E4F2EA; --shadow:0 1px 2px rgba(20,40,50,.06),0 8px 24px rgba(20,40,50,.06);
+  --disp:"Fraunces",Georgia,serif; --ui:"Space Grotesk","Noto Sans KR",sans-serif; --body:"Noto Sans KR",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.6;
+  background-image:radial-gradient(circle at 1px 1px,rgba(14,124,134,.05) 1px,transparent 0);background-size:22px 22px;}
+.wrap{max-width:960px;margin:0 auto;padding:0 18px 80px}
+a{color:var(--teal)}
+button{font-family:var(--ui);cursor:pointer}
+
+/* Header */
+header{padding:30px 0 14px}
+.eyebrow{font-family:var(--ui);font-weight:600;letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--teal);margin:0}
+h1{font-family:var(--disp);font-weight:600;font-size:clamp(28px,5vw,44px);line-height:1.05;margin:6px 0 4px;letter-spacing:-.01em}
+h1 .thread{position:relative;white-space:nowrap}
+h1 .thread::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:8px;background:var(--amber-l);z-index:-1;border-radius:4px}
+.sub{color:var(--ink-soft);font-size:15px;margin:2px 0 0}
+
+/* Voice bar */
+.voicebar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:10px 14px;margin:16px 0 6px;box-shadow:var(--shadow)}
+.voicebar .vlabel{font-family:var(--ui);font-weight:600;font-size:12px;color:var(--ink-soft);letter-spacing:.04em}
+.seg{display:inline-flex;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;color:var(--ink-soft);font-size:13px;font-weight:600;padding:6px 12px;border-radius:8px;transition:.15s}
+.seg button.on{background:var(--teal);color:#fff;box-shadow:0 1px 3px rgba(14,124,134,.4)}
+.testvoice{margin-left:auto;border:1px solid var(--line);background:var(--card);color:var(--teal);border-radius:10px;padding:8px 14px;font-weight:600;font-size:13px}
+.testvoice:hover{background:var(--teal-l)}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;position:sticky;top:0;z-index:20;background:var(--paper);padding:12px 0 10px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink-soft);font-weight:600;font-size:14px;
+  padding:9px 16px;border-radius:11px;transition:.15s;display:flex;align-items:center;gap:7px}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabs button .pill{background:var(--rose);color:#fff;font-size:11px;padding:1px 7px;border-radius:20px;min-width:18px;text-align:center}
+.tabs button.on .pill{background:var(--amber)}
+
+.panel{display:none;animation:fade .3s}
+.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Unit nav */
+.unitnav{display:flex;gap:8px;overflow-x:auto;padding:14px 0 8px;-webkit-overflow-scrolling:touch}
+.unitnav button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 14px;
+  font-family:var(--ui);font-weight:600;font-size:13px;color:var(--ink-soft)}
+.unitnav button.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.unitnav button b{font-family:var(--disp);font-size:15px;margin-right:6px}
+
+/* Unit card */
+.ucard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:20px;box-shadow:var(--shadow)}
+.ucard .utag{font-family:var(--ui);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber)}
+.ucard h2{font-family:var(--disp);font-weight:600;font-size:24px;margin:4px 0 2px}
+.ucard .en-sub{font-family:var(--ui);color:var(--teal);font-weight:600;font-size:15px;margin:0 0 14px}
+.easybox{background:var(--teal-l);border-left:4px solid var(--teal);border-radius:0 12px 12px 0;padding:14px 16px;margin:6px 0 14px}
+.easybox p{margin:0;font-size:15px;color:var(--ink)}
+.points{list-style:none;padding:0;margin:0 0 6px;display:grid;gap:8px}
+.points li{display:flex;gap:10px;font-size:14.5px;color:var(--ink)}
+.points li::before{content:"→";color:var(--amber);font-weight:700;flex:0 0 auto}
+.exhead{font-family:var(--ui);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.exhead::before{content:"";height:1px;width:20px;background:var(--line)}
+
+/* Example sentence */
+.ex{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;background:var(--card);transition:.15s}
+.ex:hover{border-color:var(--teal)}
+.ex .en{font-size:17px;line-height:1.9;color:var(--ink);word-spacing:1px}
+.ex .en .w{cursor:pointer;border-radius:5px;padding:1px 2px;transition:background .12s}
+.ex .en .w:hover{background:var(--amber-l)}
+.ex .en .rel{color:var(--teal-d);font-weight:700;background:var(--teal-l);border-radius:6px;padding:1px 5px}
+.ex .en .rel:hover{background:#cfeaea}
+.ex .tools{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ex .tools button{border:1px solid var(--line);background:var(--card);border-radius:9px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--ink-soft);display:inline-flex;align-items:center;gap:6px}
+.ex .tools button:hover{border-color:var(--teal);color:var(--teal)}
+.ex .ko{display:none;margin-top:10px;padding:11px 14px;background:var(--paper);border-radius:10px;font-size:15px;color:var(--ink);border:1px dashed var(--line)}
+.ex .ko.show{display:block}
+.hintword{font-size:12px;color:var(--ink-soft);margin-top:8px}
+
+/* Download btn */
+.dlrow{margin:8px 0 26px;display:flex;gap:10px;flex-wrap:wrap}
+.btn-primary{background:var(--teal);color:#fff;border:0;border-radius:12px;padding:13px 20px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:9px;box-shadow:0 2px 8px rgba(14,124,134,.35)}
+.btn-primary:hover{background:var(--teal-d)}
+.btn-ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:13px 20px;font-weight:600;font-size:15px}
+
+/* Tooltip */
+#tip{position:fixed;z-index:100;max-width:320px;background:#fff;border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 12px 40px rgba(20,40,50,.22);padding:0;display:none;overflow:hidden}
+#tip .tip-h{background:var(--ink);color:#fff;padding:13px 16px}
+#tip .tip-word{font-family:var(--disp);font-size:21px;font-weight:600;line-height:1.1}
+#tip .tip-ipa{font-family:var(--ui);color:#9fd3d6;font-size:14px;margin-top:2px}
+#tip .tip-b{padding:14px 16px}
+#tip .tip-mean{font-size:15px;color:var(--ink);margin:0 0 8px}
+#tip .tip-mean b{color:var(--teal-d)}
+#tip .tip-ex{font-size:13.5px;color:var(--ink);background:var(--paper);border-radius:9px;padding:9px 11px;margin-top:8px}
+#tip .tip-ex .ee{display:block}
+#tip .tip-ex .kk{display:block;color:var(--ink-soft);margin-top:3px}
+#tip .tip-play{margin-top:10px;width:100%;background:var(--amber-l);color:#8a5410;border:0;border-radius:10px;padding:9px;font-weight:700;font-size:13px}
+#tip .tip-play:hover{background:#f6e0c2}
+#tip .tip-x{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.15);border:0;color:#fff;width:24px;height:24px;border-radius:50%;font-size:14px;line-height:1}
+
+/* Quiz */
+.quiz-top{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow);position:sticky;top:58px;z-index:15}
+.quiz-top .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.progress{flex:1;min-width:160px;height:9px;background:var(--paper);border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--green));width:0;transition:.3s}
+.qstat{font-family:var(--ui);font-weight:700;font-size:14px;color:var(--ink)}
+.qstat .g{color:var(--green)} .qstat .r{color:var(--rose)}
+.filterbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.filterbar button{border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);border-radius:20px;padding:5px 12px;font-size:12.5px;font-weight:600}
+.filterbar button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.q .qmeta{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.q .qnum{font-family:var(--disp);font-weight:700;color:var(--teal)}
+.q .badge{font-family:var(--ui);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+.b-lv{background:var(--amber-l);color:#8a5410}
+.b-un{background:var(--teal-l);color:var(--teal-d)}
+.q .stem{font-size:16.5px;line-height:1.7;margin:2px 0 14px;color:var(--ink)}
+.q .stem code{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:1px 8px;font-family:var(--ui);color:var(--teal-d);font-weight:700}
+.opts{display:grid;gap:9px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:12px 14px;font-size:15px;text-align:left;color:var(--ink);transition:.15s;width:100%;font-family:var(--body)}
+.opt:not(.locked):hover{border-color:var(--teal);background:var(--teal-l)}
+.opt .key{font-family:var(--ui);font-weight:700;flex:0 0 auto;width:22px;height:22px;border-radius:7px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;font-size:12px;color:var(--ink-soft)}
+.opt.correct{border-color:var(--green);background:var(--green-l)}
+.opt.correct .key{background:var(--green);color:#fff;border-color:var(--green)}
+.opt.wrong{border-color:var(--rose);background:var(--rose-l)}
+.opt.wrong .key{background:var(--rose);color:#fff;border-color:var(--rose)}
+.opt.locked{cursor:default;opacity:.75}
+.opt.locked.correct,.opt.locked.wrong{opacity:1}
+.explain{display:none;margin-top:12px;background:var(--paper);border-radius:11px;padding:12px 14px;font-size:14px;color:var(--ink);border-left:3px solid var(--teal)}
+.explain.show{display:block}
+.explain b{color:var(--teal-d)}
+
+.empty{text-align:center;padding:60px 20px;color:var(--ink-soft)}
+.empty .big{font-family:var(--disp);font-size:22px;color:var(--ink);margin-bottom:6px}
+.note-card{background:var(--rose-l);border:1px solid #f0c9d1;border-radius:14px;padding:14px 16px;margin-bottom:14px;font-size:14px;color:#7a2233}
+.note-card b{color:var(--rose)}
+footer{text-align:center;color:var(--ink-soft);font-size:13px;padding:30px 0 10px;font-family:var(--ui)}
+@media(max-width:560px){.ucard{padding:18px 15px}.quiz-top{top:52px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="eyebrow">Grammar in Use · Unit 90–95</p>
+  <h1>관계사절 <span class="thread">마스터</span></h1>
+  <p class="sub">who · that · which · whose · whom · where · 추가정보절 · -ing/-ed &nbsp;— 듣고, 클릭하고, 풀어보세요.</p>
+</header>
+
+<div class="voicebar">
+  <span class="vlabel">발음</span>
+  <div class="seg" id="segAccent">
+    <button data-acc="en-US" class="on">🇺🇸 미국</button>
+    <button data-acc="en-GB">🇬🇧 영국</button>
+  </div>
+  <div class="seg" id="segGender">
+    <button data-gen="male" class="on">남성</button>
+    <button data-gen="female">여성</button>
+  </div>
+  <button class="testvoice" id="testVoice">🔊 발음 테스트</button>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="learn" class="on">📖 설명 &amp; 예문</button>
+  <button data-tab="quiz">📝 문제 <span class="pill" id="quizProg">0</span></button>
+  <button data-tab="wrong">🗂️ 오답노트 <span class="pill" id="wrongCount">0</span></button>
+</nav>
+
+<!-- LEARN -->
+<section class="panel on" id="panel-learn">
+  <div class="unitnav" id="unitnav"></div>
+  <div id="learnBody"></div>
+  <div class="dlrow">
+    <button class="btn-primary" id="dlDocx">⬇️ 설명 전체 WORD(.docx) 다운로드</button>
+    <button class="btn-ghost" id="dlThisUnit">이 단원만 저장</button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="panel" id="panel-quiz">
+  <div class="quiz-top">
+    <div class="row">
+      <div class="progress"><i id="progBar"></i></div>
+      <div class="qstat"><span id="qDone">0</span>/120 · <span class="g" id="qRight">0</span>정답 · <span class="r" id="qWrong">0</span>오답</div>
+    </div>
+    <div class="filterbar" id="qFilter">
+      <button data-f="all" class="on">전체 120</button>
+      <button data-f="90">U90</button><button data-f="91">U91</button><button data-f="92">U92</button>
+      <button data-f="93">U93</button><button data-f="94">U94</button><button data-f="95">U95</button>
+      <button data-f="todo">안 푼 문제</button>
+    </div>
+  </div>
+  <div id="quizBody"></div>
+</section>
+
+<!-- WRONG -->
+<section class="panel" id="panel-wrong">
+  <div id="wrongBody"></div>
+</section>
+
+<footer>데이비드앤드컴퍼니 · 관계사절 학습앱 · 단어를 클릭하면 뜻·발음·예문이 나와요.</footer>
+</div>
+
+<div id="tip"></div>
+
+<script>
+/* ============================ DATA ============================ */
+const UNITS = [
+ {id:90,tag:"관계사절 1",title:"who / that / which",sub:"관계사가 뒤 문장의 '주어' 역할",
+  easy:"관계사절은 두 문장을 하나로 이어주는 '설명 꼬리표'예요. 사람을 설명하면 who, 사물·동물을 설명하면 which, 둘 다 쓸 수 있는 만능 단어는 that! 여기서는 관계사가 뒤 문장에서 '누가/무엇이'처럼 주어 역할을 해요.",
+  points:["who = 사람을 설명해요 (사람 뒤에)","which = 사물·동물을 설명해요","that = 사람·사물 모두에 쓸 수 있어요","관계사 바로 뒤에 동사가 와요 (주어 역할이라서요)"],
+  ex:[
+   {en:"The girl who is singing is my sister.",ko:"노래하고 있는 그 소녀는 내 여동생이야.",rel:["who"]},
+   {en:"I have a cat which has blue eyes.",ko:"나는 파란 눈을 가진 고양이가 있어.",rel:["which"]},
+   {en:"The boy who won the race is my friend.",ko:"그 경주에서 이긴 소년은 내 친구야.",rel:["who"]},
+   {en:"This is the bus that goes to the zoo.",ko:"이건 동물원으로 가는 버스야.",rel:["that"]},
+   {en:"People who read a lot know many words.",ko:"책을 많이 읽는 사람들은 많은 단어를 알아.",rel:["who"]}
+  ]},
+ {id:91,tag:"관계사절 2",title:"who / that / which 의 사용과 생략",sub:"관계사가 '목적어'면 생략할 수 있어요",
+  easy:"관계사가 뒤 문장에서 '목적어(~을/를)' 역할을 하면, 관계사를 생략할 수 있어요! (주어일 때는 생략하면 안 돼요.) 사람이면 who/whom/that, 사물이면 which/that을 써요.",
+  points:["관계사가 목적어면 생략 가능 → The book (that) I read","관계사가 주어면 생략 불가 → The man who called (필요)","사람 목적격: 회화는 who, 격식체는 whom","관계사를 지워도 '명사 + 주어 + 동사' 순서면 자연스러워요"],
+  ex:[
+   {en:"The book that I read was fun.",ko:"내가 읽은 그 책은 재미있었어. (that 생략 가능)",rel:["that"]},
+   {en:"The movie we watched was scary.",ko:"우리가 본 영화는 무서웠어. (관계사 which 생략됨)",rel:[]},
+   {en:"The man who we met is a doctor.",ko:"우리가 만난 그 남자는 의사야.",rel:["who"]},
+   {en:"Here is the pen you gave me.",ko:"여기 네가 나에게 준 펜이 있어. (관계사 생략됨)",rel:[]},
+   {en:"The song she sang was beautiful.",ko:"그녀가 부른 노래는 아름다웠어. (관계사 생략됨)",rel:[]}
+  ]},
+ {id:92,tag:"관계사절 3",title:"whose / whom / where",sub:"소유 · 사람 목적격 · 장소",
+  easy:"whose는 '~의'라는 소유를 나타내요(사람·사물 모두). whom은 사람이 목적어일 때 쓰는 격식체 단어예요. where는 '~하는 곳'처럼 장소를 설명해요.",
+  points:["whose + 명사 → 소유 ('그의 강아지'처럼)","whom → 사람이 목적어일 때 (격식체)","where → 장소 뒤에서 '거기서 ~하다'","where 뒤에는 완전한 문장(주어+동사)이 와요"],
+  ex:[
+   {en:"That's the boy whose dog ran away.",ko:"저 애가 강아지가 도망간 그 소년이야.",rel:["whose"]},
+   {en:"This is the park where we played.",ko:"여기가 우리가 놀던 공원이야.",rel:["where"]},
+   {en:"She's the singer whose songs I love.",ko:"그녀는 내가 노래를 좋아하는 그 가수야.",rel:["whose"]},
+   {en:"The man whom I met is a writer.",ko:"내가 만난 그 남자는 작가야.",rel:["whom"]},
+   {en:"Busan is the city where I was born.",ko:"부산은 내가 태어난 도시야.",rel:["where"]}
+  ]},
+ {id:93,tag:"관계사절 4",title:"추가정보절 (1)",sub:"콤마(,)로 설명을 덧붙여요",
+  easy:"이미 누구/무엇인지 아는 대상에, 콤마(,)를 찍고 '추가 정보'를 덧붙이는 관계사절이에요. 사람은 who, 사물은 which를 써요. 여기서는 that을 쓸 수 없고, 관계사도 생략할 수 없어요.",
+  points:["콤마(,)가 꼭 필요해요","that은 쓰면 안 돼요 (who/which만)","관계사를 생략할 수 없어요","콤마가 있으면 '추가 정보', 없으면 '어느 것인지 구별'하는 뜻"],
+  ex:[
+   {en:"My mother, who is a nurse, works at night.",ko:"우리 엄마는, 간호사이신데, 밤에 일하셔.",rel:["who"]},
+   {en:"Seoul, which is in Korea, is a big city.",ko:"서울은, 한국에 있는데, 큰 도시야.",rel:["which"]},
+   {en:"The Sun, which gives us light, is a star.",ko:"태양은, 우리에게 빛을 주는데, 별이야.",rel:["which"]},
+   {en:"Mr. Kim, who teaches math, is funny.",ko:"김 선생님은, 수학을 가르치시는데, 재미있으셔.",rel:["who"]},
+   {en:"Paris, which is in France, is beautiful.",ko:"파리는, 프랑스에 있는데, 아름다워.",rel:["which"]}
+  ]},
+ {id:94,tag:"관계사절 5",title:"추가정보절 (2)",sub:"all/some/most + of whom / of which",
+  easy:"추가 정보절에서 수량 표현과 함께 'all of whom(사람)', 'some of which(사물)'처럼 써요. 사람이면 of whom, 사물이면 of which를 쓰는 게 핵심이에요. 격식체·문어체에서 자주 나와요.",
+  points:["사람 → of whom","사물 → of which","all / some / most / none / both / many + of whom·which","콤마 뒤에서 '그중 일부/전부'를 설명해요"],
+  ex:[
+   {en:"I have two cats, both of which are black.",ko:"나는 고양이가 두 마리 있는데, 둘 다 검은색이야.",rel:["which"]},
+   {en:"He has three sisters, all of whom are nurses.",ko:"그는 누나가 셋 있는데, 모두 간호사야.",rel:["whom"]},
+   {en:"She bought many books, some of which were old.",ko:"그녀는 책을 많이 샀는데, 그중 일부는 오래된 거였어.",rel:["which"]},
+   {en:"We met ten people, none of whom spoke Korean.",ko:"우리는 열 명을 만났는데, 아무도 한국어를 못 했어.",rel:["whom"]},
+   {en:"The team has many players, most of whom are young.",ko:"그 팀엔 선수가 많은데, 대부분이 어려.",rel:["whom"]}
+  ]},
+ {id:95,tag:"-ing / -ed 구문",title:"-ing 와 -ed 구문",sub:"관계사절을 짧게 줄이기",
+  easy:"관계사절을 짧게 줄이는 방법이에요! 능동(스스로 ~하는)은 -ing, 수동(~당한/된)은 -ed(과거분사)를 써요. 'who is talking'은 'talking'으로, 'which was broken'은 'broken'으로 줄여요.",
+  points:["능동 → -ing (the man talking = who is talking)","수동 → 과거분사 (the window broken = which was broken)","'관계사 + be동사'를 지워서 줄여요","줄인 말이 명사 뒤에서 꾸며줘요"],
+  ex:[
+   {en:"The boy talking to the teacher is my friend.",ko:"선생님과 이야기하고 있는 소년은 내 친구야. (who is talking)",rel:["talking"]},
+   {en:"The window broken in the storm is fixed now.",ko:"폭풍에 깨진 창문은 이제 고쳐졌어. (which was broken)",rel:["broken"]},
+   {en:"Look at the girl swimming in the pool.",ko:"수영장에서 수영하는 소녀를 봐. (who is swimming)",rel:["swimming"]},
+   {en:"The letter sent yesterday arrived today.",ko:"어제 보낸 편지가 오늘 도착했어. (which was sent)",rel:["sent"]},
+   {en:"Anyone wanting to join can sign up.",ko:"참여하고 싶은 사람은 누구나 신청할 수 있어. (who wants)",rel:["wanting"]}
+  ]}
+];
+
+/* Word dictionary: word -> {ipa, ko, ex, exko} */
+const VOCAB = {
+ girl:{ipa:"/ɡɜːrl/",ko:"소녀, 여자아이",ex:"The girl is my sister.",exko:"그 소녀는 내 여동생이야."},
+ singing:{ipa:"/ˈsɪŋɪŋ/",ko:"노래하고 있는 (sing의 -ing형)",ex:"She is singing a song.",exko:"그녀는 노래를 부르고 있어."},
+ sister:{ipa:"/ˈsɪstər/",ko:"여동생, 누나, 언니",ex:"My sister is a nurse.",exko:"내 언니는 간호사야."},
+ cat:{ipa:"/kæt/",ko:"고양이",ex:"I have a cat with blue eyes.",exko:"나는 파란 눈의 고양이가 있어."},
+ blue:{ipa:"/bluː/",ko:"파란, 파란색의",ex:"The cat has blue eyes.",exko:"그 고양이는 파란 눈을 가졌어."},
+ eyes:{ipa:"/aɪz/",ko:"눈 (eye의 복수)",ex:"Her eyes are brown.",exko:"그녀의 눈은 갈색이야."},
+ boy:{ipa:"/bɔɪ/",ko:"소년, 남자아이",ex:"The boy won the race.",exko:"그 소년이 경주에서 이겼어."},
+ won:{ipa:"/wʌn/",ko:"이겼다 (win의 과거형)",ex:"He won the race.",exko:"그는 경주에서 이겼어."},
+ race:{ipa:"/reɪs/",ko:"경주, 달리기 시합",ex:"The race was exciting.",exko:"그 경주는 흥미진진했어."},
+ friend:{ipa:"/frend/",ko:"친구",ex:"He is my best friend.",exko:"그는 나의 가장 친한 친구야."},
+ bus:{ipa:"/bʌs/",ko:"버스",ex:"This bus goes to the zoo.",exko:"이 버스는 동물원으로 가."},
+ zoo:{ipa:"/zuː/",ko:"동물원",ex:"We went to the zoo.",exko:"우리는 동물원에 갔어."},
+ people:{ipa:"/ˈpiːpəl/",ko:"사람들",ex:"People who read a lot are smart.",exko:"책을 많이 읽는 사람들은 똑똑해."},
+ read:{ipa:"/riːd/",ko:"읽다",ex:"I read a book every day.",exko:"나는 매일 책을 읽어."},
+ words:{ipa:"/wɜːrdz/",ko:"단어들 (word의 복수)",ex:"I learn new words.",exko:"나는 새 단어들을 배워."},
+ book:{ipa:"/bʊk/",ko:"책",ex:"The book was fun.",exko:"그 책은 재미있었어."},
+ fun:{ipa:"/fʌn/",ko:"재미있는, 재미",ex:"The game was fun.",exko:"그 게임은 재미있었어."},
+ movie:{ipa:"/ˈmuːvi/",ko:"영화",ex:"The movie was scary.",exko:"그 영화는 무서웠어."},
+ watched:{ipa:"/wɒtʃt/",ko:"봤다 (watch의 과거형)",ex:"We watched a movie.",exko:"우리는 영화를 봤어."},
+ scary:{ipa:"/ˈskeəri/",ko:"무서운",ex:"The story was scary.",exko:"그 이야기는 무서웠어."},
+ man:{ipa:"/mæn/",ko:"남자, 사람",ex:"The man is a doctor.",exko:"그 남자는 의사야."},
+ met:{ipa:"/met/",ko:"만났다 (meet의 과거형)",ex:"We met yesterday.",exko:"우리는 어제 만났어."},
+ doctor:{ipa:"/ˈdɒktər/",ko:"의사",ex:"She is a doctor.",exko:"그녀는 의사야."},
+ pen:{ipa:"/pen/",ko:"펜",ex:"You gave me this pen.",exko:"네가 나에게 이 펜을 줬어."},
+ gave:{ipa:"/ɡeɪv/",ko:"줬다 (give의 과거형)",ex:"He gave me a gift.",exko:"그는 나에게 선물을 줬어."},
+ song:{ipa:"/sɒŋ/",ko:"노래",ex:"The song was beautiful.",exko:"그 노래는 아름다웠어."},
+ sang:{ipa:"/sæŋ/",ko:"노래했다 (sing의 과거형)",ex:"She sang a song.",exko:"그녀는 노래를 불렀어."},
+ beautiful:{ipa:"/ˈbjuːtɪfl/",ko:"아름다운",ex:"The view is beautiful.",exko:"그 경치는 아름다워."},
+ dog:{ipa:"/dɒɡ/",ko:"개, 강아지",ex:"The boy's dog ran away.",exko:"그 소년의 개가 도망쳤어."},
+ ran:{ipa:"/ræn/",ko:"달렸다 (run의 과거형)",ex:"The dog ran away.",exko:"그 개가 도망쳤어."},
+ away:{ipa:"/əˈweɪ/",ko:"멀리, 떨어져",ex:"It ran away.",exko:"그것은 도망쳤어."},
+ park:{ipa:"/pɑːrk/",ko:"공원",ex:"We played in the park.",exko:"우리는 공원에서 놀았어."},
+ played:{ipa:"/pleɪd/",ko:"놀았다 (play의 과거형)",ex:"They played together.",exko:"그들은 함께 놀았어."},
+ singer:{ipa:"/ˈsɪŋər/",ko:"가수",ex:"She is a famous singer.",exko:"그녀는 유명한 가수야."},
+ songs:{ipa:"/sɒŋz/",ko:"노래들 (song의 복수)",ex:"I love her songs.",exko:"나는 그녀의 노래들을 좋아해."},
+ love:{ipa:"/lʌv/",ko:"사랑하다, 아주 좋아하다",ex:"I love this song.",exko:"나는 이 노래를 아주 좋아해."},
+ writer:{ipa:"/ˈraɪtər/",ko:"작가",ex:"He is a writer.",exko:"그는 작가야."},
+ city:{ipa:"/ˈsɪti/",ko:"도시",ex:"Busan is a big city.",exko:"부산은 큰 도시야."},
+ born:{ipa:"/bɔːrn/",ko:"태어난",ex:"I was born in Busan.",exko:"나는 부산에서 태어났어."},
+ mother:{ipa:"/ˈmʌðər/",ko:"어머니, 엄마",ex:"My mother is a nurse.",exko:"우리 엄마는 간호사야."},
+ nurse:{ipa:"/nɜːrs/",ko:"간호사",ex:"She works as a nurse.",exko:"그녀는 간호사로 일해."},
+ works:{ipa:"/wɜːrks/",ko:"일하다 (work의 3인칭)",ex:"He works at night.",exko:"그는 밤에 일해."},
+ night:{ipa:"/naɪt/",ko:"밤",ex:"She works at night.",exko:"그녀는 밤에 일해."},
+ sun:{ipa:"/sʌn/",ko:"태양, 해",ex:"The Sun is a star.",exko:"태양은 별이야."},
+ light:{ipa:"/laɪt/",ko:"빛",ex:"The Sun gives us light.",exko:"태양은 우리에게 빛을 줘."},
+ star:{ipa:"/stɑːr/",ko:"별",ex:"The Sun is a star.",exko:"태양은 별이야."},
+ teaches:{ipa:"/tiːtʃɪz/",ko:"가르치다 (teach의 3인칭)",ex:"He teaches math.",exko:"그는 수학을 가르쳐."},
+ math:{ipa:"/mæθ/",ko:"수학",ex:"I like math.",exko:"나는 수학을 좋아해."},
+ funny:{ipa:"/ˈfʌni/",ko:"웃긴, 재미있는",ex:"The teacher is funny.",exko:"그 선생님은 웃겨."},
+ beautiful2:{ipa:"/ˈbjuːtɪfl/",ko:"아름다운",ex:"Paris is beautiful.",exko:"파리는 아름다워."},
+ cats:{ipa:"/kæts/",ko:"고양이들",ex:"I have two cats.",exko:"나는 고양이가 두 마리 있어."},
+ black:{ipa:"/blæk/",ko:"검은, 검정색",ex:"Both cats are black.",exko:"두 고양이 모두 검은색이야."},
+ sisters:{ipa:"/ˈsɪstərz/",ko:"자매들, 누나·언니들",ex:"He has three sisters.",exko:"그는 누나가 셋 있어."},
+ nurses:{ipa:"/nɜːrsɪz/",ko:"간호사들",ex:"They are all nurses.",exko:"그들은 모두 간호사야."},
+ books:{ipa:"/bʊks/",ko:"책들",ex:"She bought many books.",exko:"그녀는 책을 많이 샀어."},
+ bought:{ipa:"/bɔːt/",ko:"샀다 (buy의 과거형)",ex:"She bought a book.",exko:"그녀는 책을 샀어."},
+ old:{ipa:"/oʊld/",ko:"오래된, 낡은, 나이 든",ex:"Some books were old.",exko:"어떤 책들은 오래됐어."},
+ ten:{ipa:"/ten/",ko:"열, 10",ex:"We met ten people.",exko:"우리는 열 명을 만났어."},
+ spoke:{ipa:"/spoʊk/",ko:"말했다 (speak의 과거형)",ex:"No one spoke Korean.",exko:"아무도 한국어를 못 했어."},
+ korean:{ipa:"/kəˈriːən/",ko:"한국어; 한국인",ex:"She speaks Korean.",exko:"그녀는 한국어를 해."},
+ team:{ipa:"/tiːm/",ko:"팀",ex:"The team has many players.",exko:"그 팀엔 선수가 많아."},
+ players:{ipa:"/ˈpleɪərz/",ko:"선수들",ex:"Most players are young.",exko:"대부분의 선수는 어려."},
+ young:{ipa:"/jʌŋ/",ko:"어린, 젊은",ex:"They are young.",exko:"그들은 어려."},
+ talking:{ipa:"/ˈtɔːkɪŋ/",ko:"이야기하고 있는 (talk의 -ing)",ex:"The boy talking is my friend.",exko:"이야기하는 소년은 내 친구야."},
+ teacher:{ipa:"/ˈtiːtʃər/",ko:"선생님",ex:"The teacher is kind.",exko:"그 선생님은 친절해."},
+ window:{ipa:"/ˈwɪndoʊ/",ko:"창문",ex:"The window is broken.",exko:"그 창문은 깨졌어."},
+ broken:{ipa:"/ˈbroʊkən/",ko:"깨진, 부서진 (break의 과거분사)",ex:"The broken window is fixed.",exko:"깨진 창문이 고쳐졌어."},
+ storm:{ipa:"/stɔːrm/",ko:"폭풍",ex:"It broke in the storm.",exko:"그것은 폭풍에 깨졌어."},
+ fixed:{ipa:"/fɪkst/",ko:"고쳐진 (fix의 과거형·분사)",ex:"It is fixed now.",exko:"그것은 이제 고쳐졌어."},
+ swimming:{ipa:"/ˈswɪmɪŋ/",ko:"수영하는 (swim의 -ing)",ex:"The girl swimming is fast.",exko:"수영하는 소녀는 빨라."},
+ pool:{ipa:"/puːl/",ko:"수영장",ex:"She swims in the pool.",exko:"그녀는 수영장에서 수영해."},
+ letter:{ipa:"/ˈletər/",ko:"편지",ex:"The letter arrived today.",exko:"그 편지는 오늘 도착했어."},
+ sent:{ipa:"/sent/",ko:"보낸 (send의 과거형·분사)",ex:"The letter sent yesterday came.",exko:"어제 보낸 편지가 왔어."},
+ arrived:{ipa:"/əˈraɪvd/",ko:"도착했다 (arrive의 과거형)",ex:"It arrived today.",exko:"그것은 오늘 도착했어."},
+ anyone:{ipa:"/ˈeniwʌn/",ko:"누구나, 아무나",ex:"Anyone can join.",exko:"누구나 참여할 수 있어."},
+ wanting:{ipa:"/ˈwɒntɪŋ/",ko:"원하는 (want의 -ing)",ex:"Anyone wanting to join can come.",exko:"참여하고 싶은 사람은 올 수 있어."},
+ join:{ipa:"/dʒɔɪn/",ko:"참여하다, 가입하다",ex:"You can join us.",exko:"너는 우리와 함께할 수 있어."},
+ nurse2:{ipa:"/nɜːrs/",ko:"간호사",ex:"She is a nurse.",exko:"그녀는 간호사야."},
+ who:{ipa:"/huː/",ko:"[관계사] 사람을 설명 (~하는)",ex:"The girl who sings.",exko:"노래하는 소녀."},
+ which:{ipa:"/wɪtʃ/",ko:"[관계사] 사물·동물을 설명",ex:"The cat which sleeps.",exko:"잠자는 고양이."},
+ that:{ipa:"/ðæt/",ko:"[관계사] 사람·사물 모두에",ex:"The bus that goes.",exko:"가는 버스."},
+ whose:{ipa:"/huːz/",ko:"[관계사] ~의 (소유)",ex:"The boy whose dog ran.",exko:"개가 달린 그 소년."},
+ whom:{ipa:"/huːm/",ko:"[관계사] 사람 목적격 (격식체)",ex:"The man whom I met.",exko:"내가 만난 그 남자."},
+ where:{ipa:"/weər/",ko:"[관계사] ~하는 곳 (장소)",ex:"The park where we play.",exko:"우리가 노는 공원."}
+};
+
+/* 120 questions: u=unit, l=level, q=stem(HTML ok), o=options, a=answer index, e=해설 */
+const QUESTIONS = [
+/* ===== Unit 90 : who/that/which (주어) ===== */
+{u:90,l:"초6",q:`The girl <code>____</code> is singing is my sister.`,o:["who","which","where","whose"],a:0,e:"사람(girl)을 설명하는 주어 관계사는 who예요."},
+{u:90,l:"초6",q:`I have a cat <code>____</code> has blue eyes.`,o:["who","which","whom","where"],a:1,e:"동물·사물을 설명할 때는 which를 써요."},
+{u:90,l:"초6",q:`The boy <code>____</code> won the race is fast.`,o:["which","who","whose","where"],a:1,e:"사람(boy)을 설명하는 주어 관계사 → who."},
+{u:90,l:"초6",q:`This is the bus <code>____</code> goes to school.`,o:["who","whom","that","whose"],a:2,e:"사물(bus)에는 that(또는 which)을 쓸 수 있어요."},
+{u:90,l:"중1",q:`The people <code>____</code> live here are kind.`,o:["which","who","whose","where"],a:1,e:"사람(people) + 주어 역할 → who."},
+{u:90,l:"중1",q:`A dictionary is a book <code>____</code> tells you word meanings.`,o:["who","whom","which","whose"],a:2,e:"사물(book)을 설명 → which(또는 that)."},
+{u:90,l:"중2",q:`올바른 문장을 고르세요.`,o:["The man who live next door is nice.","The man who lives next door is nice.","The man which lives next door is nice.","The man whose lives next door is nice."],a:1,e:"사람이므로 who, 선행사가 단수(man)라 동사도 lives."},
+{u:90,l:"중2",q:`The keys <code>____</code> were on the table are gone.`,o:["who","which","whom","where"],a:1,e:"사물(keys) → which(또는 that)."},
+{u:90,l:"중3",q:`주어 자리에서 who와 which를 모두 대신할 수 있는 단어는?`,o:["that","whom","whose","where"],a:0,e:"that은 사람·사물 모두에 쓸 수 있는 만능 관계사예요."},
+{u:90,l:"중3",q:`Scientists <code>____</code> study space are called astronomers.`,o:["which","who","whose","where"],a:1,e:"사람(scientists) → who."},
+{u:90,l:"고1",q:`The novel <code>____</code> won the prize is a bestseller.`,o:["who","which","whom","where"],a:1,e:"사물(novel) + 주어 → which."},
+{u:90,l:"고1",q:`관계사가 절의 '주어'로 쓰인 문장을 고르세요.`,o:["The book that I bought was cheap.","The woman that called you is here.","The film that we saw was long.","The song that she likes is old."],a:1,e:"'that called you'는 관계사가 called의 주어. 나머지는 목적어예요."},
+{u:90,l:"고2",q:`An architect is a person <code>____</code> designs buildings.`,o:["which","who","whom","where"],a:1,e:"사람(person) → who."},
+{u:90,l:"고2",q:`틀린 문장을 고르세요.`,o:["The train which arrives at noon is late.","The train that arrives at noon is late.","The train who arrives at noon is late.","A train is a vehicle that runs on rails."],a:2,e:"train은 사물이므로 who를 쓸 수 없어요."},
+{u:90,l:"고3",q:`The organization <code>____</code> funds the project is local.`,o:["who","which","whom","where"],a:1,e:"단체·사물(organization) → which(또는 that)."},
+{u:90,l:"고3",q:`Passengers <code>____</code> have tickets may board now.`,o:["which","who","whom","where"],a:1,e:"사람(passengers) + 주어 → who."},
+{u:90,l:"대1",q:`격식 있는 글에서 '사람'을 주어로 설명할 때 가장 선호되는 관계사는?`,o:["that","who","which","whom"],a:1,e:"격식체에서는 사람 주어에 who를 선호해요."},
+{u:90,l:"대1",q:`"The report that criticizes the policy is thorough." 이 관계사절의 선행사는?`,o:["report","policy","criticizes","thorough"],a:0,e:"that이 설명하는 대상은 report(보고서)."},
+{u:90,l:"대1",q:`복수 동사를 올바르게 쓴 주어 관계사절 문장은?`,o:["The students who studies hard pass.","The students who study hard pass.","The students which study hard pass.","The student who study hard pass."],a:1,e:"복수 선행사(students)에는 복수 동사 study."},
+{u:90,l:"대1",q:`Everything <code>____</code> glitters is not gold.`,o:["who","which","that","where"],a:2,e:"-thing류(everything) 뒤에는 보통 that을 써요."},
+
+/* ===== Unit 91 : who/that/which 목적어 + 생략 ===== */
+{u:91,l:"초6",q:`"The book <code>____</code> I read was good." 여기서 관계사는 목적어예요. 그래서 이 관계사는?`,o:["절대 못 지워요","생략할 수 있어요","who예요","where예요"],a:1,e:"목적어 관계사는 생략(생략 가능)할 수 있어요."},
+{u:91,l:"초6",q:`The man <code>____</code> we met is a doctor.`,o:["who","which","where","whose"],a:0,e:"사람 목적격은 회화에서 who(또는 whom/that)."},
+{u:91,l:"초6",q:`The movie <code>____</code> we watched was funny.`,o:["who","which","whose","where"],a:1,e:"사물(movie) 목적격 → which(또는 that)."},
+{u:91,l:"초6",q:`Combine: "Here is the pen. You gave it to me." → "Here is the pen <code>____</code> you gave me."`,o:["who","which","where","whose"],a:1,e:"사물(pen) 목적격 → which(또는 that, 생략 가능)."},
+{u:91,l:"중1",q:`관계사를 생략할 수 있는 문장은?`,o:["The girl who sits next to me is nice.","The book that I bought is new.","The dog that barks is loud.","The man who called is my uncle."],a:1,e:"'that I bought'은 목적어라서 생략 가능. 나머지는 주어."},
+{u:91,l:"중1",q:`The song <code>____</code> she sang was beautiful.`,o:["who","which","where","whose"],a:1,e:"사물(song) 목적격 → which."},
+{u:91,l:"중2",q:`관계사를 반드시 써야 하는(생략 불가) 문장은?`,o:["The food that we ordered was cold.","The bag that I lost was black.","The bus that goes downtown is late.","The letter that he wrote was long."],a:2,e:"'that goes downtown'은 주어라서 생략 불가."},
+{u:91,l:"중2",q:`Combine: "This is the house. We bought it last year." → "This is the house <code>____</code> we bought last year."`,o:["which","who","where","whose"],a:0,e:"사물(house) 목적격 → which(또는 that)."},
+{u:91,l:"중3",q:`목적격일 때 '사람'에 쓰며 회화에서 생략도 되는 관계사는?`,o:["who / that","which","whose","where"],a:0,e:"사람 목적격은 who/that, 목적격이라 생략도 가능."},
+{u:91,l:"중3",q:`관계사를 뺀 올바른 문장은? (원문: The woman that you called is my teacher.)`,o:["The woman you called is my teacher.","The woman called you is my teacher.","The woman who you my teacher.","The woman is you called my teacher."],a:0,e:"목적격 that 생략 → 명사+주어+동사 순서."},
+{u:91,l:"고1",q:`생략이 반영된 올바른 문장은?`,o:["The car I drives is old.","The car I drive is old.","The car drives I is old.","The car who I drive is old."],a:1,e:"'The car (which) I drive' — I 다음 동사는 drive."},
+{u:91,l:"고1",q:`"The people <code>____</code> I invited didn't come." 여기서 관계사는 절에서 무엇?`,o:["주어","목적어","동사","형용사"],a:1,e:"invited의 목적어(=the people) 역할이에요."},
+{u:91,l:"고2",q:`격식 있는 글에서 '사람 목적격'으로 흔히 쓰는 형태는?`,o:["whom","which","whose","where"],a:0,e:"격식체 사람 목적격은 whom."},
+{u:91,l:"고2",q:`관계사를 생략할 수 없는 문장은?`,o:["The idea that he suggested was good.","The idea that changed everything was simple.","The gift that she gave me was nice.","The place that we visited was quiet."],a:1,e:"'that changed everything'은 주어 → 생략 불가."},
+{u:91,l:"고3",q:`생략하면 틀리는(관계사 필수) 문장은?`,o:["The photos I took are ready.","The train that leaves at six is fast.","The email you sent arrived.","The house we rented is big."],a:1,e:"'that leaves'는 주어이므로 반드시 필요."},
+{u:91,l:"고3",q:`There's something <code>____</code> I want to tell you.`,o:["that","who","which","where"],a:0,e:"something 뒤에는 보통 that(목적격이라 생략도 가능)."},
+{u:91,l:"대1",q:`The person to <code>____</code> I gave the keys has left.`,o:["who","whom","which","whose"],a:1,e:"전치사 to 뒤 사람 목적격은 whom."},
+{u:91,l:"대1",q:`반드시 있어야 하는(생략 불가) 관계사는 어떤 경우인가요?`,o:["목적격 관계사","주격 관계사","which만","that만"],a:1,e:"주격(주어) 관계사는 생략할 수 없어요."},
+{u:91,l:"대1",q:`관계사를 뺐을 때 문법적으로 올바른 문장은? (원문: The novel that I'm reading is long.)`,o:["The novel I'm reading is long.","The novel reading I'm is long.","The novel is I'm reading long.","The novel which reading is long."],a:0,e:"목적격 that 생략 → 'The novel I'm reading'."},
+{u:91,l:"대1",q:`"The candidate whom the board selected withdrew." 에서 whom은 selected의 무엇?`,o:["주어","목적어","보어","부사"],a:1,e:"whom은 selected의 목적어."},
+
+/* ===== Unit 92 : whose/whom/where ===== */
+{u:92,l:"초6",q:`That's the boy <code>____</code> dog ran away.`,o:["who","whose","where","which"],a:1,e:"'그의 강아지'처럼 소유를 나타내면 whose."},
+{u:92,l:"초6",q:`This is the park <code>____</code> we played.`,o:["who","whose","where","which"],a:2,e:"장소(park)에서 '거기서 놀았다' → where."},
+{u:92,l:"초6",q:`The girl <code>____</code> bag is red is my friend.`,o:["whose","who","where","which"],a:0,e:"'그녀의 가방' 소유 → whose."},
+{u:92,l:"초6",q:`I know a shop <code>____</code> they sell nice cakes.`,o:["whose","whom","where","who"],a:2,e:"장소(shop) → where."},
+{u:92,l:"중1",q:`She's the singer <code>____</code> songs I love.`,o:["who","whose","where","whom"],a:1,e:"'그녀의 노래' 소유 → whose."},
+{u:92,l:"중1",q:`That is the town <code>____</code> I was born.`,o:["whose","whom","where","which"],a:2,e:"장소(town) → where."},
+{u:92,l:"중2",q:`The man <code>____</code> I met yesterday is a writer. (격식체)`,o:["whose","whom","where","which"],a:1,e:"사람 목적격(격식) → whom."},
+{u:92,l:"중2",q:`소유(~의)를 나타내는 관계사는?`,o:["where","whom","whose","who"],a:2,e:"whose가 소유격 관계사예요."},
+{u:92,l:"중3",q:`A hotel is a place <code>____</code> people stay when traveling.`,o:["whose","whom","where","which"],a:2,e:"장소(place) → where."},
+{u:92,l:"중3",q:`The student <code>____</code> phone rang left the room.`,o:["who","whom","whose","where"],a:2,e:"'그 학생의 휴대폰' 소유 → whose."},
+{u:92,l:"고1",q:`The author <code>____</code> we invited canceled.`,o:["whose","whom","where","which"],a:1,e:"사람 목적격(invite의 목적어) → whom."},
+{u:92,l:"고1",q:`올바른 문장을 고르세요.`,o:["The house where lives my aunt is old.","The house where my aunt lives is old.","The house whose my aunt lives is old.","The house whom my aunt lives is old."],a:1,e:"where 뒤에는 완전한 문장(주어+동사): my aunt lives."},
+{u:92,l:"고2",q:`This is the doctor <code>____</code> advice I followed.`,o:["who","whom","whose","where"],a:2,e:"'그 의사의 조언' 소유 → whose."},
+{u:92,l:"고2",q:`"the office where I work" 은 "the office <code>____</code> I work" 와 같아요.`,o:["in which","whose","whom","who"],a:0,e:"where = in which (전치사 + which)."},
+{u:92,l:"고3",q:`whom을 올바르게 쓴 문장은?`,o:["The friend whom called me is here.","The friend whom I called is here.","The friend whom is nice came.","The friend whom runs fast won."],a:1,e:"whom은 목적어일 때만: 'whom I called'."},
+{u:92,l:"고3",q:`Berlin is the city <code>____</code> the wall once stood.`,o:["whose","whom","where","which"],a:2,e:"장소(city) → where."},
+{u:92,l:"대1",q:`whose는 무엇을 가리킬 수 있나요?`,o:["사람만","사물만","사람과 사물 모두","장소만"],a:2,e:"whose는 사람·사물 모두의 소유를 나타내요."},
+{u:92,l:"대1",q:`"the man who(m) I work with" 의 격식체 표현은?`,o:["the man with whom I work","the man which I work","the man whose I work","the man where I work"],a:0,e:"전치사를 앞으로 보내 'with whom'으로 써요."},
+{u:92,l:"대1",q:`"the researcher whose findings changed the field" 에서 whose가 꾸미는 명사는?`,o:["researcher","findings","field","changed"],a:1,e:"whose + findings ('그의 연구 결과')."},
+{u:92,l:"대1",q:`There was a moment <code>____</code> everything made sense. (추상적 상황)`,o:["whose","whom","where","which"],a:2,e:"situation·point·moment 같은 추상 명사에도 where를 쓸 수 있어요."},
+
+/* ===== Unit 93 : 추가정보절 (1) ===== */
+{u:93,l:"초6",q:`My mother, <code>____</code> is a nurse, works at night.`,o:["who","which","where","whose"],a:0,e:"사람(mother) + 추가정보 → who."},
+{u:93,l:"초6",q:`Seoul, <code>____</code> is in Korea, is a big city.`,o:["who","which","where","whose"],a:1,e:"사물·장소(Seoul) + 추가정보 → which."},
+{u:93,l:"초6",q:`콤마로 추가 정보를 줄 때 '사람'에 쓰는 관계사는?`,o:["which","who","that","where"],a:1,e:"추가정보절에서 사람은 who."},
+{u:93,l:"초6",q:`I have two brothers, <code>____</code> live in Busan.`,o:["who","which","where","whose"],a:0,e:"사람(brothers) → who."},
+{u:93,l:"중1",q:`The Sun, <code>____</code> gives us light, is a star.`,o:["who","which","where","whose"],a:1,e:"사물(the Sun) → which."},
+{u:93,l:"중1",q:`콤마가 있는 추가정보절에서 that을 쓸 수 있나요?`,o:["항상 가능","쓸 수 없음","사람만 가능","사물만 가능"],a:1,e:"추가정보절(콤마)에서는 that을 쓰지 않아요."},
+{u:93,l:"중2",q:`올바르게 콤마를 찍은 문장은?`,o:["My uncle who lives in LA is rich.","My uncle, who lives in LA, is rich.","My uncle, that lives in LA, is rich.","My uncle which lives in LA is rich."],a:1,e:"특정한 삼촌에 대한 추가정보 → 콤마 + who."},
+{u:93,l:"중2",q:`Mr. Kim, <code>____</code> teaches math, is funny.`,o:["who","which","where","that"],a:0,e:"사람(Mr. Kim) → who."},
+{u:93,l:"중3",q:`추가정보절에서 관계사는 어떻게 되나요?`,o:["생략할 수 있다","생략할 수 없다","반드시 that","반드시 where"],a:1,e:"추가정보절에서는 관계사를 생략할 수 없어요."},
+{u:93,l:"중3",q:`This book, <code>____</code> I read last week, is great.`,o:["who","which","that","where"],a:1,e:"사물(book) + 추가정보 → which."},
+{u:93,l:"고1",q:`올바른 추가정보절 문장은?`,o:["Paris which is in France is beautiful.","Paris, which is in France, is beautiful.","Paris, that is in France, is beautiful.","Paris, who is in France, is beautiful."],a:1,e:"콤마 + which, 사물이므로 who·that 불가."},
+{u:93,l:"고1",q:`"My sister who lives in Seoul is a doctor." (콤마 없음) 이 문장이 암시하는 것은?`,o:["여동생이 한 명이다","여동생이 둘 이상이다","문장이 틀렸다","콤마가 빠졌다"],a:1,e:"콤마 없는 한정절 → 여러 자매 중 '서울에 사는' 그 자매를 구별."},
+{u:93,l:"고2",q:`The bridge, <code>____</code> was built in 1990, is closed.`,o:["who","which","that","where"],a:1,e:"사물(bridge) + 추가정보 → which."},
+{u:93,l:"고2",q:`추가정보절(non-defining)에 대해 옳은 설명은?`,o:["that을 쓴다","선행사를 구별하는 필수 정보를 준다","추가 정보를 주며 콤마를 쓴다","관계사를 생략할 수 있다"],a:2,e:"추가정보절은 콤마로 부가 설명을 덧붙여요."},
+{u:93,l:"고3",q:`Our teacher, <code>____</code> we all respect, is retiring. (사람 목적격·격식)`,o:["who","whom","which","that"],a:1,e:"추가정보절에서 사람 목적격은 whom(격식)."},
+{u:93,l:"고3",q:`콤마를 올바르게 넣은 문장은? (원문: Mount Everest which is the tallest mountain is in Nepal.)`,o:["Mount Everest, which is the tallest mountain, is in Nepal.","Mount Everest which is the tallest mountain, is in Nepal.","Mount Everest, that is the tallest mountain, is in Nepal.","Mount Everest which, is the tallest mountain is in Nepal."],a:0,e:"고유명사엔 추가정보절: 양쪽 콤마 + which."},
+{u:93,l:"대1",q:`추가정보절을 콤마로 구분하는 이유는?`,o:["어느 명사인지 구별하려고","비필수적인 부가 정보라서","동사를 대신하려고","항상 틀린 문장이라서"],a:1,e:"없어도 문장이 성립하는 부가(비필수) 정보이기 때문."},
+{u:93,l:"대1",q:`추가정보절에서 that을 쓰지 않는 이유는?`,o:["너무 격식적이라서","이 구조에서 콤마 뒤 that이 어울리지 않아서","사람에만 쓰여서","고어라서"],a:1,e:"콤마가 있는 추가정보절 구조에서는 that이 쓰이지 않아요."},
+{u:93,l:"대1",q:`"The report, which took months, was rejected." 관계사절을 빼도 완전한 문장인가요?`,o:["예","아니요","that일 때만","사람일 때만"],a:0,e:"추가정보절을 빼도 'The report was rejected.'로 완전해요."},
+{u:93,l:"대1",q:`"Students who cheated were punished." (콤마 없음) 의 의미는?`,o:["모든 학생이 컨닝했다","컨닝한 학생들만 벌 받았다","아무도 컨닝 안 했다","문법이 틀렸다"],a:1,e:"콤마 없는 한정절 → '컨닝한' 학생들로 범위를 좁혀요."},
+
+/* ===== Unit 94 : 추가정보절 (2) of whom/of which ===== */
+{u:94,l:"초6",q:`I have three cats, all of <code>____</code> are black.`,o:["whom","which","who","where"],a:1,e:"고양이(사물·동물) → of which."},
+{u:94,l:"초6",q:`She has two sons, both of <code>____</code> are doctors.`,o:["which","whom","where","whose"],a:1,e:"사람(sons) → of whom."},
+{u:94,l:"초6",q:`He bought many books, some of <code>____</code> were old.`,o:["whom","which","who","where"],a:1,e:"사물(books) → of which."},
+{u:94,l:"초6",q:`They met ten people, none of <code>____</code> spoke English.`,o:["which","whom","where","whose"],a:1,e:"사람(people) → of whom."},
+{u:94,l:"중1",q:`My friends, most of <code>____</code> are students, came.`,o:["which","whom","where","that"],a:1,e:"사람(friends) → of whom."},
+{u:94,l:"중1",q:`'of ___' 추가정보절에서 사물에 쓰는 것은?`,o:["whom","which","who","where"],a:1,e:"사물은 of which."},
+{u:94,l:"중2",q:`The team has 20 players, several of <code>____</code> are injured.`,o:["which","whom","where","whose"],a:1,e:"사람(players) → of whom."},
+{u:94,l:"중2",q:`We saw old paintings, the value of <code>____</code> is huge.`,o:["whom","which","who","where"],a:1,e:"사물(paintings) → of which."},
+{u:94,l:"중3",q:`I read three articles, one of <code>____</code> was very long.`,o:["whom","which","where","whose"],a:1,e:"사물(articles) → of which."},
+{u:94,l:"중3",q:`올바른 문장은?`,o:["He has two sisters, both of who are nurses.","He has two sisters, both of whom are nurses.","He has two sisters, both of which are nurses.","He has two sisters, both of whose are nurses."],a:1,e:"사람이므로 both of whom."},
+{u:94,l:"고1",q:`She gave me flowers, the colors of <code>____</code> were amazing.`,o:["whom","which","where","who"],a:1,e:"사물(flowers) → of which."},
+{u:94,l:"고1",q:`"many of whom" 에서 whom이 가리키는 것은?`,o:["사물","사람","장소","시간"],a:1,e:"whom은 사람을 가리켜요."},
+{u:94,l:"고2",q:`The report has ten sections, each of <code>____</code> is important.`,o:["whom","which","where","whose"],a:1,e:"사물(sections) → of which."},
+{u:94,l:"고2",q:`"some of them were broken" 을 콤마 뒤 관계사절로 바꾸면?`,o:["some of which were broken","some of whom were broken","some of where broken","some that broken"],a:0,e:"사물을 받으므로 some of which."},
+{u:94,l:"고3",q:`The scientists, the work of <code>____</code> is famous, won a prize.`,o:["whom","which","whose","who"],a:0,e:"사람(scientists)이므로 the work of whom (= whose work)."},
+{u:94,l:"고3",q:`올바른 문장은?`,o:["The buildings, many of which are old, will be repaired.","The buildings, many of whom are old, will be repaired.","The buildings, many of who are old, will be repaired.","The buildings, many of whose are old, will be repaired."],a:0,e:"건물(사물) → many of which."},
+{u:94,l:"대1",q:`'of which / of whom' 구문은 주로 어떤 영어에서 쓰나요?`,o:["일상 대화","격식체·문어체","질문할 때만","명령할 때만"],a:1,e:"격식 있는 글·문어체에서 자주 쓰여요."},
+{u:94,l:"대1",q:`"He wrote five novels. All of them became films." → "He wrote five novels, all of <code>____</code> became films."`,o:["which","whom","who","where"],a:0,e:"소설(사물) → all of which."},
+{u:94,l:"대1",q:`"the members, none of whom agreed" 에서 whom이 대신하는 것은?`,o:["the members","none","agreed","전체 절"],a:0,e:"whom = the members(사람들)."},
+{u:94,l:"대1",q:`수량표현 + of which 를 올바르게 쓴 문장은?`,o:["The rules, most of which are outdated, need review.","The rules, most of whom are outdated, need review.","The rules, most that are outdated, need review.","The rules, most of who are outdated, need review."],a:0,e:"규칙(사물) → most of which."},
+
+/* ===== Unit 95 : -ing / -ed 구문 ===== */
+{u:95,l:"초6",q:`The boy <code>____</code> to the teacher is my friend. (그가 이야기하고 있다)`,o:["talking","talked","talks","talk"],a:0,e:"능동(who is talking) → -ing 형 talking."},
+{u:95,l:"초6",q:`The car <code>____</code> in the accident was red. (그것이 손상되었다)`,o:["damaging","damaged","damages","damage"],a:1,e:"수동(which was damaged) → 과거분사 damaged."},
+{u:95,l:"초6",q:`Look at the girl <code>____</code> in the pool. (그녀가 수영하고 있다)`,o:["swum","swims","swimming","swam"],a:2,e:"능동(who is swimming) → swimming."},
+{u:95,l:"초6",q:`I found the money <code>____</code> under the bed. (그것이 숨겨져 있었다)`,o:["hiding","hid","hidden","hides"],a:2,e:"수동(which was hidden) → hidden."},
+{u:95,l:"중1",q:`The people <code>____</code> for the bus are cold. (그들이 기다리고 있다)`,o:["waited","waiting","wait","waits"],a:1,e:"능동(who are waiting) → waiting."},
+{u:95,l:"중1",q:`The letter <code>____</code> yesterday arrived today. (그것이 보내졌다)`,o:["sending","sent","sends","send"],a:1,e:"수동(which was sent) → sent."},
+{u:95,l:"중2",q:`The man <code>____</code> the piano is my dad. (= who is playing)`,o:["played","playing","plays","play"],a:1,e:"능동 → playing."},
+{u:95,l:"중2",q:`Most of the products <code>____</code> here are cheap. (그것들이 팔린다)`,o:["selling","sold","sells","sell"],a:1,e:"수동(which are sold) → sold."},
+{u:95,l:"중3",q:`Reduce: "The boy who is running is fast." → "The boy <code>____</code> is fast."`,o:["run","running","ran","runs"],a:1,e:"who is running → running."},
+{u:95,l:"중3",q:`Reduce: "The book that was written by her is famous." → "The book <code>____</code> by her is famous."`,o:["writing","written","wrote","writes"],a:1,e:"that was written → written(과거분사)."},
+{u:95,l:"고1",q:`The information <code>____</code> on the website is old. (그것이 주어진다)`,o:["giving","given","gives","gave"],a:1,e:"수동(which is given) → given."},
+{u:95,l:"고1",q:`능동의 의미로 -ing 구문을 쓴 것은?`,o:["The house painted last year.","The dog barking loudly.","The car repaired today.","The food eaten quickly."],a:1,e:"barking만 능동(-ing), 나머지는 수동(과거분사)."},
+{u:95,l:"고2",q:`Anyone <code>____</code> to join can sign up. (= who wants)`,o:["wanted","wanting","wants","want"],a:1,e:"능동 → wanting."},
+{u:95,l:"고2",q:`Reduce: "The students who were chosen for the trip are happy." → "The students <code>____</code> for the trip are happy."`,o:["choosing","chosen","chose","choose"],a:1,e:"who were chosen → chosen."},
+{u:95,l:"고3",q:`올바르게 줄인 문장은?`,o:["The parcel delivering this morning is mine.","The parcel delivered this morning is mine.","The parcel deliver this morning is mine.","The parcel delivers this morning is mine."],a:1,e:"소포는 '배달된' 대상 → 수동 delivered."},
+{u:95,l:"고3",q:`The number of people <code>____</code> English is growing. (= who speak)`,o:["spoken","speaking","spoke","speaks"],a:1,e:"능동 → speaking."},
+{u:95,l:"대1",q:`-ed(과거분사) 구문은 관계사절의 어떤 '태(voice)'에 해당하나요?`,o:["능동태","수동태","미래시제","명령형"],a:1,e:"과거분사 구문 = 수동태 관계사절의 축약."},
+{u:95,l:"대1",q:`Reduce: "Cars which are made in Korea are popular." → "Cars <code>____</code> in Korea are popular."`,o:["making","made","make","makes"],a:1,e:"which are made → made."},
+{u:95,l:"대1",q:`올바른 짝은? (능동→-ing, 수동→-ed)`,o:["surrounding / surrounded","surrounded / surrounding","surround / surrounds","surrounds / surround"],a:0,e:"능동 surrounding, 수동 surrounded."},
+{u:95,l:"대1",q:`The theory <code>____</code> by the scientist explains it well. (그것이 제안되었다)`,o:["proposing","proposed","proposes","propose"],a:1,e:"수동(which was proposed) → proposed."}
+];
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+/* ============================ VOICE / TTS ============================ */
+const voiceState={accent:"en-US",gender:"male"};
+let VOICES=[];
+const MALE=/\b(male|david|mark|guy|george|daniel|alex|aaron|fred|oliver|arthur|ryan|thomas|james|william|eric)\b/i;
+const FEMALE=/\b(female|zira|hazel|susan|kate|samantha|karen|moira|tessa|serena|victoria|allison|ava|emma|amy|sonia|libby|jenny|aria|michelle)\b/i;
+function loadVoices(){VOICES=window.speechSynthesis?speechSynthesis.getVoices():[];}
+if(window.speechSynthesis){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+function pickVoice(){
+  const acc=voiceState.accent,gen=voiceState.gender;
+  let pool=VOICES.filter(v=>v.lang&&v.lang.replace("_","-").toLowerCase().startsWith(acc.toLowerCase()));
+  if(!pool.length)pool=VOICES.filter(v=>v.lang&&v.lang.toLowerCase().startsWith("en"));
+  if(!pool.length)pool=VOICES;
+  const rx=gen==="male"?MALE:FEMALE,other=gen==="male"?FEMALE:MALE;
+  let m=pool.find(v=>rx.test(v.name));
+  if(!m)m=pool.find(v=>!other.test(v.name)); // avoid clearly-opposite gender
+  if(!m)m=pool[0];
+  return m;
+}
+function speak(text){
+  if(!window.speechSynthesis){alert("이 브라우저는 음성 읽기를 지원하지 않아요.");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  const v=pickVoice();
+  if(v){u.voice=v;u.lang=v.lang;}else{u.lang=voiceState.accent;}
+  u.rate=.92;u.pitch=voiceState.gender==="male"?.92:1.05;
+  speechSynthesis.speak(u);
+}
+document.getElementById("segAccent").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;voiceState.accent=b.dataset.acc;[...e.currentTarget.children].forEach(c=>c.classList.toggle("on",c===b));});
+document.getElementById("segGender").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;voiceState.gender=b.dataset.gen;[...e.currentTarget.children].forEach(c=>c.classList.toggle("on",c===b));});
+document.getElementById("testVoice").addEventListener("click",()=>speak("This is the sentence that you will hear."));
+
+/* ============================ TABS ============================ */
+document.getElementById("tabs").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const t=b.dataset.tab;
+  document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id==="panel-"+t));
+  if(t==="wrong")renderWrong();
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+/* ============================ LEARN TAB ============================ */
+let curUnit=0;
+const REL=new Set(["who","which","that","whose","whom","where","talking","broken","swimming","sent","wanting"]);
+function cleanWord(w){return w.toLowerCase().replace(/[^a-z']/g,"");}
+function renderSentence(ex){
+  const relset=new Set((ex.rel||[]).map(r=>r.toLowerCase()));
+  return ex.en.split(/(\s+)/).map(tok=>{
+    if(/^\s+$/.test(tok))return tok;
+    const cw=cleanWord(tok);
+    if(!cw)return tok;
+    const isRel=relset.has(cw);
+    return `<span class="w${isRel?" rel":""}" data-w="${cw}">${tok}</span>`;
+  }).join("");
+}
+function renderUnitNav(){
+  document.getElementById("unitnav").innerHTML=UNITS.map((u,i)=>
+    `<button data-i="${i}" class="${i===curUnit?"on":""}"><b>${u.id}</b>${u.tag}</button>`).join("");
+}
+function renderLearnBody(){
+  const u=UNITS[curUnit];
+  document.getElementById("learnBody").innerHTML=`
+   <div class="ucard">
+     <div class="utag">Unit ${u.id} · ${u.tag}</div>
+     <h2>${u.title}</h2>
+     <p class="en-sub">${u.sub}</p>
+     <div class="easybox"><p>${u.easy}</p></div>
+     <ul class="points">${u.points.map(p=>`<li>${p}</li>`).join("")}</ul>
+     <div class="exhead">쉬운 예문 5개 · 단어를 눌러보세요</div>
+     ${u.ex.map((ex,i)=>`
+       <div class="ex">
+         <div class="en" data-ex="${i}">${renderSentence(ex)}</div>
+         <div class="tools">
+           <button data-speak="${ex.en.replace(/"/g,"&quot;")}">🔊 문장 듣기</button>
+           <button data-ko="${i}">🇰🇷 해석 보기</button>
+         </div>
+         <div class="ko" id="ko-${curUnit}-${i}">${ex.ko}</div>
+         <div class="hintword">💡 <b class="w" style="color:var(--teal-d)">파란 단어</b>가 관계사예요.</div>
+       </div>`).join("")}
+   </div>`;
+}
+function renderLearn(){renderUnitNav();renderLearnBody();}
+document.getElementById("unitnav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;curUnit=+b.dataset.i;renderLearn();window.scrollTo({top:document.querySelector(".unitnav").offsetTop-10,behavior:"smooth"});});
+document.getElementById("learnBody").addEventListener("click",e=>{
+  const sp=e.target.closest("button[data-speak]");if(sp){speak(sp.dataset.speak);return;}
+  const ko=e.target.closest("button[data-ko]");if(ko){const el=document.getElementById(`ko-${curUnit}-${ko.dataset.ko}`);el.classList.toggle("show");ko.textContent=el.classList.contains("show")?"🇰🇷 해석 숨기기":"🇰🇷 해석 보기";return;}
+  const w=e.target.closest(".w[data-w]");if(w){showTip(w);return;}
+});
+
+/* ============================ TOOLTIP ============================ */
+const tip=document.getElementById("tip");
+function showTip(el){
+  const key=el.dataset.w;const d=VOCAB[key];
+  const disp=el.textContent.replace(/[^A-Za-z']/g,"")||key;
+  if(!d){
+    tip.innerHTML=`<div class="tip-h"><button class="tip-x">×</button><div class="tip-word">${disp}</div><div class="tip-ipa">발음 정보 준비 중</div></div>
+      <div class="tip-b"><p class="tip-mean">이 단어의 뜻은 아직 사전에 없어요. 발음은 들어볼 수 있어요.</p>
+      <button class="tip-play" data-say="${disp}">🔊 발음 듣기</button></div>`;
+  }else{
+    tip.innerHTML=`<div class="tip-h"><button class="tip-x">×</button><div class="tip-word">${disp}</div><div class="tip-ipa">${d.ipa}</div></div>
+      <div class="tip-b">
+        <p class="tip-mean"><b>뜻</b> ${d.ko}</p>
+        <div class="tip-ex"><span class="ee">📎 ${d.ex}</span><span class="kk">${d.exko}</span></div>
+        <button class="tip-play" data-say="${disp}">🔊 발음 듣기</button>
+      </div>`;
+  }
+  tip.style.display="block";
+  const r=el.getBoundingClientRect();const tw=tip.offsetWidth,th=tip.offsetHeight;
+  let left=r.left+r.width/2-tw/2;left=Math.max(10,Math.min(left,innerWidth-tw-10));
+  let top=r.bottom+8;if(top+th>innerHeight-10)top=r.top-th-8;top=Math.max(10,top);
+  tip.style.left=left+"px";tip.style.top=top+"px";
+}
+tip.addEventListener("click",e=>{
+  if(e.target.closest(".tip-x")){tip.style.display="none";return;}
+  const s=e.target.closest("[data-say]");if(s)speak(s.dataset.say);
+});
+document.addEventListener("click",e=>{if(!e.target.closest("#tip")&&!e.target.closest(".w[data-w]"))tip.style.display="none";});
+
+/* ============================ QUIZ ============================ */
+const results={}; // qi -> chosen index
+let filterVal="all";
+const KEYS=["A","B","C","D"];
+const SHUFFLED=(()=>{const a=QUESTIONS.map((_,i)=>i);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;})();
+function matchFilter(qi){
+  const q=QUESTIONS[qi];
+  if(filterVal==="all")return true;
+  if(filterVal==="todo")return results[qi]===undefined;
+  return String(q.u)===filterVal;
+}
+function renderQuiz(){
+  const body=document.getElementById("quizBody");
+  const list=SHUFFLED.filter(matchFilter);
+  if(!list.length){body.innerHTML=`<div class="empty"><div class="big">해당하는 문제가 없어요</div><p>다른 필터를 선택해 보세요.</p></div>`;updateStats();return;}
+  body.innerHTML=list.map(qi=>{
+    const q=QUESTIONS[qi];const chosen=results[qi];const answered=chosen!==undefined;
+    const no=SHUFFLED.indexOf(qi)+1;
+    return `<div class="q" data-qi="${qi}">
+      <div class="qmeta"><span class="qnum">Q${no}</span><span class="badge b-un">U${q.u}</span><span class="badge b-lv">${q.l}</span></div>
+      <div class="stem">${q.q}</div>
+      <div class="opts">${q.o.map((op,oi)=>{
+        let cls="opt";
+        if(answered){cls+=" locked";if(oi===q.a)cls+=" correct";else if(oi===chosen)cls+=" wrong";}
+        return `<button class="${cls}" data-oi="${oi}" ${answered?"disabled":""}><span class="key">${KEYS[oi]}</span><span>${escapeHtml(op)}</span></button>`;
+      }).join("")}</div>
+      <div class="explain${answered?" show":""}">${answered?(chosen===q.a?"✅ 정답! ":"❌ 오답 · 정답은 <b>"+KEYS[q.a]+"</b>. ")+q.e:""}</div>
+    </div>`;
+  }).join("");
+  updateStats();
+}
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+document.getElementById("quizBody").addEventListener("click",e=>{
+  const btn=e.target.closest(".opt");if(!btn)return;
+  const card=btn.closest(".q");const qi=+card.dataset.qi;
+  if(results[qi]!==undefined)return; // 이미 답함 → 수정 불가
+  results[qi]=+btn.dataset.oi;
+  renderQuiz();updateTabPills();
+});
+document.getElementById("qFilter").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;filterVal=b.dataset.f;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle("on",c===b));
+  renderQuiz();
+});
+function updateStats(){
+  const done=Object.keys(results).length;
+  let right=0;Object.entries(results).forEach(([qi,ch])=>{if(QUESTIONS[qi].a===ch)right++;});
+  const wrong=done-right;
+  document.getElementById("qDone").textContent=done;
+  document.getElementById("qRight").textContent=right;
+  document.getElementById("qWrong").textContent=wrong;
+  document.getElementById("progBar").style.width=(done/QUESTIONS.length*100)+"%";
+}
+function updateTabPills(){
+  document.getElementById("quizProg").textContent=Object.keys(results).length;
+  const wrong=Object.entries(results).filter(([qi,ch])=>QUESTIONS[qi].a!==ch).length;
+  document.getElementById("wrongCount").textContent=wrong;
+}
+
+/* ============================ WRONG NOTE ============================ */
+function renderWrong(){
+  const body=document.getElementById("wrongBody");
+  const wrongs=SHUFFLED.filter(qi=>results[qi]!==undefined&&results[qi]!==QUESTIONS[qi].a);
+  if(!wrongs.length){
+    body.innerHTML=`<div class="empty"><div class="big">🎉 오답이 없어요</div><p>문제를 풀면 틀린 문제만 여기 모여요.</p></div>`;return;
+  }
+  body.innerHTML=`<div class="note-card">틀린 문제 <b>${wrongs.length}개</b>를 모았어요. 정답과 해설을 다시 확인해 보세요.</div>`+
+   wrongs.map(qi=>{const q=QUESTIONS[qi];const ch=results[qi];
+    return `<div class="q">
+      <div class="qmeta"><span class="badge b-un">U${q.u}</span><span class="badge b-lv">${q.l}</span></div>
+      <div class="stem">${q.q}</div>
+      <div class="opts">${q.o.map((op,oi)=>{
+        let cls="opt locked";if(oi===q.a)cls+=" correct";else if(oi===ch)cls+=" wrong";
+        return `<button class="${cls}" disabled><span class="key">${KEYS[oi]}</span><span>${escapeHtml(op)}</span></button>`;
+      }).join("")}</div>
+      <div class="explain show">내 답 <b>${KEYS[ch]}</b> → 정답 <b>${KEYS[q.a]}</b> · ${q.e}</div>
+    </div>`;
+  }).join("");
+}
+
+/* ============================ DOCX (JSZip) ============================ */
+function xmlEsc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function run(text,{b=false,i=false,sz=22,color="17222E"}={}){
+  return `<w:r><w:rPr><w:rFonts w:ascii="Malgun Gothic" w:hAnsi="Malgun Gothic" w:eastAsia="Malgun Gothic"/>${b?"<w:b/>":""}${i?"<w:i/>":""}<w:sz w:val="${sz}"/><w:szCs w:val="${sz}"/><w:color w:val="${color}"/></w:rPr><w:t xml:space="preserve">${xmlEsc(text)}</w:t></w:r>`;
+}
+function para(runs,{spaceBefore=0,spaceAfter=120,ind=0,shade=""}={}){
+  const pPr=`<w:pPr>${shade?`<w:shd w:val="clear" w:fill="${shade}"/>`:""}<w:spacing w:before="${spaceBefore}" w:after="${spaceAfter}"/>${ind?`<w:ind w:left="${ind}"/>`:""}</w:pPr>`;
+  return `<w:p>${pPr}${Array.isArray(runs)?runs.join(""):runs}</w:p>`;
+}
+function buildDocXml(units){
+  let b="";
+  b+=para(run("관계사절 마스터 · Relative Clauses",{b:true,sz:44,color:"0E7C86"}),{spaceAfter:40});
+  b+=para(run("Grammar in Use Intermediate · Unit 90–95 쉬운 설명 노트",{sz:22,color:"4A5A68"}),{spaceAfter:240});
+  units.forEach(u=>{
+    b+=para(run(`Unit ${u.id} · ${u.tag}`,{b:true,sz:20,color:"E08A2B"}),{spaceBefore:200,spaceAfter:20});
+    b+=para(run(u.title,{b:true,sz:32,color:"17222E"}),{spaceAfter:20});
+    b+=para(run(u.sub,{i:true,sz:22,color:"0E7C86"}),{spaceAfter:120});
+    b+=para(run(u.easy,{sz:22,color:"17222E"}),{spaceAfter:120,shade:"E3F1F1"});
+    b+=para(run("핵심 포인트",{b:true,sz:24,color:"0E7C86"}),{spaceBefore:120,spaceAfter:40});
+    u.points.forEach(p=>{b+=para([run("• ",{b:true,sz:22,color:"E08A2B"}),run(p,{sz:22})],{ind:240,spaceAfter:40});});
+    b+=para(run("쉬운 예문 5개",{b:true,sz:24,color:"0E7C86"}),{spaceBefore:120,spaceAfter:40});
+    u.ex.forEach((ex,i)=>{
+      b+=para([run(`${i+1}. `,{b:true,sz:22,color:"0E7C86"}),run(ex.en,{b:true,sz:22,color:"17222E"})],{ind:240,spaceAfter:20});
+      b+=para(run("↳ "+ex.ko,{sz:21,color:"4A5A68"}),{ind:480,spaceAfter:100});
+    });
+  });
+  b+=`<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/></w:sectPr>`;
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${b}</w:body></w:document>`;
+}
+async function makeDocx(units,filename){
+  if(typeof JSZip==="undefined"){alert("문서 생성 도구를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.");return;}
+  const zip=new JSZip();
+  zip.file("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`);
+  zip.folder("_rels").file(".rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`);
+  zip.folder("word").file("document.xml",buildDocXml(units));
+  const blob=await zip.generateAsync({type:"blob"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
+}
+document.getElementById("dlDocx").addEventListener("click",()=>makeDocx(UNITS,"관계사절_설명노트_Unit90-95.docx"));
+document.getElementById("dlThisUnit").addEventListener("click",()=>{const u=UNITS[curUnit];makeDocx([u],`관계사절_Unit${u.id}_${u.tag}.docx`);});
+
+/* ============================ INIT ============================ */
+renderLearn();renderQuiz();updateTabPills();
+</script>
+</body>
+</html>
