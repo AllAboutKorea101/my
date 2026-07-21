@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All About Korea — Korean Grammar</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --navy: #1B2A5E;
+  --navy2: #243270;
+  --blue: #3B5BDB;
+  --blue-light: #E8EDFF;
+  --green: #12B76A;
+  --green-bg: #ECFDF3;
+  --red: #F04438;
+  --red-bg: #FEF3F2;
+  --yellow: #F79009;
+  --yellow-bg: #FFFAEB;
+  --gray0: #F9FAFB;
+  --gray1: #F2F4F7;
+  --gray2: #E4E7EC;
+  --gray3: #D0D5DD;
+  --gray4: #98A2B3;
+  --gray5: #667085;
+  --gray6: #475467;
+  --gray7: #344054;
+  --gray8: #1D2939;
+  --text: #101828;
+  --white: #ffffff;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --shadow: 0 1px 3px rgba(16,24,40,0.1), 0 1px 2px rgba(16,24,40,0.06);
+  --shadow-md: 0 4px 8px rgba(16,24,40,0.08), 0 2px 4px rgba(16,24,40,0.04);
+  --sidebar-w: 260px;
+  --topnav-h: 60px;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--gray1);
+  color: var(--text);
+}
+
+/* ── TOP NAV BAR ── */
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--topnav-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--gray2);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 300;
+  gap: 16px;
+}
+
+.burger-btn {
+  width: 36px; height: 36px;
+  display: flex; flex-direction: column; justify-content: center; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+  flex-shrink: 0;
+}
+.burger-line { height: 2px; background: var(--text); border-radius: 2px; }
+.burger-line:nth-child(1) { width: 20px; }
+.burger-line:nth-child(2) { width: 16px; }
+.burger-line:nth-child(3) { width: 20px; }
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  flex: 1;
+}
+.logo span { color: var(--blue); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav-link {
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray6);
+  text-decoration: none;
+  border-radius: var(--radius-xs);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.nav-link:hover { background: var(--gray1); color: var(--text); }
+.nav-link.active { background: var(--blue-light); color: var(--blue); }
+
+/* ── LAYOUT ── */
+#app {
+  display: flex;
+  padding-top: var(--topnav-h);
+  min-height: 100%;
+  position: relative;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--white);
+  border-right: 1px solid var(--gray2);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: var(--topnav-h);
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray3) transparent;
+  transition: transform 0.25s ease;
+  z-index: 500;
+  transform: translateX(-100%);
+  box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+}
+.sidebar.open { transform: translateX(0); }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--gray3); border-radius: 4px; }
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  top: var(--topnav-h);
+  background: rgba(0,0,0,0.3);
+  z-index: 490;
+}
+.sidebar-overlay.open { display: block; }
+
+.sidebar-nav { padding: 8px 0; flex: 1; }
+.sidebar-section-label {
+  font-size: 10px; font-weight: 700; color: var(--gray4);
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 12px 20px 4px;
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px;
+  font-size: 13px; font-weight: 500;
+  color: var(--gray7);
+  cursor: pointer;
+  transition: background 0.12s;
+  text-decoration: none;
+  border: none; background: none; width: 100%;
+  text-align: left; font-family: inherit;
+}
+.sidebar-item:hover { background: var(--blue-light); color: var(--blue); }
+.sidebar-item.active { background: var(--blue-light); color: var(--blue); font-weight: 700; }
+.sidebar-item-icon { width: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--gray5); }
+.sidebar-item:hover .sidebar-item-icon,
+.sidebar-item.active .sidebar-item-icon { color: var(--blue); }
+.sidebar-divider { height: 1px; background: var(--gray2); margin: 8px 0; }
+
+/* ── MAIN CONTENT ── */
+.main {
+  margin-left: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--topnav-h));
+}
+
+/* ── LEVEL TABS ── */
+.level-tabs {
+  background: var(--white);
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--gray2);
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--topnav-h);
+  z-index: 100;
+}
+.level-tab {
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray5);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  font-family: inherit;
+  margin-bottom: -1px;
+}
+.level-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.level-tab:hover:not(.active) { color: var(--gray7); }
+
+/* ── SCROLL AREA ── */
+.scroll-area {
+  flex: 1;
+  padding: 24px;
+  display: none;
+}
+.scroll-area.active { display: block; }
+
+/* ── STREAK BANNER ── */
+.streak-banner {
+  background: linear-gradient(135deg, #FFF3DC, #FFECC0);
+  border: 1px solid #FFDEA0;
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 800px;
+}
+.streak-fire { font-size: 28px; }
+.streak-text h4 { font-size: 14px; font-weight: 700; color: var(--yellow); }
+.streak-text p { font-size: 12px; color: var(--gray6); margin-top: 2px; }
+
+/* ── UNIT CARDS ── */
+.curriculum-header {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  max-width: 800px;
+}
+.curriculum-badge {
+  display: inline-flex; align-items: center;
+  background: var(--blue-light); color: var(--blue);
+  font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.curriculum-title-row { display: flex; justify-content: space-between; align-items: flex-end; }
+.curriculum-title { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
+
+/* ── UNIT LIST ── */
+.unit-list-intro {
+  font-size: 13px;
+  color: var(--gray5);
+  margin-bottom: 12px;
+  padding: 0 2px;
+}
+.unit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 800px;
+}
+.unit-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--white);
+  border: 1px solid var(--gray2);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.unit-row:hover {
+  border-color: var(--blue);
+  background: var(--blue-light);
+  box-shadow: var(--shadow-md);
+}
+.unit-row-num {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.unit-row-num span { font-size: 14px; font-weight: 800; color: #C08A50; }
+.unit-row-title { flex: 1; font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.unit-row-arrow { color: var(--gray4); flex-shrink: 0; display: flex; align-items: center; }
+.unit-row:hover .unit-row-arrow { color: var(--blue); }
+
+/* ── ACCORDION ── */
+.accordion-block {
+  background: var(--white);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  max-width: 800px;
+}
+.accordion-header {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  background: none; border: none;
+  cursor: pointer; font-family: inherit;
+  transition: background 0.15s;
+  text-align: left;
+}
+.accordion-header:hover { background: var(--gray0); }
+.accordion-header.open { background: var(--blue-light); }
+.accordion-header-left { display: flex; align-items: center; gap: 14px; }
+.accordion-icon { font-size: 24px; flex-shrink: 0; }
+.accordion-title { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.accordion-header.open .accordion-title { color: var(--blue); }
+.accordion-sub { font-size: 12px; color: var(--gray5); margin-top: 2px; font-weight: 500; }
+.accordion-arrow { font-size: 16px; color: var(--gray4); transition: transform 0.25s ease; flex-shrink: 0; }
+.accordion-arrow.open { transform: rotate(180deg); color: var(--blue); }
+.accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; border-top: 1px solid transparent; }
+.accordion-body.open { max-height: 4000px; border-top-color: var(--gray1); }
+.accordion-body .unit-list-intro { padding: 12px 20px 6px; font-size: 12px; color: var(--gray5); }
+.accordion-body .unit-list { padding: 0 12px; max-width: none; }
+.accordion-body .unit-row { border-radius: var(--radius-sm); }
+.accordion-body > div:last-child { height: 8px; }
+
+/* ── DETAIL PANEL (slide-over) ── */
+.detail-panel {
+  position: fixed;
+  top: var(--topnav-h); right: 0; bottom: 0;
+  width: min(640px, 100%);
+  background: var(--gray0);
+  z-index: 400;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+  border-left: 1px solid var(--gray2);
+}
+.detail-panel.open { display: flex; }
+
+.detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  top: var(--topnav-h);
+  background: rgba(0,0,0,0.35);
+  z-index: 390;
+}
+.detail-overlay.open { display: block; }
+
+.detail-top-nav {
+  background: var(--white);
+  padding: 16px 24px;
+  display: flex; align-items: center; gap: 14px;
+  border-bottom: 1px solid var(--gray2);
+  flex-shrink: 0;
+}
+.back-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--gray1); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--text);
+  transition: background 0.15s;
+}
+.back-btn:hover { background: var(--gray2); }
+.detail-top-title { font-size: 16px; font-weight: 700; color: var(--text); flex: 1; }
+.done-pill {
+  font-size: 12px; font-weight: 700; padding: 6px 16px;
+  border-radius: 20px; border: none; cursor: pointer; font-family: inherit;
+  transition: all 0.2s;
+}
+.done-pill.undone { background: var(--blue-light); color: var(--blue); }
+.done-pill.done { background: var(--green-bg); color: var(--green); }
+
+.detail-scroll { flex: 1; overflow-y: auto; padding: 20px 24px; scrollbar-width: thin; scrollbar-color: var(--gray3) transparent; }
+.detail-scroll::-webkit-scrollbar { width: 4px; }
+.detail-scroll::-webkit-scrollbar-thumb { background: var(--gray3); border-radius: 4px; }
+
+/* ── GRAMMAR HERO ── */
+.grammar-hero {
+  background: var(--navy);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.grammar-hero::after {
+  content: '';
+  position: absolute; bottom: -30px; right: -20px;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.grammar-hero-label { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.grammar-hero-title { font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.5px; font-family: 'Noto Sans KR', sans-serif; margin-bottom: 6px; }
+.grammar-hero-sub { font-size: 14px; color: rgba(255,255,255,0.65); }
+.grammar-hero-tags { display: flex; gap: 8px; margin-top: 14px; }
+.hero-tag { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+.hero-tag-blue { background: rgba(59,91,219,0.3); color: #99B3FF; }
+.hero-tag-green { background: rgba(18,183,106,0.2); color: #4FD18B; }
+
+/* ── INFO CARDS ── */
+.info-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.info-card-title { font-size: 11px; font-weight: 700; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.formula-text { font-size: 18px; font-weight: 700; color: var(--text); font-family: 'Noto Sans KR', sans-serif; margin-bottom: 6px; }
+.formula-en { font-size: 13px; color: var(--gray5); line-height: 1.6; }
+
+.rule-table { width: 100%; border-collapse: collapse; }
+.rule-table th { font-size: 10px; font-weight: 700; color: var(--gray5); letter-spacing: 0.5px; padding: 0 0 10px; text-align: left; }
+.rule-row { border-top: 1px solid var(--gray1); }
+.rule-row td { padding: 12px 0; vertical-align: top; }
+.rule-cond-ko { font-size: 13px; font-weight: 600; color: var(--gray7); }
+.rule-cond-en { font-size: 11px; color: var(--gray5); margin-top: 2px; }
+.rule-ex-ko { font-size: 14px; font-weight: 700; color: var(--navy); font-family: 'Noto Sans KR', sans-serif; }
+.rule-ex-en { font-size: 11px; color: var(--gray5); margin-top: 2px; }
+
+/* ── EXAMPLES ── */
+.example-list { display: flex; flex-direction: column; gap: 8px; }
+.ex-item {
+  background: var(--gray0);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.ex-num { font-size: 11px; font-weight: 700; color: var(--gray4); min-width: 22px; padding-top: 2px; }
+.ex-body { flex: 1; }
+.ex-ko { font-size: 14px; color: var(--text); line-height: 1.5; font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; }
+.ex-ko .hl { color: var(--blue); font-weight: 700; }
+.ex-en { font-size: 12px; color: var(--gray5); margin-top: 3px; }
+.ex-audio {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--blue-light); border: none;
+  color: var(--blue); font-size: 13px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.15s;
+}
+.ex-audio:hover { background: var(--blue); color: #fff; }
+.ex-audio.playing { background: var(--blue); color: #fff; animation: beatPulse 0.6s infinite alternate; }
+@keyframes beatPulse { to { transform: scale(1.15); } }
+
+/* ── QUIZ ── */
+.quiz-section { margin-top: 4px; }
+.quiz-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.quiz-tab-btn {
+  padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  border: 1.5px solid var(--gray2); background: var(--white); color: var(--gray6);
+  cursor: pointer; font-family: inherit; transition: all 0.15s;
+}
+.quiz-tab-btn.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+.quiz-panel { display: none; }
+.quiz-panel.active { display: block; }
+
+.q-item {
+  background: var(--gray0);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.q-num { font-size: 10px; font-weight: 700; color: var(--gray4); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+.q-text { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; line-height: 1.5; font-family: 'Noto Sans KR', sans-serif; }
+.q-blank { display: inline-block; min-width: 80px; border-bottom: 2px solid var(--blue); color: var(--blue); text-align: center; font-weight: 700; }
+.q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.q-opt {
+  padding: 10px 12px; background: var(--white); border: 1.5px solid var(--gray2);
+  border-radius: var(--radius-xs); font-size: 13px; font-weight: 600; color: var(--gray7);
+  cursor: pointer; font-family: 'Noto Sans KR', inherit; text-align: center;
+  transition: all 0.15s;
+}
+.q-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+.q-opt.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.q-opt.wrong { border-color: var(--red); background: var(--red-bg); color: var(--red); }
+.q-opt:disabled { cursor: not-allowed; }
+.q-feedback-inline {
+  margin-top: 10px; padding: 10px 14px;
+  border-radius: var(--radius-xs);
+  font-size: 12px; display: none;
+}
+.q-feedback-inline.show { display: block; }
+.q-feedback-inline.ok { background: var(--green-bg); color: #027A48; }
+.q-feedback-inline.err { background: var(--red-bg); color: #B42318; }
+
+.fill-input-wrap { display: flex; gap: 8px; margin-top: 8px; }
+.fill-input {
+  flex: 1; padding: 10px 14px;
+  border: 1.5px solid var(--gray2); border-radius: var(--radius-xs);
+  font-size: 14px; color: var(--text);
+  font-family: inherit; outline: none;
+  transition: border-color 0.15s;
+  background: var(--white);
+}
+.fill-input:focus { border-color: var(--blue); }
+.fill-input.correct { border-color: var(--green); background: var(--green-bg); }
+.fill-input.wrong { border-color: var(--red); background: var(--red-bg); }
+.fill-submit {
+  padding: 10px 18px; background: var(--blue); border: none;
+  border-radius: var(--radius-xs); color: #fff; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: opacity 0.15s;
+}
+.fill-submit:hover { opacity: 0.85; }
+.fill-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.arrange-tokens { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.token-btn {
+  padding: 7px 14px; background: var(--blue-light); border: 1.5px solid rgba(59,91,219,0.2);
+  border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--blue);
+  cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all 0.15s;
+}
+.token-btn:hover { background: var(--blue); color: #fff; }
+.token-btn.used { opacity: 0.3; pointer-events: none; }
+.arrange-answer {
+  min-height: 44px; padding: 10px 14px;
+  border: 1.5px dashed var(--gray3); border-radius: var(--radius-xs);
+  font-size: 14px; color: var(--gray5); margin: 8px 0;
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  background: var(--white);
+}
+.arrange-answer:empty::before { content: 'Tap words to build the sentence'; font-size: 13px; }
+.arrange-answer.correct { border-color: var(--green); border-style: solid; background: var(--green-bg); }
+.arrange-answer.wrong { border-color: var(--red); border-style: solid; background: var(--red-bg); }
+.arrange-token-placed {
+  background: var(--white); border: 1px solid var(--gray2);
+  border-radius: 12px; padding: 4px 12px;
+  font-size: 13px; color: var(--text); font-family: 'Noto Sans KR', sans-serif;
+}
+.check-arrange-btn {
+  padding: 9px 20px; background: var(--navy); border: none;
+  border-radius: var(--radius-xs); color: #fff; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit; margin-top: 6px;
+}
+.reset-arrange-btn {
+  padding: 9px 16px; background: var(--gray1); border: none;
+  border-radius: var(--radius-xs); color: var(--gray6); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: inherit; margin-top: 6px; margin-left: 8px;
+}
+
+.dialogue-box {
+  background: var(--gray1); border-radius: var(--radius-sm);
+  padding: 14px; margin-bottom: 10px;
+}
+.dialogue-line { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+.dialogue-line:last-child { margin-bottom: 0; }
+.speaker { font-size: 11px; font-weight: 700; color: var(--gray5); min-width: 20px; padding-top: 2px; }
+.bubble {
+  background: var(--white); border-radius: 12px; padding: 9px 14px;
+  font-size: 14px; color: var(--text); font-family: 'Noto Sans KR', sans-serif;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06); flex: 1; line-height: 1.5;
+}
+.bubble.me { background: var(--blue); color: #fff; }
+.bubble-blank { font-size: 14px; border-bottom: 2px solid rgba(255,255,255,0.8); color: rgba(255,255,255,0.9); font-weight: 700; display: inline-block; min-width: 60px; text-align: center; }
+
+/* ── DRAWER (mobile) ── */
+.drawer-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 500;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.drawer-overlay.open { display: flex; opacity: 1; }
+.drawer {
+  width: 280px;
+  background: var(--white);
+  height: 100%;
+  display: flex; flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+}
+.drawer-overlay.open .drawer { transform: translateX(0); }
+.drawer-head {
+  background: var(--navy);
+  padding: 28px 24px 24px;
+  position: relative;
+}
+.drawer-logo { font-size: 20px; font-weight: 800; color: #fff; }
+.drawer-logo span { color: #7B9CFF; }
+.drawer-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+.drawer-nav { padding: 16px 0; flex: 1; }
+.drawer-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 24px;
+  font-size: 14px; font-weight: 500; color: var(--gray7);
+  cursor: pointer; transition: background 0.15s;
+  text-decoration: none; border: none; background: none; width: 100%;
+  text-align: left; font-family: inherit;
+}
+.drawer-item:hover { background: var(--blue-light); color: var(--blue); }
+.drawer-item-icon { font-size: 18px; width: 24px; text-align: center; }
+.drawer-svg-icon { display: inline-flex; align-items: center; justify-content: center; }
+.drawer-item.active { background: var(--blue-light); color: var(--blue); font-weight: 700; }
+.drawer-divider { height: 1px; background: var(--gray2); margin: 8px 0; }
+.drawer-close-btn {
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.15); border: none; border-radius: 50%;
+  color: #fff; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── SCORE MINI ── */
+.score-row { display: flex; gap: 10px; margin: 12px 0; }
+.score-card {
+  flex: 1; background: var(--white); border-radius: var(--radius-sm);
+  padding: 14px; text-align: center; box-shadow: var(--shadow);
+}
+.score-num { font-size: 24px; font-weight: 800; color: var(--navy); }
+.score-lbl { font-size: 11px; color: var(--gray5); margin-top: 2px; font-weight: 600; }
+
+/* Animations */
+@keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.scroll-area.active { animation: slideUp 0.2s ease; }
+
+/* ── MOBILE: bottom nav, hide sidebar ── */
+.bottom-nav { display: none; }
+
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+
+  .sidebar {
+    transform: translateX(-260px);
+    width: 260px;
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .level-tabs {
+    padding: 0 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    top: var(--topnav-h);
+  }
+  .level-tabs::-webkit-scrollbar { display: none; }
+  .level-tab { padding: 10px 12px; font-size: 12px; }
+
+  .scroll-area { padding: 12px; }
+
+  .accordion-block, .unit-list { max-width: none; }
+  .accordion-header { padding: 14px 16px; }
+  .accordion-body .unit-list { padding: 0 8px; }
+  .unit-row { padding: 12px 14px; gap: 12px; }
+
+  .nav-links { display: none; }
+  .logo { font-size: 17px; }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--white);
+    border-top: 1px solid var(--gray2);
+    padding: 8px 0 env(safe-area-inset-bottom, 8px);
+    z-index: 300;
+  }
+  .bottom-item {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 600; color: var(--gray4);
+    cursor: pointer;
+    border: none; background: none; font-family: inherit;
+    text-decoration: none;
+    transition: color 0.15s;
+    padding: 4px 0;
+  }
+  .bottom-item.active { color: var(--blue); }
+  .bottom-icon { font-size: 20px; display: flex; align-items: center; justify-content: center; height: 22px; }
+
+  .main { padding-bottom: 68px; }
+
+  .detail-panel {
+    top: var(--topnav-h);
+    width: 100%;
+    left: 0; right: 0;
+    border-left: none;
+  }
+  .detail-scroll { padding: 14px 16px; }
+  .detail-top-nav { padding: 12px 16px; }
+
+  .grammar-hero { padding: 16px; }
+  .grammar-hero-title { font-size: 24px; }
+  .info-card { padding: 14px 16px; }
+  .q-options { grid-template-columns: 1fr; }
+
+  .streak-banner { margin-bottom: 12px; }
+  .curriculum-header { padding: 16px; }
+}
+
+/* Unit card elements (kept from original, for home tab use) */
+.unit-card {
+  background: var(--white); border-radius: var(--radius);
+  margin-bottom: 10px; box-shadow: var(--shadow); overflow: hidden;
+  max-width: 800px;
+}
+.unit-card-header { padding: 14px 20px 0; display: flex; justify-content: space-between; align-items: center; }
+.unit-label { font-size: 10px; font-weight: 700; color: var(--gray4); letter-spacing: 1px; text-transform: uppercase; }
+.unit-status { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.unit-status.available { background: var(--blue-light); color: var(--blue); }
+.unit-status.locked { background: var(--gray1); color: var(--gray4); }
+.unit-status.done { background: var(--green-bg); color: var(--green); }
+.unit-title { font-size: 20px; font-weight: 800; color: var(--text); padding: 6px 20px 10px; letter-spacing: -0.3px; }
+.unit-items { border-top: 1px solid var(--gray1); }
+.unit-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px; border-bottom: 1px solid var(--gray1);
+  cursor: pointer; transition: background 0.12s;
+}
+.unit-item:last-of-type { border-bottom: none; }
+.unit-item:hover { background: var(--gray0); }
+.unit-item-text { font-size: 13px; font-weight: 500; color: var(--gray7); }
+.unit-item-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gray3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.unit-item-check.done { background: var(--green); border-color: var(--green); color: #fff; font-size: 11px; }
+.unit-item-check.locked { background: var(--gray1); border-color: var(--gray2); }
+.show-more-btn {
+  width: 100%; padding: 12px; border: none; background: none;
+  font-size: 12px; font-weight: 700; color: var(--blue);
+  cursor: pointer; letter-spacing: 0.3px; font-family: inherit;
+  border-top: 1px solid var(--gray1);
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.unit-card-featured {
+  background: var(--navy); border-radius: var(--radius);
+  margin-bottom: 12px; box-shadow: var(--shadow-md);
+  overflow: hidden; position: relative; max-width: 800px;
+}
+.unit-card-featured::before {
+  content: ''; position: absolute;
+  top: -40px; right: -40px; width: 150px; height: 150px;
+  border-radius: 50%; background: rgba(255,255,255,0.04);
+}
+.unit-featured-header { padding: 18px 20px 4px; display: flex; justify-content: space-between; align-items: flex-start; }
+.unit-featured-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; }
+.unit-featured-link-btn { width: 28px; height: 28px; background: rgba(255,255,255,0.12); border: none; border-radius: 8px; color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.unit-featured-title { font-size: 24px; font-weight: 800; color: #fff; padding: 4px 20px 16px; letter-spacing: -0.3px; }
+.unit-featured-points { display: flex; gap: 12px; padding: 0 20px 18px; }
+.featured-pt { background: rgba(255,255,255,0.1); border-radius: var(--radius-xs); padding: 8px 16px; }
+.featured-pt-label { font-size: 9px; color: rgba(255,255,255,0.5); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.featured-pt-val { font-size: 16px; font-weight: 800; color: #fff; margin-top: 2px; font-family: 'Noto Sans KR', sans-serif; }
+.start-btn {
+  display: block; width: calc(100% - 40px); margin: 0 20px 20px;
+  padding: 14px; background: #fff; border: none; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 800; color: var(--navy);
+  cursor: pointer; font-family: inherit; text-align: center;
+  letter-spacing: 0.3px; transition: opacity 0.15s;
+}
+.start-btn:hover { opacity: 0.9; }
+.mini-units { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; max-width: 800px; }
+.mini-unit-card {
+  background: var(--white); border-radius: var(--radius);
+  padding: 16px; box-shadow: var(--shadow);
+  cursor: pointer; transition: box-shadow 0.15s;
+}
+.mini-unit-card:hover { box-shadow: var(--shadow-md); }
+.mini-unit-label { font-size: 10px; font-weight: 700; color: var(--gray4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.mini-unit-title { font-size: 14px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; margin-bottom: 10px; }
+.mini-unit-footer { display: flex; align-items: center; justify-content: space-between; }
+.mini-pts { font-size: 12px; color: var(--gray5); }
+.mini-arrow { font-size: 14px; color: var(--gray4); }
+.mini-badge { background: var(--yellow-bg); color: var(--yellow); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV BAR -->
+<header class="top-nav">
+  <button class="burger-btn" onclick="toggleDrawer()" aria-label="Menu">
+    <div class="burger-line"></div>
+    <div class="burger-line"></div>
+    <div class="burger-line"></div>
+  </button>
+  <div class="logo">All About <span>Korea</span></div>
+  <nav class="nav-links">
+    <a class="nav-link active" href="https://www.businesskorean.com" target="_blank">Home</a>
+    <a class="nav-link" href="https://www.businesskorean.com/Study Korean/Study Korean.html" target="_blank">Study Korean</a>
+    <a class="nav-link" href="https://www.businesskorean.com/Homestay/Homestay.html" target="_blank">Homestay</a>
+    <a class="nav-link" href="https://www.businesskorean.com/Guided Tour/Guided Tour.html" target="_blank">Guided Tour</a>
+    <a class="nav-link" href="https://www.businesskorean.com/Guided Tour/Korea Travel.html" target="_blank">Korea Travel</a>
+  </nav>
+</header>
+
+<div id="app">
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleDrawer()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Navigation</div>
+      <a class="sidebar-item active" href="https://www.businesskorean.com" target="_blank">
+        <span class="sidebar-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span> Home
+      </a>
+      <a class="sidebar-item" href="https://www.businesskorean.com/Study Korean/Study Korean.html" target="_blank">
+        <span class="sidebar-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> Study Korean
+      </a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">External</div>
+      <a class="sidebar-item" href="https://www.businesskorean.com/Homestay/Homestay.html" target="_blank">
+        <span class="sidebar-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span> Homestay
+      </a>
+      <a class="sidebar-item" href="https://www.businesskorean.com/Guided Tour/Guided Tour.html" target="_blank">
+        <span class="sidebar-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Guided Tour
+      </a>
+      <a class="sidebar-item" href="https://www.businesskorean.com/Guided Tour/Korea Travel.html" target="_blank">
+        <span class="sidebar-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.38 2 2 0 0 1 3.62 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span> Korea Travel
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <!-- LEVEL TABS -->
+    <div class="level-tabs">
+      <button class="level-tab active" onclick="switchLevel(this,'grammar')">Grammar</button>
+      <button class="level-tab" onclick="switchLevel(this,'vocabulary')">Vocabulary</button>
+      <button class="level-tab" onclick="switchLevel(this,'expression')">Expression</button>
+      <button class="level-tab" onclick="switchLevel(this,'business')">Business Korean</button>
+    </div>
+
+    <!-- GRAMMAR TAB -->
+    <div class="scroll-area active" id="level-grammar">
+
+      <div class="accordion-block">
+        <button class="accordion-header open" onclick="toggleAccordion('acc-beginner',this)">
+          <div class="accordion-header-left">
+            <span class="accordion-icon">📗</span>
+            <div>
+              <div class="accordion-title">Beginner · 초급</div>
+              <div class="accordion-sub">TOPIK 1–2 · CEFR A1–A2</div>
+            </div>
+          </div>
+          <span class="accordion-arrow open" id="arrow-acc-beginner">▾</span>
+        </button>
+        <div class="accordion-body open" id="acc-beginner">
+          <div class="unit-list-intro">Select a unit to jump into the lesson.</div>
+          <div class="unit-list">
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/1_Tenses.html" target="_blank">
+              <div class="unit-row-num"><span>1</span></div>
+              <div class="unit-row-title">Tenses</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/2_Negative_Expressions.html" target="_blank">
+              <div class="unit-row-num"><span>2</span></div>
+              <div class="unit-row-title">Negative Expressions</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/3_Particles.html" target="_blank">
+              <div class="unit-row-num"><span>3</span></div>
+              <div class="unit-row-title">Particles</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/4_Listing_and_Contrast.html" target="_blank">
+              <div class="unit-row-num"><span>4</span></div>
+              <div class="unit-row-title">Listing and Contrast</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/5_Time_Expressions.html" target="_blank">
+              <div class="unit-row-num"><span>5</span></div>
+              <div class="unit-row-title">Time Expressions</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/6_Ability_and_Possibility.html" target="_blank">
+              <div class="unit-row-num"><span>6</span></div>
+              <div class="unit-row-title">Ability and Possibility</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/7_Demands_and_Obligations.html" target="_blank">
+              <div class="unit-row-num"><span>7</span></div>
+              <div class="unit-row-title">Demands and Obligations, Permission and Prohibition</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/8_Expressions_of_Hope.html" target="_blank">
+              <div class="unit-row-num"><span>8</span></div>
+              <div class="unit-row-title">Expressions of Hope</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/9_Reasons_and_Causes.html" target="_blank">
+              <div class="unit-row-num"><span>9</span></div>
+              <div class="unit-row-title">Reasons and Causes</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/10_Making_Requests_and_Assisting.html" target="_blank">
+              <div class="unit-row-num"><span>10</span></div>
+              <div class="unit-row-title">Making Requests and Assisting</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/11_Trying_New_Things_and_Experiences.html" target="_blank">
+              <div class="unit-row-num"><span>11</span></div>
+              <div class="unit-row-title">Trying New Things and Experiences</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/12_Asking_Opinions_and_Making_Suggestions.html" target="_blank">
+              <div class="unit-row-num"><span>12</span></div>
+              <div class="unit-row-title">Asking Opinions and Making Suggestions</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/13_Intentions_and_Plans.html" target="_blank">
+              <div class="unit-row-num"><span>13</span></div>
+              <div class="unit-row-title">Intentions and Plans</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/14_Background_Information_and_Explanations.html" target="_blank">
+              <div class="unit-row-num"><span>14</span></div>
+              <div class="unit-row-title">Background Information and Explanations</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/15_Purpose_and_Intention.html" target="_blank">
+              <div class="unit-row-num"><span>15</span></div>
+              <div class="unit-row-title">Purpose and Intention</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/16_Conditions_and_Suppositions.html" target="_blank">
+              <div class="unit-row-num"><span>16</span></div>
+              <div class="unit-row-title">Conditions and Suppositions</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/17_Conjecture.html" target="_blank">
+              <div class="unit-row-num"><span>17</span></div>
+              <div class="unit-row-title">Conjecture</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/18_Changes_in_Parts_of_Speech.html" target="_blank">
+              <div class="unit-row-num"><span>18</span></div>
+              <div class="unit-row-title">Changes in Parts of Speech</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/19_Expressions_of_State.html" target="_blank">
+              <div class="unit-row-num"><span>19</span></div>
+              <div class="unit-row-title">Expressions of State</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/20_Confirming_Information.html" target="_blank">
+              <div class="unit-row-num"><span>20</span></div>
+              <div class="unit-row-title">Confirming Information</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/21_Discovery_and_Surprise.html" target="_blank">
+              <div class="unit-row-num"><span>21</span></div>
+              <div class="unit-row-title">Discovery and Surprise</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/22_Additional_Endings.html" target="_blank">
+              <div class="unit-row-num"><span>22</span></div>
+              <div class="unit-row-title">Additional Endings</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/23_Quotations.html" target="_blank">
+              <div class="unit-row-num"><span>23</span></div>
+              <div class="unit-row-title">Quotations</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Beginner/24_Irregular_Conjugations.html" target="_blank">
+              <div class="unit-row-num"><span>24</span></div>
+              <div class="unit-row-title">Irregular Conjugations</div>
+              <div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </a>
+          </div>
+          <div style="height:8px"></div>
+        </div>
+      </div>
+
+      <!-- INTERMEDIATE ACCORDION -->
+      <div class="accordion-block">
+        <button class="accordion-header" onclick="toggleAccordion('acc-intermediate',this)">
+          <div class="accordion-header-left">
+            <span class="accordion-icon">📘</span>
+            <div>
+              <div class="accordion-title">Intermediate · 중급</div>
+              <div class="accordion-sub">TOPIK 3–4 · CEFR B1–B2</div>
+            </div>
+          </div>
+          <span class="accordion-arrow" id="arrow-acc-intermediate">▾</span>
+        </button>
+        <div class="accordion-body" id="acc-intermediate">
+          <div class="unit-list-intro">Select a unit to jump into the lesson.</div>
+          <div class="unit-list">
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/1_Expressing_Conjecture_and_Supposition.html" target="_blank"><div class="unit-row-num"><span>1</span></div><div class="unit-row-title">추측과 예상을 나타낼 때 · Expressing Conjecture and Supposition</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/2_Expressing_Contrast.html" target="_blank"><div class="unit-row-num"><span>2</span></div><div class="unit-row-title">대조를 나타낼 때 · Expressing Contrast</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/3_Expressing_Background_and_Situation.html" target="_blank"><div class="unit-row-num"><span>3</span></div><div class="unit-row-title">배경과 상황을 나타낼 때 · Expressing Background and Situation</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/4_Expressing_Result.html" target="_blank"><div class="unit-row-num"><span>4</span></div><div class="unit-row-title">결과를 나타낼 때 · Expressing Result</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/5_Expressing_Requests_and_Permission.html" target="_blank"><div class="unit-row-num"><span>5</span></div><div class="unit-row-title">요청과 허락을 나타낼 때 · Expressing Requests and Permission</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/6_Expressing_Purpose_and_Intention.html" target="_blank"><div class="unit-row-num"><span>6</span></div><div class="unit-row-title">목적과 의도를 나타낼 때 · Expressing Purpose and Intention</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/7_Expressing_Conditions_and_Prerequisites.html" target="_blank"><div class="unit-row-num"><span>7</span></div><div class="unit-row-title">조건과 전제를 나타낼 때 · Expressing Conditions and Prerequisites</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/8_Expressing_Obligation_and_Avoidance.html" target="_blank"><div class="unit-row-num"><span>8</span></div><div class="unit-row-title">의무와 회피를 나타낼 때 · Expressing Obligation and Avoidance</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/9_Expressing_Ability_and_Possibility.html" target="_blank"><div class="unit-row-num"><span>9</span></div><div class="unit-row-title">능력과 가능성을 나타낼 때 · Expressing Ability and Possibility</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/10_Expressing_Simultaneous_Actions.html" target="_blank"><div class="unit-row-num"><span>10</span></div><div class="unit-row-title">동시 행동을 나타낼 때 · Expressing Simultaneous Actions</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/11_Expressing_Change_and_Transition.html" target="_blank"><div class="unit-row-num"><span>11</span></div><div class="unit-row-title">변화와 전환을 나타낼 때 · Expressing Change and Transition</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/12_Expressing_Feelings_and_Emotions.html" target="_blank"><div class="unit-row-num"><span>12</span></div><div class="unit-row-title">감정을 나타낼 때 · Expressing Feelings and Emotions</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/13_Expressing_Regret_and_Wish.html" target="_blank"><div class="unit-row-num"><span>13</span></div><div class="unit-row-title">후회와 바람을 나타낼 때 · Expressing Regret and Wish</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/14_Expressing_Addition_and_Sequence.html" target="_blank"><div class="unit-row-num"><span>14</span></div><div class="unit-row-title">추가와 순서를 나타낼 때 · Expressing Addition and Sequence</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Intermediate/15_Expressing_Appearance_and_Impression.html" target="_blank"><div class="unit-row-num"><span>15</span></div><div class="unit-row-title">외양과 인상을 나타낼 때 · Expressing Appearance and Impression</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+          </div>
+          <div style="height:8px"></div>
+        </div>
+      </div>
+
+      <!-- ADVANCED ACCORDION -->
+      <div class="accordion-block">
+        <button class="accordion-header" onclick="toggleAccordion('acc-advanced',this)">
+          <div class="accordion-header-left">
+            <span class="accordion-icon">📙</span>
+            <div>
+              <div class="accordion-title">Advanced · 고급</div>
+              <div class="accordion-sub">TOPIK 5–6 · CEFR C1–C2</div>
+            </div>
+          </div>
+          <span class="accordion-arrow" id="arrow-acc-advanced">▾</span>
+        </button>
+        <div class="accordion-body" id="acc-advanced">
+          <div class="unit-list-intro">Select a unit to jump into the lesson.</div>
+          <div class="unit-list">
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/1_Expressing_Choices.html" target="_blank"><div class="unit-row-num"><span>1</span></div><div class="unit-row-title">선택을 나타낼 때 · Expressing Choices</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/2_Expressing_Citations_and_Quotations.html" target="_blank"><div class="unit-row-num"><span>2</span></div><div class="unit-row-title">인용을 나타낼 때 · Expressing Citations and Quotations</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/3_Expressing_Nominalization.html" target="_blank"><div class="unit-row-num"><span>3</span></div><div class="unit-row-title">명사화됨을 나타낼 때 · Expressing Nominalization</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/4_Expressing_Causes_and_Reasons.html" target="_blank"><div class="unit-row-num"><span>4</span></div><div class="unit-row-title">원인과 이유를 나타낼 때 · Expressing Causes and Reasons</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/5_Expressing_Hypothetical_Situations.html" target="_blank"><div class="unit-row-num"><span>5</span></div><div class="unit-row-title">가정 상황을 나타낼 때 · Expressing Hypothetical Situations</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/6_Expressing_the_Ordering_of_Behavior.html" target="_blank"><div class="unit-row-num"><span>6</span></div><div class="unit-row-title">순차적 행동을 나타낼 때 · Expressing the Ordering of Behavior</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/7_Expressing_Conditions_and_Decisions.html" target="_blank"><div class="unit-row-num"><span>7</span></div><div class="unit-row-title">조건과 결정을 나타낼 때 · Expressing Conditions and Decisions</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/8_Expressing_Doing_Things_Separately_and_Together.html" target="_blank"><div class="unit-row-num"><span>8</span></div><div class="unit-row-title">따로 함과 같이 함을 나타낼 때 · Expressing Doing Things Separately and Together</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/9_Expressing_Contrasts_and_Opposites.html" target="_blank"><div class="unit-row-num"><span>9</span></div><div class="unit-row-title">대조와 반대를 나타낼 때 · Expressing Contrasts and Opposites</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/10_Expressing_Similarity.html" target="_blank"><div class="unit-row-num"><span>10</span></div><div class="unit-row-title">유사함을 나타낼 때 · Expressing Similarity</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/11_Expressing_Addition_and_Inclusion.html" target="_blank"><div class="unit-row-num"><span>11</span></div><div class="unit-row-title">추가와 포함을 나타낼 때 · Expressing Addition and Inclusion</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/12_Expressing_Habits_and_Attitude.html" target="_blank"><div class="unit-row-num"><span>12</span></div><div class="unit-row-title">습관과 태도를 나타낼 때 · Expressing Habits and Attitude</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/13_Expressing_Degree.html" target="_blank"><div class="unit-row-num"><span>13</span></div><div class="unit-row-title">정도를 나타낼 때 · Expressing Degree</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/14_Expressing_Intention.html" target="_blank"><div class="unit-row-num"><span>14</span></div><div class="unit-row-title">의도를 나타낼 때 · Expressing Intention</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/15_Expressing_Supposition_and_Possibility.html" target="_blank"><div class="unit-row-num"><span>15</span></div><div class="unit-row-title">추측과 가능성을 나타낼 때 · Expressing Supposition and Possibility</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/16_Expressing_Inevitability.html" target="_blank"><div class="unit-row-num"><span>16</span></div><div class="unit-row-title">당연함을 나타낼 때 · Expressing Inevitability</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/17_Expressing_Enumeration.html" target="_blank"><div class="unit-row-num"><span>17</span></div><div class="unit-row-title">나열함을 나타낼 때 · Expressing Enumeration</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/18_Expressing_Results_and_Retrospection.html" target="_blank"><div class="unit-row-num"><span>18</span></div><div class="unit-row-title">결과와 회상을 나타낼 때 · Expressing Results and Retrospection</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/19_Expressing_Situations_and_Standards.html" target="_blank"><div class="unit-row-num"><span>19</span></div><div class="unit-row-title">상황이나 기준을 나타낼 때 · Expressing Situations and Standards</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/20_Expressing_Emphasis.html" target="_blank"><div class="unit-row-num"><span>20</span></div><div class="unit-row-title">강조를 나타낼 때 · Expressing Emphasis</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/21_Expressing_Honorifics.html" target="_blank"><div class="unit-row-num"><span>21</span></div><div class="unit-row-title">높임법을 나타낼 때 · Expressing Honorifics</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+            <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Advanced/22_Other_Useful_Expressions.html" target="_blank"><div class="unit-row-num"><span>22</span></div><div class="unit-row-title">기타 유용한 표현들 · Other Useful Expressions</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+          </div>
+          <div style="height:8px"></div>
+        </div>
+      </div>
+
+      <div style="height:20px"></div>
+    </div><!-- /level-grammar -->
+
+    <!-- VOCABULARY TAB -->
+    <div class="scroll-area" id="level-vocabulary">
+      <div class="unit-list-intro">Select a unit to jump into the lesson.</div>
+      <div class="unit-list">
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/1_Basic_Nouns.html" target="_blank"><div class="unit-row-num"><span>1</span></div><div class="unit-row-title">Basic Nouns</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/2_Verbs.html" target="_blank"><div class="unit-row-num"><span>2</span></div><div class="unit-row-title">Verbs</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/3_Adjectives.html" target="_blank"><div class="unit-row-num"><span>3</span></div><div class="unit-row-title">Adjectives</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/4_Numbers_and_Counters.html" target="_blank"><div class="unit-row-num"><span>4</span></div><div class="unit-row-title">Numbers and Counters</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/5_Daily_Life.html" target="_blank"><div class="unit-row-num"><span>5</span></div><div class="unit-row-title">Daily Life</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/6_Food_and_Drink.html" target="_blank"><div class="unit-row-num"><span>6</span></div><div class="unit-row-title">Food and Drink</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/7_Travel_and_Transportation.html" target="_blank"><div class="unit-row-num"><span>7</span></div><div class="unit-row-title">Travel and Transportation</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/8_Health_and_Body.html" target="_blank"><div class="unit-row-num"><span>8</span></div><div class="unit-row-title">Health and Body</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/9_Nature_and_Weather.html" target="_blank"><div class="unit-row-num"><span>9</span></div><div class="unit-row-title">Nature and Weather</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Voca/10_Emotions_and_Feelings.html" target="_blank"><div class="unit-row-num"><span>10</span></div><div class="unit-row-title">Emotions and Feelings</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- EXPRESSION TAB -->
+    <div class="scroll-area" id="level-expression">
+      <div class="unit-list-intro">Select a unit to jump into the lesson.</div>
+      <div class="unit-list">
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/1_Greetings.html" target="_blank"><div class="unit-row-num"><span>1</span></div><div class="unit-row-title">Greetings</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/2_Self_Introduction.html" target="_blank"><div class="unit-row-num"><span>2</span></div><div class="unit-row-title">Self Introduction</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/3_Shopping.html" target="_blank"><div class="unit-row-num"><span>3</span></div><div class="unit-row-title">Shopping</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/4_Ordering_Food.html" target="_blank"><div class="unit-row-num"><span>4</span></div><div class="unit-row-title">Ordering Food</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/5_Asking_for_Directions.html" target="_blank"><div class="unit-row-num"><span>5</span></div><div class="unit-row-title">Asking for Directions</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/6_Making_Plans.html" target="_blank"><div class="unit-row-num"><span>6</span></div><div class="unit-row-title">Making Plans</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/7_At_the_Hospital.html" target="_blank"><div class="unit-row-num"><span>7</span></div><div class="unit-row-title">At the Hospital</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/8_Using_Public_Transport.html" target="_blank"><div class="unit-row-num"><span>8</span></div><div class="unit-row-title">Using Public Transport</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/9_Expressing_Opinions.html" target="_blank"><div class="unit-row-num"><span>9</span></div><div class="unit-row-title">Expressing Opinions</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Expression/10_Phone_Calls.html" target="_blank"><div class="unit-row-num"><span>10</span></div><div class="unit-row-title">Phone Calls</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- BUSINESS KOREAN TAB -->
+    <div class="scroll-area" id="level-business">
+      <div class="unit-list-intro">Select a unit to jump into the lesson.</div>
+      <div class="unit-list">
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/1_Business_Greetings.html" target="_blank"><div class="unit-row-num"><span>1</span></div><div class="unit-row-title">Business Greetings</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/2_Formal_Speech.html" target="_blank"><div class="unit-row-num"><span>2</span></div><div class="unit-row-title">Formal Speech</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/3_Email_and_Documents.html" target="_blank"><div class="unit-row-num"><span>3</span></div><div class="unit-row-title">Email and Documents</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/4_Meetings_and_Presentations.html" target="_blank"><div class="unit-row-num"><span>4</span></div><div class="unit-row-title">Meetings and Presentations</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/5_Negotiations.html" target="_blank"><div class="unit-row-num"><span>5</span></div><div class="unit-row-title">Negotiations</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/6_Company_Structure.html" target="_blank"><div class="unit-row-num"><span>6</span></div><div class="unit-row-title">Company Structure</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/7_Customer_Service.html" target="_blank"><div class="unit-row-num"><span>7</span></div><div class="unit-row-title">Customer Service</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/8_Job_Interviews.html" target="_blank"><div class="unit-row-num"><span>8</span></div><div class="unit-row-title">Job Interviews</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/9_Business_Dining.html" target="_blank"><div class="unit-row-num"><span>9</span></div><div class="unit-row-title">Business Dining</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+        <a class="unit-row" href="https://www.businesskorean.com/Study Korean/Business Korean/10_Korean_Business_Culture.html" target="_blank"><div class="unit-row-num"><span>10</span></div><div class="unit-row-title">Korean Business Culture</div><div class="unit-row-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></a>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+  </main>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <a class="bottom-item active" href="https://www.businesskorean.com" target="_blank">
+      <span class="bottom-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>
+      <span>Home</span>
+    </a>
+    <a class="bottom-item" href="https://www.businesskorean.com/Study Korean/Grammar.html" target="_blank">
+      <span class="bottom-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+      <span>Grammar</span>
+    </a>
+    <a class="bottom-item" href="https://www.businesskorean.com/Study Korean/Voca.html" target="_blank">
+      <span class="bottom-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+      <span>Vocabulary</span>
+    </a>
+    <a class="bottom-item" href="https://www.businesskorean.com/Study Korean/Expression.html" target="_blank">
+      <span class="bottom-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      <span>Expression</span>
+    </a>
+  </nav>
+
+  <!-- DRAWER (mobile) -->
+  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawerOnBg(event)">
+    <div class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-logo">All About <span>Korea</span></div>
+        <div class="drawer-sub">Korean Language Learning</div>
+        <button class="drawer-close-btn" onclick="toggleDrawer()">✕</button>
+      </div>
+      <div class="drawer-nav">
+        <a class="drawer-item active" href="https://www.businesskorean.com" target="_blank">
+          <span class="drawer-item-icon drawer-svg-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span> Home
+        </a>
+        <a class="drawer-item" href="https://www.businesskorean.com/Study Korean/Study Korean.html" target="_blank">
+          <span class="drawer-item-icon drawer-svg-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> Study Korean
+        </a>
+        <div class="drawer-divider"></div>
+        <a class="drawer-item" href="https://www.businesskorean.com/Homestay/Homestay.html" target="_blank">
+          <span class="drawer-item-icon drawer-svg-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span> Homestay
+        </a>
+        <a class="drawer-item" href="https://www.businesskorean.com/Guided Tour/Guided Tour.html" target="_blank">
+          <span class="drawer-item-icon drawer-svg-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Guided Tour
+        </a>
+        <a class="drawer-item" href="https://www.businesskorean.com/Guided Tour/Korea Travel.html" target="_blank">
+          <span class="drawer-item-icon drawer-svg-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.38 2 2 0 0 1 3.62 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span> Korea Travel
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL OVERLAY -->
+  <div class="detail-overlay" id="detail-overlay" onclick="closeLesson()"></div>
+
+  <!-- LESSON DETAIL PANEL -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-top-nav">
+      <button class="back-btn" onclick="closeLesson()">‹</button>
+      <div class="detail-top-title" id="detail-nav-title"></div>
+      <button class="done-pill undone" id="done-pill-btn" onclick="toggleDone()">Mark done</button>
+    </div>
+    <div class="detail-scroll" id="detail-scroll-body" style="padding: 20px 24px;"></div>
+  </div>
+
+</div><!-- /#app -->
+
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const LESSONS = [
+  {
+    id:1, grammar:"A/V-(스)ㅂ니다",
+    title:"Present Tense (Formal)", ko_title:"현재 시제 (격식체)",
+    topik:"TOPIK 1", cefr:"A1",
+    formula_ko:"동사/형용사 어간 + (스)ㅂ니다",
+    formula_en:"Verb/Adjective stem + (eu)mnida — formal polite present tense used in presentations, news, and formal settings",
+    rules:[
+      {cond:"No final consonant (받침 없음)", en:"Drop the 다, add ㅂ니다", ex:"가다 → 갑니다", exen:"to go → goes (formal)"},
+      {cond:"With final consonant (받침 있음)", en:"Drop the 다, add 습니다", ex:"먹다 → 먹습니다", exen:"to eat → eats (formal)"},
+      {cond:"Final consonant ㄹ (ㄹ 받침)", en:"Drop ㄹ and 다, add ㅂ니다", ex:"살다 → 삽니다", exen:"to live → lives (formal)"},
+      {cond:"이다 (to be)", en:"Add 입니다 after noun", ex:"학생이다 → 학생입니다", exen:"is a student (formal)"},
+    ],
+    examples:[
+      {ko:"저는 학교에 {갑니다}.", en:"I go to school.", hl:"갑니다"},
+      {ko:"밥을 {먹습니다}.", en:"I eat rice.", hl:"먹습니다"},
+      {ko:"저는 학생{입니다}.", en:"I am a student.", hl:"입니다"},
+      {ko:"커피를 {마십니다}.", en:"I drink coffee.", hl:"마십니다"},
+      {ko:"한국어를 {공부합니다}.", en:"I study Korean.", hl:"공부합니다"},
+      {ko:"친구가 {옵니다}.", en:"A friend is coming.", hl:"옵니다"},
+      {ko:"선생님께서 {가르칩니다}.", en:"The teacher teaches.", hl:"가르칩니다"},
+      {ko:"날씨가 {좋습니다}.", en:"The weather is good.", hl:"좋습니다"},
+      {ko:"책이 {있습니다}.", en:"There is a book.", hl:"있습니다"},
+      {ko:"회사에서 {일합니다}.", en:"I work at a company.", hl:"일합니다"},
+      {ko:"음악을 {듣습니다}.", en:"I listen to music.", hl:"듣습니다"},
+      {ko:"물을 {마십니다}.", en:"I drink water.", hl:"마십니다"},
+      {ko:"버스를 {탑니다}.", en:"I take the bus.", hl:"탑니다"},
+      {ko:"집에 {삽니다}.", en:"I live at home.", hl:"삽니다"},
+      {ko:"이것이 제 책{입니다}.", en:"This is my book.", hl:"입니다"},
+    ],
+    mc:[
+      {q:"저는 학교에 ___ .", hint:"(가다 → formal present)", ans:"갑니다", opts:["갑니다","갔습니다","갈 거예요","가고 있어요"], exp:"가다: no final consonant → stem '가' + ㅂ니다 = 갑니다"},
+      {q:"밥을 ___ .", hint:"(먹다 → formal present)", ans:"먹습니다", opts:["먹습니다","먹어요","먹었어요","먹겠어요"], exp:"먹다 has final consonant ㄱ → 먹습니다"},
+      {q:"저는 학생 ___ .", hint:"(이다 → formal)", ans:"입니다", opts:["입니다","이에요","였습니다","이었어요"], exp:"이다 after consonant → 입니다"},
+      {q:"친구가 ___ .", hint:"(오다 → formal)", ans:"옵니다", opts:["옵니다","와요","왔어요","올 거예요"], exp:"오다: no final consonant → 오 + ㅂ니다 = 옵니다"},
+      {q:"음악을 ___ .", hint:"(듣다 → formal)", ans:"듣습니다", opts:["들어요","듣습니다","들었어요","들을 거예요"], exp:"듣다: final consonant ㄷ → 듣습니다"},
+      {q:"날씨가 ___ .", hint:"(좋다 → formal)", ans:"좋습니다", opts:["좋아요","좋았어요","좋습니다","좋을 거예요"], exp:"좋다: final consonant ㅎ → 좋습니다"},
+      {q:"회사에서 ___ .", hint:"(일하다 → formal)", ans:"일합니다", opts:["일해요","일했어요","일합니다","일할 거예요"], exp:"일하다: 하다 verb → 일합니다"},
+    ],
+    fill:[
+      {q:"저는 학교에 ___.", ans:"갑니다", hint:"가다 → formal"},
+      {q:"커피를 ___.", ans:"마십니다", hint:"마시다 → formal"},
+      {q:"책이 ___.", ans:"있습니다", hint:"있다 → formal"},
+      {q:"물을 ___.", ans:"마십니다", hint:"마시다 → formal"},
+      {q:"버스를 ___.", ans:"탑니다", hint:"타다 → formal"},
+      {q:"집에 ___.", ans:"삽니다", hint:"살다 → formal (ㄹ drop)"},
+      {q:"한국어를 ___.", ans:"공부합니다", hint:"공부하다 → formal"},
+    ],
+    arrange:[
+      {ans:"저는 학교에 갑니다", tokens:["저는","갑니다","학교에"], en:"I go to school."},
+      {ans:"밥을 먹습니다", tokens:["먹습니다","밥을"], en:"I eat rice."},
+      {ans:"저는 학생입니다", tokens:["학생입니다","저는"], en:"I am a student."},
+      {ans:"날씨가 좋습니다", tokens:["좋습니다","날씨가"], en:"The weather is good."},
+      {ans:"회사에서 일합니다", tokens:["일합니다","회사에서"], en:"I work at a company."},
+      {ans:"친구가 옵니다", tokens:["옵니다","친구가"], en:"A friend is coming."},
+      {ans:"음악을 듣습니다", tokens:["음악을","듣습니다"], en:"I listen to music."},
+    ],
+    dialogue:[
+      {lines:[{sp:"A",txt:"어디에 가세요?",me:false},{sp:"B",txt:"학교에 ___.",me:true}], ans:"갑니다", en:"Where are you going? — I go to school."},
+      {lines:[{sp:"A",txt:"무엇을 먹어요?",me:false},{sp:"B",txt:"밥을 ___.",me:true}], ans:"먹습니다", en:"What are you eating? — I eat rice."},
+      {lines:[{sp:"A",txt:"직업이 무엇이에요?",me:false},{sp:"B",txt:"저는 선생님___.",me:true}], ans:"입니다", en:"What is your job? — I am a teacher."},
+      {lines:[{sp:"A",txt:"무엇을 마셔요?",me:false},{sp:"B",txt:"커피를 ___.",me:true}], ans:"마십니다", en:"What do you drink? — I drink coffee."},
+      {lines:[{sp:"A",txt:"어디에 살아요?",me:false},{sp:"B",txt:"서울에 ___.",me:true}], ans:"삽니다", en:"Where do you live? — I live in Seoul."},
+      {lines:[{sp:"A",txt:"무엇을 들어요?",me:false},{sp:"B",txt:"음악을 ___.",me:true}], ans:"듣습니다", en:"What do you listen to? — I listen to music."},
+      {lines:[{sp:"A",txt:"어디에서 일해요?",me:false},{sp:"B",txt:"회사에서 ___.",me:true}], ans:"일합니다", en:"Where do you work? — I work at a company."},
+    ]
+  },
+  {
+    id:2, grammar:"A/V-아/어요",
+    title:"Present Tense (Informal Polite)", ko_title:"현재 시제 (비격식 존댓말)",
+    topik:"TOPIK 1", cefr:"A1",
+    formula_ko:"동사/형용사 어간 + 아요 / 어요",
+    formula_en:"Verb/Adj stem + ayo/eoyo — the most common everyday polite form used in daily conversation",
+    rules:[
+      {cond:"ㅏ or ㅗ vowel (ㅏ,ㅗ 모음)", en:"Add 아요 to the stem", ex:"가다 → 가요", exen:"to go → go/goes"},
+      {cond:"Other vowels (그 외 모음)", en:"Add 어요 to the stem", ex:"먹다 → 먹어요", exen:"to eat → eat/eats"},
+      {cond:"하다 verbs", en:"하다 → 해요", ex:"공부하다 → 공부해요", exen:"to study → study/studies"},
+      {cond:"이다 after vowel", en:"Add 예요", ex:"의사이다 → 의사예요", exen:"is a doctor"},
+      {cond:"이다 after consonant", en:"Add 이에요", ex:"학생이다 → 학생이에요", exen:"is a student"},
+    ],
+    examples:[
+      {ko:"저는 커피를 {마셔요}.", en:"I drink coffee.", hl:"마셔요"},
+      {ko:"오늘 날씨가 {좋아요}.", en:"The weather is nice today.", hl:"좋아요"},
+      {ko:"친구를 {만나요}.", en:"I meet a friend.", hl:"만나요"},
+      {ko:"한국어가 {어려워요}.", en:"Korean is difficult.", hl:"어려워요"},
+      {ko:"집에 {있어요}.", en:"I'm at home.", hl:"있어요"},
+      {ko:"사과를 {먹어요}.", en:"I eat an apple.", hl:"먹어요"},
+      {ko:"음악을 {들어요}.", en:"I listen to music.", hl:"들어요"},
+      {ko:"버스를 {타요}.", en:"I take the bus.", hl:"타요"},
+      {ko:"이 책이 {재미있어요}.", en:"This book is interesting.", hl:"재미있어요"},
+      {ko:"저는 선생님{이에요}.", en:"I am a teacher.", hl:"이에요"},
+      {ko:"물을 {마셔요}.", en:"I drink water.", hl:"마셔요"},
+      {ko:"학교에 {가요}.", en:"I go to school.", hl:"가요"},
+      {ko:"영화를 {봐요}.", en:"I watch a movie.", hl:"봐요"},
+      {ko:"집에서 {쉬어요}.", en:"I rest at home.", hl:"쉬어요"},
+      {ko:"한국 음식이 {맛있어요}.", en:"Korean food is delicious.", hl:"맛있어요"},
+    ],
+    mc:[
+      {q:"커피를 ___ .", hint:"(마시다 → 아/어요)", ans:"마셔요", opts:["마셔요","마시어요","마십니다","마실 거예요"], exp:"마시다: 시 + 어 contracted → 셔 → 마셔요"},
+      {q:"날씨가 ___ .", hint:"(좋다 → 아/어요)", ans:"좋아요", opts:["좋아요","좋어요","좋습니다","좋겠어요"], exp:"좋다: ㅗ vowel → 아요 → 좋아요"},
+      {q:"저는 학생 ___ .", hint:"(이다 after consonant)", ans:"이에요", opts:["이에요","예요","입니다","이었어요"], exp:"학생 ends in consonant → 이에요"},
+      {q:"한국어가 ___ .", hint:"(어렵다 → 아/어요)", ans:"어려워요", opts:["어려워요","어렵어요","어렵습니다","어려울 거예요"], exp:"어렵다: ㅂ irregular → 어려워요"},
+      {q:"음악을 ___ .", hint:"(듣다 → 아/어요)", ans:"들어요", opts:["듣어요","들어요","듣습니다","들을 거예요"], exp:"듣다: ㄷ irregular → 들어요"},
+      {q:"영화를 ___ .", hint:"(보다 → 아/어요)", ans:"봐요", opts:["보어요","봐요","봅니다","볼 거예요"], exp:"보다: ㅗ + 아요 contracted → 봐요"},
+      {q:"집에서 ___ .", hint:"(쉬다 → 아/어요)", ans:"쉬어요", opts:["쉬어요","쉬아요","쉽니다","쉴 거예요"], exp:"쉬다: ㅣ vowel → 어요 → 쉬어요"},
+    ],
+    fill:[
+      {q:"커피를 ___.", ans:"마셔요", hint:"마시다"},
+      {q:"날씨가 ___.", ans:"좋아요", hint:"좋다"},
+      {q:"음악을 ___.", ans:"들어요", hint:"듣다"},
+      {q:"영화를 ___.", ans:"봐요", hint:"보다"},
+      {q:"집에 ___.", ans:"있어요", hint:"있다"},
+      {q:"학교에 ___.", ans:"가요", hint:"가다"},
+      {q:"한국 음식이 ___.", ans:"맛있어요", hint:"맛있다"},
+    ],
+    arrange:[
+      {ans:"저는 커피를 마셔요", tokens:["마셔요","저는","커피를"], en:"I drink coffee."},
+      {ans:"날씨가 좋아요", tokens:["좋아요","날씨가"], en:"The weather is nice."},
+      {ans:"음악을 들어요", tokens:["들어요","음악을"], en:"I listen to music."},
+      {ans:"버스를 타요", tokens:["타요","버스를"], en:"I take the bus."},
+      {ans:"집에 있어요", tokens:["있어요","집에"], en:"I'm at home."},
+      {ans:"영화를 봐요", tokens:["봐요","영화를"], en:"I watch a movie."},
+      {ans:"한국 음식이 맛있어요", tokens:["맛있어요","한국 음식이"], en:"Korean food is delicious."},
+    ],
+    dialogue:[
+      {lines:[{sp:"A",txt:"뭐 마셔요?",me:false},{sp:"B",txt:"커피를 ___.",me:true}], ans:"마셔요", en:"What do you drink? — I drink coffee."},
+      {lines:[{sp:"A",txt:"오늘 날씨 어때요?",me:false},{sp:"B",txt:"날씨가 ___.",me:true}], ans:"좋아요", en:"How's the weather? — The weather is nice."},
+      {lines:[{sp:"A",txt:"무슨 음악을 들어요?",me:false},{sp:"B",txt:"케이팝을 ___.",me:true}], ans:"들어요", en:"What music do you listen to? — I listen to K-pop."},
+      {lines:[{sp:"A",txt:"지금 어디에 있어요?",me:false},{sp:"B",txt:"집에 ___.",me:true}], ans:"있어요", en:"Where are you now? — I'm at home."},
+      {lines:[{sp:"A",txt:"어떻게 학교에 가요?",me:false},{sp:"B",txt:"버스를 ___.",me:true}], ans:"타요", en:"How do you go to school? — I take the bus."},
+      {lines:[{sp:"A",txt:"직업이 뭐예요?",me:false},{sp:"B",txt:"저는 선생님___.",me:true}], ans:"이에요", en:"What's your job? — I am a teacher."},
+      {lines:[{sp:"A",txt:"한국 음식 어때요?",me:false},{sp:"B",txt:"한국 음식이 ___.",me:true}], ans:"맛있어요", en:"How's Korean food? — It's delicious."},
+    ]
+  },
+  {
+    id:3, grammar:"A/V-았/었어요",
+    title:"Past Tense", ko_title:"과거 시제",
+    topik:"TOPIK 1", cefr:"A1",
+    formula_ko:"동사/형용사 어간 + 았어요 / 었어요",
+    formula_en:"Stem + asseoyo/eosseoyo — casual polite past tense, the standard way to talk about past events",
+    rules:[
+      {cond:"ㅏ or ㅗ vowel (ㅏ,ㅗ 모음)", en:"Add 았어요", ex:"가다 → 갔어요", exen:"went"},
+      {cond:"Other vowels (그 외 모음)", en:"Add 었어요", ex:"먹다 → 먹었어요", exen:"ate"},
+      {cond:"하다 verbs", en:"하다 → 했어요", ex:"공부하다 → 공부했어요", exen:"studied"},
+      {cond:"이다 (to be)", en:"이다 → 이었어요 / 였어요", ex:"학생이었어요", exen:"was a student"},
+    ],
+    examples:[
+      {ko:"어제 학교에 {갔어요}.", en:"I went to school yesterday.", hl:"갔어요"},
+      {ko:"아침에 밥을 {먹었어요}.", en:"I ate rice in the morning.", hl:"먹었어요"},
+      {ko:"친구를 {만났어요}.", en:"I met a friend.", hl:"만났어요"},
+      {ko:"영화를 {봤어요}.", en:"I watched a movie.", hl:"봤어요"},
+      {ko:"한국어를 {공부했어요}.", en:"I studied Korean.", hl:"공부했어요"},
+      {ko:"음악을 {들었어요}.", en:"I listened to music.", hl:"들었어요"},
+      {ko:"편지를 {썼어요}.", en:"I wrote a letter.", hl:"썼어요"},
+      {ko:"물을 {마셨어요}.", en:"I drank water.", hl:"마셨어요"},
+      {ko:"버스를 {탔어요}.", en:"I took the bus.", hl:"탔어요"},
+      {ko:"숙제를 {했어요}.", en:"I did my homework.", hl:"했어요"},
+      {ko:"책을 {읽었어요}.", en:"I read a book.", hl:"읽었어요"},
+      {ko:"집에서 {쉬었어요}.", en:"I rested at home.", hl:"쉬었어요"},
+      {ko:"커피를 {마셨어요}.", en:"I drank coffee.", hl:"마셨어요"},
+      {ko:"사진을 {찍었어요}.", en:"I took a photo.", hl:"찍었어요"},
+      {ko:"한국 음식을 {먹었어요}.", en:"I ate Korean food.", hl:"먹었어요"},
+    ],
+    mc:[
+      {q:"어제 학교에 ___ .", hint:"(가다 → past)", ans:"갔어요", opts:["갔어요","가요","갈 거예요","가고 있어요"], exp:"가다: ㅏ vowel + 았어요 contracted = 갔어요"},
+      {q:"영화를 ___ .", hint:"(보다 → past)", ans:"봤어요", opts:["봐요","봤어요","볼 거예요","보고 있어요"], exp:"보다: ㅗ + 았어요 contracted = 봤어요"},
+      {q:"숙제를 ___ .", hint:"(하다 → past)", ans:"했어요", opts:["해요","할 거예요","했어요","하고 있어요"], exp:"하다 → 했어요 (하 + 였 contracted)"},
+      {q:"음악을 ___ .", hint:"(듣다 → past)", ans:"들었어요", opts:["들어요","들었어요","들을 거예요","듣고 있어요"], exp:"듣다: ㄷ irregular → 들었어요"},
+      {q:"책을 ___ .", hint:"(읽다 → past)", ans:"읽었어요", opts:["읽어요","읽었어요","읽을 거예요","읽고 있어요"], exp:"읽다: final consonants → 읽었어요"},
+      {q:"편지를 ___ .", hint:"(쓰다 → past)", ans:"썼어요", opts:["써요","썼어요","쓸 거예요","쓰고 있어요"], exp:"쓰다: ㅡ vowel drops + 었어요 = 썼어요"},
+      {q:"친구를 ___ .", hint:"(만나다 → past)", ans:"만났어요", opts:["만나요","만났어요","만날 거예요","만나고 있어요"], exp:"만나다: ㅏ + 았어요 contracted = 만났어요"},
+    ],
+    fill:[
+      {q:"어제 학교에 ___.", ans:"갔어요", hint:"가다 → past"},
+      {q:"영화를 ___.", ans:"봤어요", hint:"보다 → past"},
+      {q:"책을 ___.", ans:"읽었어요", hint:"읽다 → past"},
+      {q:"편지를 ___.", ans:"썼어요", hint:"쓰다 → past"},
+      {q:"숙제를 ___.", ans:"했어요", hint:"하다 → past"},
+      {q:"음악을 ___.", ans:"들었어요", hint:"듣다 → past"},
+      {q:"버스를 ___.", ans:"탔어요", hint:"타다 → past"},
+    ],
+    arrange:[
+      {ans:"어제 학교에 갔어요", tokens:["어제","갔어요","학교에"], en:"I went to school yesterday."},
+      {ans:"영화를 봤어요", tokens:["봤어요","영화를"], en:"I watched a movie."},
+      {ans:"숙제를 했어요", tokens:["했어요","숙제를"], en:"I did my homework."},
+      {ans:"친구를 만났어요", tokens:["만났어요","친구를"], en:"I met a friend."},
+      {ans:"음악을 들었어요", tokens:["들었어요","음악을"], en:"I listened to music."},
+      {ans:"버스를 탔어요", tokens:["탔어요","버스를"], en:"I took the bus."},
+      {ans:"커피를 마셨어요", tokens:["마셨어요","커피를"], en:"I drank coffee."},
+    ],
+    dialogue:[
+      {lines:[{sp:"A",txt:"어제 어디에 갔어요?",me:false},{sp:"B",txt:"학교에 ___.",me:true}], ans:"갔어요", en:"Where did you go? — I went to school."},
+      {lines:[{sp:"A",txt:"어제 뭐 봤어요?",me:false},{sp:"B",txt:"영화를 ___.",me:true}], ans:"봤어요", en:"What did you watch? — I watched a movie."},
+      {lines:[{sp:"A",txt:"숙제 다 했어요?",me:false},{sp:"B",txt:"네, 숙제를 ___.",me:true}], ans:"했어요", en:"Did you finish homework? — Yes, I did my homework."},
+      {lines:[{sp:"A",txt:"어제 뭐 마셨어요?",me:false},{sp:"B",txt:"커피를 ___.",me:true}], ans:"마셨어요", en:"What did you drink? — I drank coffee."},
+      {lines:[{sp:"A",txt:"책 읽었어요?",me:false},{sp:"B",txt:"네, 책을 ___.",me:true}], ans:"읽었어요", en:"Did you read? — Yes, I read a book."},
+      {lines:[{sp:"A",txt:"누구를 만났어요?",me:false},{sp:"B",txt:"친구를 ___.",me:true}], ans:"만났어요", en:"Who did you meet? — I met a friend."},
+      {lines:[{sp:"A",txt:"뭐 들었어요?",me:false},{sp:"B",txt:"음악을 ___.",me:true}], ans:"들었어요", en:"What did you listen to? — I listened to music."},
+    ]
+  },
+  {
+    id:4, grammar:"V-(으)ㄹ 거예요",
+    title:"Future Tense ①", ko_title:"미래 시제 ①",
+    topik:"TOPIK 2", cefr:"A2",
+    formula_ko:"동사 어간 + (으)ㄹ 거예요",
+    formula_en:"Verb stem + (eu)l geoyeyo — expresses future intention or prediction; the speaker's plan or expectation",
+    rules:[
+      {cond:"No final consonant (받침 없음)", en:"Add ㄹ 거예요", ex:"가다 → 갈 거예요", exen:"will go"},
+      {cond:"With final consonant (받침 있음)", en:"Add 을 거예요", ex:"먹다 → 먹을 거예요", exen:"will eat"},
+      {cond:"Final consonant ㄹ", en:"Keep ㄹ and add 거예요", ex:"살다 → 살 거예요", exen:"will live"},
+    ],
+    examples:[
+      {ko:"내일 학교에 {갈 거예요}.", en:"I will go to school tomorrow.", hl:"갈 거예요"},
+      {ko:"저녁에 밥을 {먹을 거예요}.", en:"I will eat dinner tonight.", hl:"먹을 거예요"},
+      {ko:"친구를 {만날 거예요}.", en:"I will meet a friend.", hl:"만날 거예요"},
+      {ko:"한국어를 {배울 거예요}.", en:"I will learn Korean.", hl:"배울 거예요"},
+      {ko:"주말에 영화를 {볼 거예요}.", en:"I will watch a movie on the weekend.", hl:"볼 거예요"},
+      {ko:"내년에 한국에 {갈 거예요}.", en:"I will go to Korea next year.", hl:"갈 거예요"},
+      {ko:"오늘 편지를 {쓸 거예요}.", en:"I will write a letter today.", hl:"쓸 거예요"},
+      {ko:"커피를 {마실 거예요}.", en:"I will drink coffee.", hl:"마실 거예요"},
+      {ko:"도서관에서 {공부할 거예요}.", en:"I will study at the library.", hl:"공부할 거예요"},
+      {ko:"음악을 {들을 거예요}.", en:"I will listen to music.", hl:"들을 거예요"},
+      {ko:"집에서 {쉴 거예요}.", en:"I will rest at home.", hl:"쉴 거예요"},
+      {ko:"책을 {읽을 거예요}.", en:"I will read a book.", hl:"읽을 거예요"},
+      {ko:"친구한테 {전화할 거예요}.", en:"I will call a friend.", hl:"전화할 거예요"},
+      {ko:"여행을 {갈 거예요}.", en:"I will travel.", hl:"갈 거예요"},
+      {ko:"사진을 {찍을 거예요}.", en:"I will take photos.", hl:"찍을 거예요"},
+    ],
+    mc:[
+      {q:"내일 학교에 ___ .", hint:"(가다 → future)", ans:"갈 거예요", opts:["갈 거예요","갔어요","가요","가고 있어요"], exp:"가다: no final consonant → 갈 거예요"},
+      {q:"저녁에 밥을 ___ .", hint:"(먹다 → future)", ans:"먹을 거예요", opts:["먹을 거예요","먹어요","먹었어요","먹고 있어요"], exp:"먹다: final ㄱ → 먹을 거예요"},
+      {q:"주말에 영화를 ___ .", hint:"(보다 → future)", ans:"볼 거예요", opts:["봐요","봤어요","볼 거예요","보고 있어요"], exp:"보다: no final consonant → 볼 거예요"},
+      {q:"한국어를 ___ .", hint:"(배우다 → future)", ans:"배울 거예요", opts:["배워요","배웠어요","배울 거예요","배우고 있어요"], exp:"배우다: no final consonant → 배울 거예요"},
+      {q:"집에서 ___ .", hint:"(쉬다 → future)", ans:"쉴 거예요", opts:["쉬어요","쉬었어요","쉴 거예요","쉬고 있어요"], exp:"쉬다: no final consonant → 쉴 거예요"},
+      {q:"책을 ___ .", hint:"(읽다 → future)", ans:"읽을 거예요", opts:["읽어요","읽었어요","읽을 거예요","읽고 있어요"], exp:"읽다: final consonants → 읽을 거예요"},
+      {q:"편지를 ___ .", hint:"(쓰다 → future)", ans:"쓸 거예요", opts:["써요","썼어요","쓸 거예요","쓰고 있어요"], exp:"쓰다: ㅡ drops → 쓸 거예요"},
+    ],
+    fill:[
+      {q:"내일 학교에 ___.", ans:"갈 거예요", hint:"가다 → future"},
+      {q:"저녁에 밥을 ___.", ans:"먹을 거예요", hint:"먹다 → future"},
+      {q:"주말에 영화를 ___.", ans:"볼 거예요", hint:"보다 → future"},
+      {q:"한국어를 ___.", ans:"배울 거예요", hint:"배우다 → future"},
+      {q:"집에서 ___.", ans:"쉴 거예요", hint:"쉬다 → future"},
+      {q:"책을 ___.", ans:"읽을 거예요", hint:"읽다 → future"},
+      {q:"오늘 편지를 ___.", ans:"쓸 거예요", hint:"쓰다 → future"},
+    ],
+    arrange:[
+      {ans:"내일 학교에 갈 거예요", tokens:["내일","갈 거예요","학교에"], en:"I will go to school tomorrow."},
+      {ans:"저녁에 밥을 먹을 거예요", tokens:["저녁에","먹을 거예요","밥을"], en:"I will eat dinner tonight."},
+      {ans:"주말에 영화를 볼 거예요", tokens:["주말에","볼 거예요","영화를"], en:"I will watch a movie on the weekend."},
+      {ans:"도서관에서 공부할 거예요", tokens:["공부할 거예요","도서관에서"], en:"I will study at the library."},
+      {ans:"집에서 쉴 거예요", tokens:["쉴 거예요","집에서"], en:"I will rest at home."},
+      {ans:"친구를 만날 거예요", tokens:["만날 거예요","친구를"], en:"I will meet a friend."},
+      {ans:"사진을 찍을 거예요", tokens:["찍을 거예요","사진을"], en:"I will take photos."},
+    ],
+    dialogue:[
+      {lines:[{sp:"A",txt:"내일 어디에 가요?",me:false},{sp:"B",txt:"학교에 ___.",me:true}], ans:"갈 거예요", en:"Where will you go? — I will go to school."},
+      {lines:[{sp:"A",txt:"저녁에 뭐 먹어요?",me:false},{sp:"B",txt:"밥을 ___.",me:true}], ans:"먹을 거예요", en:"What will you eat? — I will eat rice."},
+      {lines:[{sp:"A",txt:"주말에 뭐 해요?",me:false},{sp:"B",txt:"영화를 ___.",me:true}], ans:"볼 거예요", en:"What will you do on the weekend? — I will watch a movie."},
+      {lines:[{sp:"A",txt:"한국어 공부해요?",me:false},{sp:"B",txt:"네, 한국어를 ___.",me:true}], ans:"배울 거예요", en:"Do you study Korean? — Yes, I will learn Korean."},
+      {lines:[{sp:"A",txt:"주말에 쉬어요?",me:false},{sp:"B",txt:"네, 집에서 ___.",me:true}], ans:"쉴 거예요", en:"Will you rest on the weekend? — Yes, I will rest at home."},
+      {lines:[{sp:"A",txt:"오늘 뭐 읽어요?",me:false},{sp:"B",txt:"책을 ___.",me:true}], ans:"읽을 거예요", en:"What will you read? — I will read a book."},
+      {lines:[{sp:"A",txt:"누구를 만날 거예요?",me:false},{sp:"B",txt:"친구를 ___.",me:true}], ans:"만날 거예요", en:"Who will you meet? — I will meet a friend."},
+    ]
+  },
+  {
+    id:5, grammar:"V-고 있다",
+    title:"Progressive Tense ①", ko_title:"진행 시제 ①",
+    topik:"TOPIK 2", cefr:"A2",
+    formula_ko:"동사 어간 + 고 있다 (있어요 / 있습니다)",
+    formula_en:"Verb stem + go issda — describes an action currently in progress; equivalent to English '-ing' form",
+    rules:[
+      {cond:"All verbs (모든 동사) + 고 있어요", en:"Polite informal progressive", ex:"먹다 → 먹고 있어요", exen:"is/am eating (right now)"},
+      {cond:"Formal style (격식체)", en:"Use 있습니다 instead", ex:"먹고 있습니다", exen:"is eating (formal)"},
+      {cond:"Past progressive (과거 진행)", en:"Change 있어요 to 있었어요", ex:"먹고 있었어요", exen:"was eating"},
+    ],
+    examples:[
+      {ko:"지금 밥을 {먹고 있어요}.", en:"I'm eating right now.", hl:"먹고 있어요"},
+      {ko:"친구가 전화를 {하고 있어요}.", en:"My friend is making a call.", hl:"하고 있어요"},
+      {ko:"학생들이 공부를 {하고 있어요}.", en:"Students are studying.", hl:"하고 있어요"},
+      {ko:"아이가 음악을 {듣고 있어요}.", en:"The child is listening to music.", hl:"듣고 있어요"},
+      {ko:"엄마가 요리를 {하고 있어요}.", en:"Mom is cooking.", hl:"하고 있어요"},
+      {ko:"저는 책을 {읽고 있어요}.", en:"I'm reading a book.", hl:"읽고 있어요"},
+      {ko:"비가 {오고 있어요}.", en:"It's raining.", hl:"오고 있어요"},
+      {ko:"동생이 TV를 {보고 있어요}.", en:"My sibling is watching TV.", hl:"보고 있어요"},
+      {ko:"선생님이 설명을 {하고 있어요}.", en:"The teacher is explaining.", hl:"하고 있어요"},
+      {ko:"버스가 {오고 있어요}.", en:"The bus is coming.", hl:"오고 있어요"},
+      {ko:"저는 한국어를 {배우고 있어요}.", en:"I'm learning Korean.", hl:"배우고 있어요"},
+      {ko:"친구가 노래를 {부르고 있어요}.", en:"My friend is singing.", hl:"부르고 있어요"},
+      {ko:"아빠가 신문을 {읽고 있어요}.", en:"Dad is reading a newspaper.", hl:"읽고 있어요"},
+      {ko:"고양이가 {자고 있어요}.", en:"The cat is sleeping.", hl:"자고 있어요"},
+      {ko:"저는 커피를 {마시고 있어요}.", en:"I'm drinking coffee.", hl:"마시고 있어요"},
+    ],
+    mc:[
+      {q:"지금 밥을 ___ .", hint:"(먹다 → progressive)", ans:"먹고 있어요", opts:["먹고 있어요","먹어요","먹었어요","먹을 거예요"], exp:"먹다 stem + 고 있어요 = 먹고 있어요 (action in progress)"},
+      {q:"저는 책을 ___ .", hint:"(읽다 → progressive)", ans:"읽고 있어요", opts:["읽고 있어요","읽어요","읽었어요","읽을 거예요"], exp:"읽다 stem + 고 있어요 = 읽고 있어요"},
+      {q:"비가 ___ .", hint:"(오다 → progressive)", ans:"오고 있어요", opts:["와요","왔어요","올 거예요","오고 있어요"], exp:"오다 stem '오' + 고 있어요 = 오고 있어요"},
+      {q:"동생이 TV를 ___ .", hint:"(보다 → progressive)", ans:"보고 있어요", opts:["봐요","봤어요","볼 거예요","보고 있어요"], exp:"보다 stem + 고 있어요 = 보고 있어요"},
+      {q:"저는 한국어를 ___ .", hint:"(배우다 → progressive)", ans:"배우고 있어요", opts:["배워요","배웠어요","배울 거예요","배우고 있어요"], exp:"배우다 stem + 고 있어요 = 배우고 있어요"},
+      {q:"고양이가 ___ .", hint:"(자다 → progressive)", ans:"자고 있어요", opts:["자요","잤어요","잘 거예요","자고 있어요"], exp:"자다 stem + 고 있어요 = 자고 있어요"},
+      {q:"저는 커피를 ___ .", hint:"(마시다 → progressive)", ans:"마시고 있어요", opts:["마셔요","마셨어요","마실 거예요","마시고 있어요"], exp:"마시다 stem + 고 있어요 = 마시고 있어요"},
+    ],
+    fill:[
+      {q:"지금 밥을 ___.", ans:"먹고 있어요", hint:"먹다 + progressive"},
+      {q:"책을 ___.", ans:"읽고 있어요", hint:"읽다 + progressive"},
+      {q:"비가 ___.", ans:"오고 있어요", hint:"오다 + progressive"},
+      {q:"TV를 ___.", ans:"보고 있어요", hint:"보다 + progressive"},
+      {q:"한국어를 ___.", ans:"배우고 있어요", hint:"배우다 + progressive"},
+      {q:"고양이가 ___.", ans:"자고 있어요", hint:"자다 + progressive"},
+      {q:"커피를 ___.", ans:"마시고 있어요", hint:"마시다 + progressive"},
+    ],
+    arrange:[
+      {ans:"지금 밥을 먹고 있어요", tokens:["지금","먹고 있어요","밥을"], en:"I'm eating right now."},
+      {ans:"저는 책을 읽고 있어요", tokens:["저는","읽고 있어요","책을"], en:"I'm reading a book."},
+      {ans:"비가 오고 있어요", tokens:["오고 있어요","비가"], en:"It's raining."},
+      {ans:"동생이 TV를 보고 있어요", tokens:["동생이","보고 있어요","TV를"], en:"My sibling is watching TV."},
+      {ans:"저는 한국어를 배우고 있어요", tokens:["저는","배우고 있어요","한국어를"], en:"I'm learning Korean."},
+      {ans:"고양이가 자고 있어요", tokens:["자고 있어요","고양이가"], en:"The cat is sleeping."},
+      {ans:"저는 커피를 마시고 있어요", tokens:["저는","마시고 있어요","커피를"], en:"I'm drinking coffee."},
+    ],
+    dialogue:[
+      {lines:[{sp:"A",txt:"지금 뭐 해요?",me:false},{sp:"B",txt:"밥을 ___.",me:true}], ans:"먹고 있어요", en:"What are you doing? — I'm eating."},
+      {lines:[{sp:"A",txt:"지금 뭐 읽어요?",me:false},{sp:"B",txt:"책을 ___.",me:true}], ans:"읽고 있어요", en:"What are you reading? — I'm reading a book."},
+      {lines:[{sp:"A",txt:"지금 밖에 비가 와요?",me:false},{sp:"B",txt:"네, 비가 ___.",me:true}], ans:"오고 있어요", en:"Is it raining outside? — Yes, it's raining."},
+      {lines:[{sp:"A",txt:"동생이 뭐 해요?",me:false},{sp:"B",txt:"TV를 ___.",me:true}], ans:"보고 있어요", en:"What is your sibling doing? — Watching TV."},
+      {lines:[{sp:"A",txt:"한국어 배워요?",me:false},{sp:"B",txt:"네, 지금 ___.",me:true}], ans:"배우고 있어요", en:"Do you learn Korean? — Yes, I'm learning now."},
+      {lines:[{sp:"A",txt:"고양이가 뭐 해요?",me:false},{sp:"B",txt:"고양이가 ___.",me:true}], ans:"자고 있어요", en:"What's the cat doing? — The cat is sleeping."},
+      {lines:[{sp:"A",txt:"지금 뭐 마셔요?",me:false},{sp:"B",txt:"커피를 ___.",me:true}], ans:"마시고 있어요", en:"What are you drinking? — I'm drinking coffee."},
+    ]
+  },
+  {
+    id:6, grammar:"A/V-았/었었어요",
+    title:"Past Perfect Tense", ko_title:"과거 완료 시제",
+    topik:"TOPIK 2", cefr:"A2",
+    formula_ko:"동사/형용사 어간 + 았었어요 / 었었어요",
+    formula_en:"Stem + asseosseoyo — past perfect; emphasizes that something happened and is now clearly in the past, often contrasting with the present",
+    rules:[
+      {cond:"ㅏ or ㅗ vowel (ㅏ,ㅗ 모음)", en:"Add 았었어요", ex:"가다 → 갔었어요", exen:"had gone / used to go"},
+      {cond:"Other vowels (그 외 모음)", en:"Add 었었어요", ex:"먹다 → 먹었었어요", exen:"had eaten"},
+      {cond:"하다 verbs", en:"하다 → 했었어요", ex:"공부하다 → 공부했었어요", exen:"had studied"},
+      {cond:"Contrast with present (현재와 대비)", en:"Implies 'but not anymore'", ex:"어렸을 때 피아노를 쳤었어요.", exen:"I used to play piano (but not now)"},
+    ],
+    examples:[
+      {ko:"어렸을 때 피아노를 {쳤었어요}.", en:"I used to play piano when I was young.", hl:"쳤었어요"},
+      {ko:"예전에 서울에 {살았었어요}.", en:"I used to live in Seoul.", hl:"살았었어요"},
+      {ko:"전에는 커피를 {마셨었어요}.", en:"I used to drink coffee before.", hl:"마셨었어요"},
+      {ko:"학교 때 수영을 {했었어요}.", en:"I used to swim during school days.", hl:"했었어요"},
+      {ko:"예전에 여기에 카페가 {있었었어요}.", en:"There used to be a café here.", hl:"있었었어요"},
+      {ko:"어릴 때 고양이를 {키웠었어요}.", en:"I used to raise a cat when I was young.", hl:"키웠었어요"},
+      {ko:"전에 이 책을 {읽었었어요}.", en:"I had read this book before.", hl:"읽었었어요"},
+      {ko:"작년에 부산에 {갔었어요}.", en:"I had gone to Busan last year.", hl:"갔었어요"},
+      {ko:"어릴 때 이 노래를 {좋아했었어요}.", en:"I used to like this song as a child.", hl:"좋아했었어요"},
+      {ko:"전에는 매일 운동을 {했었어요}.", en:"I used to exercise every day before.", hl:"했었어요"},
+      {ko:"예전에 그 식당에 {갔었어요}.", en:"I used to go to that restaurant.", hl:"갔었어요"},
+      {ko:"어릴 때 그림을 {그렸었어요}.", en:"I used to draw pictures as a child.", hl:"그렸었어요"},
+      {ko:"전에 일본에 {살았었어요}.", en:"I used to live in Japan.", hl:"살았었어요"},
+      {ko:"예전에 그 노래를 {좋아했었어요}.", en:"I used to like that song.", hl:"좋아했었어요"},
+      {ko:"어릴 때 축구를 {했었어요}.", en:"I used to play football as a child.", hl:"했었어요"},
+    ],
+    mc:[
+      {q:"어릴 때 피아노를 ___ .", hint:"(치다 → past perfect)", ans:"쳤었어요", opts:["쳐요","쳤어요","쳤었어요","칠 거예요"], exp:"쳤었어요 = past perfect, 'used to but not anymore'"},
+      {q:"예전에 서울에 ___ .", hint:"(살다 → past perfect)", ans:"살았었어요", opts:["살아요","살았어요","살았었어요","살 거예요"], exp:"살다: ㅏ vowel → 살았었어요 (used to live there)"},
+      {q:"전에는 매일 운동을 ___ .", hint:"(하다 → past perfect)", ans:"했었어요", opts:["해요","했어요","했었어요","할 거예요"], exp:"하다 → 했었어요 (used to, implies not anymore)"},
+      {q:"작년에 부산에 ___ .", hint:"(가다 → past perfect)", ans:"갔었어요", opts:["가요","갔어요","갔었어요","갈 거예요"], exp:"가다: ㅏ + 았었어요 = 갔었어요 (past perfect)"},
+      {q:"전에 이 책을 ___ .", hint:"(읽다 → past perfect)", ans:"읽었었어요", opts:["읽어요","읽었어요","읽었었어요","읽을 거예요"], exp:"읽다 → 읽었었어요 (had read before)"},
+      {q:"어릴 때 고양이를 ___ .", hint:"(키우다 → past perfect)", ans:"키웠었어요", opts:["키워요","키웠어요","키웠었어요","키울 거예요"], exp:"키우다: ㅜ irregular → 키웠었어요"},
+      {q:"어릴 때 축구를 ___ .", hint:"(하다 → past perfect)", ans:"했었어요", opts:["해요","했어요","했었어요","할 거예요"], exp:"하다 → 했었어요 (used to play, but not now)"},
+    ],
+    fill:[
+      {q:"어릴 때 피아노를 ___.", ans:"쳤었어요", hint:"치다 → past perfect"},
+      {q:"예전에 서울에 ___.", ans:"살았었어요", hint:"살다 → past perfect"},
+      {q:"전에는 매일 운동을 ___.", ans:"했었어요", hint:"하다 → past perfect"},
+      {q:"작년에 부산에 ___.", ans:"갔었어요", hint:"가다 → past perfect"},
+      {q:"전에 이 책을 ___.", ans:"읽었었어요", hint:"읽다 → past perfect"},
+      {q:"어릴 때 고양이를 ___.", ans:"키웠었어요", hint:"키우다 → past perfect"},
+      {q:"예전에 그 노래를 ___.", ans:"좋아했었어요", hint:"좋아하다 → past perfect"},
+    ],
+    arrange:[
+      {ans:"어릴 때 피아노를 쳤었어요", tokens:["어릴 때","쳤었어요","피아노를"], en:"I used to play piano when I was young."},
+      {ans:"예전에 서울에 살았었어요", tokens:["예전에","살았었어요","서울에"], en:"I used to live in Seoul."},
+      {ans:"전에 이 책을 읽었었어요", tokens:["전에","읽었었어요","이 책을"], en:"I had read this book before."},
+      {ans:"작년에 부산에 갔었어요", tokens:["작년에","갔었어요","부산에"], en:"I had gone to Busan last year."},
+      {ans:"전에는 매일 운동을 했었어요", tokens:["전에는","했었어요","매일 운동을"], en:"I used to exercise every day."},
+      {ans:"어릴 때 고양이를 키웠었어요", tokens:["어릴 때","키웠었어요","고양이를"], en:"I used to raise a cat."},
+      {ans:"어릴 때 축구를 했었어요", tokens:["어릴 때","했었어요","축구를"], en:"I used to play football."},
+    ],
+    dialogue:[
+      {lines:[{sp:"A",txt:"어릴 때 뭐 했어요?",me:false},{sp:"B",txt:"피아노를 ___.",me:true}], ans:"쳤었어요", en:"What did you do as a child? — I used to play piano."},
+      {lines:[{sp:"A",txt:"예전에 어디에 살았어요?",me:false},{sp:"B",txt:"서울에 ___.",me:true}], ans:"살았었어요", en:"Where did you used to live? — I used to live in Seoul."},
+      {lines:[{sp:"A",txt:"전에 이 책 읽었어요?",me:false},{sp:"B",txt:"네, 전에 ___.",me:true}], ans:"읽었었어요", en:"Did you read this book before? — Yes, I had read it."},
+      {lines:[{sp:"A",txt:"작년에 부산에 갔어요?",me:false},{sp:"B",txt:"네, 작년에 ___.",me:true}], ans:"갔었어요", en:"Did you go to Busan last year? — Yes, I had gone."},
+      {lines:[{sp:"A",txt:"전에 운동했어요?",me:false},{sp:"B",txt:"네, 매일 ___.",me:true}], ans:"했었어요", en:"Did you exercise before? — Yes, I used to every day."},
+      {lines:[{sp:"A",txt:"어릴 때 뭘 키웠어요?",me:false},{sp:"B",txt:"고양이를 ___.",me:true}], ans:"키웠었어요", en:"What did you raise as a child? — I used to raise a cat."},
+      {lines:[{sp:"A",txt:"어릴 때 운동했어요?",me:false},{sp:"B",txt:"네, 축구를 ___.",me:true}], ans:"했었어요", en:"Did you play sports as a child? — Yes, I used to play football."},
+    ]
+  }
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let completedLessons = JSON.parse(localStorage.getItem('kr_done') || '[]');
+let currentLessonId = null;
+let showMoreOpen = false;
+
+// Arrange state per lesson
+let arrangeState = {}; // {qi: {placed:[], usedIdx:[]}}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+function init() {
+  updateProgress();
+  updateCheckmarks();
+}
+
+function updateProgress() {
+  const pct = Math.round(completedLessons.length / 6 * 100);
+  const fill = document.getElementById('prog-fill');
+  const pctEl = document.getElementById('prog-pct');
+  if (fill) fill.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+}
+
+function updateCheckmarks() {
+  LESSONS.forEach(l => {
+    const el = document.getElementById('chk-' + l.id);
+    if (!el) return;
+    if (completedLessons.includes(l.id)) {
+      el.classList.add('done');
+      el.innerHTML = '✓';
+    }
+  });
+}
+
+// ─── DRAWER ──────────────────────────────────────────────────────────────────
+function toggleDrawer() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const isOpen = sidebar.classList.contains('open');
+  if (isOpen) {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  } else {
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+  }
+}
+function closeDrawerOnBg(e) {
+  if (e.target === document.getElementById('drawer-overlay')) toggleDrawer();
+}
+
+// ─── LEVEL TABS ──────────────────────────────────────────────────────────────
+function switchLevel(btn, level) {
+  document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.scroll-area').forEach(a => a.classList.remove('active'));
+  document.getElementById('level-' + level).classList.add('active');
+}
+
+// ─── ACCORDION ───────────────────────────────────────────────────────────────
+function toggleAccordion(id, headerBtn) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById('arrow-' + id);
+  const isOpen = body.classList.contains('open');
+  if (isOpen) {
+    body.classList.remove('open');
+    arrow.classList.remove('open');
+    headerBtn.classList.remove('open');
+  } else {
+    body.classList.add('open');
+    arrow.classList.add('open');
+    headerBtn.classList.add('open');
+  }
+}
+
+// ─── SHOW MORE ───────────────────────────────────────────────────────────────
+function toggleShowMore() {
+  showMoreOpen = !showMoreOpen;
+  [4,5,6].forEach(i => {
+    const el = document.getElementById('u1-item' + i);
+    if (el) el.style.display = showMoreOpen ? 'flex' : 'none';
+  });
+  document.getElementById('show-more-btn').textContent = showMoreOpen ? 'SHOW LESS ▴' : 'SHOW 3 MORE ▾';
+}
+
+// ─── LESSON OPEN/CLOSE ───────────────────────────────────────────────────────
+function openLesson(id) {
+  currentLessonId = id;
+  const L = LESSONS.find(l => l.id === id);
+  arrangeState = {};
+  document.getElementById('detail-nav-title').textContent = L.grammar;
+  const pill = document.getElementById('done-pill-btn');
+  if (completedLessons.includes(id)) {
+    pill.textContent = '✓ Done';
+    pill.className = 'done-pill done';
+  } else {
+    pill.textContent = 'Mark done';
+    pill.className = 'done-pill undone';
+  }
+  document.getElementById('detail-scroll-body').innerHTML = buildDetailHTML(L);
+  document.getElementById('detail-panel').classList.add('open');
+  switchQuizTab(document.querySelector('.quiz-tab-btn'), 'mc');
+}
+
+function closeLesson() {
+  document.getElementById('detail-panel').classList.remove('open');
+  updateProgress();
+  updateCheckmarks();
+}
+
+function toggleDone() {
+  if (!currentLessonId) return;
+  const idx = completedLessons.indexOf(currentLessonId);
+  if (idx === -1) {
+    completedLessons.push(currentLessonId);
+  } else {
+    completedLessons.splice(idx, 1);
+  }
+  localStorage.setItem('kr_done', JSON.stringify(completedLessons));
+  const pill = document.getElementById('done-pill-btn');
+  if (completedLessons.includes(currentLessonId)) {
+    pill.textContent = '✓ Done';
+    pill.className = 'done-pill done';
+  } else {
+    pill.textContent = 'Mark done';
+    pill.className = 'done-pill undone';
+  }
+}
+
+// ─── BUILD DETAIL HTML ───────────────────────────────────────────────────────
+function buildDetailHTML(L) {
+  // Rules table
+  const rulesHTML = L.rules.map(r => `
+    <tr class="rule-row">
+      <td style="padding-right:12px;width:40%">
+        <div class="rule-cond-ko">${r.cond}</div>
+        <div class="rule-cond-en">${r.en}</div>
+      </td>
+      <td>
+        <div class="rule-ex-ko">${r.ex}</div>
+        <div class="rule-ex-en">${r.exen}</div>
+      </td>
+    </tr>`).join('');
+
+  // Examples
+  const exHTML = L.examples.map((ex, i) => {
+    const koDisplay = ex.ko.replace('{'+ex.hl+'}', `<span class="hl">${ex.hl}</span>`);
+    return `<div class="ex-item">
+      <div class="ex-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="ex-body">
+        <div class="ex-ko">${koDisplay}</div>
+        <div class="ex-en">${ex.en}</div>
+      </div>
+      <button class="ex-audio" onclick="speakText('${ex.ko.replace(/\{|\}/g,'').replace(/'/g,"\\'")}', this)" title="Listen">▶</button>
+    </div>`;
+  }).join('');
+
+  // MC quiz
+  const mcHTML = L.mc.map((q, i) => {
+    const optsHTML = shuffleArr([...q.opts]).map(o =>
+      `<button class="q-opt" onclick="checkMC(this, '${o.replace(/'/g,"\\'")}', '${q.ans.replace(/'/g,"\\'")}', \`${q.exp.replace(/`/g,"'")}\`, ${i})">${o}</button>`
+    ).join('');
+    return `<div class="q-item" id="mc-q-${i}">
+      <div class="q-num">Q${i+1} · Multiple Choice</div>
+      <div class="q-text">${q.q.replace('___', '<span class="q-blank">___</span>')}</div>
+      <div style="font-size:11px;color:var(--gray5);margin-bottom:8px">💡 ${q.hint}</div>
+      <div class="q-options">${optsHTML}</div>
+      <div class="q-feedback-inline" id="mc-fb-${i}"></div>
+    </div>`;
+  }).join('');
+
+  // Fill blank quiz
+  const fillHTML = L.fill.map((q, i) =>
+    `<div class="q-item">
+      <div class="q-num">Q${i+1} · Fill in the Blank</div>
+      <div class="q-text">${q.q.replace('___', '<span class="q-blank">___</span>')}</div>
+      <div style="font-size:11px;color:var(--gray5);margin-bottom:8px">💡 ${q.hint}</div>
+      <div class="fill-input-wrap">
+        <input class="fill-input" id="fill-inp-${i}" type="text" placeholder="Type your answer..." onkeydown="if(event.key==='Enter')checkFill(${i},'${q.ans.replace(/'/g,"\\'")}')">
+        <button class="fill-submit" onclick="checkFill(${i},'${q.ans.replace(/'/g,"\\'")}')">Check</button>
+      </div>
+      <div class="q-feedback-inline" id="fill-fb-${i}"></div>
+    </div>`
+  ).join('');
+
+  // Arrange quiz
+  const arrangeHTML = L.arrange.map((q, i) => {
+    const shuffled = shuffleArr([...q.tokens]);
+    const tokensHTML = shuffled.map((t, ti) =>
+      `<button class="token-btn" id="tok-${i}-${ti}" data-word="${t}" onclick="tapToken(${i},${ti},'${t.replace(/'/g,"\\'")}','${q.ans.replace(/'/g,"\\'")}',${L.arrange.length})">${t}</button>`
+    ).join('');
+    return `<div class="q-item">
+      <div class="q-num">Q${i+1} · Arrange</div>
+      <div class="q-text" style="font-size:12px;color:var(--gray5)">${q.en}</div>
+      <div class="arrange-tokens" id="arr-tok-${i}">${tokensHTML}</div>
+      <div class="arrange-answer" id="arr-ans-${i}"></div>
+      <div style="margin-top:6px;display:flex;gap:6px">
+        <button class="check-arrange-btn" onclick="checkArrange(${i},'${q.ans.replace(/'/g,"\\'")}')">Check ✓</button>
+        <button class="reset-arrange-btn" onclick="resetArrange(${i},${L.id})">Reset</button>
+      </div>
+      <div class="q-feedback-inline" id="arr-fb-${i}"></div>
+    </div>`;
+  }).join('');
+
+  // Dialogue quiz
+  const dialogueHTML = L.dialogue.map((q, i) => {
+    const linesHTML = q.lines.map(line => `
+      <div class="dialogue-line">
+        <span class="speaker">${line.sp}</span>
+        <div class="bubble ${line.me ? 'me' : ''}">
+          ${line.me ? `<span class="bubble-blank" id="dia-blank-${i}">___</span>` : line.txt}
+        </div>
+      </div>`).join('');
+    const optsHTML = shuffleArr([...L.mc.slice(0,4).map(m=>m.ans), q.ans]).filter((v,i,a)=>a.indexOf(v)===i).slice(0,4).map(o =>
+      `<button class="q-opt" style="font-size:12px" onclick="checkDia(this,'${o.replace(/'/g,"\\'")}','${q.ans.replace(/'/g,"\\'")}',${i},'${q.ans.replace(/'/g,"\\'")}')">
+        ${o}</button>`).join('');
+    return `<div class="q-item">
+      <div class="q-num">Q${i+1} · Complete the Dialogue</div>
+      <div style="font-size:11px;color:var(--gray5);margin-bottom:8px">${q.en}</div>
+      <div class="dialogue-box">${linesHTML}</div>
+      <div class="q-options">${optsHTML}</div>
+      <div class="q-feedback-inline" id="dia-fb-${i}"></div>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="grammar-hero">
+      <div class="grammar-hero-label">Unit 1 · Lesson ${String(L.id).padStart(2,'0')}</div>
+      <div class="grammar-hero-title">${L.grammar}</div>
+      <div class="grammar-hero-sub">${L.title}</div>
+      <div class="grammar-hero-tags">
+        <span class="hero-tag hero-tag-blue">${L.topik}</span>
+        <span class="hero-tag hero-tag-green">CEFR ${L.cefr}</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📐 Grammar Formula · 문법 공식</div>
+      <div class="formula-text">${L.formula_ko}</div>
+      <div class="formula-en">${L.formula_en}</div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📋 Conjugation Rules · 활용 규칙</div>
+      <table class="rule-table">
+        <tr><th style="width:40%">Condition · 조건</th><th>Example · 예시</th></tr>
+        ${rulesHTML}
+      </table>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">💬 Example Sentences · 예문 (${L.examples.length})</div>
+      <div class="example-list">${exHTML}</div>
+    </div>
+
+    <div class="info-card quiz-section">
+      <div class="info-card-title">✏️ Quiz · 퀴즈</div>
+      <div class="quiz-tabs">
+        <button class="quiz-tab-btn active" onclick="switchQuizTab(this,'mc')">Multiple Choice</button>
+        <button class="quiz-tab-btn" onclick="switchQuizTab(this,'fill')">Fill Blank</button>
+        <button class="quiz-tab-btn" onclick="switchQuizTab(this,'arrange')">Arrange</button>
+        <button class="quiz-tab-btn" onclick="switchQuizTab(this,'dialogue')">Dialogue</button>
+      </div>
+      <div class="quiz-panel active" id="qp-mc">${mcHTML}</div>
+      <div class="quiz-panel" id="qp-fill">${fillHTML}</div>
+      <div class="quiz-panel" id="qp-arrange">${arrangeHTML}</div>
+      <div class="quiz-panel" id="qp-dialogue">${dialogueHTML}</div>
+    </div>
+    <div style="height:16px"></div>
+  `;
+}
+
+// ─── TTS ─────────────────────────────────────────────────────────────────────
+function speakText(text, btn) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'ko-KR';
+  utt.rate = 0.85;
+  window.speechSynthesis.speak(utt);
+  if (btn) {
+    btn.classList.add('playing');
+    utt.onend = () => btn.classList.remove('playing');
+    setTimeout(() => btn.classList.remove('playing'), 3000);
+  }
+}
+
+// ─── QUIZ TABS ───────────────────────────────────────────────────────────────
+function switchQuizTab(btn, panel) {
+  document.querySelectorAll('.quiz-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.quiz-panel').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const el = document.getElementById('qp-' + panel);
+  if (el) el.classList.add('active');
+}
+
+// ─── MC CHECK ────────────────────────────────────────────────────────────────
+function checkMC(btn, chosen, ans, exp, qi) {
+  const parent = btn.closest('.q-item');
+  parent.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+  const isRight = chosen === ans;
+  btn.classList.add(isRight ? 'correct' : 'wrong');
+  if (!isRight) parent.querySelectorAll('.q-opt').forEach(b => { if (b.textContent.trim() === ans) b.classList.add('correct'); });
+  const fb = document.getElementById('mc-fb-' + qi);
+  fb.className = 'q-feedback-inline show ' + (isRight ? 'ok' : 'err');
+  fb.innerHTML = isRight ? `✅ Correct! &nbsp; <em>${exp}</em>` : `❌ Correct: <strong>${ans}</strong> — ${exp}`;
+  if (isRight) speakText(ans, null);
+}
+
+// ─── FILL CHECK ──────────────────────────────────────────────────────────────
+function checkFill(i, ans) {
+  const inp = document.getElementById('fill-inp-' + i);
+  const val = inp.value.trim();
+  const fb = document.getElementById('fill-fb-' + i);
+  if (!val) return;
+  const isRight = val === ans;
+  inp.className = 'fill-input ' + (isRight ? 'correct' : 'wrong');
+  inp.disabled = true;
+  inp.nextElementSibling.disabled = true;
+  fb.className = 'q-feedback-inline show ' + (isRight ? 'ok' : 'err');
+  fb.innerHTML = isRight ? `✅ Correct!` : `❌ Answer: <strong>${ans}</strong>`;
+  if (isRight) speakText(ans, null);
+}
+
+// ─── ARRANGE ─────────────────────────────────────────────────────────────────
+function tapToken(qi, ti, word, ans, total) {
+  if (!arrangeState[qi]) arrangeState[qi] = { placed: [], usedIdx: [] };
+  const s = arrangeState[qi];
+  if (s.usedIdx.includes(ti)) return;
+  s.placed.push({ word, ti });
+  s.usedIdx.push(ti);
+  document.getElementById('tok-' + qi + '-' + ti).classList.add('used');
+  renderArrangeAnswer(qi);
+}
+
+function renderArrangeAnswer(qi) {
+  const s = arrangeState[qi] || { placed: [] };
+  const box = document.getElementById('arr-ans-' + qi);
+  if (!box) return;
+  box.className = 'arrange-answer';
+  box.innerHTML = s.placed.map(p => `<span class="arrange-token-placed">${p.word}</span>`).join('');
+}
+
+function checkArrange(qi, ans) {
+  const s = arrangeState[qi] || { placed: [] };
+  const built = s.placed.map(p => p.word).join(' ');
+  const box = document.getElementById('arr-ans-' + qi);
+  const fb = document.getElementById('arr-fb-' + qi);
+  const isRight = built.trim() === ans.trim();
+  box.className = 'arrange-answer ' + (isRight ? 'correct' : 'wrong');
+  fb.className = 'q-feedback-inline show ' + (isRight ? 'ok' : 'err');
+  fb.innerHTML = isRight ? `✅ Correct!` : `❌ Answer: <strong>${ans}</strong>`;
+  if (isRight) speakText(ans, null);
+}
+
+function resetArrange(qi, lessonId) {
+  arrangeState[qi] = { placed: [], usedIdx: [] };
+  const L = LESSONS.find(l => l.id === lessonId);
+  const q = L.arrange[qi];
+  const shuffled = shuffleArr([...q.tokens]);
+  const tokBox = document.getElementById('arr-tok-' + qi);
+  if (tokBox) {
+    tokBox.innerHTML = shuffled.map((t, ti) =>
+      `<button class="token-btn" id="tok-${qi}-${ti}" data-word="${t}" onclick="tapToken(${qi},${ti},'${t.replace(/'/g,"\\'")}','${q.ans.replace(/'/g,"\\'")}',${L.arrange.length})">${t}</button>`
+    ).join('');
+  }
+  const ansBox = document.getElementById('arr-ans-' + qi);
+  if (ansBox) { ansBox.className = 'arrange-answer'; ansBox.innerHTML = ''; }
+  const fb = document.getElementById('arr-fb-' + qi);
+  if (fb) { fb.className = 'q-feedback-inline'; fb.innerHTML = ''; }
+}
+
+// ─── DIALOGUE CHECK ──────────────────────────────────────────────────────────
+function checkDia(btn, chosen, ans, qi, correctAns) {
+  const parent = btn.closest('.q-item');
+  parent.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+  const isRight = chosen === ans;
+  btn.classList.add(isRight ? 'correct' : 'wrong');
+  if (!isRight) parent.querySelectorAll('.q-opt').forEach(b => { if (b.textContent.trim() === ans) b.classList.add('correct'); });
+  const blank = document.getElementById('dia-blank-' + qi);
+  if (blank) { blank.textContent = chosen; blank.style.color = isRight ? 'var(--green)' : 'var(--red)'; blank.style.borderBottomColor = isRight ? 'var(--green)' : 'var(--red)'; }
+  const fb = document.getElementById('dia-fb-' + qi);
+  fb.className = 'q-feedback-inline show ' + (isRight ? 'ok' : 'err');
+  fb.innerHTML = isRight ? `✅ Correct!` : `❌ Correct: <strong>${ans}</strong>`;
+  if (isRight) speakText(ans, null);
+}
+
+function shuffleArr(arr) { return arr.map(v=>[Math.random(),v]).sort().map(v=>v[1]); }
+
+init();
+</script>
+</body>
+</html>
