@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Women-Only Homestay in Seoul | All About Korea</title>
+<meta name="description" content="A Seoul government-endorsed, women-only homestay 5 minutes from Gangbyeon Station. Homemade breakfast, a local host, and easy access to Seongsu-dong, Gangnam & more.">
+<style>
+  :root{
+    --blue:#2563eb; --blue-dark:#1e3a8a; --blue-soft:#eef2ff;
+    --green:#16a34a; --green-soft:#ecfdf5;
+    --yellow:#f59e0b; --yellow-soft:#fffbeb;
+    --red:#ef4444; --red-soft:#fef2f2;
+    --ink:#0f172a; --ink-soft:#475569;
+    --gray-50:#f8fafc; --gray-100:#f1f5f9; --gray-200:#e2e8f0; --gray-300:#cbd5e1;
+    --white:#fff;
+    --radius:16px;
+    --shadow:0 8px 24px -12px rgba(15,23,42,.18);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--ink);background:var(--gray-50);-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  img{display:block;max-width:100%;}
+  button{font-family:inherit;}
+
+  /* ===== Top bar ===== */
+  .topbar{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--gray-200);}
+  .topbar-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px;}
+  .hamburger-btn{width:40px;height:40px;border:none;background:var(--gray-100);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+  .hamburger-btn svg{width:20px;height:20px;stroke:var(--ink);}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;letter-spacing:-.2px;white-space:nowrap;}
+  .brand .accent{color:var(--blue);}
+  .top-nav{display:none;margin-left:auto;gap:22px;align-items:center;}
+  .top-nav a{font-size:14.5px;font-weight:600;color:var(--ink-soft);padding:6px 2px;border-bottom:2px solid transparent;}
+  .top-nav a.active{color:var(--blue);border-color:var(--blue);}
+  @media(min-width:900px){.top-nav{display:flex;}}
+
+  /* ===== Drawer menu ===== */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:50;}
+  .overlay.show{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;left:0;height:100%;width:280px;max-width:82vw;background:#fff;z-index:60;
+    transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:12px 0 32px -12px rgba(0,0,0,.25);
+    display:flex;flex-direction:column;}
+  .drawer.show{transform:translateX(0);}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px;border-bottom:1px solid var(--gray-200);}
+  .drawer-close{width:34px;height:34px;border:none;background:var(--gray-100);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .drawer-close svg{width:16px;height:16px;stroke:var(--ink);}
+  .drawer-nav{padding:10px;display:flex;flex-direction:column;gap:2px;}
+  .drawer-nav a{display:flex;align-items:center;gap:14px;padding:13px 12px;border-radius:12px;font-weight:600;font-size:15px;color:var(--ink);}
+  .drawer-nav a .ico{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--blue-dark);flex-shrink:0;}
+  .drawer-nav a .ico svg{width:19px;height:19px;stroke:currentColor;fill:none;}
+  .drawer-nav a.active{background:var(--blue-soft);color:var(--blue);}
+  .drawer-nav a.active .ico{color:var(--blue);}
+  .drawer-nav hr{border:none;border-top:1px solid var(--gray-200);margin:8px 6px;}
+
+  /* ===== Hero slider ===== */
+  .slider-wrap{position:relative;background:#000;}
+  .slider{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;touch-action:pan-y;}
+  @media(min-width:700px){.slider{aspect-ratio:16/8;}}
+  .slide{position:absolute;inset:0;opacity:0;transition:opacity .45s ease;}
+  .slide.active{opacity:1;}
+  .slide img{width:100%;height:100%;object-fit:cover;}
+  .slide-caption{position:absolute;left:16px;bottom:16px;color:#fff;font-size:12.5px;font-weight:600;background:rgba(15,23,42,.45);backdrop-filter:blur(3px);padding:6px 12px;border-radius:999px;}
+  .slider-arrow{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:none;
+    background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:5;}
+  .slider-arrow svg{width:18px;height:18px;stroke:var(--ink);}
+  .slider-arrow.prev{left:10px;} .slider-arrow.next{right:10px;}
+  .slider-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;}
+  .slider-dots button{width:6px;height:6px;border-radius:50%;border:none;background:rgba(255,255,255,.55);padding:0;cursor:pointer;transition:.2s;}
+  .slider-dots button.active{background:#fff;width:18px;border-radius:4px;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 16px;}
+
+  /* ===== Language + intro card ===== */
+  .lang-row{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin:18px 0 12px;}
+  .lang-row label{font-size:12.5px;font-weight:700;color:var(--ink-soft);}
+  select#langSelect{appearance:none;border:1.5px solid var(--gray-300);background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="%23475569" stroke-width="2"><path d="M2 4l5 5 5-5"/></svg>') no-repeat right 10px center;
+    padding:9px 30px 9px 12px;border-radius:10px;font-size:13.5px;font-weight:600;color:var(--ink);cursor:pointer;}
+
+  .intro-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:22px 18px;box-shadow:var(--shadow);margin-bottom:22px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--blue);background:var(--blue-soft);padding:5px 11px;border-radius:999px;}
+  .intro-card h1{font-size:23px;line-height:1.28;margin:12px 0 4px;letter-spacing:-.3px;}
+  .intro-card .subhead{font-size:14.5px;font-weight:700;color:var(--green);margin:0 0 12px;}
+  .intro-card p.lede{font-size:14.5px;line-height:1.7;color:var(--ink-soft);margin:0 0 18px;}
+
+  .feature-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+  @media(min-width:560px){.feature-grid{grid-template-columns:1fr 1fr;}}
+  @media(min-width:900px){.feature-grid{grid-template-columns:1fr 1fr 1fr;}}
+  .feature{display:flex;gap:11px;padding:13px;border:1px solid var(--gray-200);border-radius:12px;background:var(--gray-50);}
+  .feature .f-ico{width:34px;height:34px;border-radius:10px;background:var(--white);border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--blue);}
+  .feature .f-ico svg{width:17px;height:17px;stroke:currentColor;fill:none;}
+  .feature h3{font-size:13.5px;margin:0 0 3px;letter-spacing:-.1px;}
+  .feature p{font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5;}
+
+  /* ===== Section generic ===== */
+  section.block{margin-bottom:26px;}
+  .block h2{font-size:17px;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .block h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);}
+  .card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
+
+  .amenity-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .amenity-list li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink);}
+  .amenity-list li .chk{width:20px;height:20px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .amenity-list li .chk svg{width:11px;height:11px;stroke:currentColor;stroke-width:3;fill:none;}
+
+  .quote{margin-top:14px;padding:14px 16px;background:var(--yellow-soft);border-left:3px solid var(--yellow);border-radius:10px;font-size:13.5px;color:#7c5b04;line-height:1.6;}
+
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .pill{font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:999px;background:var(--gray-100);color:var(--ink-soft);border:1px solid var(--gray-200);}
+  .pill.blue{background:var(--blue-soft);color:var(--blue);border-color:transparent;}
+  .pill.green{background:var(--green-soft);color:var(--green);border-color:transparent;}
+
+  .two-col{display:grid;grid-template-columns:1fr;gap:14px;}
+  @media(min-width:760px){.two-col{grid-template-columns:1fr 1fr;}}
+
+  /* ===== Form ===== */
+  .form-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+  @media(min-width:640px){.form-grid{grid-template-columns:1fr 1fr;}}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:12.5px;font-weight:700;color:var(--ink-soft);}
+  .field input,.field select,.field textarea{border:1.5px solid var(--gray-300);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;color:var(--ink);background:#fff;}
+  .field textarea{resize:vertical;min-height:70px;}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:var(--blue);}
+
+  .preview{margin-top:16px;padding:14px 16px;background:var(--blue-soft);border-radius:12px;font-size:13px;line-height:1.75;color:var(--ink);white-space:pre-wrap;}
+  .preview b{color:var(--blue);}
+
+  .submit-btn{margin-top:16px;width:100%;padding:14px;border:none;border-radius:12px;background:var(--blue);color:#fff;font-weight:800;font-size:15px;cursor:pointer;transition:.15s;}
+  .submit-btn:hover{background:var(--blue-dark);}
+  .form-note{font-size:11.5px;color:var(--ink-soft);margin-top:8px;text-align:center;}
+
+  footer{padding:26px 16px 40px;text-align:center;font-size:12px;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<!-- ===== Top bar ===== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="hamburger-btn" id="openDrawer" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <div class="brand">All About <span class="accent">Korea</span></div>
+  </div>
+</header>
+
+<!-- ===== Drawer ===== -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="brand">All About <span class="accent">Korea</span></div>
+    <button class="drawer-close" id="closeDrawer" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <nav class="drawer-nav">
+    <a href="https://www.businesskorean.com">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></span>Home
+    </a>
+    <a href="https://www.businesskorean.com/Study Korean/Study Korean.html">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5"/><path d="M4 5.5v15"/></svg></span>Study Korean
+    </a>
+    <a href="https://www.businesskorean.com/Homestay/Homestay.html" class="active">
+      <span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/></svg></span>Homestay
+    </a>
+    <a href="https://www.businesskorean.com/Guided Tour/Guided Tour.html">
+      <span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z"/></svg></span>Guided Tour
+    </a>
+    <a href="https://www.businesskorean.com/Korea Travel/Korea Travel.html">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C9.6 21 3 14.4 3 6a2 2 0 0 1 2-2Z"/></svg></span>Korea Travel
+    </a>
+  </nav>
+</aside>
+
+<!-- ===== Hero slider ===== -->
+<div class="slider-wrap">
+  <div class="slider" id="slider">
+    <!-- slides injected by JS -->
+  </div>
+  <button class="slider-arrow prev" id="prevBtn" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <button class="slider-arrow next" id="nextBtn" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  <div class="slider-dots" id="dots"></div>
+</div>
+
+<main class="wrap">
+
+  <!-- ===== Language + intro ===== -->
+  <div class="lang-row">
+    <label for="langSelect">🌐 Language</label>
+    <select id="langSelect">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="zh">中文</option>
+      <option value="ja">日本語</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="pl">Polski</option>
+    </select>
+  </div>
+
+  <section class="intro-card">
+    <span class="eyebrow">✦ Women-Only Homestay</span>
+    <h1 id="t-headline"></h1>
+    <p class="subhead" id="t-subhead"></p>
+    <p class="lede" id="t-paragraph"></p>
+    <div class="feature-grid" id="t-features"></div>
+  </section>
+
+  <!-- ===== Room & Amenities ===== -->
+  <section class="block">
+    <h2><span class="dot"></span><span id="t-roomHead">Room &amp; Amenities</span></h2>
+    <div class="two-col">
+      <div class="card">
+        <ul class="amenity-list" id="t-amenities">
+          <li><span class="chk"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Private room, all to yourself</li>
+          <li><span class="chk"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Shared living room, bathroom &amp; kitchen</li>
+          <li><span class="chk"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Free laundry &amp; drying</li>
+          <li><span class="chk"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Homemade Korean breakfast, every day</li>
+        </ul>
+        <div class="quote" id="t-quote">We love getting to know our guests — feel free to tell us if you'd like to join us for a market walk, dinner, or anything else :-)</div>
+      </div>
+      <div class="card">
+        <h3 style="margin:0 0 8px;font-size:14.5px;" id="t-nearbyHead">Nearby &amp; Within a 5-Minute Walk</h3>
+        <div class="pill-row">
+          <span class="pill blue">🏊 Pool</span><span class="pill blue">🏋️ Gym</span><span class="pill blue">🎬 Cinema</span><span class="pill blue">🎳 Bowling</span>
+          <span class="pill green">🛒 Grocery</span><span class="pill green">🍽️ Restaurants</span><span class="pill green">☕ Cafés</span><span class="pill green">🛍️ Mall</span>
+        </div>
+        <h3 style="margin:16px 0 8px;font-size:14.5px;" id="t-easyHead">Easy Access To</h3>
+        <div class="pill-row">
+          <span class="pill">Seongsu-dong</span><span class="pill">Seoul Forest</span><span class="pill">Lotte Tower</span><span class="pill">Lotte World</span>
+          <span class="pill">COEX</span><span class="pill">Gangnam</span><span class="pill">Myeongdong</span><span class="pill">Gyeongbokgung</span>
+          <span class="pill">Jongno</span><span class="pill">Itaewon</span><span class="pill">Hongdae</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Booking inquiry ===== -->
+  <section class="block">
+    <h2><span class="dot"></span><span id="t-inquiryHead">Send a Stay Inquiry</span></h2>
+    <div class="card">
+      <form id="inquiryForm" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="9dd4cfff-07aa-46a5-a6e0-6f93c919958d">
+        <input type="hidden" name="subject" value="New Homestay Inquiry — All About Korea">
+        <input type="hidden" name="message" id="hiddenMessage">
+        <div class="form-grid">
+          <div class="field full">
+            <label for="email" id="t-lab-email">Your email (we'll reply here) *</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="country" id="t-lab-country">Your country *</label>
+            <input type="text" id="country" required placeholder="e.g. Canada">
+          </div>
+          <div class="field">
+            <label for="name" id="t-lab-name">Your name *</label>
+            <input type="text" id="name" required placeholder="e.g. Sarah">
+          </div>
+          <div class="field">
+            <label for="checkin" id="t-lab-checkin">Check-in date *</label>
+            <input type="date" id="checkin" required>
+          </div>
+          <div class="field">
+            <label for="checkout" id="t-lab-checkout">Check-out date *</label>
+            <input type="date" id="checkout" required>
+          </div>
+          <div class="field">
+            <label for="purpose" id="t-lab-purpose">Purpose of visit *</label>
+            <input type="text" id="purpose" required placeholder="e.g. Korean study, travel">
+          </div>
+          <div class="field">
+            <label for="guests" id="t-lab-guests">Number of guests *</label>
+            <select id="guests" required><option>1</option><option>2</option></select>
+          </div>
+          <div class="field full">
+            <label for="extra" id="t-lab-extra">Anything else we should know? (optional)</label>
+            <textarea id="extra" placeholder="Allergies, arrival time, questions for your host..."></textarea>
+          </div>
+        </div>
+
+        <div class="preview" id="preview"></div>
+
+        <button type="submit" class="submit-btn" id="t-submitBtn">Send Inquiry ✉</button>
+        <p class="form-note" id="t-formNote">Your message is written for you in Korean and English so your host can reply quickly.</p>
+        <p class="form-note" id="t-emailFallback" style="margin-top:4px;">If the form doesn't send, please copy your message above and email it to <b>lemoned2@naver.com</b>.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer id="t-footer">© All About Korea · Homestay Program</footer>
+
+<script>
+/* ---------- Drawer menu ---------- */
+const drawer=document.getElementById('drawer'),overlay=document.getElementById('overlay');
+document.getElementById('openDrawer').onclick=()=>{drawer.classList.add('show');overlay.classList.add('show');};
+document.getElementById('closeDrawer').onclick=closeD;
+overlay.onclick=closeD;
+function closeD(){drawer.classList.remove('show');overlay.classList.remove('show');}
+
+/* ---------- Image slider ---------- */
+const photos=[1,2,3,4,5,6,7,9,10,11,12,13,14];
+const sliderEl=document.getElementById('slider'),dotsEl=document.getElementById('dots');
+let idx=0;
+photos.forEach((n,i)=>{
+  const div=document.createElement('div');
+  div.className='slide'+(i===0?' active':'');
+  div.innerHTML='<img src="images/'+n+'.jpg" alt="Homestay photo '+n+'" loading="'+(i===0?'eager':'lazy')+'">';
+  sliderEl.appendChild(div);
+  const dot=document.createElement('button');
+  if(i===0)dot.className='active';
+  dot.onclick=()=>go(i);
+  dotsEl.appendChild(dot);
+});
+const slides=[...sliderEl.children], dots=[...dotsEl.children];
+function go(n){
+  slides[idx].classList.remove('active'); dots[idx].classList.remove('active');
+  idx=(n+slides.length)%slides.length;
+  slides[idx].classList.add('active'); dots[idx].classList.add('active');
+}
+document.getElementById('prevBtn').onclick=()=>go(idx-1);
+document.getElementById('nextBtn').onclick=()=>go(idx+1);
+let auto=setInterval(()=>go(idx+1),5500);
+const resetAuto=()=>{clearInterval(auto);auto=setInterval(()=>go(idx+1),5500);};
+[document.getElementById('prevBtn'),document.getElementById('nextBtn')].forEach(b=>b.addEventListener('click',resetAuto));
+
+/* swipe */
+let sx=0;
+sliderEl.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+sliderEl.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-sx;
+  if(dx>45){go(idx-1);resetAuto();} else if(dx<-45){go(idx+1);resetAuto();}
+},{passive:true});
+
+/* ---------- Feature icon set ---------- */
+const icons={
+  shield:'<path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3Z"/>',
+  train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 12h14M8 20l2-2M16 20l-2-2"/><circle cx="9" cy="16" r="0.6"/><circle cx="15" cy="16" r="0.6"/>',
+  badge:'<circle cx="12" cy="9" r="6"/><path d="M9 14.5 7 21l5-2.5L17 21l-2-6.5"/>',
+  coffee:'<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9Z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1-1 1-1 2M12 3c0 1-1 1-1 2"/>',
+  basket:'<path d="M4 9h16l-1.5 10a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7L4 9Z"/><path d="M8 9 10 4M16 9 14 4M9 13v4M15 13v4"/>',
+  chat:'<path d="M4 5h16v11H8l-4 4V5Z"/>',
+  compass:'<circle cx="12" cy="12" r="9"/><path d="m14.5 9.5-1.7 5.2-5.3 1.8 1.7-5.2 5.3-1.8Z"/>',
+  store:'<path d="M4 9 5 4h14l1 5"/><path d="M4 9h16v11H4V9Z"/><path d="M9 20v-6h6v6"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z"/>'
+};
+function svg(name){return '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+icons[name]+'</svg>';}
+
+/* ---------- Translations ---------- */
+const T={
+en:{headline:"A Home Away From Home in Seoul",subhead:"Women-Only Homestay · 5 Minutes from Gangbyeon Station",paragraph:"Learn Korean, explore Seoul, and feel at home. Our women-only homestay offers homemade Korean breakfast, authentic local experiences, and easy access to Seongsu, Gangnam, and Myeongdong.",
+features:[["shield","Women-Only Stay","A safe, welcoming space designed just for female travelers."],["train","5 Minutes to the Subway","Gangbyeon Station (Line 2) is a short walk from your door."],["badge","Seoul-Certified Guesthouse","Officially endorsed by the Seoul city government."],["coffee","Homemade Breakfast","A Korean breakfast prepared fresh every morning."],["basket","Market Tour with Host","Explore a traditional local market together."],["chat","Practice Korean Every Day","Learn through real conversations with your local host."],["compass","Local Host Tips","Get authentic local recommendations for food, cafés, and hidden gems."],["store","Everything Nearby","Shops, cafes, and restaurants all within a 5-minute walk."],["star","Close to Top Sights","Seongsu-dong, Seoul Forest, Gangnam, and more, minutes away."]]},
+roomAndForm:{
+en:{roomHead:"Room & Amenities",amenities:["Private room, all to yourself","Shared living room, bathroom & kitchen","Free laundry & drying","Homemade Korean breakfast, every day"],quote:"We love getting to know our guests — feel free to tell us if you'd like to join us for a market walk, dinner, or anything else :-)",nearbyHead:"Nearby & Within a 5-Minute Walk",easyHead:"Easy Access To",inquiryHead:"Send a Stay Inquiry",labels:{email:"Your email (we'll reply here) *",country:"Your country *",name:"Your name *",checkin:"Check-in date *",checkout:"Check-out date *",purpose:"Purpose of visit *",guests:"Number of guests *",extra:"Anything else we should know? (optional)"},submit:"Send Inquiry ✉",formNote:"Your message is written for you in Korean and English so your host can reply quickly.",emailFallback:"If the form doesn't send, please copy your message above and email it to <b>lemoned2@naver.com</b>.",footer:"© All About Korea · Homestay Program"},
+es:{roomHead:"Habitación y Comodidades",amenities:["Habitación privada, solo para ti","Sala, baño y cocina compartidos","Lavandería y secado gratis","Desayuno coreano casero, cada día"],quote:"Nos encanta conocer a nuestras huéspedes — dinos si quieres unirte a un paseo por el mercado, cenar o cualquier otra cosa :-)",nearbyHead:"Cerca, a 5 Minutos Caminando",easyHead:"Fácil Acceso a",inquiryHead:"Enviar una Solicitud de Estancia",labels:{email:"Tu correo (responderemos aquí) *",country:"Tu país *",name:"Tu nombre *",checkin:"Fecha de entrada *",checkout:"Fecha de salida *",purpose:"Motivo de la visita *",guests:"Número de huéspedes *",extra:"¿Algo más que debamos saber? (opcional)"},submit:"Enviar Solicitud ✉",formNote:"Tu mensaje se escribe en coreano e inglés para que tu anfitriona responda rápido.",emailFallback:"Si el formulario no se envía, copia tu mensaje de arriba y envíalo a <b>lemoned2@naver.com</b>.",footer:"© All About Korea · Programa de Homestay"},
+zh:{roomHead:"房间与设施",amenities:["独立房间，完全属于你","共用客厅、浴室和厨房","免费洗衣及烘干","每日现做的韩式早餐"],quote:"我们很乐意多了解客人——如果想一起逛市场、吃晚饭或做点别的，随时告诉我们 :-)",nearbyHead:"步行5分钟范围内",easyHead:"轻松抵达",inquiryHead:"发送住宿咨询",labels:{email:"您的邮箱（我们将回复到这里）*",country:"您的国家 *",name:"您的姓名 *",checkin:"入住日期 *",checkout:"退房日期 *",purpose:"访问目的 *",guests:"入住人数 *",extra:"还有什么需要告诉我们的吗？（可选）"},submit:"发送咨询 ✉",formNote:"您的留言会自动生成韩文和英文版本，方便房东快速回复。",emailFallback:"如果表单无法发送，请复制上方留言并发送邮件至 <b>lemoned2@naver.com</b>。",footer:"© All About Korea · 民宿项目"},
+ja:{roomHead:"お部屋・設備",amenities:["専用の個室","リビング・バス・キッチンは共用","洗濯・乾燥無料","毎日手作りの韓国式朝食"],quote:"ゲストの皆さんと仲良くなるのが大好きです — 市場散策や夕食など、ご一緒したい時はお気軽にどうぞ :-)",nearbyHead:"徒歩5分圏内",easyHead:"アクセス良好",inquiryHead:"宿泊のお問い合わせ",labels:{email:"メールアドレス（こちらに返信します）*",country:"出身国 *",name:"お名前 *",checkin:"チェックイン日 *",checkout:"チェックアウト日 *",purpose:"訪問目的 *",guests:"人数 *",extra:"その他伝えたいこと（任意）"},submit:"問い合わせを送る ✉",formNote:"メッセージは韓国語と英語で自動作成されるので、ホストがすぐに返信できます。",emailFallback:"フォームが送信できない場合は、上のメッセージをコピーして <b>lemoned2@naver.com</b> までメールしてください。",footer:"© All About Korea · ホームステイプログラム"},
+fr:{roomHead:"Chambre et Équipements",amenities:["Chambre privée, rien qu'à vous","Salon, salle de bain et cuisine partagés","Lessive et séchage gratuits","Petit-déjeuner coréen fait maison, chaque jour"],quote:"Nous adorons apprendre à connaître nos hôtes — dites-nous si vous souhaitez nous accompagner au marché, dîner, ou toute autre activité :-)",nearbyHead:"À 5 Minutes à Pied",easyHead:"Accès Facile à",inquiryHead:"Envoyer une Demande de Séjour",labels:{email:"Votre e-mail (nous répondrons ici) *",country:"Votre pays *",name:"Votre nom *",checkin:"Date d'arrivée *",checkout:"Date de départ *",purpose:"Motif de la visite *",guests:"Nombre de personnes *",extra:"Autre chose à savoir ? (facultatif)"},submit:"Envoyer la Demande ✉",formNote:"Votre message est rédigé en coréen et en anglais pour que votre hôte réponde rapidement.",emailFallback:"Si le formulaire ne s'envoie pas, copiez votre message ci-dessus et envoyez-le à <b>lemoned2@naver.com</b>.",footer:"© All About Korea · Programme Homestay"},
+de:{roomHead:"Zimmer & Ausstattung",amenities:["Privates Zimmer, nur für dich","Gemeinsames Wohnzimmer, Bad & Küche","Kostenlose Wäsche & Trockner","Jeden Tag hausgemachtes koreanisches Frühstück"],quote:"Wir lernen unsere Gäste gerne kennen — sag uns einfach, wenn du beim Marktbummel, Abendessen oder etwas anderem dabei sein möchtest :-)",nearbyHead:"In 5 Gehminuten Erreichbar",easyHead:"Guter Zugang zu",inquiryHead:"Anfrage für einen Aufenthalt senden",labels:{email:"Deine E-Mail (wir antworten hier) *",country:"Dein Land *",name:"Dein Name *",checkin:"Anreisedatum *",checkout:"Abreisedatum *",purpose:"Zweck des Besuchs *",guests:"Anzahl der Gäste *",extra:"Sonst noch etwas? (optional)"},submit:"Anfrage Senden ✉",formNote:"Deine Nachricht wird auf Koreanisch und Englisch verfasst, damit deine Gastgeberin schnell antworten kann.",emailFallback:"Falls das Formular nicht sendet, kopiere deine Nachricht oben und schicke sie an <b>lemoned2@naver.com</b>.",footer:"© All About Korea · Homestay-Programm"},
+pl:{roomHead:"Pokój i Udogodnienia",amenities:["Prywatny pokój tylko dla Ciebie","Wspólny salon, łazienka i kuchnia","Bezpłatne pranie i suszenie","Domowe koreańskie śniadanie każdego dnia"],quote:"Uwielbiamy poznawać naszych gości — daj nam znać, jeśli chcesz dołączyć do spaceru po targu, kolacji lub czegoś innego :-)",nearbyHead:"5 Minut Pieszo",easyHead:"Łatwy Dojazd do",inquiryHead:"Wyślij Zapytanie o Pobyt",labels:{email:"Twój e-mail (odpowiemy tutaj) *",country:"Twój kraj *",name:"Twoje imię *",checkin:"Data zameldowania *",checkout:"Data wymeldowania *",purpose:"Cel wizyty *",guests:"Liczba gości *",extra:"Coś jeszcze, o czym powinniśmy wiedzieć? (opcjonalnie)"},submit:"Wyślij Zapytanie ✉",formNote:"Twoja wiadomość jest napisana po koreańsku i angielsku, aby gospodyni mogła szybko odpowiedzieć.",emailFallback:"Jeśli formularz się nie wyśle, skopiuj wiadomość powyżej i wyślij ją na <b>lemoned2@naver.com</b>.",footer:"© All About Korea · Program Homestay"}
+},
+es:{headline:"Un Hogar Lejos de Casa en Seúl",subhead:"Homestay Solo para Mujeres · A 5 Minutos de la Estación Gangbyeon",paragraph:"¿Piensas estudiar coreano o explorar Seúl? Nuestro homestay exclusivo para mujeres es un alojamiento avalado oficialmente por el gobierno de la ciudad de Seúl, a solo 5 minutos a pie de la estación Gangbyeon (Línea 2). Comienza el día con un desayuno coreano casero, practica coreano con una anfitriona amigable y recorre juntas un mercado tradicional. Con Seongsu-dong, Seoul Forest, Gangnam y Myeongdong cerca, es la base perfecta para estudiantes de idiomas y viajeras primerizas.",
+features:[["shield","Alojamiento Solo para Mujeres","Un espacio seguro y acogedor pensado solo para viajeras."],["train","A 5 Minutos del Metro","La estación Gangbyeon (Línea 2) está a un paso de la puerta."],["badge","Certificado por Seúl","Avalado oficialmente por el gobierno de la ciudad."],["coffee","Desayuno Casero","Un desayuno coreano preparado cada mañana."],["basket","Recorrido al Mercado","Explora junto a tu anfitriona un mercado local."],["chat","Practica Coreano a Diario","Un ambiente relajado para conversar de verdad."],["compass","Consejos de tu Anfitriona","Recomendaciones honestas de alguien que conoce la ciudad."],["store","Todo Cerca","Tiendas, cafés y restaurantes a solo 5 minutos caminando."],["star","Cerca de los Mejores Lugares","Seongsu-dong, Seoul Forest, Gangnam y más, a minutos."]]},
+zh:{headline:"在首尔的第二个家",subhead:"女性专属民宿 · 步行5分钟至江边站",paragraph:"计划学习韩语或探索首尔吗？我们的女性专属民宿是经首尔市政府正式认证的民宿，从江边站（2号线）步行仅需5分钟。清晨享用现做的韩式早餐，与亲切的房东练习韩语，还可以一起逛逛传统市场。附近就是圣水洞、首尔林、江南和明洞，是语言学习者和初次访韩旅客的理想落脚点。",
+features:[["shield","女性专属住宿","专为女性旅客打造的安全舒适空间。"],["train","步行5分钟至地铁站","江边站（2号线）近在咫尺。"],["badge","首尔市认证民宿","获首尔市政府官方认证。"],["coffee","自制早餐","每天现做的韩式早餐。"],["basket","与房东同游市场","一起探访当地传统市场。"],["chat","每日练习韩语","轻松环境下自然练习会话。"],["compass","本地房东贴士","获得懂首尔的人给出的真实建议。"],["store","生活便利","商店、咖啡厅、餐厅都在5分钟步行范围内。"],["star","邻近热门景点","圣水洞、首尔林、江南等，仅数分钟车程。"]]},
+ja:{headline:"ソウルでのもうひとつの我が家",subhead:"女性専用ホームステイ・カンビョン駅から徒歩5分",paragraph:"韓国語の勉強やソウル観光をお考えですか？当ホームステイはソウル市公認の女性専用ゲストハウスで、カンビョン駅（2号線）から徒歩わずか5分。毎朝手作りの韓国式朝食からスタートし、気さくなホストと韓国語を練習したり、一緒に伝統市場を散策したりできます。ソンス洞、ソウルの森、江南、明洞にも近く、語学学習者や初めての訪韓者にぴったりの拠点です。",
+features:[["shield","女性専用宿泊","女性旅行者のための安全で温かい空間です。"],["train","地下鉄まで徒歩5分","カンビョン駅（2号線）はすぐ近くです。"],["badge","ソウル市認証ゲストハウス","ソウル市政府公認の宿泊施設です。"],["coffee","手作り朝食","毎朝作りたての韓国式朝食をご用意します。"],["basket","ホストと市場散策","地元の伝統市場を一緒に巡ります。"],["chat","毎日韓国語を練習","気軽に会話力を伸ばせる環境です。"],["compass","ホストの現地情報","街をよく知るホストならではのアドバイス。"],["store","生活便利","徒歩5分圏内にお店やカフェ、レストランが揃います。"],["star","人気スポットも近い","ソンス洞、ソウルの森、江南など数分の距離です。"]]},
+fr:{headline:"Un Second Chez-Soi à Séoul",subhead:"Homestay Réservé aux Femmes · À 5 Minutes de la Station Gangbyeon",paragraph:"Vous prévoyez d'apprendre le coréen ou d'explorer Séoul ? Notre homestay réservé aux femmes est un hébergement officiellement approuvé par la ville de Séoul, à seulement 5 minutes à pied de la station Gangbyeon (ligne 2). Commencez la journée par un petit-déjeuner coréen fait maison, pratiquez le coréen avec une hôte accueillante et flânez ensemble dans un marché traditionnel. À proximité de Seongsu-dong, Seoul Forest, Gangnam et Myeongdong, c'est la base idéale pour les apprenants de langue et les primo-visiteurs.",
+features:[["shield","Réservé aux Femmes","Un espace sûr et chaleureux pensé pour les voyageuses."],["train","À 5 Minutes du Métro","La station Gangbyeon (ligne 2) est à deux pas."],["badge","Certifié par Séoul","Officiellement approuvé par la ville de Séoul."],["coffee","Petit-Déjeuner Fait Maison","Un petit-déjeuner coréen préparé chaque matin."],["basket","Marché avec l'Hôte","Explorez ensemble un marché traditionnel local."],["chat","Pratiquez le Coréen","Un cadre détendu pour progresser à l'oral."],["compass","Conseils de l'Hôte","Des conseils sincères d'une personne qui connaît la ville."],["store","Tout à Proximité","Boutiques, cafés et restaurants à 5 minutes à pied."],["star","Près des Lieux Incontournables","Seongsu-dong, Seoul Forest, Gangnam, à quelques minutes."]]},
+de:{headline:"Ein Zuhause auf Zeit in Seoul",subhead:"Homestay nur für Frauen · 5 Minuten von der Gangbyeon-Station",paragraph:"Planst du, Koreanisch zu lernen oder Seoul zu erkunden? Unser Homestay nur für Frauen ist eine offiziell von der Stadt Seoul anerkannte Unterkunft, nur 5 Gehminuten von der Gangbyeon-Station (Linie 2) entfernt. Starte den Tag mit einem hausgemachten koreanischen Frühstück, übe Koreanisch mit einer freundlichen Gastgeberin und erkunde gemeinsam einen traditionellen Markt. Seongsu-dong, Seoul Forest, Gangnam und Myeongdong liegen ganz in der Nähe – die perfekte Basis für Sprachlernende und Erstbesucher.",
+features:[["shield","Nur für Frauen","Ein sicherer, einladender Ort nur für Reisende."],["train","5 Minuten zur U-Bahn","Die Gangbyeon-Station (Linie 2) liegt gleich um die Ecke."],["badge","Von Seoul zertifiziert","Offiziell von der Stadt Seoul anerkannt."],["coffee","Hausgemachtes Frühstück","Jeden Morgen frisch zubereitetes koreanisches Frühstück."],["basket","Markttour mit der Gastgeberin","Erkundet gemeinsam einen traditionellen Markt."],["chat","Täglich Koreanisch üben","Entspannte Umgebung für echte Gespräche."],["compass","Insider-Tipps","Ehrliche Reisetipps von jemandem, der die Stadt kennt."],["store","Alles in der Nähe","Geschäfte, Cafés und Restaurants in 5 Gehminuten."],["star","Nah an Top-Sehenswürdigkeiten","Seongsu-dong, Seoul Forest, Gangnam u.v.m."]]},
+pl:{headline:"Drugi Dom w Seulu",subhead:"Homestay Tylko dla Kobiet · 5 Minut od Stacji Gangbyeon",paragraph:"Planujesz naukę koreańskiego albo zwiedzanie Seulu? Nasz homestay przeznaczony wyłącznie dla kobiet to kwatera oficjalnie zatwierdzona przez władze miasta Seul, zaledwie 5 minut pieszo od stacji Gangbyeon (linia 2). Zacznij dzień od domowego koreańskiego śniadania, poćwicz koreański z przyjazną gospodynią i razem odwiedźcie tradycyjny targ. W pobliżu znajdziesz Seongsu-dong, Seoul Forest, Gangnam i Myeongdong – to idealna baza dla uczących się języka i osób odwiedzających Koreę po raz pierwszy.",
+features:[["shield","Tylko dla Kobiet","Bezpieczna, przyjazna przestrzeń dla podróżniczek."],["train","5 Minut do Metra","Stacja Gangbyeon (linia 2) jest tuż za rogiem."],["badge","Certyfikat Miasta Seul","Oficjalnie zatwierdzona przez władze miasta."],["coffee","Domowe Śniadanie","Koreańskie śniadanie przygotowywane każdego ranka."],["basket","Wycieczka na Targ","Wspólne zwiedzanie lokalnego, tradycyjnego targu."],["chat","Codzienna Praktyka Koreańskiego","Swobodna atmosfera sprzyjająca rozmowom."],["compass","Wskazówki Gospodyni","Szczere porady od osoby, która zna miasto."],["store","Wszystko w Zasięgu Ręki","Sklepy, kawiarnie i restauracje 5 minut pieszo."],["star","Blisko Głównych Atrakcji","Seongsu-dong, Seoul Forest, Gangnam i inne, kilka minut drogi."]]}
+};
+function renderLang(code){
+  const d=T[code];
+  document.getElementById('t-headline').textContent=d.headline;
+  document.getElementById('t-subhead').textContent=d.subhead;
+  document.getElementById('t-paragraph').textContent=d.paragraph;
+  const grid=document.getElementById('t-features');
+  grid.innerHTML=d.features.map(f=>'<div class="feature"><span class="f-ico">'+svg(f[0])+'</span><div><h3>'+f[1]+'</h3><p>'+f[2]+'</p></div></div>').join('');
+
+  const r=T.roomAndForm[code]||T.roomAndForm.en;
+  document.getElementById('t-roomHead').textContent=r.roomHead;
+  document.getElementById('t-amenities').innerHTML=r.amenities.map(a=>'<li><span class="chk"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>'+a+'</li>').join('');
+  document.getElementById('t-quote').textContent=r.quote;
+  document.getElementById('t-nearbyHead').textContent=r.nearbyHead;
+  document.getElementById('t-easyHead').textContent=r.easyHead;
+  document.getElementById('t-inquiryHead').textContent=r.inquiryHead;
+  document.getElementById('t-lab-email').textContent=r.labels.email;
+  document.getElementById('t-lab-country').textContent=r.labels.country;
+  document.getElementById('t-lab-name').textContent=r.labels.name;
+  document.getElementById('t-lab-checkin').textContent=r.labels.checkin;
+  document.getElementById('t-lab-checkout').textContent=r.labels.checkout;
+  document.getElementById('t-lab-purpose').textContent=r.labels.purpose;
+  document.getElementById('t-lab-guests').textContent=r.labels.guests;
+  document.getElementById('t-lab-extra').textContent=r.labels.extra;
+  document.getElementById('t-submitBtn').textContent=r.submit;
+  document.getElementById('t-formNote').textContent=r.formNote;
+  document.getElementById('t-emailFallback').innerHTML=r.emailFallback;
+  document.getElementById('t-footer').innerHTML=r.footer;
+}
+document.getElementById('langSelect').addEventListener('change',e=>renderLang(e.target.value));
+renderLang('en');
+
+/* ---------- Booking form template + preview ---------- */
+const fEmail=document.getElementById('email'),fCountry=document.getElementById('country'),fName=document.getElementById('name'),
+fIn=document.getElementById('checkin'),fOut=document.getElementById('checkout'),fPurpose=document.getElementById('purpose'),
+fGuests=document.getElementById('guests'),fExtra=document.getElementById('extra'),preview=document.getElementById('preview'),
+hiddenMsg=document.getElementById('hiddenMessage');
+
+function blank(v,ph){return v && v.trim() ? v : ph;}
+function buildMessage(){
+  const country=blank(fCountry.value,'(country)'), name=blank(fName.value,'(name)');
+  const cin=fIn.value||'(check-in date)', cout=fOut.value||'(check-out date)';
+  const purpose=blank(fPurpose.value,'(purpose of visit)');
+  const guests=fGuests.value||'1';
+  const extra=fExtra.value.trim();
+
+  const kr = `안녕하세요 저는 ${country} 사람 ${name}입니다.\n`
+    + `저는 ${cin}부터 ${cout}까지 당신의 숙소에서 홈스테이를 하고 싶어요.\n`
+    + `이번 한국 방문 목적은 ${purpose}입니다.\n`
+    + `인원은 ${guests}명입니다.\n`
+    + `당신의 숙소에 머물고 싶어요. 가능 여부 알려 주세요.`
+    + (extra ? `\n추가로: ${extra}` : '');
+
+  const en = `Hello, I am ${name} from ${country}.\n`
+    + `I would like to stay at your homestay from ${cin} to ${cout}.\n`
+    + `The purpose of my visit to Korea is ${purpose}.\n`
+    + `Number of guests: ${guests}.\n`
+    + `Please let me know if this is available.`
+    + (extra ? `\nAlso: ${extra}` : '');
+
+  return {kr,en};
+}
+function refreshPreview(){
+  const {kr,en}=buildMessage();
+  preview.innerHTML='<b>Korean 🇰🇷</b>\n'+kr+'\n\n<b>English</b>\n'+en+'\n\n<b>Reply to</b>\n'+(fEmail.value||'(your email)');
+  hiddenMsg.value = 'KR:\n'+kr+'\n\nEN:\n'+en;
+}
+[fEmail,fCountry,fName,fIn,fOut,fPurpose,fGuests,fExtra].forEach(el=>el.addEventListener('input',refreshPreview));
+refreshPreview();
+</script>
+</body>
+</html>
