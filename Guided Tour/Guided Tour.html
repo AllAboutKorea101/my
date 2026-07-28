@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guided Tour | All About Korea</title>
+<style>
+:root{
+  --navy:#1E293B; --indigo:#4F46E5; --indigo-light:#EEF0FF;
+  --coral:#E8623D; --green:#16A34A; --red:#DC2626; --gold:#F5A623; --blue:#2563EB; --purple:#7C3AED;
+  --gray:#64748B; --border:#E5E7EB; --bg:#FFFFFF; --bg-soft:#F8F9FC;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--navy);background:var(--bg);line-height:1.6}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+ul{list-style:none}
+
+/* Header */
+header{border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:100}
+.header-inner{max-width:1040px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo-wrap{display:flex;align-items:center;gap:14px}
+#burgerBtn{background:none;border:none;font-size:22px;cursor:pointer;color:var(--navy);padding:4px}
+.logo{font-size:20px;font-weight:700;white-space:nowrap}
+.logo span{color:var(--indigo)}
+.head-right{display:flex;align-items:center;gap:20px}
+nav.top-nav{display:flex;gap:24px;font-size:14px;font-weight:600}
+nav.top-nav a{color:var(--gray);padding:6px 2px}
+nav.top-nav a.active{color:var(--indigo)}
+#langSel{border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:13px;font-weight:600;color:var(--navy);background:#fff;cursor:pointer}
+@media(max-width:820px){nav.top-nav{display:none}}
+
+/* Sidebar */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);opacity:0;pointer-events:none;transition:.25s;z-index:200}
+.overlay.show{opacity:1;pointer-events:auto}
+.sidebar{position:fixed;top:0;left:0;height:100%;width:280px;background:#fff;transform:translateX(-100%);transition:.25s;z-index:201;box-shadow:2px 0 20px rgba(0,0,0,.08)}
+.sidebar.show{transform:translateX(0)}
+.sidebar-head{padding:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sidebar-head span{font-weight:700;font-size:17px}
+#closeBtn{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray)}
+.sidebar ul{padding:12px}
+.sidebar li a{display:flex;align-items:center;gap:14px;padding:13px 12px;border-radius:10px;font-weight:600;font-size:15px;color:var(--navy)}
+.sidebar li a:hover{background:var(--bg-soft)}
+.sidebar li a.active{background:var(--indigo-light);color:var(--indigo)}
+.sidebar li a .ic{font-size:18px;width:22px;text-align:center}
+
+/* Hero */
+.wrap{max-width:1040px;margin:0 auto;padding:28px 20px 70px}
+.eyebrow-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.eyebrow{display:inline-block;background:var(--indigo-light);color:var(--indigo);font-size:12.5px;font-weight:800;letter-spacing:.3px;padding:6px 12px;border-radius:20px}
+h1.title{font-size:26px;font-weight:800;line-height:1.3;margin-bottom:10px}
+.eyebrow-sub{color:var(--gray);font-size:14.5px;margin-bottom:20px}
+.hero-slider{position:relative;border-radius:14px;overflow:hidden;margin-bottom:22px;aspect-ratio:16/10;background:#000}
+.slider-track{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.slider-track::-webkit-scrollbar{display:none}
+.slider-track img{width:100%;height:100%;object-fit:cover;flex:0 0 100%;scroll-snap-align:start}
+.sl-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(15,23,42,.45);color:#fff;border:none;width:34px;height:34px;border-radius:50%;font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.sl-btn.prev{left:10px}.sl-btn.next{right:10px}
+.sl-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:2}
+.sl-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);cursor:pointer;transition:.2s}
+.sl-dots span.active{background:#fff;width:16px;border-radius:4px}
+@media(max-width:600px){.hero-slider{aspect-ratio:4/3}}
+
+/* Quick info */
+.quick-info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;background:var(--bg-soft);border-radius:14px;padding:20px;margin-bottom:26px}
+.quick-info div{font-size:13px}
+.quick-info .lbl{font-weight:700;font-size:14px;margin-bottom:2px}
+@media(max-width:600px){.quick-info{grid-template-columns:1fr 1fr}}
+
+/* Sections */
+section.block{margin-bottom:34px}
+h2.h{font-size:19px;font-weight:800;margin-bottom:14px;border-left:4px solid var(--indigo);padding-left:10px}
+.desc p{margin-bottom:10px;color:#334155;font-size:15px}
+.hl-list li{display:flex;gap:10px;margin-bottom:9px;font-size:15px;color:#334155}
+.hl-list li:before{content:"✓";color:var(--green);font-weight:800}
+
+/* Itinerary */
+.timeline{position:relative;padding-left:34px}
+.timeline:before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:3px;background:var(--coral);border-radius:3px}
+.tstep{position:relative;margin-bottom:22px}
+.tstep .dot{position:absolute;left:-34px;top:0;width:20px;height:20px;border-radius:50%;background:var(--coral);border:3px solid #fff;box-shadow:0 0 0 2px var(--coral)}
+.tstep .dot.faded{background:#fff}
+.tstep .t-time{font-size:12px;color:var(--coral);font-weight:700;margin-bottom:2px}
+.tstep .t-title{font-weight:700;font-size:15px}
+.tstep .t-sub{font-size:13.5px;color:var(--gray)}
+
+/* Include/exclude */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+.two-col li{display:flex;gap:8px;margin-bottom:9px;font-size:14.5px}
+.chk{color:var(--green);font-weight:800}
+.x{color:var(--red);font-weight:800}
+
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:640px){.info-grid{grid-template-columns:1fr}}
+.info-grid h3{font-size:14.5px;font-weight:700;margin-bottom:8px}
+.info-grid li{font-size:14px;color:#334155;margin-bottom:6px;padding-left:14px;position:relative}
+.info-grid li:before{content:"•";position:absolute;left:0;color:var(--indigo)}
+
+/* Reviews */
+.reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.reviews-grid{grid-template-columns:1fr}}
+.review-card{background:var(--bg-soft);border-radius:14px;padding:18px}
+.review-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.avatar{width:38px;height:38px;flex:none;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.av1{background:var(--indigo)} .av2{background:var(--coral)} .av3{background:var(--green)}
+.av4{background:var(--gold)} .av5{background:var(--navy)} .av6{background:var(--red)}
+.av7{background:var(--blue)} .av8{background:var(--purple)}
+.review-name{font-weight:700;font-size:14px}
+.review-meta{font-size:12.5px;color:var(--gray)}
+.review-photos{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
+.review-photos img{height:64px;width:64px;object-fit:cover;border-radius:8px;flex:none}
+.review-card p{font-size:13.8px;color:#334155}
+
+/* Booking form */
+.form-box{background:var(--bg-soft);border-radius:16px;padding:26px}
+.form-box h3{font-size:19px;margin-bottom:6px}
+.form-box>p{font-size:14px;color:var(--gray);margin-bottom:18px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:560px){.f-row{grid-template-columns:1fr}}
+.f-field{display:flex;flex-direction:column;gap:6px}
+.f-field label{font-size:13px;font-weight:700}
+.f-field input,.f-field select,.f-field textarea{border:1px solid var(--border);border-radius:9px;padding:10px 12px;font-size:14px;font-family:inherit;background:#fff}
+.f-field textarea{resize:vertical;min-height:80px}
+.pref-row{display:flex;gap:10px}
+.pref-row label{display:flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:9px;padding:9px 14px;font-size:14px;cursor:pointer}
+.submit-btn{background:var(--indigo);color:#fff;font-weight:800;border:none;padding:13px 26px;border-radius:30px;font-size:15px;cursor:pointer}
+.submit-btn:disabled{opacity:.6;cursor:default}
+#formMsg{margin-top:12px;font-size:14px;font-weight:600}
+
+footer{text-align:center;padding:24px;font-size:12.5px;color:var(--gray);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="header-inner">
+  <div class="logo-wrap">
+    <button id="burgerBtn" aria-label="Menu">☰</button>
+    <a href="https://www.businesskorean.com" class="logo">All About <span>Korea</span></a>
+  </div>
+  <div class="head-right">
+    <nav class="top-nav">
+      <a href="https://www.businesskorean.com">Home</a>
+      <a href="https://www.businesskorean.com/Study Korean/Study Korean.html">Study Korean</a>
+      <a href="https://www.businesskorean.com/Homestay/Homestay.html">Homestay</a>
+      <a href="https://www.businesskorean.com/Guided Tour/Guided Tour.html" class="active">Guided Tour</a>
+      <a href="https://www.businesskorean.com/Korea Travel/Korea Travel.html">Korea Travel</a>
+    </nav>
+  </div>
+ </div>
+</header>
+
+<div class="overlay" id="overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-head"><span>Menu</span><button id="closeBtn" aria-label="Close">✕</button></div>
+  <ul>
+    <li><a href="https://www.businesskorean.com"><span class="ic">🏠</span>Home</a></li>
+    <li><a href="https://www.businesskorean.com/Study Korean/Study Korean.html"><span class="ic">📖</span>Study Korean</a></li>
+    <li><a href="https://www.businesskorean.com/Homestay/Homestay.html"><span class="ic">🏢</span>Homestay</a></li>
+    <li><a href="https://www.businesskorean.com/Guided Tour/Guided Tour.html" class="active"><span class="ic">🌐</span>Guided Tour</a></li>
+    <li><a href="https://www.businesskorean.com/Korea Travel/Korea Travel.html"><span class="ic">📞</span>Korea Travel</a></li>
+  </ul>
+</aside>
+
+<main class="wrap">
+  <div class="eyebrow-row">
+    <div class="eyebrow" data-i18n="eyebrow_tag">Private Tours: Travel Like a Local</div>
+    <select id="langSel" aria-label="Language">
+      <option value="en">EN</option><option value="es">ES</option><option value="zh">中文</option>
+      <option value="ja">日本語</option><option value="fr">FR</option><option value="de">DE</option><option value="pl">PL</option>
+    </select>
+  </div>
+  <h1 class="title" data-i18n="title">Seoul Sunset Hike + Temple &amp; K-Food Adventure</h1>
+
+  <div class="hero-slider" id="heroSlider">
+    <div class="slider-track" id="sliderTrack">
+      <img src="images/1.jpeg" alt="Guests walking through Hongdae's neon night streets">
+      <img src="images/2.jpeg" alt="Family sharing Korean BBQ and banchan with their guide">
+      <img src="images/3.jpeg" alt="Guests enjoying tteokbokki and makgeolli at a street food stall">
+      <img src="images/4.jpeg" alt="Family visiting a mountain temple with their guide">
+      <img src="images/5.jpeg" alt="Guests watching sunset over Seoul from the summit">
+      <img src="images/6.jpeg" alt="Guests smiling at the sunset viewpoint over Seoul">
+      <img src="images/7.jpeg" alt="Family hiking a forest trail with their guide">
+      <img src="images/8.jpeg" alt="Guests and guide overlooking the Han River">
+      <img src="images/9.jpeg" alt="Guests laughing on the forest steps of Achasan">
+      <img src="images/10.jpeg" alt="Family hiking with mountain peaks in the background">
+    </div>
+    <button class="sl-btn prev" id="slPrev" aria-label="Previous">‹</button>
+    <button class="sl-btn next" id="slNext" aria-label="Next">›</button>
+    <div class="sl-dots" id="slDots"></div>
+  </div>
+
+  <div class="quick-info">
+    <div><div class="lbl">⏱ <span data-i18n="qi1_label">Duration</span></div><span data-i18n="qi1_val">2.5 hours</span></div>
+    <div><div class="lbl">👥 <span data-i18n="qi2_label">Group size</span></div><span data-i18n="qi2_val">Min 2 – Max 8 guests</span></div>
+    <div><div class="lbl">🗣 <span data-i18n="qi3_label">Guide language</span></div><span data-i18n="qi3_val">Korean, English</span></div>
+    <div><div class="lbl">🎬 <span data-i18n="qi4_label">Fun fact</span></div><span data-i18n="qi4_val">Featured in BTS's Run BTS ep. 44</span></div>
+    <div><div class="lbl">🥾 <span data-i18n="qi5_label">Difficulty</span></div><span data-i18n="qi5_val">Beginner-friendly, a few stone steps</span></div>
+    <div><div class="lbl">🌄 <span data-i18n="qi6_label">Start time</span></div><span data-i18n="qi6_val">5–6 PM, varies by season</span></div>
+  </div>
+
+  <section class="block">
+    <h2 class="h" data-i18n="hl_head">Why you'll love this hike</h2>
+    <ul class="hl-list">
+      <li data-i18n="hl1">Watch the sky turn gold over Seoul from a ridge most tourists never find</li>
+      <li data-i18n="hl2">Step into Gyeongwonjeongsa Temple's quiet courtyards with someone who knows its story</li>
+      <li data-i18n="hl3">Talk real history, culture, and daily life with your guide the whole way up — no script</li>
+      <li data-i18n="hl4">End the night with real Korean food (and better stories) at a cozy local spot</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2 class="h" data-i18n="about_head">About this experience</h2>
+    <div class="desc">
+      <p data-i18n="about1">This isn't a sightseeing checklist — it's an evening with a local friend who happens to know every hidden staircase, temple bell, and noodle shop on Achasan.</p>
+      <p data-i18n="about2">Climb through quiet pine forest as the city turns gold below you, along the same ridge line BTS's RM and V once hiked on Run BTS. Stop at Gyeongwonjeongsa Temple for a moment among centuries-old rooftops, then head back down to a warm, unpretentious meal your guide actually eats. Expect real conversation about Korea along the way — not a rehearsed script.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="h">Itinerary</h2>
+    <div class="timeline">
+      <div class="tstep"><div class="dot"></div><div class="t-title" data-i18n="itin_start">Starting location: Gwangnaru Station (Line 5), Exit 1</div></div>
+      <div class="tstep"><div class="dot faded"></div><div class="t-time" data-i18n="itin_walk">On foot · 15 minutes</div></div>
+      <div class="tstep"><div class="dot"></div><div class="t-time" data-i18n="itin_hike1">Hiking · 30 minutes</div></div>
+      <div class="tstep"><div class="dot"></div><div class="t-title" data-i18n="itin_photo_title">Photo stop</div><div class="t-sub" data-i18n="itin_photo_sub">Sunset, scenic views on the way · 20 minutes</div></div>
+      <div class="tstep"><div class="dot"></div><div class="t-time" data-i18n="itin_hike1">Hiking · 30 minutes</div></div>
+      <div class="tstep"><div class="dot faded"></div><div class="t-title" data-i18n="itin_temple">A temple home to Buddhist nuns only · 10 minutes</div></div>
+      <div class="tstep"><div class="dot"></div><div class="t-title" data-i18n="itin_food_title">Local Food Street</div><div class="t-sub" data-i18n="itin_food_sub">Dessert, street food, local &amp; regional snacks · 45 minutes</div></div>
+      <div class="tstep"><div class="dot" style="background:var(--navy);box-shadow:0 0 0 2px var(--navy)"></div><div class="t-title" data-i18n="itin_finish">Finish at: Achasan Station (Line 5)</div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="h" data-i18n="incl_head">What's included</h2>
+    <div class="two-col">
+      <ul>
+        <li><span class="chk">✓</span><span data-i18n="incl1">Guided hike to Achasan summit</span></li>
+        <li><span class="chk">✓</span><span data-i18n="incl2">Visit to Gyeongwonjeongsa Temple</span></li>
+        <li><span class="chk">✓</span><span data-i18n="incl3">Traditional Korean cuisine and street food</span></li>
+      </ul>
+      <ul>
+        <li><span class="x">✕</span><span data-i18n="excl1">Transportation to and from the starting point</span></li>
+        <li><span class="x">✕</span><span data-i18n="excl2">Personal expenses</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="h" data-i18n="gtk_head">Good to know</h2>
+    <div class="info-grid">
+      <div><h3>🎒 <span data-i18n="bring_head">What to bring</span></h3><ul>
+        <li data-i18n="bring1">Comfortable shoes</li><li data-i18n="bring2">Camera</li><li data-i18n="bring3">Water</li></ul></div>
+      <div><h3>🚫 <span data-i18n="notallowed_head">Not allowed</span></h3><ul><li data-i18n="notallowed1">Smoking</li></ul></div>
+      <div><h3>ℹ️ <span data-i18n="before_head">Before you go</span></h3><ul>
+        <li data-i18n="before1">Wear shoes suitable for hiking</li>
+        <li data-i18n="before2">Bring a camera for the views</li>
+        <li data-i18n="before3">Carry water for the hike</li></ul></div>
+    </div>
+    <p style="margin-top:14px;font-size:14px;color:var(--gray)" data-i18n="notsuitable">Not suitable for people with mobility impairments or wheelchair users.</p>
+  </section>
+
+  <section class="block">
+    <h2 class="h" data-i18n="reviews_head">What guests say</h2>
+    <div class="reviews-grid">
+
+      <div class="review-card">
+        <div class="review-head"><div class="avatar av2">N</div><div><div class="review-name">Nabila — United Kingdom</div><div class="review-meta">★★★★★ · <span data-i18n="rev_verified">Verified booking</span> · <span data-i18n="rev_friend_group">Friend group</span></div></div></div>
+        <p data-i18n="rev1">"We had a really fun tour and a great time learning more about Korean culture. It was interesting, enjoyable, and a lovely way to experience the area from a local perspective. We especially enjoyed chatting with a local and hearing their insights, which made the tour feel more personal and memorable. We did this tour at the end of our trip to Korea but would recommend doing it at the start to get some recommendations on where to go/visit!"</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-head"><div class="avatar av3">J</div><div><div class="review-name">Jordan — United States</div><div class="review-meta">★★★★★ · <span data-i18n="rev_verified">Verified booking</span></div></div></div>
+        <p data-i18n="rev2">"Our guide was beyond wonderful! It felt as if we were visiting and catching up with a good friend as he made us feel very at home even while far away from home. We climbed to great heights to see breathtaking views surrounded by peaceful nature while carrying on stimulating conversation covering a multitude of topics including Korean history, culture, language, life, etc. We finished the adventure in a cozy charming local eatery to share delicious food and drink as well as memorable stories and laughs before parting ways with his guidance and direction. This experience was definitely a highlight of our trip."</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-head"><div class="avatar av8">J</div><div><div class="review-name">Jordan — United States</div><div class="review-meta">★★★★★ · <span data-i18n="rev_verified">Verified booking</span></div></div></div>
+        <p data-i18n="rev3">"Absolutely phenomenal! David was a great guide and super personal! I also requested to go an hour early so we could see the beginning of the sunrise at the top of the mountain. The view turned out to be just as gorgeous as I hoped! He also helped me navigate the subway system which I really appreciated! He also doesn't mind taking pictures of you if you ask him, which is a huge plus! He also touched on some history of Korea and the things we were seeing which I enjoyed :) Definitely recommend this tour! Plus the hike was a blast and it ends with food, like come on that's awesome :D"</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-head"><div class="avatar av4">S</div><div><div class="review-name">Siddharth — United States</div><div class="review-meta">★★★★★ · <span data-i18n="rev_verified">Verified booking</span></div></div></div>
+        <p data-i18n="rev4">"Wonderful experience! Sanghoon is very knowledgeable and goes out of his way to explain details. The hike was beautiful, the food we had was unique and sumptuous. I will be coming back with my kids and wife! Thank you Sanghoon for the great time I had."</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-head"><div class="avatar av5">E</div><div><div class="review-name">Eveline — Netherlands</div><div class="review-meta">★★★★★ · <span data-i18n="rev_verified">Verified booking</span></div></div></div>
+        <p data-i18n="rev5">"David and I met up an hour early to catch the sunset on today's hike. When I learned the summit was the same spot where BTS's RM and V did their Run BTS ep. 44 mission, I was determined to reach it. As a beginner hiker, the trail was doable but the stairs required a few extra breaks, and David was wonderfully patient throughout. The climb was worth it — the view was stunning, and we captured several beautiful photos at the top. On the way down, we stopped at Gyeongwonjeongsa Temple, which added a peaceful touch to the day, before ending with a comforting dinner at a local Korean noodle restaurant. It was a memorable experience from start to finish."</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-head"><div class="avatar av6">R</div><div><div class="review-name">Reem — United States</div><div class="review-meta">★★★★★ · <span data-i18n="rev_verified">Verified booking</span></div></div></div>
+        <p data-i18n="rev6">"The hike was more intense than expected (not for beginners but not too difficult) especially with the intense summer heat, but the view was well worth it. Gyeongwonjeongsa Temple was a beautiful short stop at the end of the hike. Our guide, David, was so patient with my group, very friendly and gave a nice history of Seoul during the hike. The restaurant he took us to was authentic and delicious (cold noodles on a summer night was perfect). If you want a relatively simple, quick taste of hiking in Seoul, this is it!"</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-head"><div class="avatar av7">J</div><div><div class="review-name">Jenny — Germany</div><div class="review-meta">★★★★★ · <span data-i18n="rev_verified">Verified booking</span></div></div></div>
+        <p data-i18n="rev7">"It was a great hike with fantastic views. I can only recommend it and would book it again. After the great tour there was a picnic in the park with delicious Korean food 👍"</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-head"><div class="avatar av1">J</div><div><div class="review-name">Jimmy — Canada</div><div class="review-meta">★★★★★ · <span data-i18n="rev_verified">Verified booking</span></div></div></div>
+        <p data-i18n="rev8">"Sanghoon is a lovely guide who cares about guests and the mountain and enjoys chatting with travellers. Dinner was delicious, and Sanghoon accommodated my special diet. Hiking with company made Achasan less intimidating for a casual hiker, and I learned a lot about neighbourhoods in Seoul that were new to me. An excellent way to spend the evening for a solo traveller or small group. The views are fantastic! This is one of my most memorable experiences in Seoul."</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="form-box">
+      <h3 data-i18n="form_head">Reserve your spot</h3>
+      <p data-i18n="form_sub">Send your preferred date and we'll confirm availability within 24 hours.</p>
+      <form id="bookingForm">
+        <input type="hidden" name="access_key" value="9dd4cfff-07aa-46a5-a6e0-6f93c919958d">
+        <input type="hidden" name="subject" value="New Guided Tour Booking Inquiry — Seoul Sunset Hike">
+        <div class="f-row">
+          <div class="f-field"><label data-i18n="f_name">Full name</label><input type="text" name="name" required></div>
+          <div class="f-field"><label data-i18n="f_email">Email</label><input type="email" name="email" required></div>
+        </div>
+        <div class="f-row">
+          <div class="f-field"><label data-i18n="f_date">Preferred date</label><input type="date" name="preferred_date" required></div>
+          <div class="f-field"><label data-i18n="f_guests">Number of guests</label>
+            <select name="guests" required>
+              <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+              <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+            </select>
+          </div>
+        </div>
+        <div class="f-field" style="margin-bottom:16px">
+          <label data-i18n="f_message">Message</label>
+          <textarea name="message"></textarea>
+        </div>
+        <button type="submit" class="submit-btn" data-i18n="f_submit">Send inquiry</button>
+        <div id="formMsg"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>© 2026 All About Korea · businesskorean.com</footer>
+
+<script>
+// Hero slider
+(function(){
+  const track=document.getElementById('sliderTrack');
+  const slides=track.children;
+  const dotsWrap=document.getElementById('slDots');
+  let dots=[];
+  for(let i=0;i<slides.length;i++){
+    const d=document.createElement('span');
+    if(i===0) d.classList.add('active');
+    d.onclick=()=>goto(i);
+    dotsWrap.appendChild(d);
+    dots.push(d);
+  }
+  function current(){ return Math.round(track.scrollLeft/track.clientWidth); }
+  function goto(i){ track.scrollTo({left:i*track.clientWidth, behavior:'smooth'}); }
+  function updateDots(){
+    const idx=current();
+    dots.forEach((d,i)=>d.classList.toggle('active', i===idx));
+  }
+  track.addEventListener('scroll', ()=>{ clearTimeout(track._t); track._t=setTimeout(updateDots,80); });
+  document.getElementById('slPrev').onclick=()=>goto(Math.max(0,current()-1));
+  document.getElementById('slNext').onclick=()=>goto(Math.min(slides.length-1,current()+1));
+  let auto=setInterval(()=>{ goto((current()+1)%slides.length); },4500);
+  const slider=document.getElementById('heroSlider');
+  slider.addEventListener('mouseenter',()=>clearInterval(auto));
+  slider.addEventListener('mouseleave',()=>{auto=setInterval(()=>{ goto((current()+1)%slides.length); },4500);});
+})();
+
+const sb=document.getElementById('sidebar'),ov=document.getElementById('overlay');
+document.getElementById('burgerBtn').onclick=()=>{sb.classList.add('show');ov.classList.add('show')};
+document.getElementById('closeBtn').onclick=()=>{sb.classList.remove('show');ov.classList.remove('show')};
+ov.onclick=()=>{sb.classList.remove('show');ov.classList.remove('show')};
+
+const i18n={
+es:{eyebrow_tag:"Tours privados: Viaja como un local",eyebrow_sub:"No es una foto de grupo turístico: es una tarde en la montaña con un guía local que te trata como a un viejo amigo.",title:"Caminata al atardecer en Seúl + Templo y aventura gastronómica",qi1_label:"Duración",qi1_val:"2.5 horas",qi2_label:"Tamaño del grupo",qi2_val:"Mín. 2 – Máx. 8 personas",qi3_label:"Idioma del guía",qi3_val:"Coreano, inglés",qi4_label:"Dato curioso",qi4_val:"Aparece en Run BTS ep. 44 de BTS",qi5_label:"Dificultad",qi5_val:"Apta para principiantes, algunos escalones de piedra",qi6_label:"Hora de inicio",qi6_val:"5–6 pm, según la temporada",hl_head:"Por qué te encantará esta caminata",hl1:"Observa el cielo dorado sobre Seúl desde una cresta que pocos turistas conocen",hl2:"Entra en los tranquilos patios del templo Gyeongwonjeongsa con alguien que conoce su historia",hl3:"Conversa sobre historia, cultura y vida cotidiana con tu guía durante toda la subida, sin guion",hl4:"Termina la noche con comida coreana auténtica en un lugar local acogedor",about_head:"Sobre esta experiencia",about1:"Esto no es una lista turística: es una tarde con un amigo local que conoce cada escalera oculta, cada campana de templo y cada fideos de Achasan.",about2:"Sube entre pinos tranquilos mientras la ciudad se dora bajo tus pies, por la misma cresta que recorrieron RM y V de BTS en Run BTS. Detente en el templo Gyeongwonjeongsa entre tejados centenarios y baja hacia una comida cálida y sencilla que tu guía realmente disfruta. Espera conversaciones reales sobre Corea en el camino.",incl_head:"Qué incluye",incl1:"Caminata guiada hasta la cima de Achasan",incl2:"Visita al templo Gyeongwonjeongsa",incl3:"Comida tradicional coreana y street food",excl1:"Transporte de ida y vuelta al punto de partida",excl2:"Gastos personales",gtk_head:"Antes de venir",bring_head:"Qué llevar",bring1:"Zapatos cómodos",bring2:"Cámara",bring3:"Agua",notallowed_head:"No permitido",notallowed1:"Fumar",before_head:"Antes de ir",before1:"Usa calzado adecuado para caminar",before2:"Lleva una cámara para las vistas",before3:"Lleva agua para la caminata",notsuitable:"No apto para personas con movilidad reducida ni usuarios de silla de ruedas.",reviews_head:"Lo que dicen los viajeros",form_head:"Reserva tu lugar",form_sub:"Envíanos tu fecha preferida y confirmaremos disponibilidad en 24 horas.",f_name:"Nombre completo",f_email:"Correo electrónico",f_date:"Fecha preferida",f_guests:"Número de personas",f_pref:"¿Amanecer o atardecer?",f_pref_sunrise:"Amanecer",f_pref_sunset:"Atardecer",f_message:"Mensaje",f_submit:"Enviar solicitud",itin_start:"Punto de partida: Estación de Gwangnaru (Línea 5), Salida 1",itin_walk:"A pie · 15 minutos",itin_hike1:"Caminata · 30 minutos",itin_photo_title:"Parada para fotos",itin_photo_sub:"Atardecer, vistas panorámicas en el camino · 20 minutos",itin_temple:"Un templo habitado solo por monjas budistas · 10 minutos",itin_food_title:"Calle de comida local",itin_food_sub:"Postre, comida callejera, bocadillos locales y regionales · 45 minutos",itin_finish:"Llegada: Estación de Achasan (Línea 5)",rev_verified:"Reserva verificada",rev_friend_group:"Grupo de amigos",rev1:"Tuvimos un recorrido realmente divertido y aprendimos mucho sobre la cultura coreana. Fue interesante, agradable y una manera encantadora de conocer la zona desde una perspectiva local. Disfrutamos especialmente charlando con un local y escuchando sus impresiones, lo que hizo que el recorrido se sintiera más personal y memorable. Hicimos este tour al final de nuestro viaje por Corea, pero recomendaríamos hacerlo al principio para obtener recomendaciones sobre qué visitar.",rev2:"¡Nuestro guía fue más que maravilloso! Sentimos como si estuviéramos visitando a un buen amigo, ya que nos hizo sentir como en casa incluso estando lejos de ella. Subimos a grandes alturas para ver vistas impresionantes rodeados de naturaleza tranquila mientras manteníamos una conversación estimulante sobre historia, cultura, idioma y vida coreana, entre otros temas. Terminamos la aventura en un acogedor restaurante local compartiendo comida y bebida deliciosas, además de historias y risas memorables, antes de despedirnos. Esta experiencia fue sin duda uno de los puntos culminantes de nuestro viaje.",rev3:"¡Absolutamente fenomenal! David fue un guía excelente y muy cercano. También le pedí ir una hora antes para ver el comienzo del amanecer en la cima de la montaña, ¡y la vista fue tan hermosa como esperaba! También me ayudó a orientarme en el metro, algo que agradecí mucho. No le importa tomarte fotos si se lo pides, ¡lo cual es un gran plus! Además, compartió algo de la historia de Corea y de los lugares que veíamos, algo que disfruté mucho :) ¡Definitivamente recomiendo este tour! Y la caminata fue estupenda y termina con comida, ¡genial!",rev4:"¡Experiencia maravillosa! Sanghoon tiene mucho conocimiento y se esfuerza por explicar los detalles. La caminata fue hermosa, la comida que probamos fue única y deliciosa. ¡Volveré con mis hijos y mi esposa! Gracias, Sanghoon, por el gran momento que pasé.",rev5:"David y yo nos encontramos una hora antes para ver el atardecer en la caminata de hoy. Cuando supe que la cima era el mismo lugar donde RM y V de BTS hicieron su misión de Run BTS ep. 44, estaba decidida a llegar allí. Como excursionista principiante, el sendero era manejable, aunque las escaleras requirieron algunas pausas extra, y David fue maravillosamente paciente todo el tiempo. La subida valió la pena: la vista fue impresionante y tomamos varias fotos hermosas en la cima. De bajada, nos detuvimos en el templo Gyeongwonjeongsa, lo que añadió un toque de paz al día, antes de terminar con una cena reconfortante en un restaurante local de fideos coreanos. Fue una experiencia memorable de principio a fin.",rev6:"La caminata fue más intensa de lo esperado (no apta para principiantes, pero tampoco demasiado difícil), especialmente con el intenso calor del verano, pero la vista valió totalmente la pena. El templo Gyeongwonjeongsa fue una hermosa y breve parada al final de la caminata. Nuestro guía, David, fue muy paciente con mi grupo, muy amable y nos contó una buena parte de la historia de Seúl durante la caminata. El restaurante al que nos llevó fue auténtico y delicioso (los fideos fríos en una noche de verano fueron perfectos). Si quieres probar el senderismo en Seúl de forma sencilla y rápida, ¡esta es la opción!",rev7:"Fue una gran caminata con vistas fantásticas. Solo puedo recomendarla y la reservaría de nuevo. Después del gran recorrido, hubo un picnic en el parque con deliciosa comida coreana 👍",rev8:"Sanghoon es un guía encantador a quien le importan los huéspedes y la montaña, y disfruta conversando con los viajeros. La cena fue deliciosa y Sanghoon se adaptó a mi dieta especial. Caminar en compañía hizo que Achasan resultara menos intimidante para un excursionista casual, y aprendí mucho sobre barrios de Seúl que no conocía. Es una excelente manera de pasar la tarde para un viajero solo o un grupo pequeño. ¡Las vistas son fantásticas! Esta es una de mis experiencias más memorables en Seúl."},
+zh:{eyebrow_tag:"私人导览:像当地人一样旅行",eyebrow_sub:"不是旅游团拍照打卡,而是与本地向导共度的山间夜晚,他会像老朋友一样对待你。",title:"首尔日落徒步 + 寺庙与韩式美食之旅",qi1_label:"时长",qi1_val:"2.5小时",qi2_label:"团队人数",qi2_val:"最少2人 – 最多8人",qi3_label:"向导语言",qi3_val:"韩语、英语",qi4_label:"趣味小知识",qi4_val:"《奔跑吧防弹》第44集取景地",qi5_label:"难度",qi5_val:"适合初学者,有部分石阶",qi6_label:"开始时间",qi6_val:"傍晚5-6点,视季节而定",hl_head:"你会爱上这次徒步的理由",hl1:"在很少游客知道的山脊上,欣赏首尔天空染成金色的瞬间",hl2:"与了解历史的向导一起走进庆源精舍寺宁静的庭院",hl3:"全程与向导畅聊韩国历史、文化与日常生活,没有固定台词",hl4:"在温馨的本地小店,以地道韩食和更多故事结束这个夜晚",about_head:"关于此体验",about1:"这不是走马观花的观光清单,而是与一位了解阿嵯山每一处隐秘台阶、寺钟与面馆的本地朋友共度的夜晚。",about2:"穿过静谧的松林拾级而上,脚下的城市渐渐染上金色,这条山脊正是防弹少年团RM和V在《奔跑吧防弹》中走过的路线。在庆源精舍寺的百年屋檐间稍作停留,再下山享用向导真心推荐的朴实美味。一路上,期待的是关于韩国的真实交流,而非排练好的讲解。",incl_head:"费用包含",incl1:"阿嵯山山顶向导徒步",incl2:"参观庆源精舍寺",incl3:"传统韩式料理与街头小吃",excl1:"往返出发地点的交通",excl2:"个人消费",gtk_head:"出行须知",bring_head:"需要携带",bring1:"舒适的鞋子",bring2:"相机",bring3:"饮用水",notallowed_head:"禁止事项",notallowed1:"吸烟",before_head:"出发前须知",before1:"请穿着适合徒步的鞋子",before2:"请携带相机拍摄美景",before3:"请携带饮用水",notsuitable:"不适合行动不便人士或轮椅使用者。",reviews_head:"客人评价",form_head:"预订名额",form_sub:"发送您期望的日期,我们将在24小时内确认。",f_name:"姓名",f_email:"电子邮箱",f_date:"期望日期",f_guests:"人数",f_pref:"日出还是日落?",f_pref_sunrise:"日出",f_pref_sunset:"日落",f_message:"留言",f_submit:"发送预订申请",itin_start:"出发地点:广渡站(5号线)1号出口",itin_walk:"步行 · 15分钟",itin_hike1:"徒步 · 30分钟",itin_photo_title:"拍照点",itin_photo_sub:"日落,沿途风景 · 20分钟",itin_temple:"只有比丘尼居住的寺庙 · 10分钟",itin_food_title:"本地美食街",itin_food_sub:"甜点、街头小吃、本地及地方风味 · 45分钟",itin_finish:"终点:峨嵯山站(5号线)",rev_verified:"已验证预订",rev_friend_group:"朋友出行",rev1:"这次徒步非常有趣,让我们更深入地了解了韩国文化。整个行程既有趣又愉快,是从当地人视角体验这片区域的绝佳方式。我们特别喜欢和向导聊天、听他分享见解,让整个行程更加个人化、更令人难忘。我们是在韩国之行快结束时参加的这次徒步,但建议大家在旅程开始时就参加,这样可以提前获得游玩建议。",rev2:"我们的向导太棒了!感觉就像在和一位老朋友叙旧,即使身处异国他乡也让我们倍感亲切。我们一路攀登,欣赏令人惊叹的美景,四周是宁静的自然,一路上聊着韩国历史、文化、语言和生活等各种话题。最后我们在一家温馨别致的本地小店结束了这次冒险,一起分享美食美酒,聊着难忘的故事,笑声不断。这绝对是我们旅程中的一大亮点。",rev3:"太精彩了!David是一位非常出色又亲切的向导。我特意要求提前一小时出发,以便在山顶看到日出的第一缕光,景色果然如我期待的那样壮丽!他还帮我搞懂了地铁路线,我非常感激。如果你请他帮忙拍照,他也很乐意,这一点特别加分!他还讲解了一些韩国历史和沿途景点的故事,我很喜欢 :) 强烈推荐这次徒步!而且徒步结束后还能吃到美食,真的太棒了 :D",rev4:"非常棒的体验!Sanghoon知识渊博,很乐意详细讲解各种细节。徒步风景优美,我们吃到的食物也很独特美味。我一定会带着孩子和妻子再来一次!谢谢Sanghoon带给我这么美好的时光。",rev5:"David和我提前一小时集合,想赶上今天徒步的日落。当我得知山顶正是防弹少年团RM和V完成《奔跑吧防弹》第44集任务的地方时,我下定决心一定要登顶。作为徒步新手,这条步道整体不难,只是台阶部分需要多歇几次,David全程都很有耐心。这次攀登非常值得——山顶景色令人惊艳,我们拍了不少美照。下山途中我们在庆源精舍寺短暂停留,为这一天增添了几分宁静,最后在一家本地韩式面馆享用了一顿温暖的晚餐。这是一次从头到尾都令人难忘的体验。",rev6:"这次徒步比预想的要强度更大一些(不太适合新手,但也不算太难),尤其是在盛夏酷热的天气里,不过山顶的景色绝对值得。庆源精舍寺是徒步终点前一处美丽的短暂停留点。我们的向导David对我们这一群人非常耐心,人也很友善,一路上讲了不少首尔的历史。他带我们去的餐厅地道又美味(夏夜吃一碗冷面简直完美)。如果你想在首尔简单快速地体验一次徒步,这就是最佳选择!",rev7:"这是一次风景绝佳的精彩徒步,非常推荐,以后还会再订。徒步结束后,还在公园里享用了美味的韩国野餐 👍",rev8:"Sanghoon是一位很贴心的向导,关心每一位客人,也很爱护这座山,喜欢和旅行者聊天。晚餐很美味,Sanghoon还特意照顾了我的特殊饮食需求。有他陪伴徒步,让阿嵯山对我这样的休闲徒步者来说不再那么令人生畏,我也了解到了很多以前不熟悉的首尔街区。无论是单人旅行还是小团体,这都是度过夜晚的绝佳方式。景色太赞了!这是我在首尔最难忘的经历之一。"},
+ja:{eyebrow_tag:"プライベートツアー:現地の人のように旅する",eyebrow_sub:"団体観光の記念撮影ではなく、旧友のように迎えてくれる現地ガイドと過ごす山の夕暮れ。",title:"ソウル・サンセットハイキング + 寺院&韓国グルメ体験",qi1_label:"所要時間",qi1_val:"2.5時間",qi2_label:"参加人数",qi2_val:"最少2名 – 最大8名",qi3_label:"ガイド言語",qi3_val:"韓国語、英語",qi4_label:"豆知識",qi4_val:"「Run BTS」第44話の舞台",qi5_label:"難易度",qi5_val:"初心者向け、石段が一部あり",qi6_label:"開始時間",qi6_val:"17〜18時頃(季節により変動)",hl_head:"このハイキングが愛される理由",hl1:"観光客がほとんど知らない尾根から、金色に染まるソウルの空を眺める",hl2:"歴史を知るガイドと共に、慶元精舎の静かな境内へ",hl3:"登る間ずっと、台本なしで韓国の歴史や文化、日常について語り合う",hl4:"居心地の良い地元のお店で、本物の韓国料理と語らいの夜を締めくくる",about_head:"この体験について",about1:"これは観光チェックリストではありません。峨嵯山の隠れた階段も、寺の鐘の音も、麺屋の場所も知り尽くした現地の友人と過ごす夕べです。",about2:"静かな松林を抜け、街が足元で金色に輝く中を登っていきます。それはBTSのRMとVが「Run BTS」で歩いた同じ尾根道。慶元精舎で数百年の甍を眺めてひと息つき、下山後はガイドが本当に愛する飾らない食事へ。道中は台本のない、韓国についてのリアルな会話が待っています。",incl_head:"含まれるもの",incl1:"峨嵯山山頂までのガイド付きハイキング",incl2:"慶元精舎の見学",incl3:"伝統的な韓国料理と屋台グルメ",excl1:"集合場所までの往復交通費",excl2:"個人的な出費",gtk_head:"知っておきたいこと",bring_head:"持ち物",bring1:"歩きやすい靴",bring2:"カメラ",bring3:"飲み水",notallowed_head:"禁止事項",notallowed1:"喫煙",before_head:"出発前に",before1:"ハイキングに適した靴を履いてください",before2:"景色を撮るカメラをお持ちください",before3:"飲み水をご持参ください",notsuitable:"歩行に制約のある方、車椅子をご利用の方には不向きです。",reviews_head:"参加者の声",form_head:"予約リクエスト",form_sub:"ご希望日をお送りください。24時間以内に空き状況をご案内します。",f_name:"お名前",f_email:"メールアドレス",f_date:"希望日",f_guests:"参加人数",f_pref:"日の出、それとも夕日?",f_pref_sunrise:"日の出",f_pref_sunset:"夕日",f_message:"メッセージ",f_submit:"予約リクエストを送る",itin_start:"出発地点:クァンナル駅(5号線)1番出口",itin_walk:"徒歩 · 15分",itin_hike1:"ハイキング · 30分",itin_photo_title:"撮影スポット",itin_photo_sub:"夕日、道中の絶景 · 20分",itin_temple:"比丘尼だけが暮らす寺院 · 10分",itin_food_title:"ローカルフードストリート",itin_food_sub:"デザート、屋台グルメ、地元の軽食 · 45分",itin_finish:"到着:アチャサン駅(5号線)",rev_verified:"確認済みの予約",rev_friend_group:"友人グループ",rev1:"とても楽しいツアーで、韓国文化について学べる素晴らしい時間でした。興味深く、楽しく、現地の視点でエリアを体験できる素敵な方法でした。特に現地の方とおしゃべりしてその考えを聞けたことが、よりパーソナルで忘れられない体験になりました。今回は旅の最後にこのツアーに参加しましたが、行き先の相談ができるので旅の最初に参加するのがおすすめです!",rev2:"ガイドさんが本当に素晴らしかったです!まるで旧友に会いに行ったかのように、異国にいながら心から温かく迎えてくれました。静かな自然に囲まれた絶景を目指して登りながら、韓国の歴史や文化、言語、暮らしなど様々な話題で会話が弾みました。最後は居心地の良い地元の食堂で、美味しい料理とお酒、そして忘れられない話と笑いを共有して締めくくりました。この経験は間違いなく今回の旅のハイライトです。",rev3:"最高でした!David は素晴らしく、とても親身なガイドでした。山頂で日の出の始まりを見たいとお願いして1時間早く出発してもらったのですが、期待通りの美しい景色でした!地下鉄の乗り方も教えてくれて本当に助かりました。頼めば写真も快く撮ってくれるのも嬉しいポイントです!韓国の歴史や見えている景色について色々教えてくれたのも楽しかったです :) このツアーは絶対おすすめです!ハイキングも最高で、最後に食事があるのも最高です :D",rev4:"素晴らしい体験でした!Sanghoonさんは知識豊富で、細かい説明も丁寧にしてくれます。ハイキングは美しく、食事もユニークで豪華でした。今度は子どもたちと妻を連れてまた来ます!素敵な時間をありがとうございました。",rev5:"David と私は今日のハイキングで夕日を見るために1時間早く待ち合わせしました。この山頂がBTSのRMとVが「Run BTS」第44話のミッションを行った場所だと知り、絶対に登ろうと決意しました。初心者の私でもトレイルは十分歩けましたが、階段では何度か休憩が必要で、David はずっと辛抱強く付き合ってくれました。登った甲斐がありました――景色は息をのむ美しさで、頂上で素敵な写真もたくさん撮れました。下山途中には慶元精舎に立ち寄り、一日に静かなひとときが加わり、最後は地元の韓国麺料理店でほっとする夕食を楽しみました。最初から最後まで忘れられない体験でした。",rev6:"ハイキングは思ったよりハード(初心者向けではないですが、そこまで難しくもない)で、特に真夏の暑さの中ではきつかったですが、景色はその価値がありました。慶元精舎はハイキングの最後に立ち寄る美しいスポットでした。ガイドの David は私たちのグループにとても辛抱強く、フレンドリーで、道中ソウルの歴史をたくさん教えてくれました。連れて行ってくれたレストランは本格的で美味しく(夏の夜の冷麺は最高でした)。ソウルで手軽にハイキングを体験したいなら、これがぴったりです!",rev7:"素晴らしい景色のハイキングでした。ぜひおすすめしたいですし、また予約したいです。ツアーの後は公園で美味しい韓国料理のピクニックもありました 👍",rev8:"Sanghoonさんはゲストと山の両方を大切にする、とても素敵なガイドで、旅行者との会話を楽しんでくれます。夕食は美味しく、私の特別な食事制限にも対応してくれました。仲間と一緒に歩くことで、気軽なハイカーにとって峨嵯山がそれほど怖く感じなくなり、知らなかったソウルの街のことも色々学べました。一人旅にも少人数グループにも夜を過ごすのにぴったりの方法です。景色も最高でした!ソウルでの最も忘れられない体験のひとつです。"},
+fr:{eyebrow_tag:"Visites privées : Voyagez comme un local",eyebrow_sub:"Pas une photo de groupe touristique — une soirée en montagne avec un guide local qui vous traite comme un vieil ami.",title:"Randonnée au coucher du soleil à Séoul + Temple et aventure culinaire coréenne",qi1_label:"Durée",qi1_val:"2,5 heures",qi2_label:"Taille du groupe",qi2_val:"Min. 2 – Max. 8 personnes",qi3_label:"Langue du guide",qi3_val:"Coréen, anglais",qi4_label:"Anecdote",qi4_val:"Vu dans Run BTS ép. 44 de BTS",qi5_label:"Difficulté",qi5_val:"Accessible aux débutants, quelques marches en pierre",qi6_label:"Heure de départ",qi6_val:"17h–18h, selon la saison",hl_head:"Pourquoi vous allez adorer cette randonnée",hl1:"Admirez le ciel doré au-dessus de Séoul depuis une crête que peu de touristes connaissent",hl2:"Découvrez les cours paisibles du temple Gyeongwonjeongsa avec quelqu'un qui en connaît l'histoire",hl3:"Discutez d'histoire, de culture et de vie quotidienne avec votre guide, sans script",hl4:"Terminez la soirée par un vrai repas coréen dans un endroit local chaleureux",about_head:"À propos de cette expérience",about1:"Ce n'est pas une liste de visites — c'est une soirée avec un ami local qui connaît chaque escalier caché, chaque cloche de temple et chaque gargote d'Achasan.",about2:"Grimpez à travers une pinède paisible pendant que la ville se dore sous vos pieds, sur la même crête que RM et V de BTS ont parcourue dans Run BTS. Faites une pause au temple Gyeongwonjeongsa parmi des toits centenaires, puis redescendez pour un repas chaleureux et sans prétention que votre guide apprécie vraiment. Attendez-vous à de vraies conversations sur la Corée en chemin.",incl_head:"Ce qui est inclus",incl1:"Randonnée guidée jusqu'au sommet d'Achasan",incl2:"Visite du temple Gyeongwonjeongsa",incl3:"Cuisine coréenne traditionnelle et street food",excl1:"Transport aller-retour jusqu'au point de départ",excl2:"Dépenses personnelles",gtk_head:"Bon à savoir",bring_head:"À apporter",bring1:"Chaussures confortables",bring2:"Appareil photo",bring3:"Eau",notallowed_head:"Non autorisé",notallowed1:"Fumer",before_head:"Avant de partir",before1:"Portez des chaussures adaptées à la randonnée",before2:"Apportez un appareil photo pour les vues",before3:"Prévoyez de l'eau pour la randonnée",notsuitable:"Non adapté aux personnes à mobilité réduite ni aux utilisateurs de fauteuil roulant.",reviews_head:"Avis des voyageurs",form_head:"Réservez votre place",form_sub:"Envoyez-nous votre date préférée, nous confirmons la disponibilité sous 24 heures.",f_name:"Nom complet",f_email:"E-mail",f_date:"Date préférée",f_guests:"Nombre de personnes",f_pref:"Lever ou coucher du soleil ?",f_pref_sunrise:"Lever du soleil",f_pref_sunset:"Coucher du soleil",f_message:"Message",f_submit:"Envoyer la demande",itin_start:"Point de départ : station Gwangnaru (ligne 5), sortie 1",itin_walk:"À pied · 15 minutes",itin_hike1:"Randonnée · 30 minutes",itin_photo_title:"Arrêt photo",itin_photo_sub:"Coucher de soleil, vues panoramiques en chemin · 20 minutes",itin_temple:"Un temple habité uniquement par des nonnes bouddhistes · 10 minutes",itin_food_title:"Rue de street food locale",itin_food_sub:"Dessert, street food, en-cas locaux et régionaux · 45 minutes",itin_finish:"Arrivée : station Achasan (ligne 5)",rev_verified:"Réservation vérifiée",rev_friend_group:"Groupe d'amis",rev1:"Nous avons vraiment passé un bon moment et beaucoup appris sur la culture coréenne. C'était intéressant, agréable et une belle façon de découvrir la région d'un point de vue local. Nous avons particulièrement aimé discuter avec un local et entendre son point de vue, ce qui a rendu la visite plus personnelle et mémorable. Nous avons fait cette visite à la fin de notre voyage en Corée, mais nous recommandons de la faire au début pour obtenir des conseils sur les endroits à visiter !",rev2:"Notre guide était plus que formidable ! On avait l'impression de retrouver un bon ami tant il nous a mis à l'aise, même loin de chez nous. Nous avons grimpé jusqu'à de superbes points de vue entourés d'une nature paisible, tout en discutant de nombreux sujets : histoire, culture, langue et vie quotidienne en Corée. Nous avons terminé cette aventure dans un restaurant local chaleureux, à partager un bon repas, des boissons, des histoires mémorables et des fous rires avant de nous séparer. Cette expérience a clairement été un point fort de notre voyage.",rev3:"Absolument formidable ! David a été un guide excellent et très attentionné. Je lui ai demandé de partir une heure plus tôt pour voir le tout début du lever du soleil au sommet, et la vue était aussi magnifique que je l'espérais ! Il m'a aussi aidée à me repérer dans le métro, ce que j'ai vraiment apprécié. Il n'hésite pas non plus à vous prendre en photo si vous le lui demandez, un vrai plus ! Il a aussi partagé un peu d'histoire de la Corée et des lieux que nous voyions, ce que j'ai beaucoup aimé :) Je recommande vivement cette visite ! La randonnée était géniale et se termine par un repas, quoi de mieux :D",rev4:"Expérience merveilleuse ! Sanghoon est très compétent et prend le temps d'expliquer chaque détail. La randonnée était magnifique, et la nourriture que nous avons goûtée était unique et savoureuse. Je reviendrai avec mes enfants et ma femme ! Merci Sanghoon pour ce beau moment.",rev5:"David et moi nous sommes retrouvés une heure plus tôt pour voir le coucher de soleil lors de la randonnée du jour. En apprenant que le sommet était le lieu où RM et V de BTS avaient réalisé leur mission Run BTS ép. 44, j'étais déterminée à l'atteindre. En tant que randonneuse débutante, le sentier était accessible, même si les marches ont nécessité quelques pauses supplémentaires, et David a été merveilleusement patient tout du long. La montée en valait la peine : la vue était magnifique et nous avons pris de belles photos au sommet. En redescendant, nous nous sommes arrêtés au temple Gyeongwonjeongsa, ce qui a apporté une touche de sérénité à la journée, avant de terminer par un dîner réconfortant dans un restaurant coréen de nouilles. Une expérience mémorable du début à la fin.",rev6:"La randonnée était plus intense que prévu (pas pour débutants mais pas trop difficile non plus), surtout avec la chaleur intense de l'été, mais la vue en valait largement la peine. Le temple Gyeongwonjeongsa a été un bel arrêt de courte durée à la fin de la randonnée. Notre guide, David, a été très patient avec mon groupe, très sympathique, et nous a raconté une belle histoire de Séoul pendant la marche. Le restaurant où il nous a emmenés était authentique et délicieux (des nouilles froides par une soirée d'été, un pur bonheur). Si vous voulez une découverte simple et rapide de la randonnée à Séoul, c'est exactement ça !",rev7:"Une belle randonnée avec des vues magnifiques. Je ne peux que la recommander et je la réserverais à nouveau. Après cette belle visite, un pique-nique nous attendait dans le parc avec de délicieux plats coréens 👍",rev8:"Sanghoon est un guide adorable qui se soucie de ses invités comme de la montagne, et qui aime discuter avec les voyageurs. Le dîner était délicieux et Sanghoon a tenu compte de mon régime alimentaire particulier. Randonner en groupe a rendu Achasan moins intimidant pour un randonneur occasionnel comme moi, et j'ai appris beaucoup de choses sur des quartiers de Séoul que je ne connaissais pas. Une excellente façon de passer la soirée, seul ou en petit groupe. Les vues sont magnifiques ! C'est l'une de mes expériences les plus mémorables à Séoul."},
+de:{eyebrow_tag:"Private Touren: Reisen wie ein Local",eyebrow_sub:"Kein Touristengruppen-Fotostopp — ein Abend am Berg mit einem lokalen Guide, der dich wie einen alten Freund behandelt.",title:"Seoul Sonnenuntergangs-Wanderung + Tempel & K-Food-Abenteuer",qi1_label:"Dauer",qi1_val:"2,5 Stunden",qi2_label:"Gruppengröße",qi2_val:"Min. 2 – max. 8 Personen",qi3_label:"Sprache des Guides",qi3_val:"Koreanisch, Englisch",qi4_label:"Wissenswertes",qi4_val:"Schauplatz von BTS' Run BTS Folge 44",qi5_label:"Schwierigkeit",qi5_val:"Für Anfänger geeignet, einige Steinstufen",qi6_label:"Startzeit",qi6_val:"17–18 Uhr, je nach Jahreszeit",hl_head:"Warum du diese Wanderung lieben wirst",hl1:"Erlebe den goldenen Himmel über Seoul von einem Grat, den kaum ein Tourist kennt",hl2:"Betrete die ruhigen Höfe des Gyeongwonjeongsa-Tempels mit jemandem, der seine Geschichte kennt",hl3:"Sprich den ganzen Weg hinauf ungeskriptet mit deinem Guide über Geschichte, Kultur und Alltag",hl4:"Beende den Abend mit echtem koreanischem Essen an einem gemütlichen lokalen Ort",about_head:"Über dieses Erlebnis",about1:"Das ist keine Sightseeing-Checkliste — es ist ein Abend mit einem lokalen Freund, der jede versteckte Treppe, jede Tempelglocke und jeden Nudelladen auf dem Achasan kennt.",about2:"Steige durch stillen Kiefernwald, während die Stadt unter dir golden wird — auf demselben Gratweg, den BTS-Mitglieder RM und V bei Run BTS gegangen sind. Halte am Gyeongwonjeongsa-Tempel zwischen jahrhundertealten Dächern inne und kehre zu einem warmen, bodenständigen Essen zurück, das dein Guide wirklich mag. Unterwegs erwarten dich echte Gespräche über Korea — kein einstudiertes Skript.",incl_head:"Inklusive",incl1:"Geführte Wanderung zum Achasan-Gipfel",incl2:"Besuch des Gyeongwonjeongsa-Tempels",incl3:"Traditionelles koreanisches Essen und Street Food",excl1:"Transport zum und vom Startpunkt",excl2:"Persönliche Ausgaben",gtk_head:"Gut zu wissen",bring_head:"Was mitbringen",bring1:"Bequeme Schuhe",bring2:"Kamera",bring3:"Wasser",notallowed_head:"Nicht erlaubt",notallowed1:"Rauchen",before_head:"Bevor es losgeht",before1:"Trage geeignetes Schuhwerk zum Wandern",before2:"Bring eine Kamera für die Aussicht mit",before3:"Nimm Wasser für die Wanderung mit",notsuitable:"Nicht geeignet für Menschen mit eingeschränkter Mobilität oder Rollstuhlnutzer.",reviews_head:"Was Gäste sagen",form_head:"Platz reservieren",form_sub:"Sende uns dein Wunschdatum, wir bestätigen die Verfügbarkeit innerhalb von 24 Stunden.",f_name:"Vollständiger Name",f_email:"E-Mail",f_date:"Wunschdatum",f_guests:"Anzahl der Gäste",f_pref:"Sonnenaufgang oder -untergang?",f_pref_sunrise:"Sonnenaufgang",f_pref_sunset:"Sonnenuntergang",f_message:"Nachricht",f_submit:"Anfrage senden",itin_start:"Startpunkt: Bahnhof Gwangnaru (Linie 5), Ausgang 1",itin_walk:"Zu Fuß · 15 Minuten",itin_hike1:"Wanderung · 30 Minuten",itin_photo_title:"Fotostopp",itin_photo_sub:"Sonnenuntergang, malerische Ausblicke unterwegs · 20 Minuten",itin_temple:"Ein Tempel, in dem nur buddhistische Nonnen leben · 10 Minuten",itin_food_title:"Straße mit lokalem Street Food",itin_food_sub:"Dessert, Street Food, lokale und regionale Snacks · 45 Minuten",itin_finish:"Ankunft: Bahnhof Achasan (Linie 5)",rev_verified:"Verifizierte Buchung",rev_friend_group:"Freundesgruppe",rev1:"Wir hatten eine wirklich unterhaltsame Tour und haben viel über die koreanische Kultur gelernt. Es war interessant, angenehm und eine schöne Art, die Gegend aus lokaler Perspektive zu erleben. Besonders gut gefiel uns das Gespräch mit einem Einheimischen und seine Einblicke, wodurch sich die Tour persönlicher und unvergesslicher anfühlte. Wir haben diese Tour am Ende unserer Koreareise gemacht, würden aber empfehlen, sie an den Anfang zu legen, um Empfehlungen für weitere Ausflüge zu bekommen!",rev2:"Unser Guide war einfach wunderbar! Es fühlte sich an, als würden wir einen guten Freund besuchen, so heimisch hat er uns fühlen lassen, obwohl wir weit weg von zu Hause waren. Wir sind zu atemberaubenden Aussichten inmitten ruhiger Natur aufgestiegen und haben dabei angeregt über koreanische Geschichte, Kultur, Sprache und das Leben dort gesprochen. Das Abenteuer endete in einem gemütlichen, charmanten lokalen Lokal, wo wir leckeres Essen und Getränke sowie unvergessliche Geschichten und viel Gelächter teilten, bevor wir uns verabschiedeten. Dieses Erlebnis war definitiv ein Highlight unserer Reise.",rev3:"Absolut phänomenal! David war ein großartiger und sehr persönlicher Guide. Ich hatte gebeten, eine Stunde früher zu starten, um den Beginn des Sonnenaufgangs auf dem Gipfel zu sehen – und die Aussicht war genauso wunderschön wie erhofft! Er hat mir auch geholfen, mich in der U-Bahn zurechtzufinden, was ich sehr zu schätzen wusste. Auf Wunsch macht er auch gerne Fotos von einem, ein großes Plus! Außerdem hat er einiges zur Geschichte Koreas und den Orten, die wir sahen, erzählt, was mir gefallen hat :) Diese Tour kann ich nur empfehlen! Die Wanderung war toll, und dass sie mit Essen endet, ist einfach klasse :D",rev4:"Wunderbare Erfahrung! Sanghoon ist sehr sachkundig und erklärt Details ausführlich. Die Wanderung war wunderschön, das Essen, das wir hatten, war einzigartig und köstlich. Ich komme mit meinen Kindern und meiner Frau wieder! Danke, Sanghoon, für die tolle Zeit.",rev5:"David und ich haben uns eine Stunde früher getroffen, um den Sonnenuntergang bei der heutigen Wanderung zu erleben. Als ich erfuhr, dass der Gipfel derselbe Ort war, an dem BTS-Mitglieder RM und V ihre Run-BTS-Folge 44 gedreht hatten, war ich fest entschlossen, ihn zu erreichen. Als Anfängerin war der Weg machbar, wenn auch die Treppen ein paar zusätzliche Pausen erforderten, und David war die ganze Zeit über wunderbar geduldig. Der Aufstieg hat sich gelohnt – die Aussicht war atemberaubend, und wir haben oben mehrere schöne Fotos gemacht. Auf dem Rückweg hielten wir am Gyeongwonjeongsa-Tempel, was dem Tag eine friedliche Note verlieh, bevor wir mit einem herzhaften Abendessen in einem lokalen koreanischen Nudelrestaurant abschlossen. Ein unvergessliches Erlebnis von Anfang bis Ende.",rev6:"Die Wanderung war intensiver als erwartet (nicht für Anfänger, aber auch nicht zu schwer), besonders bei der intensiven Sommerhitze, aber die Aussicht war es absolut wert. Der Gyeongwonjeongsa-Tempel war ein schöner kurzer Zwischenstopp am Ende der Wanderung. Unser Guide David war sehr geduldig mit meiner Gruppe, sehr freundlich und erzählte uns während der Wanderung viel über die Geschichte Seouls. Das Restaurant, in das er uns brachte, war authentisch und lecker (kalte Nudeln an einem Sommerabend waren perfekt). Wenn du einen relativ einfachen, schnellen Einblick ins Wandern in Seoul willst, ist das genau richtig!",rev7:"Es war eine tolle Wanderung mit fantastischer Aussicht. Ich kann sie nur empfehlen und würde sie jederzeit wieder buchen. Nach der tollen Tour gab es noch ein Picknick im Park mit leckerem koreanischem Essen 👍",rev8:"Sanghoon ist ein wunderbarer Guide, dem sowohl die Gäste als auch der Berg am Herzen liegen und der sich gerne mit Reisenden unterhält. Das Abendessen war köstlich, und Sanghoon ist auf meine besondere Ernährung eingegangen. Die Wanderung in Gesellschaft machte den Achasan für einen Gelegenheitswanderer wie mich weniger einschüchternd, und ich habe viel über Viertel in Seoul gelernt, die mir bisher unbekannt waren. Ein hervorragender Weg, den Abend als Alleinreisender oder in kleiner Gruppe zu verbringen. Die Aussicht ist fantastisch! Das ist eine meiner unvergesslichsten Erfahrungen in Seoul."},
+pl:{eyebrow_tag:"Prywatne wycieczki: Podróżuj jak mieszkaniec",eyebrow_sub:"To nie grupowe zdjęcie turystyczne — to wieczór w górach z lokalnym przewodnikiem, który traktuje cię jak starego przyjaciela.",title:"Wieczorna wędrówka w Seulu + świątynia i przygoda z koreańskim jedzeniem",qi1_label:"Czas trwania",qi1_val:"2,5 godziny",qi2_label:"Wielkość grupy",qi2_val:"Min. 2 – maks. 8 osób",qi3_label:"Język przewodnika",qi3_val:"Koreański, angielski",qi4_label:"Ciekawostka",qi4_val:"Miejsce z odcinka 44 Run BTS (BTS)",qi5_label:"Poziom trudności",qi5_val:"Dla początkujących, kilka kamiennych stopni",qi6_label:"Godzina rozpoczęcia",qi6_val:"17–18, zależnie od sezonu",hl_head:"Dlaczego pokochasz tę wędrówkę",hl1:"Zobacz złote niebo nad Seulem z grani, o której mało kto z turystów wie",hl2:"Wejdź do cichych dziedzińców świątyni Gyeongwonjeongsa z kimś, kto zna jej historię",hl3:"Rozmawiaj z przewodnikiem o historii, kulturze i codziennym życiu przez całą wędrówkę, bez scenariusza",hl4:"Zakończ wieczór prawdziwym koreańskim jedzeniem w klimatycznym, lokalnym miejscu",about_head:"O tym doświadczeniu",about1:"To nie lista atrakcji do odhaczenia — to wieczór z lokalnym przyjacielem, który zna każde ukryte schody, dzwon świątynny i knajpkę z makaronem na Achasan.",about2:"Wspinaj się przez cichy sosnowy las, gdy miasto pod tobą złoci się w zachodzącym słońcu — tą samą granią, którą przeszli RM i V z BTS w Run BTS. Zatrzymaj się przy świątyni Gyeongwonjeongsa wśród liczących sobie wieki dachów, a potem zejdź na ciepły, skromny posiłek, który twój przewodnik naprawdę lubi. Po drodze czekają szczere rozmowy o Korei — żadnego wyuczonego scenariusza.",incl_head:"Co jest wliczone",incl1:"Wędrówka z przewodnikiem na szczyt Achasan",incl2:"Wizyta w świątyni Gyeongwonjeongsa",incl3:"Tradycyjne koreańskie jedzenie i street food",excl1:"Transport do i z miejsca startu",excl2:"Wydatki osobiste",gtk_head:"Warto wiedzieć",bring_head:"Co zabrać",bring1:"Wygodne buty",bring2:"Aparat",bring3:"Wodę",notallowed_head:"Zabronione",notallowed1:"Palenie",before_head:"Zanim wyruszysz",before1:"Załóż obuwie odpowiednie do wędrówki",before2:"Zabierz aparat, by uchwycić widoki",before3:"Zabierz ze sobą wodę",notsuitable:"Nieodpowiednie dla osób o ograniczonej mobilności ani dla użytkowników wózków inwalidzkich.",reviews_head:"Co mówią goście",form_head:"Zarezerwuj miejsce",form_sub:"Wyślij preferowaną datę, a potwierdzimy dostępność w ciągu 24 godzin.",f_name:"Imię i nazwisko",f_email:"E-mail",f_date:"Preferowana data",f_guests:"Liczba osób",f_pref:"Wschód czy zachód słońca?",f_pref_sunrise:"Wschód słońca",f_pref_sunset:"Zachód słońca",f_message:"Wiadomość",f_submit:"Wyślij zapytanie",itin_start:"Miejsce startu: stacja Gwangnaru (linia 5), wyjście 1",itin_walk:"Pieszo · 15 minut",itin_hike1:"Wędrówka · 30 minut",itin_photo_title:"Postój na zdjęcia",itin_photo_sub:"Zachód słońca, widoki po drodze · 20 minut",itin_temple:"Świątynia zamieszkana wyłącznie przez buddyjskie mniszki · 10 minut",itin_food_title:"Ulica lokalnego jedzenia",itin_food_sub:"Deser, street food, lokalne i regionalne przekąski · 45 minut",itin_finish:"Meta: stacja Achasan (linia 5)",rev_verified:"Zweryfikowana rezerwacja",rev_friend_group:"Grupa znajomych",rev1:"Mieliśmy naprawdę udaną wycieczkę i świetnie się bawiliśmy, poznając koreańską kulturę. Było ciekawie, przyjemnie i to był piękny sposób na doświadczenie okolicy z lokalnej perspektywy. Szczególnie podobały nam się rozmowy z lokalnym przewodnikiem i jego spostrzeżenia, dzięki czemu wycieczka była bardziej osobista i niezapomniana. Zrobiliśmy tę wycieczkę pod koniec naszej podróży po Korei, ale polecamy zrobić ją na początku, aby otrzymać wskazówki, co jeszcze warto zobaczyć!",rev2:"Nasz przewodnik był po prostu wspaniały! Czuliśmy się, jakbyśmy odwiedzali dobrego przyjaciela — sprawił, że poczuliśmy się jak w domu, mimo że byliśmy tak daleko od niego. Wspinaliśmy się na spore wysokości, podziwiając zapierające dech widoki wśród spokojnej przyrody, prowadząc przy tym ciekawą rozmowę na wiele tematów, w tym o koreańskiej historii, kulturze, języku i życiu codziennym. Przygodę zakończyliśmy w przytulnej, urokliwej lokalnej restauracji, dzieląc się pysznym jedzeniem i napojami oraz niezapomnianymi historiami i śmiechem, zanim się pożegnaliśmy. To zdecydowanie był jeden z najlepszych momentów naszej podróży.",rev3:"Absolutnie fenomenalnie! David był świetnym i bardzo osobistym przewodnikiem. Poprosiłam też o wyjście godzinę wcześniej, żebyśmy mogli zobaczyć początek wschodu słońca na szczycie góry. Widok okazał się równie piękny, jak się spodziewałam! Pomógł mi też poruszać się metrem, co bardzo doceniłam! Chętnie też robi zdjęcia, jeśli go o to poprosisz, co jest ogromnym plusem! Opowiedział też trochę o historii Korei i miejscach, które widzieliśmy, co bardzo mi się podobało :) Zdecydowanie polecam tę wycieczkę! Wędrówka była świetna, a na koniec czeka jedzenie — no bo jak inaczej :D",rev4:"Wspaniałe doświadczenie! Sanghoon jest bardzo dobrze zorientowany i chętnie tłumaczy wszystkie szczegóły. Wędrówka była piękna, a jedzenie, które próbowaliśmy, było wyjątkowe i wyśmienite. Wrócę tu z dziećmi i żoną! Dziękuję, Sanghoon, za wspaniale spędzony czas.",rev5:"David i ja spotkaliśmy się godzinę wcześniej, żeby złapać zachód słońca podczas dzisiejszej wędrówki. Gdy dowiedziałam się, że szczyt to to samo miejsce, w którym RM i V z BTS nagrywali odcinek 44 Run BTS, byłam zdeterminowana, by tam dotrzeć. Jako początkująca piechurka uznałam szlak za wykonalny, choć schody wymagały kilku dodatkowych przerw, a David był przez cały czas cudownie cierpliwy. Wspinaczka była tego warta — widok był oszałamiający, a na szczycie zrobiliśmy kilka pięknych zdjęć. W drodze powrotnej zatrzymaliśmy się przy świątyni Gyeongwonjeongsa, co dodało dniu odrobinę spokoju, a na koniec czekała kojąca kolacja w lokalnej koreańskiej restauracji z makaronem. To było niezapomniane doświadczenie od początku do końca.",rev6:"Wędrówka okazała się bardziej intensywna, niż się spodziewałam (nie dla początkujących, ale też nie za trudna), zwłaszcza przy intensywnym letnim upale, ale widok był tego wart. Świątynia Gyeongwonjeongsa była pięknym, krótkim przystankiem na końcu wędrówki. Nasz przewodnik, David, był bardzo cierpliwy wobec mojej grupy, bardzo przyjazny i podczas wędrówki opowiedział sporo o historii Seulu. Restauracja, do której nas zabrał, była autentyczna i pyszna (zimny makaron w letni wieczór był idealny). Jeśli chcesz w prosty i szybki sposób spróbować wędrówek w Seulu, to jest to dokładnie to!",rev7:"To była świetna wędrówka z fantastycznymi widokami. Mogę ją tylko polecić i chętnie zarezerwowałabym ją ponownie. Po wspaniałej wycieczce odbył się jeszcze piknik w parku z pysznym koreańskim jedzeniem 👍",rev8:"Sanghoon jest wspaniałym przewodnikiem, któremu zależy zarówno na gościach, jak i na górze, i który uwielbia rozmawiać z podróżnikami. Kolacja była pyszna, a Sanghoon uwzględnił moją specjalną dietę. Wędrówka w towarzystwie sprawiła, że Achasan był mniej onieśmielający dla początkującego piechura, a ja dowiedziałam się wiele o dzielnicach Seulu, których wcześniej nie znałam. To świetny sposób na spędzenie wieczoru zarówno dla samotnego podróżnika, jak i małej grupy. Widoki są fantastyczne! To jedno z moich najbardziej niezapomnianych doświadczeń w Seulu."}
+};
+
+const nodes=document.querySelectorAll('[data-i18n]');
+nodes.forEach(el=>el.dataset.en=el.textContent);
+function setLang(l){
+  nodes.forEach(el=>{
+    const k=el.dataset.i18n;
+    el.textContent = (l==='en' ? el.dataset.en : (i18n[l]&&i18n[l][k])) || el.dataset.en;
+  });
+}
+document.getElementById('langSel').onchange=e=>setLang(e.target.value);
+
+document.getElementById('bookingForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const btn=e.target.querySelector('button[type=submit]');
+  const msg=document.getElementById('formMsg');
+  btn.disabled=true; const orig=btn.textContent; btn.textContent='...';
+  try{
+    const res=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{Accept:'application/json'},body:new FormData(e.target)});
+    const data=await res.json();
+    msg.style.color = data.success ? 'var(--green)' : 'var(--red)';
+    msg.textContent = data.success ? "✅ Thanks! We'll be in touch within 24 hours." : "⚠️ Something went wrong. Please try again.";
+    if(data.success) e.target.reset();
+  }catch(err){ msg.style.color='var(--red)'; msg.textContent="⚠️ Something went wrong. Please try again."; }
+  btn.disabled=false; btn.textContent=orig;
+});
+</script>
+</body>
+</html>
