@@ -1,0 +1,75 @@
+<!--
+  ============================================================
+  보호된 페이지 템플릿 (예: Beginner.html, Voca.html 등)
+  사용법: 기존 페이지의 <head> 맨 아래, 그리고 <body> 콘텐츠 부분에
+  아래 3곳을 그대로 복사해 넣으면 됩니다.
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beginner Grammar – All About Korea</title>
+
+<!-- ① <head> 안에 이 스크립트를 넣으세요: 로그인+결제 여부를 콘텐츠 표시 전에 확인 -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8",
+    authDomain: "all-about-korea-login.firebaseapp.com",
+    projectId: "all-about-korea-login",
+    storageBucket: "all-about-korea-login.firebasestorage.app",
+    messagingSenderId: "20771155142",
+    appId: "1:20771155142:web:bbfeb19541625e750cbbc7"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      // 로그인 안 했으면 → 로그인 페이지로
+      location.href = "https://www.businesskorean.com/login.html";
+      return;
+    }
+
+    const snap = await getDoc(doc(db, "users", user.uid));
+    const paid = snap.exists() && snap.data().paid === true;
+
+    if (!paid) {
+      // 로그인은 했지만 결제 안 했으면 → 결제 페이지로
+      location.href = "https://www.businesskorean.com/payment.html";
+      return;
+    }
+
+    // 통과: 로딩화면 숨기고 실제 콘텐츠 보여주기
+    document.getElementById('gate-loading').style.display = 'none';
+    document.getElementById('gate-content').style.display = 'block';
+  });
+</script>
+<style>
+  #gate-loading{min-height:100vh;display:flex;align-items:center;justify-content:center;
+    font-family:'Inter',sans-serif;color:#6b6b6b;font-size:14px;}
+  #gate-content{display:none;}
+</style>
+</head>
+<body>
+
+<!-- ② 로그인/결제 확인 중 보여줄 로딩 화면 -->
+<div id="gate-loading">Checking access…</div>
+
+<!-- ③ 기존 페이지의 모든 콘텐츠(헤더, 문법 설명, 퀴즈 등)를 이 div 안에 넣으세요 -->
+<div id="gate-content">
+
+  <!-- 여기에 기존 Beginner.html의 <body> 내용 전체를 붙여넣으면 됩니다 -->
+  <h1>여기에 실제 문법 콘텐츠가 들어갑니다.</h1>
+
+</div>
+
+</body>
+</html>
