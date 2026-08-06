@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{userId} {
+      // 본인 데이터만 읽을 수 있음
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // 본인 문서를 새로 만드는 건 허용하되, 구독/결제 관련 필드는 직접 못 넣게 막음
+      // (이 필드들은 오직 Cloud Functions(Admin 권한)만 쓸 수 있음)
+      allow create: if request.auth != null && request.auth.uid == userId
+                    && !("subscriptionActive" in request.resource.data)
+                    && !("paid" in request.resource.data);
+
+      // 본인 문서를 수정할 순 있지만, 구독/결제 상태 필드는 절대 직접 못 바꿈
+      allow update: if request.auth != null && request.auth.uid == userId
+                    && !request.resource.data.diff(resource.data).affectedKeys()
+                         .hasAny(["subscriptionActive", "paid", "subscriptionID", "subscriptionPlanId"]);
+
+      allow delete: if false;
+    }
+
+    // 그 외 모든 컬렉션은 기본적으로 차단
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
