@@ -15,7 +15,8 @@ service cloud.firestore {
       // 본인 문서를 수정할 순 있지만, 구독/결제 상태 필드는 절대 직접 못 바꿈
       allow update: if request.auth != null && request.auth.uid == userId
                     && !request.resource.data.diff(resource.data).affectedKeys()
-                         .hasAny(["subscriptionActive", "paid", "subscriptionID", "subscriptionPlanId"]);
+                         .hasAny(["subscriptionActive", "paid", "subscriptionID", "subscriptionPlanId",
+                                  "subscriptionStartedAt", "subscriptionCancelledAt"]);
 
       allow delete: if false;
     }

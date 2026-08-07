@@ -44,11 +44,12 @@
 
     document.getElementById('gate-loading').style.display = 'none';
     document.getElementById('gate-content').style.display = 'flex';
+  });
 
-    document.getElementById('signOutBtn').addEventListener('click', async () => {
-      await signOut(auth);
-      location.href = "https://www.businesskorean.com/";
-    });
+  // onAuthStateChanged 밖에 한 번만 등록 (재실행돼도 리스너 중복 등록 방지)
+  document.getElementById('signOutBtn').addEventListener('click', async () => {
+    await signOut(auth);
+    location.href = "https://www.businesskorean.com/";
   });
 
   function renderStatus(isActive) {
@@ -83,7 +84,7 @@
 
     confirmNo.addEventListener('click', () => {
       confirmBox.style.display = 'none';
-      cancelBtn.style.display = 'inline-flex';
+      cancelBtn.style.display = '';
     });
 
     confirmYes.addEventListener('click', async () => {
