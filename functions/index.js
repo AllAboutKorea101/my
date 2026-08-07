@@ -140,7 +140,10 @@ exports.paypalWebhook = onRequest(
       }
 
       const event = req.body;
-      const subscriptionID = event?.resource?.id;
+      // BILLING.SUBSCRIPTION.* 이벤트는 resource.id가 구독ID지만,
+      // PAYMENT.SALE.* 이벤트(매달 자동결제)는 resource.id가 결제(거래) ID이고
+      // 실제 구독ID는 resource.billing_agreement_id에 들어있습니다.
+      const subscriptionID = event?.resource?.billing_agreement_id || event?.resource?.id;
       if (!subscriptionID) {
         res.status(200).send("ignored");
         return;
