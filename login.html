@@ -3,14 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- 도메인 통일: www.businesskorean.com으로 들어와도 즉시 businesskorean.com으로 강제 이동.
-     구글 로그인(리다이렉트 방식)은 "떠날 때"와 "돌아올 때"가 반드시 같은 주소여야 정상 작동하므로,
-     Firebase 코드가 실행되기 전에 가장 먼저 이 작업을 합니다. -->
-<script>
-  if (location.hostname === 'www.businesskorean.com') {
-    location.replace('https://businesskorean.com' + location.pathname + location.search + location.hash);
-  }
-</script>
 <title>Sign In – All About Korea</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,8 +124,8 @@
 
   function goNext() {
     location.href = redirectTarget
-      ? `https://businesskorean.com/${redirectTarget}`
-      : "https://businesskorean.com/";
+      ? `https://www.businesskorean.com/${redirectTarget}`
+      : "https://www.businesskorean.com/";
   }
 
   // 구글에서 리다이렉트로 돌아왔을 때 로그인 결과를 확인합니다 (팝업 방식 대신 리다이렉트 방식 사용 —

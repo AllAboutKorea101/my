@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>여름휴가 계획과 KTX 예매 | Summer Vacation & KTX Booking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html{ font-size:22px; } /* 2x baseline (32px) scaled down to ~0.7x per latest request */
+  :root{
+    --ink:#16283F; --rail:#1C6E8C; --rail-dark:#124B5F; --coral:#FF6F3C; --sun:#FFC857;
+    --paper:#FAF6EE; --paper2:#F1EAD9; --sky:#EAF4FB; --line:#D8CFB8; --good:#1E8A5F; --bad:#D64545; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'Gowun Dodum',sans-serif; line-height:1.55; }
+  .en{ font-family:'Manrope',sans-serif; }
+  .app{ max-width:980px; margin:0 auto; padding:0 20px 80px; }
+
+  /* HERO (shrunk) */
+  .hero{
+    position:relative; padding:20px 28px 16px; margin:0 -20px 0;
+    background: linear-gradient(180deg,#0F2438,var(--ink)); color:#fff; overflow:hidden;
+  }
+  .hero::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:6px;
+    background-image: radial-gradient(circle, var(--paper) 3px, transparent 3.3px);
+    background-size: 16px 12px; background-position: 8px -8px;
+  }
+  h1{ font-family:'Gowun Batang',serif; font-size:clamp(1.1rem,4vw,1.5rem); margin:0 0 4px; font-weight:700; line-height:1.28; }
+  .hero-en{ margin:0; font-family:'Manrope',sans-serif; font-weight:500; font-size:clamp(0.7rem,2vw,0.85rem); color:#BFD9E6; }
+
+  /* STICKY LEVEL + TAB BAR */
+  .sticky-top{ position:sticky; top:0; z-index:50; background:var(--paper); margin:0 -20px; padding:10px 20px 0; }
+  .level-select{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+  .level-hint{ font-family:'Manrope',sans-serif; font-size:0.7rem; color:#5b5646; letter-spacing:.01em; }
+  .level-switch{ display:flex; gap:6px; background:var(--ink); padding:4px; border-radius:30px; }
+  .lvl-btn{
+    font-family:'Manrope',sans-serif; font-weight:600; font-size:0.7rem; letter-spacing:.02em;
+    background:transparent; border:none; color:#BFD9E6; padding:7px 14px; border-radius:20px; cursor:pointer;
+  }
+  .lvl-btn.active{ background:var(--coral); color:#fff; }
+  .lvl-btn:hover:not(.active){ color:#fff; }
+
+  /* TABS */
+  .tabs{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:2px; background:var(--line); border-radius:var(--radius);
+    overflow:hidden; margin-bottom:16px; box-shadow:0 4px 14px rgba(22,40,63,.08);
+  }
+  .tab-btn{
+    background:var(--paper2); border:none; cursor:pointer; padding:16px 6px 14px; font-family:'Gowun Dodum',sans-serif;
+    color:var(--ink); font-size:0.844rem; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:3px;
+    position:relative; transition:background .15s;
+  }
+  .tab-btn small{ font-family:'Manrope',sans-serif; font-weight:500; color:#6b6656; font-size:0.656rem; letter-spacing:.03em;}
+  .tab-btn .num{ font-family:'Manrope',sans-serif; font-size:0.625rem; color:var(--coral); font-weight:700; letter-spacing:.06em;}
+  .tab-btn:hover{ background:#fff; }
+  .tab-btn.active{ background:var(--paper); }
+  .tab-btn.active::after{ content:""; position:absolute; left:14%; right:14%; bottom:0; height:3px; background:var(--coral); border-radius:3px 3px 0 0; }
+
+  .panel{ display:none; animation:fade .25s ease; }
+  .panel.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  h2.section-title{ font-family:'Gowun Batang',serif; font-size:1.375rem; margin:0 0 4px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;}
+  h2.section-title .en{ font-size:0.813rem; color:#8a8471; font-weight:500;}
+  p.section-desc{ color:#5b5646; font-size:0.875rem; margin:0 0 22px; }
+
+  .vocab-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+  .vcard{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; position:relative; overflow:hidden; }
+  .vcard::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--rail); }
+  .vcard .kr{ font-size:1.188rem; font-weight:700; }
+  .vcard .pos{ display:inline-block; font-family:'Manrope',sans-serif; font-size:0.625rem; font-weight:600; color:var(--rail-dark); background:var(--sky); border-radius:20px; padding:2px 9px; margin:6px 0 6px; letter-spacing:.04em; text-transform:uppercase; }
+  .vcard .en{ font-size:0.844rem; color:#3b3a33; }
+
+  .ticket{ background:#fff; border-radius:var(--radius); border:1px solid var(--line); box-shadow:0 6px 20px rgba(22,40,63,.06); overflow:hidden; margin-bottom:26px; }
+  .ticket-head{ background:var(--rail); color:#fff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; font-family:'Manrope',sans-serif; font-size:0.813rem; letter-spacing:.04em; }
+  .ticket-body{ padding:22px 24px; }
+  .rline{ margin:0 0 18px; font-size:1.063rem; }
+  .rline:last-child{ margin-bottom:0; }
+  .rline .num{ color:var(--coral); font-family:'Manrope',sans-serif; font-weight:700; margin-right:6px; font-size:0.813rem;}
+  .rline .translit{ display:block; font-family:'Manrope',sans-serif; color:#8a8471; font-size:0.781rem; margin:4px 0 0 22px; }
+
+  .w{ cursor:pointer; border-bottom:2px dotted var(--rail); padding:0 1px; border-radius:2px; }
+  .w:hover, .w:focus{ background:var(--sun); outline:none; }
+  .p{ color:#7c7867; }
+
+  .qbox{ background:var(--sky); border-radius:var(--radius); padding:18px 20px; margin-top:8px;}
+  .qbox h3{ margin:0 0 12px; font-size:0.938rem; font-family:'Manrope',sans-serif;}
+  .qitem{ margin-bottom:20px; }
+  .qitem p.qtext{ font-weight:700; margin:0 0 8px; font-size:0.906rem;}
+  .qitem .hintEn{ font-weight:400; color:#8a8471; }
+  .qtext-en{ display:block; font-weight:400; color:#8a8471; font-size:0.75rem; margin-top:3px; }
+  .pill-en{ display:block; font-size:0.72rem; color:#8a8471; font-weight:400; margin-top:2px; }
+  .pill.correct .pill-en, .pill.incorrect .pill-en{ color:#f0ede4; }
+
+  .pillgroup{ display:flex; flex-direction:column; gap:8px; }
+  .pill{
+    display:block; width:100%; text-align:left; background:#fff; border:2px solid #cfe0b0; color:var(--ink);
+    border-radius:14px; padding:12px 16px; font-family:'Gowun Dodum',sans-serif; font-size:0.875rem; cursor:pointer;
+    transition:.15s;
+  }
+  .pill:hover:not(.disabled){ background:#F5F8EC; }
+  .pill.correct{ background:#3F7D32; border-color:#3F7D32; color:#fff; }
+  .pill.incorrect{ background:var(--bad); border-color:var(--bad); color:#fff; }
+  .pill.disabled{ cursor:default; }
+
+  .feedback{ font-size:0.813rem; margin-top:6px; font-weight:700; }
+  .feedback.ok{ color:var(--good); }
+  .feedback.no{ color:var(--bad); }
+
+  .btn{ font-family:'Manrope',sans-serif; font-weight:600; font-size:0.844rem; background:var(--coral); color:#fff; border:none; padding:11px 22px; border-radius:30px; cursor:pointer; letter-spacing:.02em; transition:transform .1s, background .15s; }
+  .btn:hover{ background:#E85A28; transform:translateY(-1px); }
+  .btn.secondary{ background:var(--rail); }
+  .btn.secondary:hover{ background:var(--rail-dark); }
+
+  .score-bar{ background:var(--ink); color:#fff; border-radius:30px; padding:10px 20px; display:inline-flex; align-items:center; gap:10px; font-family:'Manrope',sans-serif; font-size:0.813rem; margin-bottom:16px; }
+  .score-bar b{ color:var(--sun); }
+
+  .gcard{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; margin-bottom:14px; }
+  .gcard .pattern{ font-family:'Manrope',sans-serif; background:var(--ink); color:var(--sun); display:inline-block; padding:5px 12px; border-radius:8px; font-size:0.875rem; font-weight:700; margin-bottom:8px; }
+  .gcard .gname{ color:#5b5646; font-size:0.813rem; margin-bottom:10px; }
+  .gcard .example{ background:var(--paper2); border-radius:8px; padding:12px 14px; font-size:0.906rem; margin-top:8px;}
+  .gcard .example .exlabel{ display:block; font-family:'Manrope',sans-serif; font-size:0.625rem; letter-spacing:.06em; text-transform:uppercase; color:var(--rail-dark); margin-bottom:5px; }
+  .gcard .example .en{ display:block; color:#8a8471; font-size:0.781rem; margin-top:5px;}
+  mark.hl{ background:#FFF1A8; color:var(--ink); padding:1px 3px; border-radius:4px; }
+
+  .tts-controls{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; background:var(--ink); color:#fff; border-radius:var(--radius); padding:16px 20px; margin-bottom:20px; font-family:'Manrope',sans-serif; font-size:0.813rem; }
+  .voicenote{ color:#BFD9E6; font-size:0.719rem; }
+
+  .dline{ display:flex; gap:14px; align-items:flex-start; padding:16px 4px; border-bottom:1px dashed var(--line); }
+  .dline:last-child{ border-bottom:none; }
+  .avatar{ width:1.75rem; height:1.75rem; min-width:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; margin-top:2px; }
+  .avatar.female{ background:#FDE3D8; }
+  .avatar.male{ background:var(--sky); }
+  .dtext{ flex:1; }
+  .dtext .spk{ font-size:0.75rem; color:#8a8471; }
+  .dtext .kr{ font-size:1.031rem; }
+  .dtext .en{ display:block; font-size:0.781rem; color:#8a8471; margin-top:4px;}
+  .playbtn{ border:none; background:var(--rail); color:#fff; width:1.75rem; height:1.75rem; min-width:1.75rem; border-radius:50%; cursor:pointer; font-size:0.75rem; flex-shrink:0; margin-top:2px; }
+  .playbtn:hover{ background:var(--rail-dark); }
+
+  .order-bank{ display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+  .chip{ font-family:'Gowun Dodum',sans-serif; background:#fff; border:1px solid var(--rail); color:var(--rail-dark); padding:8px 14px; border-radius:20px; cursor:pointer; font-size:0.875rem; }
+  .chip:hover{ background:var(--sky); }
+  .order-answer{ min-height:1.6rem; background:#fff; border:2px dashed var(--line); border-radius:10px; padding:8px 10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px; }
+  .order-answer .chip{ background:var(--sun); border-color:var(--sun); color:var(--ink); cursor:default; }
+
+  .placeholder-card{ background:#fff; border:2px dashed var(--line); border-radius:var(--radius); padding:36px 24px; text-align:center; color:#5b5646; font-size:0.875rem; }
+  .placeholder-card .big{ font-size:2rem; margin-bottom:10px; }
+
+  /* WORD FISHING GAME */
+  .race-hud{ display:flex; gap:20px; flex-wrap:wrap; align-items:center; background:var(--ink); color:#fff; border-radius:30px; padding:12px 22px; margin-bottom:16px; font-family:'Manrope',sans-serif; font-size:0.875rem; }
+  .race-hud b{ color:var(--sun); }
+  .race-end{ text-align:center; padding:30px 20px; }
+  .race-end .big-score{ font-family:'Gowun Batang',serif; font-size:2rem; color:var(--coral); margin:10px 0; }
+  .fish-intro{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; margin-bottom:16px; }
+  .fish-intro h3{ margin:0 0 10px; font-family:'Manrope',sans-serif; font-size:0.95rem; }
+  .fish-intro ul{ margin:0; padding-left:1.1em; display:flex; flex-direction:column; gap:8px; }
+  .fish-intro li{ font-size:0.85rem; line-height:1.5; }
+  .fish-intro li .en{ display:block; color:#8a8471; font-size:0.75rem; margin-top:2px; }
+  .fish-target-box{ text-align:center; margin-bottom:10px; font-family:'Manrope',sans-serif; font-size:0.8rem; color:#5b5646; }
+  .fish-target{ font-family:'Gowun Batang',serif; font-size:1.25rem; color:var(--ink); background:var(--sun); display:inline-block; padding:8px 20px; border-radius:14px; margin-top:6px; }
+  .fish-pond{ position:relative; height:300px; background:linear-gradient(180deg,#EAF4FB,#CFE8F5); border:2px solid var(--rail); border-radius:var(--radius); overflow:hidden; margin-bottom:12px; }
+  .fish-word{
+    position:absolute; top:-40px; background:#fff; border:2px solid var(--rail); color:var(--rail-dark);
+    border-radius:20px; padding:8px 14px; cursor:pointer; font-size:0.875rem; font-family:'Gowun Dodum',sans-serif;
+    animation-timing-function:linear; animation-fill-mode:forwards; white-space:nowrap; box-shadow:0 3px 6px rgba(0,0,0,.12);
+  }
+  .fish-word.wrong-flash{ background:var(--bad); color:#fff; border-color:var(--bad); pointer-events:none; }
+  .fish-word.correct-flash{ background:var(--good); color:#fff; border-color:var(--good); pointer-events:none; }
+  @keyframes fishFall{ from{ top:-40px; } to{ top:320px; } }
+
+  #tooltip{ position:fixed; z-index:999; background:var(--ink); color:#fff; padding:10px 14px; border-radius:10px; max-width:280px; font-size:0.844rem; box-shadow:0 8px 24px rgba(0,0,0,.25); display:none; line-height:1.5; }
+  #tooltip .tw{ font-weight:700; font-size:0.938rem; }
+  #tooltip .tp{ font-family:'Manrope',sans-serif; font-size:0.625rem; letter-spacing:.06em; text-transform:uppercase; color:var(--sun); margin:2px 0 4px; display:inline-block; }
+  #tooltip .tb{ color:#BFD9E6; font-size:0.719rem; margin-top:4px; }
+
+  @media(max-width:640px){ .tabs{ grid-template-columns:repeat(3,1fr); } }
+</style>
+<!-- 로그인 게이트: 구글 로그인 한 사람만 이 뉴스레터를 볼 수 있습니다 -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8",
+    authDomain: "all-about-korea-login.firebaseapp.com",
+    projectId: "all-about-korea-login",
+    storageBucket: "all-about-korea-login.firebasestorage.app",
+    messagingSenderId: "20771155142",
+    appId: "1:20771155142:web:bbfeb19541625e750cbbc7"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      // 로그인 안 됨: "로그인 해주세요" 메시지를 잠깐 보여준 뒤 로그인 페이지로 이동
+      // (돌아올 주소를 함께 넘겨서, 로그인 후 이 페이지로 자동 복귀시킴)
+      const returnPath = location.pathname.replace(/^\//, '');
+      document.getElementById('gate-loading').textContent = 'Please sign in to view this page… (로그인이 필요합니다)';
+      setTimeout(() => {
+        location.href = 'https://www.businesskorean.com/login.html?redirect=' + returnPath;
+      }, 900);
+      return;
+    }
+    // 로그인 확인됨: 로딩 화면 숨기고 실제 콘텐츠 표시
+    document.getElementById('gate-loading').style.display = 'none';
+    document.getElementById('gate-content').style.display = 'block';
+  });
+</script>
+<style>
+  #gate-loading{min-height:100vh;display:flex;align-items:center;justify-content:center;
+    font-family:'Manrope',sans-serif;color:#16283F;font-size:15px;text-align:center;padding:20px;}
+  #gate-content{display:none;}
+</style>
+</head>
+<body>
+<div id="gate-loading">Checking access…</div>
+<div id="gate-content">
+<div class="app">
+
+  <div class="hero">
+    <h1>주제: 여름휴가 계획과 KTX·고속버스 예매</h1>
+    <p class="hero-en">Topic: Summer Vacation Plans &amp; Booking KTX / Express Bus Tickets</p>
+  </div>
+
+  <div class="sticky-top">
+    <div class="level-select">
+      <span class="level-hint">👉 먼저 학습할 난이도를 선택하세요 · Choose your level first</span>
+      <div class="level-switch">
+        <button class="lvl-btn active" data-level="l1" onclick="setLevel('l1')">TOPIK 1–2</button>
+        <button class="lvl-btn" data-level="l2" onclick="setLevel('l2')">TOPIK 3–4</button>
+        <button class="lvl-btn" data-level="l3" onclick="setLevel('l3')">TOPIK 5–6</button>
+        <button class="lvl-btn" data-level="l4" onclick="setLevel('l4')">원어민</button>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="t1"><span class="num">01</span>단어<small>Words</small></button>
+      <button class="tab-btn" data-tab="t2"><span class="num">02</span>독해<small>Reading</small></button>
+      <button class="tab-btn" data-tab="t3"><span class="num">03</span>문법<small>Grammar</small></button>
+      <button class="tab-btn" data-tab="t4"><span class="num">04</span>대화<small>Dialogue</small></button>
+      <button class="tab-btn" data-tab="t5"><span class="num">05</span>퀴즈<small>Quiz</small></button>
+      <button class="tab-btn" data-tab="t6"><span class="num">06</span>게임<small>Game</small></button>
+    </nav>
+  </div>
+
+
+  <main>
+    <section id="t1" class="panel active">
+      <h2 class="section-title">필수 단어 <span class="en">Essential Vocabulary</span></h2>
+      <p class="section-desc">앞으로 나올 문장에 꼭 필요한 단어예요. Words you'll need for the sentences ahead.</p>
+      <div class="vocab-grid" id="vocabGrid"></div>
+    </section>
+
+    <section id="t2" class="panel">
+      <h2 class="section-title">독해 <span class="en">Reading</span></h2>
+      <p class="section-desc">문장을 읽고 아래 질문에 답해 보세요. Read the passage, then answer the questions below.</p>
+      <div class="ticket">
+        <div class="ticket-head"><span>KTX · READING PASSAGE</span><span>SEOUL → BUSAN</span></div>
+        <div class="ticket-body" id="readingBody"></div>
+      </div>
+      <div class="qbox">
+        <h3>내용 확인 · Comprehension Check</h3>
+        <div id="readingQuiz"></div>
+      </div>
+    </section>
+
+    <section id="t3" class="panel">
+      <h2 class="section-title">문법 <span class="en">Grammar</span></h2>
+      <p class="section-desc">독해문을 이해하는 데 필요한 문법이에요. 노란색으로 표시된 부분이 문법이 쓰인 곳이에요.<br>Grammar points from the reading passage — the yellow highlight shows where the pattern appears.</p>
+      <div id="grammarList"></div>
+    </section>
+
+    <section id="t4" class="panel">
+      <h2 class="section-title">대화 <span class="en">Dialogue</span></h2>
+      <p class="section-desc">부산 여행을 준비하는 두 사람의 대화예요. Two people preparing for a trip to Busan.</p>
+      <div class="tts-controls">
+        <span>🔊 <span class="en">Listen — 지민 0.6x · 수아 0.7x</span></span>
+        <span class="voicenote" id="voiceNote">한국어 음성을 불러오는 중... Loading Korean voice...</span>
+      </div>
+      <div id="dialogueList"></div>
+    </section>
+
+    <section id="t5" class="panel">
+      <h2 class="section-title">퀴즈 <span class="en">Quiz</span></h2>
+      <p class="section-desc">답을 고르면 바로 정답 여부와 이유를 알려줘요. Pick an answer to get instant feedback and the reason why.</p>
+      <div class="score-bar">🏅 <span class="en">Score</span> <b id="liveScore">0 / 0</b></div>
+
+      <div class="qbox"><h3>A. 단어 뜻 맞추기 · Word Meaning</h3><div id="quizA"></div></div>
+      <div class="qbox" style="margin-top:16px;"><h3>B. 문장 완성 (빈칸) · Fill in the Blank</h3><div id="quizB"></div></div>
+      <div class="qbox" style="margin-top:16px;">
+        <h3>C. 어순 배열 · Sentence Word Order</h3>
+        <p style="font-size:0.813rem;color:#5b5646;margin-top:-8px;">단어 뭉치를 순서대로 클릭하세요. Click the word chunks in the correct order.</p>
+        <div id="quizC"></div>
+      </div>
+    </section>
+
+    <section id="t6" class="panel">
+      <h2 class="section-title">게임 <span class="en">Game</span></h2>
+      <p class="section-desc">단어 낚시 — 뜻에 맞는 단어가 물속에 떨어지기 전에 클릭하세요! Word Fishing — click the falling word that matches the given meaning before it reaches the bottom.</p>
+
+      <div class="race-hud">
+        <div>🎣 <span class="en">Score</span> <b id="fishScore">0</b></div>
+        <div>❤️ <b id="fishLives">3</b></div>
+        <div>📚 <span class="en">Word pool</span> <b id="fishWordCount">0</b></div>
+      </div>
+
+      <div class="fish-intro" id="fishIntro">
+        <h3>게임 방법 · How to Play</h3>
+        <ul>
+          <li>🎯 화면 위에 영어 뜻이 나와요. <span class="en">An English meaning appears at the top.</span></li>
+          <li>🐟 물속에 떨어지는 단어 중 그 뜻에 맞는 한국어 단어를 클릭하세요. <span class="en">Click the falling Korean word that matches that meaning.</span></li>
+          <li>✅ 정답이면 +10점, 오답이거나 정답을 놓치면 ❤️가 하나 줄어요. <span class="en">Correct = +10 points; a wrong click or a missed word costs a ❤️.</span></li>
+          <li>⏱️ 점수가 오를수록 단어가 점점 빨리 떨어져요. <span class="en">Words fall faster as your score climbs.</span></li>
+          <li>💔 ❤️가 0이 되면 게임이 끝나요. <span class="en">The game ends when you run out of lives.</span></li>
+        </ul>
+        <div style="text-align:center; margin-top:14px;">
+          <button class="btn" onclick="beginFishGame()">▶ 게임 시작 Start Game</button>
+        </div>
+      </div>
+
+      <div class="fish-target-box" id="fishTargetBox" style="display:none;">
+        <span class="en">Find the Korean word that means:</span>
+        <div class="fish-target" id="fishTarget">—</div>
+      </div>
+
+      <div class="fish-pond" id="fishPond" style="display:none;"></div>
+
+      <div class="race-end" id="fishEndScreen" style="display:none;">
+        <div style="font-size:2rem;">🐟</div>
+        <div>게임 종료! Game over!</div>
+        <div class="big-score" id="fishFinalScore"></div>
+        <div style="margin-top:14px;">
+          <button class="btn secondary" onclick="startFishGame()">🔄 다시 시작 Restart</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="tooltip"></div>
+
+<script>
+/* ---------------- TAB SWITCHING ---------------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ---------------- TOOLTIP ---------------- */
+const tooltip = document.getElementById('tooltip');
+function showTooltip(el){
+  const kr = el.dataset.kr || el.textContent;
+  const en = el.dataset.en, pos = el.dataset.pos, base = el.dataset.base;
+  tooltip.innerHTML = '<div class="tw">'+kr+'</div><span class="tp">'+pos+'</span><div>'+en+'</div>' + (base ? '<div class="tb">base form / 기본형: '+base+'</div>' : '');
+  tooltip.style.display = 'block';
+  const r = el.getBoundingClientRect();
+  let left = r.left, top = r.bottom + 8;
+  if(left + 280 > window.innerWidth) left = window.innerWidth - 290;
+  if(top + 110 > window.innerHeight) top = r.top - 100;
+  tooltip.style.left = Math.max(8,left)+'px';
+  tooltip.style.top = Math.max(8,top)+'px';
+}
+document.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('w')){ e.stopPropagation(); showTooltip(e.target); }
+  else if(!e.target.closest('#tooltip')){ tooltip.style.display='none'; }
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && document.activeElement.classList.contains('w')) showTooltip(document.activeElement);
+});
+function W(kr,en,pos,base){
+  return '<span class="w" tabindex="0" data-kr="'+kr+'" data-en="'+en+'" data-pos="'+pos+'"' + (base?(' data-base="'+base+'"'):'') + '>'+kr+'</span>';
+}
+function P(p){ return '<span class="p">'+p+'</span>'; }
+
+/* ================= LEVEL DATA ================= */
+const LEVELS = {
+
+/* ---------- L1 : TOPIK 1-2 ---------- */
+l1:{
+  label:'TOPIK 1–2 · Korean',
+  vocab:[
+    {kr:'여름', en:'summer', pos:'noun'},{kr:'휴가', en:'vacation', pos:'noun'},
+    {kr:'좋아하다', en:'to like', pos:'verb'},{kr:'있다', en:'there is / to have', pos:'verb'},
+    {kr:'없다', en:'there isn\'t / to not have', pos:'verb'},{kr:'가족', en:'family', pos:'noun'},
+    {kr:'가다', en:'to go', pos:'verb'},{kr:'오다', en:'to come', pos:'verb'},
+    {kr:'표', en:'ticket', pos:'noun'},{kr:'사다', en:'to buy', pos:'verb'},
+    {kr:'기차', en:'train', pos:'noun'},{kr:'빠르다', en:'to be fast', pos:'adjective'},
+    {kr:'싸다', en:'to be cheap', pos:'adjective'},
+  ],
+  readingHTML:[
+    ['1', W('저','I, me','pronoun')+P('는')+' '+W('여름','summer','noun')+P('을')+' '+W('좋아해요','like','verb','좋아하다')+'.', "I like summer."],
+    ['2', W('저','I, me','pronoun')+P('는')+' '+W('휴가','vacation','noun')+P('가')+' '+W('있어요','there is / to have','verb','있다')+'.', "I have a vacation."],
+    ['3', W('가족','family','noun')+P('과')+' '+W('부산','Busan','proper noun')+P('에')+' '+W('가요','go','verb','가다')+'.', "I go to Busan with my family."],
+    ['4', 'KTX '+W('표','ticket','noun')+P('를')+' '+W('사요','buy','verb','사다')+'.', "I buy a KTX ticket."],
+    ['5', W('기차','train','noun')+P('가')+' '+W('빨라요','fast','adjective','빠르다')+'.', "The train is fast."],
+  ],
+  readingQ:[
+    {q:'이 글은 무엇에 대한 내용이에요?', en:'What is this passage about?', opts:['여름 휴가와 부산 여행 준비','가을 등산 계획','생일 파티 준비','학교 시험'], optsEn:['Preparing for a summer vacation trip to Busan','Planning an autumn hike','Preparing a birthday party','A school exam'], correct:0, reason:"여름 휴가에 부산으로 가족 여행을 준비하는 내용이에요."},
+    {q:'저는 무엇을 좋아해요?', en:'What does the writer like?', opts:['겨울','여름','봄','가을'], optsEn:['Winter','Summer','Spring','Autumn'], correct:1, reason:"'저는 여름을 좋아해요'라고 했어요."},
+    {q:'누구와 부산에 가요?', en:'Who is going to Busan with the writer?', opts:['친구','가족','혼자','선생님'], optsEn:['Friend','Family','Alone','Teacher'], correct:1, reason:"'가족과 부산에 가요'라고 했어요."},
+    {q:'무엇을 사요?', en:'What do they buy?', opts:['옷','신발','KTX 표','음식'], optsEn:['Clothes','Shoes','A KTX ticket','Food'], correct:2, reason:"'KTX 표를 사요'라고 했어요."},
+    {q:'기차가 어때요?', en:'How is the train?', opts:['느려요','비싸요','빨라요','작아요'], optsEn:['Slow','Expensive','Fast','Small'], correct:2, reason:"'기차가 빨라요'라고 했어요."},
+  ],
+  grammar:[
+    {p:'N을/를 좋아하다', name:'to like N', ex1:'저는 여름을 좋아해요.', hl1:'여름을 좋아해요', en1:'I like summer.', ex2:'저는 커피를 좋아해요.', hl2:'커피를 좋아해요', en2:'I like coffee.'},
+    {p:'N이/가 있다 · 없다', name:'there is / isn\'t — to have / not have', ex1:'저는 휴가가 있어요.', hl1:'휴가가 있어요', en1:'I have a vacation.', ex2:'저는 시간이 없어요.', hl2:'시간이 없어요', en2:"I don't have time."},
+    {p:'N과/와', name:'with N (together)', ex1:'가족과 부산에 가요.', hl1:'가족과', en1:'with (my) family', ex2:'친구와 밥을 먹어요.', hl2:'친구와', en2:'I eat with a friend.'},
+    {p:'N에 가다/오다', name:'to go / come to N (place)', ex1:'가족과 부산에 가요.', hl1:'부산에 가요', en1:'(I) go to Busan.', ex2:'저는 학교에 가요.', hl2:'학교에 가요', en2:'I go to school.'},
+    {p:'N을/를 사다', name:'to buy N', ex1:'KTX 표를 사요.', hl1:'표를 사요', en1:'(I) buy a ticket.', ex2:'저는 사과를 사요.', hl2:'사과를 사요', en2:'I buy an apple.'},
+    {p:'A-아/어요', name:'adjective, present tense polite ending', ex1:'기차가 빨라요.', hl1:'빨라요', en1:'(It) is fast.', ex2:'이 가방이 싸요.', hl2:'싸요', en2:'This bag is cheap.'},
+  ],
+  dialogue:[
+    {spk:'female', name:'지민 Jimin', kr: W('여름','summer','noun')+P('을')+' '+W('좋아해요','like','verb','좋아하다')+'?', en:'Do you like summer?'},
+    {spk:'male', name:'수아 Sua', kr: W('네','yes','interjection')+', '+W('좋아해요','like','verb','좋아하다')+'.', en:'Yes, I like it.'},
+    {spk:'female', name:'지민 Jimin', kr: W('휴가','vacation','noun')+P('가')+' '+W('있어요','there is / have','verb','있다')+'?', en:'Do you have a vacation?'},
+    {spk:'male', name:'수아 Sua', kr: W('네','yes','interjection')+', '+W('있어요','there is / have','verb','있다')+'.', en:'Yes, I do.'},
+    {spk:'female', name:'지민 Jimin', kr: W('어디','where','pronoun')+P('에')+' '+W('가요','go','verb','가다')+'?', en:'Where are you going?'},
+    {spk:'male', name:'수아 Sua', kr: W('가족','family','noun')+P('과')+' '+W('부산','Busan','proper noun')+P('에')+' '+W('가요','go','verb','가다')+'.', en:"I'm going to Busan with my family."},
+  ],
+  quizA:[
+    {q:'"기차"의 뜻은 무엇이에요?', en:'What does "기차" mean?', opts:['train','bus','ticket','car'], correct:0, reason:"'기차'는 철길 위를 달리는 교통수단이에요."},
+    {q:'"사다"의 뜻은 무엇이에요?', en:'What does "사다" mean?', opts:['to sell','to buy','to see','to give'], correct:1, reason:"'사다'는 돈을 내고 물건을 얻는 것을 뜻해요."},
+    {q:'"싸다"의 뜻은 무엇이에요?', en:'What does "싸다" mean?', opts:['to be expensive','to be cheap','to be fast','to be slow'], correct:1, reason:"'싸다'는 가격이 낮다는 뜻이에요."},
+    {q:'"없다"의 뜻은 무엇이에요?', en:'What does "없다" mean?', opts:['there is','there isn\'t','to go','to come'], correct:1, reason:"'없다'는 '있다'의 반대말이에요."},
+    {q:'"빠르다"의 뜻은 무엇이에요?', en:'What does "빠르다" mean?', opts:['to be slow','to be fast','to be big','to be small'], correct:1, reason:"'빠르다'는 속도가 높다는 뜻이에요."},
+  ],
+  quizB:[
+    {q:'저는 여름____ 좋아해요.', en:'I like ___ summer.', opts:['을','이','에','와'], correct:0, reason:"'좋아하다' 앞에는 목적어 조사 '을/를'을 써요."},
+    {q:'저는 휴가____ 있어요.', en:'I have a vacation.', opts:['가','를','에','도'], correct:0, reason:"'있다' 앞에는 '이/가'를 써요."},
+    {q:'가족____ 부산에 가요.', en:'I go to Busan ___ my family.', opts:['과','를','가','는'], correct:0, reason:"'~와 같이'라는 뜻일 때 'N과/와'를 써요."},
+    {q:'저는 학교____ 가요.', en:'I go ___ school.', opts:['에','를','가','도'], correct:0, reason:"장소로 이동할 때는 'N에 가다'를 써요."},
+    {q:'KTX 표____ 사요.', en:'I buy ___ a KTX ticket.', opts:['를','가','에','도'], correct:0, reason:"'사다' 앞에는 목적어 조사 '을/를'을 써요."},
+  ],
+  quizC:[
+    {chunks:['저는','여름을','좋아해요.'], correctOrder:[0,1,2], en:'I like summer.'},
+    {chunks:['저는','휴가가','있어요.'], correctOrder:[0,1,2], en:'I have a vacation.'},
+    {chunks:['가족과','부산에','가요.'], correctOrder:[0,1,2], en:'I go to Busan with my family.'},
+    {chunks:['KTX','표를','사요.'], correctOrder:[0,1,2], en:'I buy a KTX ticket.'},
+    {chunks:['기차가','빨라요.'], correctOrder:[0,1], en:'The train is fast.'},
+  ],
+  quizD:[],
+  gameSentences:[],
+},
+
+/* ---------- L2 : TOPIK 3-4 ---------- */
+l2:{
+  label:'TOPIK 3–4 · Korean',
+  vocab:[
+    {kr:'여름', en:'summer', pos:'noun'},{kr:'휴가', en:'vacation, time off', pos:'noun'},
+    {kr:'계획', en:'plan', pos:'noun'},{kr:'기차', en:'train', pos:'noun'},
+    {kr:'고속버스', en:'express bus', pos:'noun'},{kr:'표', en:'ticket', pos:'noun'},
+    {kr:'예매하다', en:'to book / reserve in advance', pos:'verb'},{kr:'가족', en:'family', pos:'noun'},
+    {kr:'바다', en:'sea, beach', pos:'noun'},{kr:'여행', en:'trip, travel', pos:'noun'},
+    {kr:'인터넷', en:'internet', pos:'noun'},{kr:'싸다', en:'to be cheap', pos:'adjective'},
+    {kr:'빠르다', en:'to be fast', pos:'adjective'},{kr:'편하다', en:'to be comfortable', pos:'adjective'},
+    {kr:'출발하다', en:'to depart', pos:'verb'},{kr:'도착하다', en:'to arrive', pos:'verb'},
+    {kr:'좌석', en:'seat', pos:'noun'},{kr:'함께', en:'together', pos:'adverb'},
+  ],
+  readingHTML:[
+    ['1', W('저','I, me','pronoun')+P('는')+' '+W('여름','summer','noun')+P('에')+' '+W('휴가','vacation','noun')+' '+W('계획','plan','noun')+P('이')+' '+W('있어요','there is / to have','verb','있다')+'.', "I have vacation plans for summer."],
+    ['2', W('가족','family','noun')+P('과')+' '+W('함께','together','adverb')+' '+W('부산','Busan','proper noun')+' '+W('바다','sea, beach','noun')+P('에')+' '+W('가고','to go (and)','verb','가다')+' '+W('싶어요','want to','auxiliary adjective','싶다')+'.', "I want to go to the Busan beach together with my family."],
+    ['3', W('그래서','so, therefore','conjunction')+' '+W('인터넷','internet','noun')+P('으로')+' KTX '+W('표','ticket','noun')+P('를')+' '+W('예매했어요','booked, reserved','verb','예매하다')+'.', "So I booked a KTX ticket online."],
+    ['4', 'KTX'+P('는')+' '+W('고속버스','express bus','noun')+P('보다')+' '+W('더','more','adverb')+' '+W('빠르고','fast (and)','adjective','빠르다')+' '+W('편해요','comfortable','adjective','편하다')+'.', "KTX is faster and more comfortable than the express bus."],
+    ['5', W('우리','we','pronoun')+P('는')+' '+W('다음','next','determiner')+' '+W('주','week','noun')+' '+W('금요일','Friday','noun')+P('에')+' '+W('서울','Seoul','proper noun')+P('에서')+' '+W('출발해요','depart','verb','출발하다')+'.', "We depart from Seoul next Friday."],
+  ],
+  readingQ:[
+    {q:'이 글의 중심 내용은 무엇이에요?', en:'What is the main idea of this passage?', opts:['여름 휴가로 가족과 부산에 가려고 KTX 표를 예매했다.','겨울에 혼자 스키를 타러 간다.','고속버스가 KTX보다 더 빠르다.','나는 서울에서 태어났다.'], optsEn:['Booked a KTX ticket to go to Busan with family for summer vacation.','Going skiing alone in winter.','The express bus is faster than KTX.','I was born in Seoul.'], correct:0, reason:"이 글은 여름 휴가로 가족과 부산에 가는 계획과 KTX 표 예매에 대한 내용이에요."},
+    {q:'누구와 함께 여행 가요?', en:'Who are they traveling with?', opts:['친구','회사 동료','가족','혼자'], optsEn:['Friend','Coworker','Family','Alone'], correct:2, reason:"두 번째 문장에 '가족과 함께'라고 나와요."},
+    {q:'어디로 여행 가요?', en:'Where are they traveling to?', opts:['제주도','부산','강릉','여수'], optsEn:['Jeju Island','Busan','Gangneung','Yeosu'], correct:1, reason:"'부산 바다에 가고 싶어요'라고 했어요."},
+    {q:'무엇으로 표를 예매했어요?', en:'How did they book the ticket?', opts:['전화로','직접 방문해서','이메일로','인터넷으로'], optsEn:['By phone','By visiting in person','By email','Online'], correct:3, reason:"'인터넷으로 KTX 표를 예매했어요'라고 했어요."},
+    {q:'언제 출발해요?', en:'When do they depart?', opts:['이번 주 금요일','다음 주 금요일','다음 주 월요일','이번 주 토요일'], optsEn:['This Friday','Next Friday','Next Monday','This Saturday'], correct:1, reason:"'다음 주 금요일에... 출발해요'라고 했어요."},
+  ],
+  grammar:[
+    {p:'V-고 싶다', name:'want to do something', ex1:'가족과 함께 부산 바다에 가고 싶어요.', hl1:'가고 싶어요', en1:'I want to go to the Busan beach together with my family.', ex2:'저는 이번 여름에 제주도에 가고 싶어요.', hl2:'가고 싶어요', en2:'I want to go to Jeju Island this summer.'},
+    {p:'N와/과 함께', name:'together with N', ex1:'가족과 함께 부산 바다에 가고 싶어요.', hl1:'가족과 함께', en1:'together with (my) family', ex2:'친구와 함께 영화를 봐요.', hl2:'친구와 함께', en2:'I watch a movie together with my friend.'},
+    {p:'N(으)로', name:'by means of / using N', ex1:'그래서 인터넷으로 KTX 표를 예매했어요.', hl1:'인터넷으로', en1:'I booked (it) using the internet.', ex2:'저는 버스로 학교에 가요.', hl2:'버스로', en2:'I go to school by bus.'},
+    {p:'A/V-았/었/였어요', name:'past tense, polite ending', ex1:'그래서 인터넷으로 KTX 표를 예매했어요.', hl1:'예매했어요', en1:'(I) booked (it).', ex2:'어제 친구를 만났어요.', hl2:'만났어요', en2:'I met my friend yesterday.'},
+    {p:'A보다 (더) A', name:'comparison — "more A than N"', ex1:'KTX는 고속버스보다 더 빠르고 편해요.', hl1:'고속버스보다 더 빠르고', en1:'(It is) faster than the express bus.', ex2:'여름이 봄보다 더 더워요.', hl2:'봄보다 더 더워요', en2:'Summer is hotter than spring.'},
+    {p:'N에서 + 출발하다/도착하다', name:'depart / arrive from N (place)', ex1:'우리는 다음 주 금요일에 서울에서 출발해요.', hl1:'서울에서 출발해요', en1:'(We) depart from Seoul.', ex2:'기차가 9시에 대전에서 도착해요.', hl2:'대전에서 도착해요', en2:'The train arrives in Daejeon at 9.'},
+  ],
+  dialogue:[
+    {spk:'female', name:'지민 Jimin', kr: W('이번','this (time)','determiner')+' '+W('여름','summer','noun')+P('에')+' '+W('휴가','vacation','noun')+' '+W('계획','plan','noun')+' '+W('있어요','to have','verb','있다')+'?', en:'Do you have vacation plans this summer?'},
+    {spk:'male', name:'수아 Sua', kr: W('네','yes','interjection')+', '+W('가족','family','noun')+P('과')+' '+W('부산','Busan','proper noun')+P('에')+' '+W('가려고','plan / intend to go','verb','가다')+' '+W('해요','do','verb','하다')+'.', en:"Yes, I'm planning to go to Busan with my family."},
+    {spk:'female', name:'지민 Jimin', kr: 'KTX'+W('표','ticket','noun')+P('는')+' '+W('예매했어요','booked','verb','예매하다')+'?', en:'Did you book the KTX ticket?'},
+    {spk:'male', name:'수아 Sua', kr: W('네','yes','interjection')+', '+W('어제','yesterday','noun')+' '+W('인터넷','internet','noun')+P('으로')+' '+W('예매했어요','booked','verb','예매하다')+'.', en:'Yes, I booked it online yesterday.'},
+    {spk:'female', name:'지민 Jimin', kr: W('좌석','seat','noun')+P('은')+' '+W('편해요','comfortable','adjective','편하다')+'?', en:'Are the seats comfortable?'},
+    {spk:'male', name:'수아 Sua', kr: W('네','yes','interjection')+', KTX'+P('는')+' '+W('빠르고','fast (and)','adjective','빠르다')+' '+W('편해요','comfortable','adjective','편하다')+'.', en:'Yes, KTX is fast and comfortable.'},
+  ],
+  quizA:[
+    {q:'"여행"의 뜻은 무엇이에요?', en:'What does "여행" mean?', opts:['trip / travel','ticket','seat','family'], correct:0, reason:"'여행'은 다른 곳으로 이동해서 구경하고 즐기는 일을 뜻해요."},
+    {q:'"좌석"의 뜻은 무엇이에요?', en:'What does "좌석" mean?', opts:['internet','seat','summer','plan'], correct:1, reason:"'좌석'은 기차나 버스에서 앉는 자리를 뜻해요."},
+    {q:'"도착하다"의 뜻은 무엇이에요?', en:'What does "도착하다" mean?', opts:['to depart','to arrive','to book','to be fast'], correct:1, reason:"'도착하다'는 목적지에 다다르는 것을 뜻해요."},
+    {q:'"싸다"의 뜻은 무엇이에요?', en:'What does "싸다" mean?', opts:['to be expensive','to be fast','to be cheap','to be comfortable'], correct:2, reason:"'싸다'는 가격이 낮다는 뜻이에요."},
+    {q:'"함께"의 뜻은 무엇이에요?', en:'What does "함께" mean?', opts:['together','alone','next','already'], correct:0, reason:"'함께'는 누군가와 같이 한다는 뜻이에요."},
+  ],
+  quizB:[
+    {q:'가족____ 함께 부산에 가요.', en:'I go to Busan together ___ my family.', opts:['과','를','도','만'], correct:0, reason:"'N와/과 함께'는 '~와 같이'라는 뜻이에요. 가족 뒤에는 '과'가 와요."},
+    {q:'인터넷____ 표를 예매했어요.', en:'I booked a ticket ___ the internet.', opts:['에','에서','도','으로'], correct:3, reason:"'N(으)로'는 수단을 나타내요. 인터넷을 '수단'으로 썼으니 '으로'가 맞아요."},
+    {q:'KTX가 고속버스____ 더 빠르고 편해요.', en:'KTX is faster and more comfortable ___ the express bus.', opts:['보다','에게','한테','의'], correct:0, reason:"비교할 때는 'A보다 더 A'를 써요."},
+    {q:'저는 부산 바다에 가고 ____.', en:'I ___ go to the Busan beach.', opts:['싶다','싶어요','싶은','싶고'], correct:1, reason:"문장을 정중하게 끝낼 때는 '싶어요'를 써요."},
+    {q:'우리는 서울____ 출발해요.', en:'We depart ___ Seoul.', opts:['에','으로','에서','도'], correct:2, reason:"출발하는 장소를 나타낼 때는 'N에서'를 써요."},
+  ],
+  quizC:[
+    {chunks:['저는','여름에','휴가 계획이','있어요.'], correctOrder:[0,1,2,3], en:'I have vacation plans for summer.'},
+    {chunks:['가족과','함께','부산 바다에','가고 싶어요.'], correctOrder:[0,1,2,3], en:'I want to go to the Busan beach together with my family.'},
+    {chunks:['인터넷으로','KTX 표를','예매했어요.'], correctOrder:[0,1,2], en:'I booked a KTX ticket online.'},
+    {chunks:['KTX는','고속버스보다','더 빠르고','편해요.'], correctOrder:[0,1,2,3], en:'KTX is faster and more comfortable than the express bus.'},
+    {chunks:['다음 주 금요일에','서울에서','출발해요.'], correctOrder:[1,0,2], en:'We depart from Seoul next Friday.'},
+  ],
+  quizD:[
+    {q:'여자가 남자에게 처음 물어본 것은 무엇이에요?', opts:['표 가격','휴가 계획','좌석 상태','출발 시간'], correct:1, reason:"대화 첫 줄에서 여자가 '휴가 계획 있어요?'라고 물었어요."},
+    {q:'남자는 표를 언제 예매했어요?', opts:['오늘','어제','지난주','내일'], correct:1, reason:"남자가 '어제 인터넷으로 예매했어요'라고 말했어요."},
+    {q:'남자는 KTX가 어떻다고 말했어요?', opts:['비싸고 불편하다','느리고 편하다','빠르고 편하다','싸고 빠르다'], correct:2, reason:"남자가 'KTX는 빠르고 편해요'라고 말했어요."},
+  ],
+  gameSentences:[
+    {chunks:['저는','여름에','휴가 계획이','있어요.'], en:'I have vacation plans for summer.'},
+    {chunks:['가족과','함께','부산 바다에','가고 싶어요.'], en:'I want to go to the Busan beach with my family.'},
+    {chunks:['그래서','인터넷으로','KTX 표를','예매했어요.'], en:'So I booked a KTX ticket online.'},
+    {chunks:['KTX는','고속버스보다','더 빠르고','편해요.'], en:'KTX is faster and more comfortable than the express bus.'},
+    {chunks:['우리는','다음 주 금요일에','서울에서','출발해요.'], en:'We depart from Seoul next Friday.'},
+  ],
+},
+
+/* ---------- L3 : TOPIK 5-6 ---------- */
+l3:{
+  label:'TOPIK 5–6 · Korean',
+  vocab:[
+    {kr:'왕복', en:'round trip', pos:'noun'},{kr:'편도', en:'one-way trip', pos:'noun'},
+    {kr:'성수기', en:'peak season', pos:'noun'},{kr:'할인', en:'discount', pos:'noun'},
+    {kr:'매진되다', en:'to sell out', pos:'verb'},{kr:'창가 자리', en:'window seat', pos:'noun'},
+    {kr:'통로 자리', en:'aisle seat', pos:'noun'},{kr:'환불하다', en:'to refund', pos:'verb'},
+    {kr:'일정', en:'schedule, itinerary', pos:'noun'},{kr:'숙소', en:'accommodation, lodging', pos:'noun'},
+    {kr:'붐비다', en:'to be crowded', pos:'verb'},{kr:'확인하다', en:'to check, confirm', pos:'verb'},
+  ],
+  readingHTML:[
+    ['1', W('여름','summer','noun')+' '+W('휴가철','vacation season','noun')+P('이')+' '+W('되면','if it becomes','verb','되다')+' '+W('기차표','train ticket','noun')+P('나')+' '+W('고속버스표','express bus ticket','noun')+P('가')+' '+W('금방','soon, quickly','adverb')+' '+W('매진되기','selling out','verb','매진되다')+' '+W('때문에','because of','dependent noun')+' '+W('미리','in advance','adverb')+' '+W('예매하는','booking','verb','예매하다')+' '+W('게','the fact/act of (것이)','dependent noun','것')+' '+W('좋아요','good','adjective','좋다')+'.', "Since train and express bus tickets sell out quickly once summer vacation season arrives, it's good to book in advance."],
+    ['2', W('저','I','pronoun')+P('는')+' '+W('이번','this','determiner')+' '+W('휴가','vacation','noun')+P('에')+' '+W('가족','family','noun')+P('과')+' '+W('부산','Busan','proper noun')+P('에')+' '+W('가기로','decided to go','verb','가다')+' '+W('했어요','decided','verb','하다')+'.', "I decided to go to Busan with my family for this vacation."],
+    ['3', W('그런데','but, however','conjunction')+' '+W('성수기라서','since it\'s peak season','noun + connector','성수기')+' '+W('그런지','it seems (maybe because)','ending','그렇다')+' '+W('원하는','wanted, desired','verb','원하다')+' '+W('시간대','time slot','noun')+P('의')+' '+W('표','ticket','noun')+P('가')+' '+W('별로','not really, particularly','adverb')+' '+W('없었어요','there wasn\'t','verb','없다')+'.', "But maybe because it's peak season, there weren't many tickets for the time I wanted."],
+    ['4', W('그래도','still, nevertheless','adverb')+' '+W('다행히','fortunately','adverb')+' '+W('창가 자리','window seat','noun')+P('로')+' '+W('예매할','to book','verb','예매하다')+' '+W('수','way, possibility','dependent noun')+' '+W('있었어요','was able to','verb','있다')+'.', "Still, fortunately I was able to book a window seat."],
+    ['5', W('혹시','just in case, perhaps','adverb')+' '+W('일정','schedule','noun')+P('이')+' '+W('바뀔','change, be changed','verb','바뀌다')+' '+W('수','possibility','dependent noun')+P('도')+' '+W('있어서','since there is','verb','있다')+' '+W('환불 규정','refund policy','noun')+P('도')+' '+W('미리','in advance','adverb')+' '+W('확인해','check, confirm','verb','확인하다')+' '+W('두었어요','did (for later)','auxiliary verb','두다')+'.', "Since the schedule might change, I also checked the refund policy in advance."],
+  ],
+  readingQ:[
+    {q:'이 글의 중심 내용은 무엇이에요?', en:'What is the main idea?', opts:['성수기라 표가 매진되기 전에 미리 예매해서 창가 자리를 구했다.','겨울 스키 여행 계획을 세웠다.','환불이 불가능해서 속상했다.','고속버스만 이용하기로 했다.'], optsEn:["Booked early before tickets sold out during peak season, getting a window seat.","Planned a winter ski trip.","Was upset because a refund wasn't possible.","Decided to only use the express bus."], correct:0, reason:"성수기라 표가 매진되기 전에 미리 예매해서 창가 자리를 구한 이야기예요."},
+    {q:'표가 빨리 매진되는 이유는 무엇이에요?', en:'Why do tickets sell out quickly?', opts:['가격이 싸서','여름 휴가철이라서','기차가 적어서','광고를 많이 해서'], optsEn:["Because they're cheap","Because it's summer vacation season","Because there are few trains","Because of a lot of advertising"], correct:1, reason:"'여름 휴가철이 되면... 금방 매진되기 때문에'라고 했어요."},
+    {q:'어떤 자리로 예매했어요?', en:'Which seat did they book?', opts:['통로 자리','창가 자리','입석','1등석'], optsEn:['Aisle seat','Window seat','Standing room','First class'], correct:1, reason:"'창가 자리로 예매할 수 있었어요'라고 했어요."},
+    {q:'왜 환불 규정을 확인했어요?', en:'Why did they check the refund policy?', opts:['표가 너무 비싸서','일정이 바뀔 수도 있어서','친구가 물어봐서','환불이 필요해서'], optsEn:['Because the ticket was too expensive','Because the schedule might change','Because a friend asked','Because a refund was needed'], correct:1, reason:"'일정이 바뀔 수도 있어서 환불 규정도... 확인해 두었어요'라고 했어요."},
+    {q:'원하는 시간대의 표가 어땠어요?', en:'How were the tickets for the desired time?', opts:['아주 많았다','별로 없었다','전부 매진됐다','무료였다'], optsEn:['There were plenty','There were not many','They were all sold out','They were free'], correct:1, reason:"'원하는 시간대의 표가 별로 없었어요'라고 했어요."},
+  ],
+  grammar:[
+    {p:'V-기 때문에', name:'because (of the fact that)', ex1:'여름 휴가철이 되면 기차표나 고속버스표가 금방 매진되기 때문에 미리 예매하는 게 좋아요.', hl1:'매진되기 때문에', en1:"Because tickets sell out quickly, it's good to book early.", ex2:'비가 오기 때문에 우산을 가지고 가요.', hl2:'오기 때문에', en2:"Because it's raining, I bring an umbrella."},
+    {p:'V-기로 하다', name:'to decide to do something', ex1:'저는 이번 휴가에 가족과 부산에 가기로 했어요.', hl1:'가기로 했어요', en1:'I decided to go to Busan with my family.', ex2:'다음 달에 이사하기로 했어요.', hl2:'이사하기로 했어요', en2:'I decided to move next month.'},
+    {p:'-아/어서 그런지', name:'maybe because ~ (uncertain reason)', ex1:'그런데 성수기라서 그런지 원하는 시간대의 표가 별로 없었어요.', hl1:'성수기라서 그런지', en1:"Maybe because it's peak season, there weren't many tickets I wanted.", ex2:'너무 피곤해서 그런지 계속 졸려요.', hl2:'피곤해서 그런지', en2:"Maybe because I'm so tired, I keep feeling sleepy."},
+    {p:'그래도', name:'still, nevertheless (connector)', ex1:'그래도 다행히 창가 자리로 예매할 수 있었어요.', hl1:'그래도 다행히', en1:'Still, fortunately I could book a window seat.', ex2:'비가 많이 와요. 그래도 등산을 갈 거예요.', hl2:'그래도', en2:"It's raining a lot. Still, I'm going to go hiking."},
+    {p:'V-아/어 두다', name:'do something in advance (for later benefit)', ex1:'환불 규정도 미리 확인해 두었어요.', hl1:'확인해 두었어요', en1:'I also checked the refund policy in advance.', ex2:'여행 가기 전에 호텔을 예약해 두었어요.', hl2:'예약해 두었어요', en2:'I booked the hotel in advance before the trip.'},
+    {p:'-(으)ㄹ 수도 있다', name:'might / could possibly', ex1:'혹시 일정이 바뀔 수도 있어서 환불 규정도 확인해 두었어요.', hl1:'바뀔 수도 있어서', en1:'Since the schedule might change...', ex2:'내일 비가 올 수도 있어요.', hl2:'올 수도 있어요', en2:'It might rain tomorrow.'},
+  ],
+  dialogue:[
+    {spk:'female', name:'지민 Jimin', kr: W('이번','this','determiner')+' '+W('여름','summer','noun')+' '+W('휴가','vacation','noun')+P('에')+' '+W('부산','Busan','proper noun')+P('에')+' '+W('가기로','decided to go','verb','가다')+' '+W('했다면서요','I heard you decided, right?','verb ending','하다')+'?', en:'I heard you decided to go to Busan for summer vacation, right?'},
+    {spk:'male', name:'수아 Sua', kr: W('네','yes','interjection')+', '+W('근데','but, by the way','conjunction')+' '+W('성수기라서','since it\'s peak season','noun + connector','성수기')+' '+W('표','ticket','noun')+' '+W('구하기','getting, obtaining','verb','구하다')+P('가')+' '+W('정말','really','adverb')+' '+W('힘들었어요','was difficult','adjective','힘들다')+'.', en:"Yes, but since it's peak season, it was really hard to get a ticket."},
+    {spk:'female', name:'지민 Jimin', kr: W('그래도','still, nevertheless','adverb')+' '+W('원하는','wanted','verb','원하다')+' '+W('시간대','time slot','noun')+P('로')+' '+W('예매했어요','booked','verb','예매하다')+'?', en:'Still, did you manage to book the time you wanted?'},
+    {spk:'male', name:'수아 Sua', kr: W('다행히','fortunately','adverb')+' '+W('창가 자리','window seat','noun')+P('로')+' '+W('예매했어요','booked','verb','예매하다')+'.', en:'Fortunately, I booked a window seat.'},
+    {spk:'female', name:'지민 Jimin', kr: W('혹시','just in case','adverb')+' '+W('일정','schedule','noun')+P('이')+' '+W('바뀌면','if it changes','verb','바뀌다')+' '+W('환불','refund','noun')+P('도')+' '+W('가능해요','is possible','adjective','가능하다')+'?', en:'If your schedule changes, can you get a refund?'},
+    {spk:'male', name:'수아 Sua', kr: W('네','yes','interjection')+', '+W('출발','departure','noun')+' '+W('하루','one day','noun')+' '+W('전까지는','until before','adverb')+' '+W('수수료','fee','noun')+' '+W('없이','without','adverb','없다')+' '+W('환불할','to refund','verb','환불하다')+' '+W('수','way, possibility','dependent noun')+' '+W('있어요','there is / can','verb','있다')+'.', en:'Yes, I can get a refund without a fee up until the day before departure.'},
+  ],
+  quizA:[
+    {q:'"매진되다"의 뜻은 무엇이에요?', en:'What does "매진되다" mean?', opts:['to sell out','to be crowded','to refund','to depart'], correct:0, reason:"'매진되다'는 표나 물건이 다 팔려서 없어지는 것을 뜻해요."},
+    {q:'"성수기"의 뜻은 무엇이에요?', en:'What does "성수기" mean?', opts:['off season','peak season','weekday','holiday decoration'], correct:1, reason:"'성수기'는 여행객이 많아 붐비는 시기를 뜻해요."},
+    {q:'"환불하다"의 뜻은 무엇이에요?', en:'What does "환불하다" mean?', opts:['to book','to refund','to board','to arrive'], correct:1, reason:"'환불하다'는 돈을 돌려받는 것을 뜻해요."},
+    {q:'"붐비다"의 뜻은 무엇이에요?', en:'What does "붐비다" mean?', opts:['to be crowded','to be empty','to be cheap','to be fast'], correct:0, reason:"'붐비다'는 사람이 많아 복잡한 상태를 뜻해요."},
+    {q:'"일정"의 뜻은 무엇이에요?', en:'What does "일정" mean?', opts:['schedule','ticket','seat','discount'], correct:0, reason:"'일정'은 정해진 계획이나 스케줄을 뜻해요."},
+  ],
+  quizB:[
+    {q:'표가 금방 매진되____ 미리 예매하는 게 좋아요.', en:'___ tickets sell out quickly, it\'s good to book early.', opts:['기 때문에','기로 해서','는지','더라도'], correct:0, reason:"이유를 나타낼 때는 'V-기 때문에'를 써요."},
+    {q:'저는 부산에 가____ 했어요.', en:'I ___ go to Busan.', opts:['기로','기 때문에','는지','더라도'], correct:0, reason:"결정을 나타낼 때는 'V-기로 하다'를 써요."},
+    {q:'너무 피곤해서 ____ 계속 졸려요.', en:"Maybe ___ I'm so tired, I keep feeling sleepy.", opts:['그런지','그래도','두었어요','수도'], correct:0, reason:"불확실한 이유를 추측할 때는 '-아/어서 그런지'를 써요."},
+    {q:'비가 많이 와요. ____ 나갈 거예요.', en:"It's raining a lot. ___, I'm going out.", opts:['그래도','그런지','기로','때문에'], correct:0, reason:"앞 내용과 반대되는 상황을 이어줄 때는 '그래도'를 써요."},
+    {q:'내일 비가 올 ____ 있어요.', en:'It ___ rain tomorrow.', opts:['수도','기로','그런지','두었어요'], correct:0, reason:"가능성을 나타낼 때는 '-(으)ㄹ 수도 있다'를 써요."},
+  ],
+  quizC:[
+    {chunks:['여름 휴가철이 되면','기차표나 고속버스표가','금방 매진되기 때문에','미리 예매하는 게 좋아요.'], correctOrder:[0,1,2,3], en:"Since tickets sell out quickly once summer vacation season comes, it's good to book early."},
+    {chunks:['저는 이번 휴가에','가족과 부산에','가기로 했어요.'], correctOrder:[0,1,2], en:'I decided to go to Busan with my family for this vacation.'},
+    {chunks:['그런데 성수기라서 그런지','원하는 시간대의','표가 별로','없었어요.'], correctOrder:[0,1,2,3], en:"But maybe because it's peak season, there weren't many tickets I wanted."},
+    {chunks:['다행히','창가 자리로','예매할 수 있었어요.'], correctOrder:[0,1,2], en:'Fortunately, I was able to book a window seat.'},
+    {chunks:['혹시 일정이 바뀔 수도 있어서','환불 규정도','미리 확인해','두었어요.'], correctOrder:[0,1,2,3], en:'Since the schedule might change, I also checked the refund policy in advance.'},
+  ],
+  quizD:[],
+  gameSentences:[],
+},
+
+/* ---------- L4 : NATIVE SPEAKER ---------- */
+l4:{
+  label:'원어민 · Native Speaker',
+  vocab:[
+    {kr:'성수기', en:'peak season', pos:'noun'},{kr:'만끽하다', en:'to fully enjoy', pos:'verb'},
+    {kr:'여정', en:'journey', pos:'noun'},{kr:'탑승하다', en:'to board', pos:'verb'},
+    {kr:'환승하다', en:'to transfer (trains/buses)', pos:'verb'},{kr:'대기자 명단', en:'waiting list', pos:'noun'},
+    {kr:'취소 수수료', en:'cancellation fee', pos:'noun'},{kr:'사전에', en:'in advance, beforehand', pos:'adverb'},
+    {kr:'배정되다', en:'to be assigned', pos:'verb'},{kr:'감안하다', en:'to take into account', pos:'verb'},
+    {kr:'여유롭다', en:'to be leisurely, ample', pos:'adjective'},{kr:'북적이다', en:'to be bustling, crowded', pos:'verb'},
+  ],
+  readingHTML:[
+    ['1', W('여름','summer','noun')+' '+W('휴가철','vacation season','noun')+P('에는')+' '+W('많은','many','determiner','많다')+' '+W('사람들','people','noun')+P('이')+' '+W('한꺼번에','all at once','adverb')+' '+W('이동하기','moving, traveling','verb','이동하다')+' '+W('때문에','because of','dependent noun')+' '+W('기차표','train ticket','noun')+' '+W('예매','booking','noun')+' '+W('경쟁','competition','noun')+P('이')+' '+W('치열해지기','becoming intense','verb','치열해지다')+' '+W('마련이다','is bound to be','ending')+'.', "Since so many people travel all at once during summer vacation season, the competition to book train tickets is bound to become fierce."],
+    ['2', W('나','I','pronoun')+' '+W('역시','also, likewise','adverb')+' '+W('가족','family','noun')+P('과의')+' '+W('뜻깊은','meaningful','adjective','뜻깊다')+' '+W('여행','trip','noun')+P('을')+' '+W('위해','for the sake of','postposition','위하다')+' '+W('한 달','one month','noun')+' '+W('전부터','from before','adverb')+' '+W('예매','booking','noun')+P('를')+' '+W('서둘렀다','rushed, hurried','verb','서두르다')+'.', "I too rushed to book a month in advance for a meaningful trip with my family."],
+    ['3', W('다행히','fortunately','adverb')+' '+W('원하던','had wanted','verb','원하다')+' '+W('시간대','time slot','noun')+P('의')+' '+W('좌석','seat','noun')+P('을')+' '+W('확보했지만','secured, but','verb','확보하다')+', '+W('만약','just in case','noun')+P('을')+' '+W('대비해','preparing for','verb','대비하다')+' '+W('대기자 명단','waiting list','noun')+P('에도')+' '+W('이름','name','noun')+P('을')+' '+W('올려','put up, registered','verb','올리다')+' '+W('두었다','did in advance','auxiliary verb','두다')+'.', "Fortunately I secured a seat for the time I wanted, but just in case, I also put my name on the waiting list."],
+    ['4', W('고속버스','express bus','noun')+P('에')+' '+W('비해','compared to','verb','비하다')+' KTX'+P('는')+' '+W('소요 시간','time required','noun')+P('이')+' '+W('짧을','short','adjective','짧다')+' '+W('뿐만 아니라','not only ~ but also','ending')+' '+W('좌석','seat','noun')+P('도')+' '+W('한층','even more','adverb')+' '+W('여유롭다','leisurely, ample','adjective','여유롭다')+'.', "Compared to the express bus, KTX not only takes less time but also has more comfortable seating."],
+    ['5', W('이러한','such, this kind of','determiner','이러하다')+' '+W('장점','advantage','noun')+P('을')+' '+W('감안하면','if you take into account','verb','감안하다')+', '+W('다소','somewhat','adverb')+' '+W('비용','cost','noun')+P('이')+' '+W('들더라도','even if it costs','verb','들다')+' KTX'+P('를')+' '+W('이용하는','using','verb','이용하다')+' '+W('것','thing, fact','dependent noun')+P('이')+' '+W('합리적인','rational, reasonable','adjective','합리적이다')+' '+W('선택','choice','noun')+P('이라')+' '+W('할','say','verb','하다')+' '+W('수','can, way','dependent noun')+' '+W('있다','there is','verb','있다')+'.', "Taking these advantages into account, using KTX can be said to be a reasonable choice even if it costs somewhat more."],
+  ],
+  readingQ:[
+    {q:'이 글의 중심 내용은 무엇이에요?', en:'What is the main idea?', opts:['여름철 치열한 예매 경쟁 속에서 KTX 좌석을 확보하고, 장점 때문에 KTX를 선택했다는 이야기','겨울 여행 준비 이야기','환불 수수료에 대한 불만','해외여행 계획'], optsEn:['Securing a KTX seat amid fierce summer booking competition, and choosing KTX for its advantages.','A story about preparing for a winter trip.','A complaint about cancellation fees.','An overseas travel plan.'], correct:0, reason:"여름 휴가철 치열한 예매 경쟁과 KTX를 선택한 이유를 설명하는 글이에요."},
+    {q:'예매 경쟁이 치열해지는 이유는 무엇이에요?', en:'Why does booking competition become fierce?', opts:['가격이 올라서','많은 사람들이 한꺼번에 이동해서','기차 수가 줄어서','방송에 나와서'], optsEn:['Prices rise','Many people travel at once','The number of trains decreases','It was on TV'], correct:1, reason:"'많은 사람들이 한꺼번에 이동하기 때문에... 치열해지기 마련이다'라고 했어요."},
+    {q:'만약을 대비해 무엇을 해 두었어요?', en:'What did they do just in case?', opts:['환불을 신청했다','대기자 명단에 이름을 올렸다','표를 취소했다','다른 교통편을 예매했다'], optsEn:['Applied for a refund','Put their name on the waiting list','Cancelled the ticket','Booked another mode of transport'], correct:1, reason:"'대기자 명단에도 이름을 올려 두었다'라고 했어요."},
+    {q:'KTX가 고속버스보다 나은 점은 무엇이에요?', en:'How is KTX better than the express bus?', opts:['가격이 훨씬 싸다','소요 시간이 짧고 좌석이 여유롭다','예매가 필요 없다','좌석이 더 좁다'], optsEn:["It's much cheaper",'It takes less time and has more spacious seats','No booking needed','The seats are narrower'], correct:1, reason:"'소요 시간이 짧을 뿐만 아니라 좌석도 한층 여유롭다'라고 했어요."},
+    {q:'글쓴이는 KTX 이용을 어떻게 평가했어요?', en:'How does the writer evaluate using KTX?', opts:['비합리적인 선택','합리적인 선택','불필요한 지출','시간 낭비'], optsEn:['An irrational choice','A reasonable choice','An unnecessary expense','A waste of time'], correct:1, reason:"'합리적인 선택이라 할 수 있다'라고 했어요."},
+  ],
+  grammar:[
+    {p:'V-기 마련이다', name:'it is bound to happen, naturally the case', ex1:'기차표 예매 경쟁이 치열해지기 마련이다.', hl1:'치열해지기 마련이다', en1:'The competition to book tickets is bound to become fierce.', ex2:'열심히 노력하면 실력이 늘기 마련이다.', hl2:'늘기 마련이다', en2:'If you work hard, your skills are bound to improve.'},
+    {p:'N을/를 위해(서)', name:'for the sake of N', ex1:'가족과의 뜻깊은 여행을 위해 한 달 전부터 예매를 서둘렀다.', hl1:'여행을 위해', en1:'For the sake of a meaningful trip, I rushed to book a month ahead.', ex2:'건강을 위해 매일 운동해요.', hl2:'건강을 위해', en2:'I exercise every day for my health.'},
+    {p:'V-아/어 두다', name:'do something in advance (formal)', ex1:'대기자 명단에도 이름을 올려 두었다.', hl1:'올려 두었다', en1:'I also put my name on the waiting list in advance.', ex2:'중요한 서류는 미리 정리해 두었다.', hl2:'정리해 두었다', en2:'I organized the important documents in advance.'},
+    {p:'A-(으)ㄹ 뿐만 아니라', name:'not only ~ but also', ex1:'소요 시간이 짧을 뿐만 아니라 좌석도 한층 여유롭다.', hl1:'짧을 뿐만 아니라', en1:'It is not only shorter but the seats are also more spacious.', ex2:'이 식당은 음식이 맛있을 뿐만 아니라 가격도 저렴하다.', hl2:'맛있을 뿐만 아니라', en2:"This restaurant's food is not only delicious but also inexpensive."},
+    {p:'V-더라도', name:'even if / even though', ex1:'다소 비용이 들더라도 KTX를 이용하는 것이 합리적이다.', hl1:'비용이 들더라도', en1:'Even if it costs somewhat more, using KTX is reasonable.', ex2:'아무리 바쁘더라도 식사는 꼭 챙겨야 한다.', hl2:'바쁘더라도', en2:'No matter how busy you are, you must eat properly.'},
+    {p:'V-다고 할 수 있다', name:'it can be said that', ex1:'KTX를 이용하는 것이 합리적인 선택이라 할 수 있다.', hl1:'선택이라 할 수 있다', en1:'Using KTX can be said to be a reasonable choice.', ex2:'꾸준한 독서는 최고의 자기계발이라고 할 수 있다.', hl2:'자기계발이라고 할 수 있다', en2:'Consistent reading can be said to be the best form of self-development.'},
+  ],
+  dialogue:[
+    {spk:'female', name:'지민 Jimin', kr: W('이번','this','determiner')+' '+W('여름','summer','noun')+' '+W('휴가','vacation','noun')+' '+W('일정','schedule','noun')+P('은')+' '+W('정하셨어요','decided (honorific)','verb','정하다')+'?', en:'Have you decided on your summer vacation schedule?'},
+    {spk:'male', name:'수아 Sua', kr: W('네','yes','interjection')+', '+W('가족','family','noun')+P('과')+' '+W('함께','together','adverb')+' '+W('부산','Busan','proper noun')+P('으로')+' '+W('여행','trip','noun')+P('을')+' '+W('다녀오기로','decided to go and come back','verb','다녀오다')+' '+W('했습니다','did (formal)','verb','하다')+'.', en:"Yes, I've decided to take a trip to Busan with my family."},
+    {spk:'female', name:'지민 Jimin', kr: W('성수기라','since it\'s peak season','noun+connector','성수기')+' '+W('표','ticket','noun')+' '+W('구하기','getting','verb','구하다')+P('가')+' '+W('쉽지','easy','adjective','쉽다')+' '+W('않으셨을','probably wasn\'t (honorific)','ending')+' '+W('텐데요','I imagine, I suppose','ending')+'.', en:"It must not have been easy to get a ticket since it's peak season."},
+    {spk:'male', name:'수아 Sua', kr: W('맞습니다','that\'s right (formal)','verb','맞다')+'. '+W('그래서','so','conjunction')+' '+W('대기자 명단','waiting list','noun')+P('에도')+' '+W('이름','name','noun')+P('을')+' '+W('올려','put up, registered','verb','올리다')+' '+W('두었습니다','did in advance (formal)','auxiliary verb','두다')+'.', en:"That's right. So I put my name on the waiting list as well."},
+    {spk:'female', name:'지민 Jimin', kr: 'KTX'+P('와')+' '+W('고속버스','express bus','noun')+' '+W('중','among','noun')+P('에')+' '+W('어느','which','determiner')+' '+W('쪽','side, option','noun')+P('을')+' '+W('선택하셨어요','chose (honorific)','verb','선택하다')+'?', en:'Which did you choose between KTX and the express bus?'},
+    {spk:'male', name:'수아 Sua', kr: W('소요 시간','time required','noun')+P('이')+' '+W('짧을 뿐만 아니라','not only short but','adjective','짧다')+' '+W('좌석','seat','noun')+P('도')+' '+W('여유로운','leisurely, ample','adjective','여유롭다')+' KTX'+P('를')+' '+W('이용하기로','decided to use','verb','이용하다')+' '+W('했습니다','did (formal)','verb','하다')+'.', en:"I decided to use KTX, since it not only takes less time but also has more comfortable seating."},
+  ],
+  quizA:[
+    {q:'"만끽하다"의 뜻은 무엇이에요?', en:'What does "만끽하다" mean?', opts:['to fully enjoy','to cancel','to postpone','to complain'], correct:0, reason:"'만끽하다'는 어떤 감정이나 상황을 마음껏 누리는 것을 뜻해요."},
+    {q:'"대기자 명단"의 뜻은 무엇이에요?', en:'What does "대기자 명단" mean?', opts:['waiting list','boarding pass','refund policy','discount coupon'], correct:0, reason:"'대기자 명단'은 자리가 나기를 기다리는 사람들의 목록이에요."},
+    {q:'"취소 수수료"의 뜻은 무엇이에요?', en:'What does "취소 수수료" mean?', opts:['booking fee','cancellation fee','seat upgrade fee','round-trip fee'], correct:1, reason:"'취소 수수료'는 예약을 취소할 때 내는 비용이에요."},
+    {q:'"배정되다"의 뜻은 무엇이에요?', en:'What does "배정되다" mean?', opts:['to be assigned','to be cancelled','to be delayed','to be refunded'], correct:0, reason:"'배정되다'는 자리나 역할이 정해져서 나뉘어 맡겨지는 것을 뜻해요."},
+    {q:'"여유롭다"의 뜻은 무엇이에요?', en:'What does "여유롭다" mean?', opts:['to be crowded','to be leisurely, ample','to be expensive','to be fast'], correct:1, reason:"'여유롭다'는 넉넉하고 느긋한 상태를 뜻해요."},
+  ],
+  quizB:[
+    {q:'노력하면 실력이 늘____.', en:'If you work hard, your skills ___ improve.', opts:['기 마련이다','기 때문이다','더라도','뿐만 아니다'], correct:0, reason:"자연스러운 결과를 나타낼 때는 'V-기 마련이다'를 써요."},
+    {q:'건강____ 매일 운동해요.', en:'I exercise every day ___ my health.', opts:['을 위해','더라도','기 마련이다','뿐만 아니라'], correct:0, reason:"목적을 나타낼 때는 'N을/를 위해(서)'를 써요."},
+    {q:'중요한 서류는 미리 정리해 ____.', en:'I organized the important documents in advance ___.', opts:['두었다','올렸다','배정했다','감안했다'], correct:0, reason:"미리 해 놓는 행동은 'V-아/어 두다'로 표현해요."},
+    {q:'이 식당은 음식이 맛있____ 가격도 저렴하다.', en:"This restaurant's food is not only delicious ___ it's also cheap.", opts:['을 뿐만 아니라','더라도','기 마련이다','을 위해'], correct:0, reason:"'~뿐만 아니라'는 하나가 아니라 둘 다 해당된다는 뜻이에요."},
+    {q:'아무리 바쁘____ 식사는 꼭 챙겨야 한다.', en:'No matter how busy you are ___, you must eat properly.', opts:['더라도','을 위해','기 마련이다','뿐만 아니라'], correct:0, reason:"양보의 의미(그럼에도 불구하고)를 나타낼 때는 'V-더라도'를 써요."},
+  ],
+  quizC:[
+    {chunks:['여름 휴가철에는','많은 사람들이 한꺼번에 이동하기 때문에','기차표 예매 경쟁이','치열해지기 마련이다.'], correctOrder:[0,1,2,3], en:"Since so many people travel all at once during summer vacation season, ticket-booking competition is bound to become fierce."},
+    {chunks:['나 역시 가족과의','뜻깊은 여행을 위해','한 달 전부터','예매를 서둘렀다.'], correctOrder:[0,1,2,3], en:'I too rushed to book a month in advance for a meaningful trip with my family.'},
+    {chunks:['다행히 원하던 시간대의 좌석을 확보했지만,','만약을 대비해','대기자 명단에도','이름을 올려 두었다.'], correctOrder:[0,1,2,3], en:'Fortunately I secured a seat for the time I wanted, but I also put my name on the waiting list just in case.'},
+    {chunks:['고속버스에 비해','KTX는 소요 시간이','짧을 뿐만 아니라','좌석도 한층 여유롭다.'], correctOrder:[0,1,2,3], en:'Compared to the express bus, KTX takes less time and also has more spacious seating.'},
+    {chunks:['이러한 장점을 감안하면,','다소 비용이 들더라도','KTX를 이용하는 것이','합리적인 선택이라 할 수 있다.'], correctOrder:[0,1,2,3], en:'Taking these advantages into account, using KTX can be considered a reasonable choice.'},
+  ],
+  quizD:[],
+  gameSentences:[],
+},
+};
+
+let currentLevel = 'l1';
+let scoreTracker = {correct:0, total:0};
+let quizCState = [];
+const quizMap = {rq:'readingQ', qa:'quizA', qb:'quizB', qd:'quizD'};
+
+/* ---------------- RENDER ENGINE ---------------- */
+function renderGrammar(list){
+  return list.map(g=>{
+    const ex1 = g.ex1.split(g.hl1).join('<mark class="hl">'+g.hl1+'</mark>');
+    const ex2 = g.hl2 ? g.ex2.split(g.hl2).join('<mark class="hl">'+g.hl2+'</mark>') : g.ex2;
+    return '<div class="gcard"><span class="pattern">'+g.p+'</span><div class="gname">'+g.name+'</div>'+
+      '<div class="example"><span class="exlabel">독해문 예문 · From the Reading</span>'+ex1+'<span class="en">'+g.en1+'</span></div>'+
+      '<div class="example"><span class="exlabel">추가 예문 · Extra Example</span>'+ex2+'<span class="en">'+g.en2+'</span></div>'+
+      '</div>';
+  }).join('');
+}
+
+function renderMCQSection(containerId, items, prefix){
+  document.getElementById(containerId).innerHTML = items.map((item,i)=>
+    '<div class="qitem"><p class="qtext">'+(i+1)+'. '+item.q+(item.en?'<span class="qtext-en">'+item.en+'</span>':'')+'</p>'+
+    '<div class="pillgroup" data-answered="">'+item.opts.map((o,j)=>'<button type="button" class="pill" data-prefix="'+prefix+'" data-qi="'+i+'" data-oi="'+j+'" onclick="answerMCQ(this)">'+o+(item.optsEn?'<span class="pill-en">'+item.optsEn[j]+'</span>':'')+'</button>').join('')+'</div>'+
+    '<div class="feedback" id="'+prefix+i+'-fb"></div></div>'
+  ).join('');
+}
+
+function answerMCQ(btn){
+  const prefix = btn.dataset.prefix, qi = parseInt(btn.dataset.qi), oi = parseInt(btn.dataset.oi);
+  const group = btn.parentElement;
+  if(group.dataset.answered === '1') return;
+  group.dataset.answered = '1';
+  const items = LEVELS[currentLevel][quizMap[prefix]];
+  const item = items[qi];
+  const buttons = group.querySelectorAll('.pill');
+  buttons.forEach(b=>b.classList.add('disabled'));
+  const correct = (oi === item.correct);
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  if(!correct) buttons[item.correct].classList.add('correct');
+  scoreTracker.total++;
+  if(correct) scoreTracker.correct++;
+  const fb = document.getElementById(prefix+qi+'-fb');
+  fb.innerHTML = (correct ? '✅ 정답이에요! ' : '❌ 아쉬워요. ') + item.reason;
+  fb.className = 'feedback ' + (correct ? 'ok' : 'no');
+  updateScoreDisplay();
+}
+
+function renderQuizC(){
+  const items = LEVELS[currentLevel].quizC;
+  quizCState = items.map(()=>({picked:[], done:false}));
+  document.getElementById('quizC').innerHTML = items.map((item,i)=>{
+    const shuffled = item.chunks.map((c,idx)=>({c,idx})).sort(()=>Math.random()-0.5);
+    const bank = shuffled.map(o=>'<button type="button" class="chip" data-qi="'+i+'" data-idx="'+o.idx+'" onclick="pickChunk(this)">'+o.c+'</button>').join('');
+    return '<div class="qitem"><p class="qtext">'+(i+1)+'. <span class="hintEn">'+item.en+'</span></p>'+
+      '<div class="order-answer" id="qc'+i+'-answer"></div>'+
+      '<div class="order-bank" id="qc'+i+'-bank">'+bank+'</div>'+
+      '<div class="feedback" id="qc'+i+'-fb"></div></div>';
+  }).join('');
+}
+function pickChunk(btn){
+  const qi = btn.dataset.qi, idx = parseInt(btn.dataset.idx);
+  const items = LEVELS[currentLevel].quizC;
+  if(quizCState[qi].done) return;
+  quizCState[qi].picked.push(idx);
+  btn.remove();
+  const ans = document.getElementById('qc'+qi+'-answer');
+  const chip = document.createElement('span');
+  chip.className = 'chip';
+  chip.textContent = items[qi].chunks[idx];
+  ans.appendChild(chip);
+  if(quizCState[qi].picked.length === items[qi].chunks.length){
+    quizCState[qi].done = true;
+    const isCorrect = JSON.stringify(quizCState[qi].picked) === JSON.stringify(items[qi].correctOrder);
+    const fb = document.getElementById('qc'+qi+'-fb');
+    scoreTracker.total++;
+    if(isCorrect){ fb.innerHTML = '✅ 정답이에요!'; fb.className = 'feedback ok'; scoreTracker.correct++; }
+    else{ fb.innerHTML = '❌ 정답: ' + items[qi].correctOrder.map(x=>items[qi].chunks[x]).join(' '); fb.className = 'feedback no'; }
+    updateScoreDisplay();
+  }
+}
+
+function updateScoreDisplay(){
+  document.getElementById('liveScore').textContent = scoreTracker.correct + ' / ' + scoreTracker.total;
+}
+
+function renderAll(){
+  const L = LEVELS[currentLevel];
+  document.getElementById('vocabGrid').innerHTML = L.vocab.map(v=>
+    '<div class="vcard"><div class="kr">'+v.kr+'</div><span class="pos">'+v.pos+'</span><div class="en">'+v.en+'</div></div>'
+  ).join('');
+
+  document.getElementById('readingBody').innerHTML = L.readingHTML.map(r=>
+    '<p class="rline"><span class="num">'+r[0]+'</span>'+r[1]+'<span class="translit">'+r[2]+'</span></p>'
+  ).join('');
+  renderMCQSection('readingQuiz', L.readingQ, 'rq');
+
+  document.getElementById('grammarList').innerHTML = renderGrammar(L.grammar);
+
+  document.getElementById('dialogueList').innerHTML = L.dialogue.map((d,i)=>
+    '<div class="dline"><div class="avatar '+d.spk+'">'+(d.spk==='female'?'👩':'🙋\u200d♀️')+'</div>'+
+    '<div class="dtext"><span class="spk">'+d.name+'</span><div class="kr">'+d.kr+'</div><span class="en">'+d.en+'</span></div>'+
+    '<button class="playbtn" onclick="speakLine('+i+')">▶</button></div>'
+  ).join('');
+
+  renderMCQSection('quizA', L.quizA, 'qa');
+  renderMCQSection('quizB', L.quizB, 'qb');
+  renderQuizC();
+
+  scoreTracker = {correct:0, total:0};
+  updateScoreDisplay();
+}
+
+function setLevel(lv){
+  currentLevel = lv;
+  document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.toggle('active', b.dataset.level===lv));
+  renderAll();
+  if(typeof startFishGame === 'function') startFishGame();
+}
+
+/* ---------------- TTS ---------------- */
+// Both speakers are voiced with real Korean voices only — no artificial pitch shifting,
+// since most browsers (esp. Chrome's built-in Korean voice) ignore the pitch parameter
+// anyway. If the browser exposes 2+ Korean voices they get two different real voices;
+// with only one voice installed, both speakers share it (labelled 지민 / 수아, not male/female).
+let koVoices = [];
+const NAME_HINTS_1 = ['sunhi','sun-hi','yuna','heami','narae','서현','지민'];
+const NAME_HINTS_2 = ['injoon','in-joon','민준','gookmin','shinji','진호','minsu','민수'];
+
+function getVoicePair(){
+  if(koVoices.length === 0) return {female:null, male:null, distinct:false};
+  if(koVoices.length === 1) return {female:koVoices[0], male:koVoices[0], distinct:false};
+  const hint1 = koVoices.find(v => NAME_HINTS_1.some(h => v.name.toLowerCase().includes(h)));
+  const hint2 = koVoices.find(v => NAME_HINTS_2.some(h => v.name.toLowerCase().includes(h)));
+  if(hint1 && hint2 && hint1.name !== hint2.name) return {female:hint1, male:hint2, distinct:true};
+  // No confident name match, but 2+ voices exist — still guarantee two different voice objects.
+  const v1 = hint1 || koVoices[0];
+  const v2 = (hint2 && hint2.name !== v1.name) ? hint2 : (koVoices.find(v => v.name !== v1.name) || koVoices[1]);
+  return {female:v1, male:v2, distinct: v1.name !== v2.name};
+}
+
+function loadVoices(){
+  const all = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  koVoices = all.filter(v => v.lang && v.lang.toLowerCase().startsWith('ko'));
+  const note = document.getElementById('voiceNote');
+  if(!('speechSynthesis' in window)){
+    note.textContent = '이 브라우저는 음성 기능을 지원하지 않아요. This browser does not support speech synthesis.';
+    return;
+  }
+  if(koVoices.length === 0){
+    note.textContent = '한국어 음성이 없어요. Chrome/Edge/Safari 브라우저를 추천해요. No Korean voice found — try Chrome, Edge, or Safari.';
+    return;
+  }
+  const pair = getVoicePair();
+  if(pair.distinct){
+    note.textContent = '✅ 지민: ' + pair.female.name + ' / 수아: ' + pair.male.name + ' · 속도 지민 0.6x·수아 0.7x';
+  } else {
+    note.textContent = '이 브라우저(예: Chrome)에는 한국어 음성이 "' + pair.female.name + '" 1개뿐이라 두 사람 목소리가 같게 들려요 · 속도 지민 0.6x·수아 0.7x. This browser has only one Korean voice, so both speakers sound the same.';
+  }
+}
+if('speechSynthesis' in window){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+function speakLine(i){
+  if(!('speechSynthesis' in window)){ alert('이 브라우저는 음성 기능을 지원하지 않아요.'); return; }
+  window.speechSynthesis.cancel();
+  if(koVoices.length === 0) loadVoices(); // late-loaded voice list retry
+  const d = LEVELS[currentLevel].dialogue[i];
+  const lineEl = document.getElementById('dialogueList').children[i].querySelector('.kr');
+  const text = lineEl.textContent;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR';
+
+  const pair = getVoicePair();
+  const voice = d.spk === 'female' ? pair.female : pair.male;
+  if(voice) u.voice = voice;
+
+  u.pitch = 1;   // never artificially shifted — most engines (Chrome) ignore it anyway
+  u.rate = d.spk === 'female' ? 0.6 : 0.7;  // 지민(Jimin) 0.6x · 수아(Sua) 0.7x
+  window.speechSynthesis.speak(u);
+}
+
+/* ---------------- WORD FISHING GAME ---------------- */
+let fish = {score:0, lives:3, pool:[], target:null, active:[], over:false, roundTimeout:null};
+
+// Builds the word pool from EVERY word used for the current level: the vocab tab
+// plus every clickable word (.w) that actually appears in the reading passage and dialogue.
+function buildGameWordPool(){
+  const L = LEVELS[currentLevel];
+  const map = new Map();
+  L.vocab.forEach(v => map.set(v.kr, {kr:v.kr, en:v.en, pos:v.pos}));
+  document.querySelectorAll('#readingBody .w, #dialogueList .w').forEach(el=>{
+    const kr = el.dataset.kr;
+    if(kr && !map.has(kr)) map.set(kr, {kr, en:el.dataset.en, pos:el.dataset.pos});
+  });
+  return Array.from(map.values());
+}
+
+function clearFishTimers(){
+  if(fish && fish.roundTimeout) clearTimeout(fish.roundTimeout);
+  const pond = document.getElementById('fishPond');
+  if(pond) pond.innerHTML = '';
+}
+
+// Resets state and shows the "how to play" screen. Used on first load, level switch, and Restart.
+function startFishGame(){
+  clearFishTimers();
+  fish = {score:0, lives:3, pool: buildGameWordPool(), target:null, active:[], over:false, roundTimeout:null};
+  document.getElementById('fishWordCount').textContent = fish.pool.length;
+  document.getElementById('fishScore').textContent = 0;
+  document.getElementById('fishLives').textContent = '❤️❤️❤️';
+  document.getElementById('fishEndScreen').style.display = 'none';
+  document.getElementById('fishPond').style.display = 'none';
+  document.getElementById('fishTargetBox').style.display = 'none';
+  document.getElementById('fishIntro').style.display = 'block';
+}
+
+// Called by the "게임 시작 / Start Game" button — actually begins play.
+function beginFishGame(){
+  document.getElementById('fishIntro').style.display = 'none';
+  document.getElementById('fishTargetBox').style.display = 'block';
+  document.getElementById('fishPond').style.display = 'block';
+  nextFishRound();
+}
+
+function updateFishHUD(){
+  document.getElementById('fishScore').textContent = fish.score;
+  document.getElementById('fishLives').textContent = '❤️'.repeat(Math.max(0,fish.lives)) || '—';
+}
+
+function nextFishRound(){
+  if(fish.over) return;
+  if(fish.lives <= 0){ endFishGame(); return; }
+  const pond = document.getElementById('fishPond');
+  pond.innerHTML = '';
+  fish.active = [];
+  const pool = fish.pool;
+  if(pool.length < 4){
+    document.getElementById('fishTarget').textContent = '단어가 부족해요 · Not enough words';
+    return;
+  }
+  const shuffled = pool.slice().sort(()=>Math.random()-0.5);
+  const target = shuffled[0];
+  const distractorCount = Math.min(4, pool.length-1);
+  const distractors = shuffled.slice(1, 1+distractorCount);
+  const batch = [target, ...distractors].sort(()=>Math.random()-0.5);
+  fish.target = target;
+  document.getElementById('fishTarget').textContent = target.en;
+
+  // Give each word its own horizontal lane so bubbles never overlap.
+  const laneCount = batch.length;
+  const laneWidth = 90 / laneCount;
+  batch.forEach((w,idx)=>{
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'fish-word';
+    el.textContent = w.kr;
+    const jitter = Math.random() * (laneWidth * 0.3);
+    el.style.left = (5 + idx*laneWidth + jitter) + '%';
+    const duration = Math.max(5, (10 - Math.min(4, Math.floor(fish.score/30))) + Math.random()*1.5);
+    el.style.animation = 'fishFall ' + duration + 's linear forwards';
+    el.style.animationDelay = (idx*0.35) + 's';
+    el.onclick = () => onFishClick(el, w);
+    el.addEventListener('animationend', () => onFishFallThrough(el, w));
+    pond.appendChild(el);
+    fish.active.push(el);
+  });
+}
+
+function onFishClick(el, w){
+  if(fish.over || el.classList.contains('wrong-flash') || el.classList.contains('correct-flash')) return;
+  if(w.kr === fish.target.kr){
+    el.classList.add('correct-flash');
+    fish.score += 10;
+    updateFishHUD();
+    fish.active.forEach(a => { if(a !== el) a.style.pointerEvents = 'none'; });
+    fish.roundTimeout = setTimeout(nextFishRound, 500);
+  } else {
+    el.classList.add('wrong-flash');
+    fish.lives -= 1;
+    updateFishHUD();
+    if(fish.lives <= 0){ fish.over = true; setTimeout(endFishGame, 500); }
+  }
+}
+function onFishFallThrough(el, w){
+  if(fish.over || !el.isConnected) return;
+  if(w.kr === fish.target.kr && !el.classList.contains('correct-flash')){
+    fish.lives -= 1;
+    updateFishHUD();
+    el.remove();
+    if(fish.lives <= 0) endFishGame();
+    else fish.roundTimeout = setTimeout(nextFishRound, 400);
+  } else {
+    el.remove();
+  }
+}
+function endFishGame(){
+  fish.over = true;
+  clearFishTimers();
+  document.getElementById('fishPond').style.display = 'none';
+  document.getElementById('fishTargetBox').style.display = 'none';
+  document.getElementById('fishEndScreen').style.display = 'block';
+  document.getElementById('fishFinalScore').textContent = fish.score + ' 점';
+}
+
+/* ---------------- INIT ---------------- */
+renderAll();
+startFishGame();
+</script>
+</div>
+</body>
+</html>
