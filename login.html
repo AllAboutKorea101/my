@@ -123,9 +123,11 @@
   const redirectTarget = isSafeRedirect(requestedRedirect) ? requestedRedirect : null;
 
   function goNext() {
-    location.href = redirectTarget
+    if (goNext._called) return;
+    goNext._called = true;
+    location.replace(redirectTarget
       ? `https://www.businesskorean.com/${redirectTarget}`
-      : "https://www.businesskorean.com/";
+      : "https://www.businesskorean.com/");
   }
 
   // 실제 로그인 성공 여부는 onAuthStateChanged가 가장 확실한 신호입니다.
