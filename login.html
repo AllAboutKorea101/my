@@ -45,6 +45,9 @@
   .terms{font-size:12px;color:var(--gray);margin-top:24px;line-height:1.6;}
   .terms a{color:var(--blue);font-weight:600;}
 
+  .back{display:inline-flex;align-items:center;gap:6px;margin-top:28px;font-size:13px;color:var(--gray);font-weight:500;}
+  .back:hover{color:var(--ink);}
+
   @media (max-width:480px){
     .card{padding:32px 22px;}
   }
@@ -60,7 +63,7 @@
 
 <div class="stage">
   <div class="card">
-    <div class="card-icon">
+    <div class="card-icon" aria-hidden="true">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </div>
     <h1>Welcome to All About Korea</h1>
@@ -76,17 +79,26 @@
       Continue with Google
     </button>
 
-    <p class="terms">By continuing, you agree to our<br><a href="https://www.businesskorean.com/Terms of Service.html">Terms of Service</a> and <a href="https://www.businesskorean.com/Privacy Policy.html">Privacy Policy</a>.</p>
-    <p id="errorMsg" style="display:none;color:var(--coral);font-size:13px;margin:16px 0 0;font-weight:500;"></p>
+    <p class="terms">By continuing, you agree to our<br><a href="https://www.businesskorean.com/Terms%20of%20Service.html">Terms of Service</a> and <a href="https://www.businesskorean.com/Privacy%20Policy.html">Privacy Policy</a>.</p>
+    <p id="errorMsg" role="alert" aria-live="assertive" style="display:none;color:var(--coral);font-size:13px;margin:16px 0 0;font-weight:500;"></p>
   </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  // ⚠️ 프로덕션 배포 전 반드시 false로 변경하세요. (콘솔에 이메일 등 사용자 정보가 노출됩니다)
+  const DEBUG = false;
+  const log = (...args) => { if (DEBUG) console.log(...args); };
+  const logError = (...args) => { if (DEBUG) console.error(...args); };
+
+  log('[LOGIN] 스크립트 시작');
 
   const firebaseConfig = {
-    apiKey: "AIzaSyDxq1uEM0Obsi5RHOKhYqDxgRAaS2lY_yw", 
+    // ⚠️ TODO: 이 키는 Firebase Console > API 제한사항에서 HTTP 리퍼러(businesskorean.com)로
+    // 반드시 제한해 두세요. 제한 없는 키는 도용 시 무단 사용/과금으로 이어질 수 있습니다.
+    apiKey: "AIzaSyDxq1uEM0Obsi5RHOKhYqDxgRAaS2lY_yw",
     authDomain: "all-about-korea-login.firebaseapp.com",
     projectId: "all-about-korea-login",
     storageBucket: "all-about-korea-login.firebasestorage.app",
@@ -97,10 +109,15 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
+  log('[LOGIN] Firebase 초기화 완료. authDomain =', firebaseConfig.authDomain);
 
   const btn = document.getElementById('googleBtn');
   const errorMsg = document.getElementById('errorMsg');
 
+  // 어디서 로그인 페이지로 왔는지 확인 (예: ?redirect=payment.html)
+  // 화이트리스트 대신, 안전한 "상대경로 .html 파일"인지 패턴으로 검증합니다.
+  // 콜론(:), 역슬래시(\), 연속 슬래시(//), 상위경로(..)가 있으면 외부 사이트로 유도하는
+  // 공격(Open Redirect)일 수 있으므로 거부하고, 이 조건을 통과한 내부 페이지 경로만 허용합니다.
   function isSafeRedirect(path) {
     if (!path) return false;
     let decoded;
@@ -109,29 +126,38 @@
     if (decoded.includes('..') || decoded.includes('//') || decoded.startsWith('/')) return false;
     return true;
   }
-
   const params = new URLSearchParams(location.search);
   const requestedRedirect = params.get('redirect');
   const redirectTarget = isSafeRedirect(requestedRedirect) ? requestedRedirect : null;
 
   function goNext() {
+    if (goNext._called) return;
+    goNext._called = true;
     const target = redirectTarget
       ? `https://www.businesskorean.com/${redirectTarget}`
       : "https://www.businesskorean.com/";
+    log('[LOGIN] 로그인 성공 확인됨 → 이동:', target);
     location.replace(target);
   }
 
-  // Google 버튼 클릭 시에만 로그인 팝업 호출 및 리다이렉트 실행
+  // 페이지를 새로고침했을 때 이미 로그인되어 있으면 자동으로 다음 페이지로 이동
+  onAuthStateChanged(auth, (user) => {
+    log('[LOGIN] onAuthStateChanged 발생. user =', user ? user.email : null);
+    if (user) goNext();
+  });
+
   btn.addEventListener('click', () => {
+    log('[LOGIN] Continue with Google 버튼 클릭됨');
     btn.disabled = true;
     errorMsg.style.display = 'none';
 
     signInWithPopup(auth, provider)
       .then((result) => {
+        log('[LOGIN] signInWithPopup 성공! 유저:', result.user.email);
         goNext();
       })
       .catch((err) => {
-        console.error('[LOGIN 실패]', err);
+        logError('[LOGIN] signInWithPopup 실패. code:', err.code, '/ message:', err.message, '/ 전체 에러:', err);
         errorMsg.textContent = `Sign-in failed (${err.code || 'unknown'}). Please try again.`;
         errorMsg.style.display = 'block';
         btn.disabled = false;
