@@ -86,7 +86,9 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  console.log('[LOGIN] 스크립트 시작');
 
   const firebaseConfig = {
     apiKey: "AIzaSyDxq1uEM0Obsi5RHOKhYqDxgRAaS2lY_yw", // ⚠️ 임시 테스트용 키 (제한 없음) — 원인 확인 후 원래 키로 되돌릴 예정
@@ -100,13 +102,12 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
+  console.log('[LOGIN] Firebase 초기화 완료. authDomain =', firebaseConfig.authDomain);
 
   const btn = document.getElementById('googleBtn');
   const errorMsg = document.getElementById('errorMsg');
 
   // 어디서 로그인 페이지로 왔는지 확인 (예: ?redirect=payment.html)
-  // 보안을 위해 화이트리스트에 있는 안전한 페이지로만 이동 허용 (외부 주소로 리다이렉트 방지)
-  // 어디서 로그인 페이지로 왔는지 확인 (예: ?redirect=members/News%20Letter_260805.html)
   // 화이트리스트 대신, 안전한 "상대경로 .html 파일"인지 패턴으로 검증합니다.
   // 콜론(:), 역슬래시(\), 연속 슬래시(//), 상위경로(..)가 있으면 외부 사이트로 유도하는
   // 공격(Open Redirect)일 수 있으므로 거부하고, 이 조건을 통과한 내부 페이지 경로만 허용합니다.
@@ -125,37 +126,35 @@
   function goNext() {
     if (goNext._called) return;
     goNext._called = true;
-    location.replace(redirectTarget
+    const target = redirectTarget
       ? `https://www.businesskorean.com/${redirectTarget}`
-      : "https://www.businesskorean.com/");
+      : "https://www.businesskorean.com/";
+    console.log('[LOGIN] 로그인 성공 확인됨 → 이동:', target);
+    location.replace(target);
   }
 
-  // 실제 로그인 성공 여부는 onAuthStateChanged가 가장 확실한 신호입니다.
-  // (getRedirectResult는 리다이렉트 직후의 "부가 확인" 단계에서 조용히 실패할 수 있어서,
-  //  로그인 자체는 성공했는데도 이 함수만으로는 못 잡아내는 경우가 있습니다)
+  // 페이지를 새로고침했을 때 이미 로그인되어 있으면 자동으로 다음 페이지로 이동
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      goNext();
-    }
-  });
-
-  // getRedirectResult는 실제 "에러"가 발생했을 때 사용자에게 알려주는 용도로만 사용합니다.
-  getRedirectResult(auth).catch((err) => {
-    console.error(err);
-    errorMsg.textContent = "Sign-in failed. Please try again.";
-    errorMsg.style.display = 'block';
-    btn.disabled = false;
+    console.log('[LOGIN] onAuthStateChanged 발생. user =', user ? user.email : null);
+    if (user) goNext();
   });
 
   btn.addEventListener('click', () => {
+    console.log('[LOGIN] Continue with Google 버튼 클릭됨');
     btn.disabled = true;
     errorMsg.style.display = 'none';
-    signInWithRedirect(auth, provider).catch((err) => {
-      console.error(err);
-      errorMsg.textContent = "Sign-in failed. Please try again.";
-      errorMsg.style.display = 'block';
-      btn.disabled = false;
-    });
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log('[LOGIN] signInWithPopup 성공! 유저:', result.user.email);
+        goNext();
+      })
+      .catch((err) => {
+        console.error('[LOGIN] signInWithPopup 실패. code:', err.code, '/ message:', err.message, '/ 전체 에러:', err);
+        errorMsg.textContent = `Sign-in failed (${err.code || 'unknown'}). Please try again.`;
+        errorMsg.style.display = 'block';
+        btn.disabled = false;
+      });
   });
 </script>
 
