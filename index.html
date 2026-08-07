@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Ultimate Gateway to Korea: Learn, Stay &amp; Explore – All About Korea</title>
+<meta name="description" content="Study Korean online from beginner to advanced, find cozy Seoul homestays, and uncover top travel tips.">
+<link rel="canonical" href="https://www.businesskorean.com/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="All About Korea">
+<meta property="og:title" content="Your Ultimate Gateway to Korea: Learn, Stay &amp; Explore">
+<meta property="og:description" content="Study Korean online from beginner to advanced, find cozy Seoul homestays, and uncover top travel tips.">
+<meta property="og:url" content="https://www.businesskorean.com/">
+<meta property="og:image" content="https://www.businesskorean.com/Landing Images/Study_Korean.jpeg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Your Ultimate Gateway to Korea: Learn, Stay &amp; Explore">
+<meta name="twitter:description" content="Study Korean online from beginner to advanced, find cozy Seoul homestays, and uncover top travel tips.">
+<meta name="twitter:image" content="https://www.businesskorean.com/Landing Images/Study_Korean.jpeg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "All About Korea",
+  "url": "https://www.businesskorean.com/",
+  "description": "Study Korean online from beginner to advanced, find cozy Seoul homestays, and uncover top travel tips.",
+  "sameAs": [
+    "https://www.youtube.com/@AllAboutKorea101",
+    "https://www.instagram.com/learnkoreanwithsanghoon"
+  ],
+  "makesOffer": [
+    {"@type":"Offer","itemOffered":{"@type":"Course","name":"Study Korean","description":"Learn Korean online from beginner to advanced levels."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Korea Homestay","description":"Stay with a local host family in Seoul, Korea."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Guided Tour","description":"Expert-led guided tours around Korea."}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Korea Travel","description":"Korea travel tips and local product guides."}}
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#222222; --gray:#6b6b6b; --gray-soft:#f7f7f7; --border:#e8e8e8;
+    --blue:#3d5afe; --blue-dark:#2c40c9; --coral:#ff385c; --coral-dark:#e01948;
+    --white:#ffffff; --radius:16px; --radius-sm:10px;
+    --shadow:0 6px 20px rgba(0,0,0,.08);
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:'Inter','Noto Sans KR','Noto Sans JP','Noto Sans SC',sans-serif;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Poppins','Noto Sans KR','Noto Sans JP','Noto Sans SC',sans-serif;margin:0;letter-spacing:-.01em;}
+  a{color:inherit;text-decoration:none;}
+  img,svg{display:block;}
+  button{font:inherit;background:none;border:0;cursor:pointer;color:inherit;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px;}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+  /* ---------- Topbar ---------- */
+  .topbar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
+  .topbar-inner{max-width:var(--maxw);margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px;}
+  .burger{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:var(--gray-soft);flex-shrink:0;}
+  .burger:hover{background:var(--border);}
+  .logo{font-weight:700;font-size:19px;white-space:nowrap;}
+  .logo span{color:var(--blue);}
+  .desktop-nav{display:none;margin-left:auto;gap:28px;align-items:center;}
+  .desktop-nav a{font-weight:500;font-size:15px;color:var(--ink);padding:8px 4px;border-bottom:2px solid transparent;}
+  .desktop-nav a:hover{color:var(--blue);}
+  .desktop-nav a.is-home{color:var(--blue);border-bottom-color:var(--blue);}
+  .lang-wrap{position:relative;margin-left:14px;flex-shrink:0;}
+  .lang-btn{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:20px;font-size:13px;font-weight:600;}
+  .lang-btn:hover{border-color:var(--ink);}
+  .lang-menu{position:absolute;right:0;top:calc(100% + 8px);background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);min-width:180px;padding:6px;display:none;max-height:320px;overflow:auto;}
+  .lang-menu.open{display:block;}
+  .signin-btn{margin-left:10px;padding:8px 16px;border:none;border-radius:20px;background:var(--blue);color:#fff;font-size:13px;font-weight:600;flex-shrink:0;white-space:nowrap;}
+  .signin-btn:hover{opacity:.9;}
+  .lang-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:8px;font-size:14px;text-align:left;}
+  .lang-item:hover{background:var(--gray-soft);}
+  .lang-item.active{color:var(--blue);font-weight:700;}
+
+  /* ---------- Drawer ---------- */
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;opacity:0;pointer-events:none;transition:opacity .25s;}
+  .backdrop.open{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;left:0;bottom:0;width:280px;max-width:82vw;background:var(--white);z-index:51;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);padding:20px 16px;overflow:auto;}
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+  .drawer-head .logo{font-size:18px;}
+  .drawer-close{width:34px;height:34px;border-radius:8px;background:var(--gray-soft);display:flex;align-items:center;justify-content:center;}
+  .drawer-link{display:flex;align-items:center;gap:14px;padding:13px 12px;border-radius:12px;font-weight:600;font-size:15.5px;color:var(--ink);}
+  .drawer-link svg{flex-shrink:0;stroke:var(--gray);}
+  .drawer-link:hover{background:var(--gray-soft);}
+  .drawer-link.active{background:#eef0ff;color:var(--blue);}
+  .drawer-link.active svg{stroke:var(--blue);}
+
+  /* ---------- Hero ---------- */
+  .util-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:16px 0 12px;}
+  .social-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;flex-shrink:0;transition:transform .15s;}
+  .social-btn:hover{transform:scale(1.06);}
+  .social-btn svg{width:19px;height:19px;}
+  .social-btn.yt{background:#FF0000;}
+  .social-btn.yt svg{fill:#fff;}
+  .social-btn.ig{border-radius:9px;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);}
+  .social-btn.ig svg{width:20px;height:20px;stroke:#fff;fill:none;}
+  .social-btn.preply{background:#F4A6C6;}
+  .social-btn.airbnb{background:#FF385C;}
+  .social-btn.airbnb svg{fill:#fff;}
+  .social-btn.gyg{background:#FF5533;}
+  .social-letter{color:#fff;font-family:'Poppins','Noto Sans KR',sans-serif;font-weight:800;font-size:17px;line-height:1;}
+  .social-btn.substack{background:#FF6719;}
+  .social-btn.substack svg{fill:#fff;}
+  .sitemap-link{margin-left:auto;font-size:14px;font-weight:600;color:var(--gray);}
+  .sitemap-link:hover{color:var(--blue);}
+
+  .hero{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--gray-soft);}
+  .hero .ph{height:auto;}
+  .hero .ph img{object-fit:contain;height:auto;}
+  .ph{background:linear-gradient(135deg,#ececec,#f7f7f7);position:relative;overflow:hidden;}
+  .ph::after{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(0,0,0,.05) 1px,transparent 1px);background-size:14px 14px;}
+  .ph svg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;stroke:#bdbdbd;}
+  .ph img{width:100%;height:100%;object-fit:cover;display:block;position:relative;}
+  .ph.has-img::after{display:none;}
+  .hero-heading{font-size:clamp(22px,4vw,30px);font-weight:700;text-align:left;margin:0 0 4px;color:var(--ink);}
+  .hero-subheading{font-size:15px;font-weight:600;text-align:left;margin:0 0 4px;color:var(--gray);}
+  .hero-desc{font-size:13.5px;font-weight:400;line-height:1.5;color:var(--gray);max-width:600px;margin:0 0 20px;}
+
+  /* ---------- Hero slider ---------- */
+  .hero-slider{position:relative;}
+  .hero-slide-viewport{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--gray-soft);aspect-ratio:16/9;}
+  .hero-slide-img{width:100%;height:100%;object-fit:cover;display:block;opacity:1;transition:opacity .3s ease;}
+  .hero-slide-img.is-fading{opacity:0;}
+  .hero-arrow{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;box-shadow:var(--shadow);transition:background .15s,transform .15s;}
+  .hero-arrow:hover{background:#fff;transform:translateY(-50%) scale(1.08);}
+  .hero-arrow-prev{left:12px;}
+  .hero-arrow-next{right:12px;}
+  .hero-dots{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:5px;padding:6px 9px;border-radius:20px;background:rgba(0,0,0,.35);backdrop-filter:blur(3px);}
+  .hero-dot{width:5px;height:5px;padding:0;margin:0;border-radius:50%;background:rgba(255,255,255,.55);transition:width .2s,background .2s;flex-shrink:0;display:block;}
+  .hero-dot.active{width:14px;height:5px;border-radius:3px;background:#fff;}
+
+  /* ---------- Sections ---------- */
+  section{padding:56px 0;}
+  .eyebrow{display:inline-block;background:var(--gray-soft);color:var(--ink);font-weight:700;font-size:13px;padding:6px 12px;border-radius:8px;margin-bottom:14px;}
+  .section-title{font-size:clamp(22px,4vw,30px);font-weight:700;margin-bottom:28px;}
+
+  .svc-grid{display:grid;grid-template-columns:1fr;gap:20px;}
+  .svc-card{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:box-shadow .2s,transform .2s;}
+  .svc-card:hover{box-shadow:var(--shadow);transform:translateY(-2px);}
+  .svc-card .ph{height:180px;}
+  .svc-body{padding:18px;}
+  .svc-body h3{font-size:18px;margin-bottom:6px;}
+  .svc-body p{margin:0;font-size:14.5px;color:var(--gray);line-height:1.5;}
+
+  .fade-in{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+  .fade-in.show{opacity:1;transform:translateY(0);}
+
+  .testi-heading{margin-bottom:34px;}
+  .testi-heading .eyebrow{background:#ffe4ea;color:var(--coral-dark);}
+  .testi-heading h2{font-size:clamp(24px,5vw,38px);font-weight:800;line-height:1.15;}
+  .testi-list{display:grid;grid-template-columns:1fr;gap:20px;}
+  .testi-card{background:#eef1ff;border-radius:var(--radius);padding:20px;}
+  .testi-card p{margin:0 0 16px;font-size:15px;line-height:1.55;color:var(--ink);}
+  .testi-person{display:flex;align-items:center;gap:12px;}
+  .avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-weight:700;font-size:15px;font-family:'Poppins',sans-serif;}
+  .testi-person strong{display:block;font-size:14.5px;}
+  .testi-person span{display:block;font-size:13px;color:var(--gray);}
+  .testi-more{margin-top:18px;text-align:center;}
+  .testi-more a{font-size:13px;font-weight:600;color:var(--gray);}
+  .testi-more a:hover{color:var(--blue);}
+
+  .cta{background:linear-gradient(135deg,var(--coral),var(--coral-dark));border-radius:var(--radius);padding:44px 28px;text-align:center;color:#fff;}
+  .cta h2{font-size:clamp(24px,5vw,34px);font-weight:800;margin-bottom:12px;}
+  .cta p{max-width:520px;margin:0 auto 26px;font-size:15px;line-height:1.6;opacity:.95;}
+  .cta-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+  .btn{padding:13px 24px;border-radius:30px;font-weight:700;font-size:14.5px;}
+  .btn-solid{background:#fff;color:var(--coral-dark);}
+  .btn-solid:hover{background:#ffe9ee;}
+  .btn-outline{border:2px solid rgba(255,255,255,.85);color:#fff;}
+  .btn-outline:hover{background:rgba(255,255,255,.12);}
+
+  footer{padding:28px 0 40px;border-top:1px solid var(--border);margin-top:20px;}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;font-size:13px;color:var(--gray);}
+
+  @media (min-width:900px){
+    .desktop-nav{display:flex;}
+    .svc-grid{grid-template-columns:1fr 1fr;}
+    .testi-list{grid-template-columns:1fr 1fr;gap:26px;}
+    .cta{padding:56px 40px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="burger" aria-label="Open menu" onclick="toggleDrawer(true)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="https://www.businesskorean.com/" class="logo">All About <span>Korea</span></a>
+    <nav class="desktop-nav">
+      <a href="https://www.businesskorean.com/" class="is-home" data-i18n="nav_home">Home</a>
+      <a href="https://www.businesskorean.com/Study Korean/Study Korean.html" data-i18n="nav_study">Study Korean</a>
+      <a href="https://www.businesskorean.com/Homestay/Homestay.html" data-i18n="nav_homestay">Homestay</a>
+      <a href="https://www.businesskorean.com/Guided Tour/Guided Tour.html" data-i18n="nav_tour">Guided Tour</a>
+      <a href="https://www.businesskorean.com/Korea Travel/Korea Travel.html" data-i18n="nav_travel">Korea Travel</a>
+      <a href="https://www.businesskorean.com/payment.html" data-i18n="nav_pricing">Pricing</a>
+    </nav>
+    <div class="lang-wrap">
+      <button class="lang-btn" onclick="toggleLangMenu()" id="langBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-menu" id="langMenu"></div>
+    </div>
+    <button class="signin-btn" id="signInBtn" onclick="location.href='https://www.businesskorean.com/login.html'" data-i18n="nav_signin">Sign In</button>
+  </div>
+</header>
+
+<!-- 로그인 상태에 따라 Sign In ↔ My Account 버튼 전환 -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8",
+    authDomain: "all-about-korea-login.firebaseapp.com",
+    projectId: "all-about-korea-login",
+    storageBucket: "all-about-korea-login.firebasestorage.app",
+    messagingSenderId: "20771155142",
+    appId: "1:20771155142:web:bbfeb19541625e750cbbc7"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    const btn = document.getElementById('signInBtn');
+    if (user) {
+      btn.textContent = 'My Account';
+      btn.removeAttribute('data-i18n'); // 로그인 상태에선 언어 전환에 영향받지 않도록 고정
+      btn.onclick = () => location.href = 'https://www.businesskorean.com/mypage.html';
+    } else {
+      btn.textContent = 'Sign In';
+      btn.setAttribute('data-i18n', 'nav_signin');
+      btn.onclick = () => location.href = 'https://www.businesskorean.com/login.html';
+    }
+  });
+</script>
+
+<!-- Drawer -->
+<div class="backdrop" id="backdrop" onclick="toggleDrawer(false)"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <span class="logo">All About <span>Korea</span></span>
+    <button class="drawer-close" onclick="toggleDrawer(false)" aria-label="Close menu">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <nav>
+    <a class="drawer-link active" href="https://www.businesskorean.com/">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+      <span data-i18n="nav_home">Home</span>
+    </a>
+    <a class="drawer-link" href="https://www.businesskorean.com/Study Korean/Study Korean.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+      <span data-i18n="nav_study">Study Korean</span>
+    </a>
+    <a class="drawer-link" href="https://www.businesskorean.com/Homestay/Homestay.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <span data-i18n="nav_homestay">Homestay</span>
+    </a>
+    <a class="drawer-link" href="https://www.businesskorean.com/Guided Tour/Guided Tour.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg>
+      <span data-i18n="nav_tour">Guided Tour</span>
+    </a>
+    <a class="drawer-link" href="https://www.businesskorean.com/Korea Travel/Korea Travel.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg>
+      <span data-i18n="nav_travel">Korea Travel</span>
+    </a>
+    <a class="drawer-link" href="https://www.businesskorean.com/payment.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="9" y1="10.5" x2="15" y2="10.5"/><line x1="9" y1="13.5" x2="15" y2="13.5"/></svg>
+      <span data-i18n="nav_pricing">Pricing</span>
+    </a>
+  </nav>
+</aside>
+
+<main class="wrap">
+
+  <div class="util-row">
+    <a class="social-btn preply" href="https://preply.in/SANGHOON6KO1831657810?ts=17852175" target="_blank" rel="noopener" aria-label="Preply">
+      <span class="social-letter">P</span>
+    </a>
+    <a class="social-btn yt" href="https://www.youtube.com/@AllAboutKorea101" target="_blank" rel="noopener" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </a>
+    <a class="social-btn ig" href="https://www.instagram.com/learnkoreanwithsanghoon" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="#fff" stroke="none"/></svg>
+    </a>
+    <a class="social-btn airbnb" href="https://www.airbnb.co.kr/users/profile/1462658086501322671" target="_blank" rel="noopener" aria-label="Airbnb">
+      <svg viewBox="0 0 24 24"><path d="M12.001 18.275c-1.353-1.697-2.148-3.184-2.413-4.457-.263-1.027-.16-1.848.291-2.465.477-.71 1.188-1.056 2.121-1.056s1.643.345 2.12 1.063c.446.61.558 1.432.286 2.465-.291 1.298-1.085 2.785-2.412 4.458zm9.601 1.14c-.185 1.246-1.034 2.28-2.2 2.783-2.253.98-4.483-.583-6.392-2.704 3.157-3.951 3.74-7.028 2.385-9.018-.795-1.14-1.933-1.695-3.394-1.695-2.944 0-4.563 2.49-3.927 5.382.37 1.565 1.352 3.343 2.917 5.332-.98 1.085-1.91 1.856-2.732 2.333-.636.344-1.245.558-1.828.609-2.679.399-4.778-2.2-3.825-4.88.132-.345.395-.98.845-1.961l.025-.053c1.464-3.178 3.242-6.79 5.285-10.795l.053-.132.58-1.116c.45-.822.635-1.19 1.351-1.643.346-.21.77-.315 1.246-.315.954 0 1.698.558 2.016 1.007.158.239.345.557.582.953l.558 1.089.08.159c2.041 4.004 3.821 7.608 5.279 10.794l.026.025.533 1.22.318.764c.243.613.294 1.222.213 1.858zm1.22-2.39c-.186-.583-.505-1.271-.9-2.094v-.03c-1.889-4.006-3.642-7.608-5.307-10.844l-.111-.163C15.317 1.461 14.468 0 12.001 0c-2.44 0-3.476 1.695-4.535 3.898l-.081.16c-1.669 3.236-3.421 6.843-5.303 10.847v.053l-.559 1.22c-.21.504-.317.768-.345.847C-.172 20.74 2.611 24 5.98 24c.027 0 .132 0 .265-.027h.372c1.75-.213 3.554-1.325 5.384-3.317 1.829 1.989 3.635 3.104 5.382 3.317h.372c.133.027.239.027.265.027 3.37.003 6.152-3.261 4.802-6.975z"/></svg>
+    </a>
+    <a class="social-btn gyg" href="https://www.getyourguide.com/seoul-l197/seoul-sunrise-sunset-hike-temple-k-food-adventure-t911527/" target="_blank" rel="noopener" aria-label="GetYourGuide">
+      <span class="social-letter">G</span>
+    </a>
+    <a class="social-btn substack" href="https://allaboutkorea101.substack.com/?utm_campaign=profile_chips" target="_blank" rel="noopener" aria-label="Substack">
+      <svg viewBox="0 0 24 24"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+    </a>
+    <a class="sitemap-link" href="https://www.businesskorean.com/Sitemap.html" data-i18n="sitemap">Sitemap</a>
+  </div>
+
+  <!-- Hero -->
+  <section style="padding-top:0;padding-bottom:0;">
+    <h1 class="hero-heading" data-i18n="hero_title">Your Ultimate Gateway to Korea</h1>
+    <h2 class="hero-subheading" data-i18n="hero_subheading">Learn, Stay &amp; Explore</h2>
+    <p class="hero-desc" data-i18n="hero_desc">Study Korean online from beginner to advanced, find cozy Seoul homestays, and uncover top travel tips.</p>
+    <div class="hero-slider">
+      <div class="hero-slide-viewport">
+        <img id="heroSlideImg" class="hero-slide-img" src="" alt="">
+        <button class="hero-arrow hero-arrow-prev" onclick="heroPrev()" aria-label="Previous image">‹</button>
+        <button class="hero-arrow hero-arrow-next" onclick="heroNext()" aria-label="Next image">›</button>
+        <div class="hero-dots" id="heroDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services">
+    <h2 class="section-title" data-i18n="services_heading">Explore our services</h2>
+    <div class="svc-grid">
+      <a class="svc-card fade-in" href="https://www.businesskorean.com/Study Korean/Study Korean.html">
+        <div class="ph has-img"><img src="Landing Images/Study_Korean.jpeg" alt="Two students studying Korean together with notebooks and laptops"></div>
+        <div class="svc-body">
+          <h3 data-i18n="svc_study_title">Study Korean</h3>
+          <p data-i18n="svc_study_desc">Immersive language programs from beginner to advanced levels</p>
+        </div>
+      </a>
+      <a class="svc-card fade-in" href="https://www.businesskorean.com/Homestay/Homestay.html">
+        <div class="ph has-img"><img src="Landing Images/Authentic_Homestay.jpeg" alt="Friends laughing together over a Korean home-cooked meal"></div>
+        <div class="svc-body">
+          <h3 data-i18n="svc_homestay_title">Authentic Homestay</h3>
+          <p data-i18n="svc_homestay_desc">Live with a local family and experience the warmth of Korean hospitality</p>
+        </div>
+      </a>
+      <a class="svc-card fade-in" href="https://www.businesskorean.com/Guided Tour/Guided Tour.html">
+        <div class="ph has-img"><img src="Landing Images/Expert-led_Tours.jpeg" alt="A guide and travelers enjoying Korean street food together at a market"></div>
+        <div class="svc-body">
+          <h3 data-i18n="svc_tour_title">Expert-led Tours</h3>
+          <p data-i18n="svc_tour_desc">Go beyond the tourist attractions and discover authentic everyday life in Korea</p>
+        </div>
+      </a>
+      <a class="svc-card fade-in" href="https://www.businesskorean.com/Korea Travel/Korea Travel.html">
+        <div class="ph has-img"><img src="Landing Images/Korea_Travel_Tips.png" alt="Elegant Korean moon jar artwork displayed in a modern living room"></div>
+        <div class="svc-body">
+          <h3 data-i18n="svc_travel_title">Travel Korea</h3>
+          <p data-i18n="svc_travel_desc">Practical travel tips plus a curated shop for Korean lifestyle goods</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section>
+    <div class="testi-heading">
+      <span class="eyebrow" data-i18n="testi_label">Testimonials</span>
+      <h2 data-i18n="testi_heading">Real Connections,<br>Unique Stories</h2>
+    </div>
+    <div class="testi-list">
+      <div class="testi-card fade-in">
+        <p data-i18n="quote1">No boring textbooks—just real chats with a friendly tutor. My Korean improved so much faster than I expected!</p>
+        <div class="testi-person">
+          <div class="avatar" style="background:#3d5afe">EW</div>
+          <div><strong data-i18n="name1">Emma W.</strong><span data-i18n="role1">Language Learner from Toronto</span></div>
+        </div>
+      </div>
+      <div class="testi-card fade-in">
+        <p data-i18n="quote2">Staying with a local host made me feel right at home from day one. It wasn't just a place to sleep, but a truly warm, authentic Korean living experience.</p>
+        <div class="testi-person">
+          <div class="avatar" style="background:#ff385c">SJ</div>
+          <div><strong data-i18n="name2">Sarah J.</strong><span data-i18n="role2">Cultural Explorer from London</span></div>
+        </div>
+      </div>
+      <div class="testi-card fade-in">
+        <p data-i18n="quote3">The guided tour took us to hidden local gems we never would have found on our own. Hands down the highlight of my trip!</p>
+        <div class="testi-person">
+          <div class="avatar" style="background:#00a878">LM</div>
+          <div><strong data-i18n="name3">Lucas M.</strong><span data-i18n="role3">Foodie Traveler from New York</span></div>
+        </div>
+      </div>
+      <div class="testi-card fade-in">
+        <p data-i18n="quote4">I've been to Korea several times, but this trip was truly special thanks to my Korean teacher and homestay host. It was so much more than just a place to stay or a language class.</p>
+        <div class="testi-person">
+          <div class="avatar" style="background:#ffb100">FY</div>
+          <div><strong data-i18n="name4">Fides Y.</strong><span data-i18n="role4">University Student from Singapore</span></div>
+        </div>
+      </div>
+      <div class="testi-card fade-in">
+        <p data-i18n="quote5">I loved being able to buy meaningful souvenirs that remind me of my time in Korea. Every time I see them, they bring back wonderful memories of my trip.</p>
+        <div class="testi-person">
+          <div class="avatar" style="background:#00b8d9">RT</div>
+          <div><strong data-i18n="name5">Ryan T.</strong><span data-i18n="role5">Architect from San Francisco</span></div>
+        </div>
+      </div>
+      <div class="testi-card fade-in">
+        <p data-i18n="quote6">I had studied Korean for years, but this was the first time I actually used it every day. Learning advanced Korean for business, economics, and finance from my teacher has been incredibly helpful in my work.</p>
+        <div class="testi-person">
+          <div class="avatar" style="background:#7c4dff">AN</div>
+          <div><strong data-i18n="name6">Anna N.</strong><span data-i18n="role6">Investor from Hong Kong</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-more"><a href="https://www.businesskorean.com/Read More.html" data-i18n="testi_more">Read More</a></div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="cta fade-in">
+      <h2 data-i18n="cta_heading">Your Korean journey starts here.</h2>
+      <p data-i18n="cta_sub">Whether it's learning the language, staying with a host, or taking a weekend guided tour—your authentic Korean adventure is waiting for&nbsp;you.</p>
+      <div class="cta-btns">
+        <a class="btn btn-solid" href="https://www.businesskorean.com/Explore All Experiences.html" data-i18n="cta_btn1">Explore All Experiences</a>
+        <a class="btn btn-outline" href="https://www.businesskorean.com/Get Membership Discounts.html" data-i18n="cta_btn2">Get Member Discounts</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer_copy">© 2026 All About Korea, Inc.</span>
+    <a href="https://www.businesskorean.com/Sitemap.html" data-i18n="sitemap">Sitemap</a>
+  </div>
+</footer>
+
+<script>
+/* ---------- Drawer ---------- */
+function toggleDrawer(open){
+  document.getElementById('drawer').classList.toggle('open', open);
+  document.getElementById('backdrop').classList.toggle('open', open);
+  document.getElementById('drawer').setAttribute('aria-hidden', String(!open));
+}
+
+/* ---------- i18n ---------- */
+const LANGS = [
+  {code:'en', flag:'🇬🇧', label:'English'},
+  {code:'es', flag:'🇪🇸', label:'Español'},
+  {code:'zh', flag:'🇨🇳', label:'中文'},
+  {code:'ja', flag:'🇯🇵', label:'日本語'},
+  {code:'fr', flag:'🇫🇷', label:'Français'},
+  {code:'de', flag:'🇩🇪', label:'Deutsch'},
+  {code:'pl', flag:'🇵🇱', label:'Polski'}
+];
+
+const T = {
+en:{nav_home:"Home",nav_study:"Study Korean",nav_homestay:"Homestay",nav_tour:"Guided Tour",nav_travel:"Korea Travel",nav_pricing:"Pricing",nav_signin:"Sign In",
+  hero_title:"Your Ultimate Gateway to Korea",hero_subheading:"Learn, Stay &amp; Explore",hero_desc:"Study Korean online from beginner to advanced, find cozy Seoul homestays, and uncover top travel tips.",services_heading:"Explore our services",
+  svc_study_title:"Study Korean",svc_study_desc:"Immersive language programs from beginner to advanced levels",
+  svc_homestay_title:"Authentic Homestay",svc_homestay_desc:"Live with a local family and experience the warmth of Korean hospitality",
+  svc_tour_title:"Expert-led Tours",svc_tour_desc:"Go beyond the tourist attractions and discover authentic everyday life in Korea",
+  svc_travel_title:"Travel Korea",svc_travel_desc:"Practical travel tips plus a curated shop for Korean lifestyle goods",
+  testi_label:"Testimonials",testi_heading:"Real Connections,<br>Unique Stories",
+  quote1:"No boring textbooks—just real chats with a friendly tutor. My Korean improved so much faster than I expected!",name1:"Emma W.",role1:"Language Learner from Toronto",
+  quote2:"Staying with a local host made me feel right at home from day one. It wasn't just a place to sleep, but a truly warm, authentic Korean living experience.",name2:"Sarah J.",role2:"Cultural Explorer from London",
+  quote3:"The guided tour took us to hidden local gems we never would have found on our own. Hands down the highlight of my trip!",name3:"Lucas M.",role3:"Foodie Traveler from New York",
+  quote4:"I've been to Korea several times, but this trip was truly special thanks to my Korean teacher and homestay host. It was so much more than just a place to stay or a language class.",name4:"Fides Y.",role4:"University Student from Singapore",
+  quote5:"I loved being able to buy meaningful souvenirs that remind me of my time in Korea. Every time I see them, they bring back wonderful memories of my trip.",name5:"Ryan T.",role5:"Architect from San Francisco",
+  quote6:"I had studied Korean for years, but this was the first time I actually used it every day. Learning advanced Korean for business, economics, and finance from my teacher has been incredibly helpful in my work.",name6:"Anna N.",role6:"Investor from Hong Kong",
+  cta_heading:"Your Korean journey starts here.",cta_sub:"Whether it's learning the language, staying with a host, or taking a weekend guided tour—your authentic Korean adventure is waiting for&nbsp;you.",
+  cta_btn1:"Explore All Experiences",cta_btn2:"Get Member Discounts",footer_copy:"© 2026 All About Korea, Inc.",sitemap:"Sitemap",testi_more:"Read More"},
+es:{nav_home:"Inicio",nav_study:"Estudiar Coreano",nav_homestay:"Estancia local",nav_tour:"Tour guiado",nav_travel:"Viajar a Corea",nav_pricing:"Precios",nav_signin:"Iniciar sesión",
+  hero_title:"Tu puerta de entrada definitiva a Corea",hero_subheading:"Aprende, Alójate y Explora",hero_desc:"Estudia coreano en línea desde nivel principiante hasta avanzado, encuentra acogedores homestays en Seúl y descubre los mejores consejos de viaje.",services_heading:"Explora nuestros servicios",
+  svc_study_title:"Estudiar Coreano",svc_study_desc:"Programas de inmersión desde nivel principiante hasta avanzado",
+  svc_homestay_title:"Estancia auténtica",svc_homestay_desc:"Vive con una familia local y siente la calidez de la hospitalidad coreana",
+  svc_tour_title:"Tours con expertos",svc_tour_desc:"Ve más allá del turismo y descubre la vida cotidiana auténtica de Corea",
+  svc_travel_title:"Llévate un poco de Corea",svc_travel_desc:"Explora productos locales cuidadosamente seleccionados y llévate un pedazo de Corea a casa.",
+  testi_label:"Testimonios",testi_heading:"Conexiones reales,<br>historias únicas",
+  quote1:"Nada de libros aburridos, solo conversaciones reales con un tutor amable. ¡Mi coreano mejoró mucho más rápido de lo esperado!",name1:"Emma W.",role1:"Estudiante de idiomas, Toronto",
+  quote2:"Alojarme con una familia local me hizo sentir como en casa desde el primer día. Fue una experiencia coreana cálida y auténtica.",name2:"Sarah J.",role2:"Exploradora cultural, Londres",
+  quote3:"El tour guiado nos llevó a lugares locales que jamás habríamos encontrado solos. ¡Lo mejor del viaje!",name3:"Lucas M.",role3:"Viajero gastronómico, Nueva York",
+  quote4:"He estado en Corea varias veces, pero este viaje fue realmente especial gracias a mi profesor de coreano y a mi anfitrión de homestay. Fue mucho más que un lugar donde alojarse o una clase de idioma.",name4:"Fides Y.",role4:"Estudiante universitaria de Singapur",
+  quote5:"Me encantó poder comprar recuerdos con significado que me recuerdan mi estancia en Corea. Cada vez que los veo, me traen maravillosos recuerdos de mi viaje.",name5:"Ryan T.",role5:"Arquitecto de San Francisco",
+  quote6:"Había estudiado coreano durante años, pero esta fue la primera vez que lo usé todos los días. Aprender coreano avanzado para negocios, economía y finanzas con mi profesor ha sido de gran ayuda en mi trabajo.",name6:"Anna N.",role6:"Inversora de Hong Kong",
+  cta_heading:"Tu viaje coreano empieza aquí.",cta_sub:"Ya sea aprender el idioma, alojarte con un anfitrión o hacer un tour de fin de semana, tu aventura coreana te espera.",
+  cta_btn1:"Explorar experiencias",cta_btn2:"Obtener descuentos",footer_copy:"© 2026 All About Korea, Inc.",sitemap:"Mapa del sitio",testi_more:"Ver más"},
+zh:{nav_home:"首页",nav_study:"学韩语",nav_homestay:"民宿体验",nav_tour:"向导旅游",nav_travel:"韩国旅行",nav_pricing:"价格",nav_signin:"登录",
+  hero_title:"你的韩国终极门户",hero_subheading:"学习、住宿与探索",hero_desc:"在线学习韩语，从初级到高级，寻找舒适的首尔寄宿家庭，并发现最佳旅行贴士。",services_heading:"了解我们的服务",
+  svc_study_title:"学韩语",svc_study_desc:"从初级到高级的沉浸式语言课程",
+  svc_homestay_title:"地道民宿体验",svc_homestay_desc:"与当地家庭同住，感受韩国式的温暖款待",
+  svc_tour_title:"专业向导旅游",svc_tour_desc:"走出旅游景点，体验韩国人的真实日常生活",
+  svc_travel_title:"把韩国带回家",svc_travel_desc:"浏览精选本地好物，把韩国的一部分带回家。",
+  testi_label:"用户评价",testi_heading:"真实的连接，<br>独特的故事",
+  quote1:"没有枯燥的课本，只有和亲切老师的真实对话。我的韩语进步比想象中快得多！",name1:"Emma W.",role1:"语言学习者 · 多伦多",
+  quote2:"住在当地寄宿家庭让我从第一天起就有回家的感觉，这是一次温暖真实的韩国生活体验。",name2:"Sarah J.",role2:"文化探索者 · 伦敦",
+  quote3:"向导带我们去了绝不会自己发现的当地秘境，是这次旅行的最大亮点！",name3:"Lucas M.",role3:"美食旅行者 · 纽约",
+  quote4:"我去过韩国好几次，但这次旅行因为我的韩语老师和寄宿家庭主人而变得格外特别。这远不止是一个住处或一堂语言课。",name4:"Fides Y.",role4:"新加坡大学生",
+  quote5:"我很喜欢能买到有意义的纪念品，让我想起在韩国的时光。每次看到它们，都会想起这次旅行的美好回忆。",name5:"Ryan T.",role5:"旧金山建筑师",
+  quote6:"我学韩语已经很多年了，但这是我第一次每天都在使用它。跟老师学习商务、经济和金融方面的高级韩语，对我的工作帮助很大。",name6:"Anna N.",role6:"香港投资人",
+  cta_heading:"你的韩国之旅从这里开始。",cta_sub:"无论是学习语言、入住寄宿家庭，还是参加周末向导旅游，你的韩国冒险都在等着你。",
+  cta_btn1:"探索所有体验",cta_btn2:"获取会员折扣",footer_copy:"© 2026 All About Korea, Inc.",sitemap:"网站地图",testi_more:"查看更多"},
+ja:{nav_home:"ホーム",nav_study:"韓国語を学ぶ",nav_homestay:"ホームステイ",nav_tour:"ガイドツアー",nav_travel:"韓国旅行",nav_pricing:"料金",nav_signin:"ログイン",
+  hero_title:"韓国への究極の入り口",hero_subheading:"学ぶ、泊まる、探す",hero_desc:"オンラインで初級から上級まで韓国語を学び、居心地の良いソウルのホームステイを見つけ、旅の最新情報をチェックしましょう。",services_heading:"サービスを見る",
+  svc_study_title:"韓国語を学ぶ",svc_study_desc:"初級から上級までの没入型語学プログラム",
+  svc_homestay_title:"本格ホームステイ",svc_homestay_desc:"現地の家庭と暮らし、韓国のおもてなしを体験",
+  svc_tour_title:"専門ガイドツアー",svc_tour_desc:"観光地を超えて、韓国のリアルな日常を発見",
+  svc_travel_title:"韓国を持ち帰る",svc_travel_desc:"厳選されたローカル商品を見て、韓国のかけらを持ち帰りましょう。",
+  testi_label:"お客様の声",testi_heading:"本物のつながり、<br>唯一無二の物語",
+  quote1:"退屈な教科書はなし。親切な先生との本物の会話だけ。韓国語が予想以上に早く上達しました！",name1:"Emma W.",role1:"言語学習者・トロント",
+  quote2:"現地ホストとの滞在は初日から自宅のような安心感でした。温かく本物の韓国の暮らしを体験できました。",name2:"Sarah J.",role2:"文化探検家・ロンドン",
+  quote3:"ガイドツアーで自分たちだけでは見つけられない穴場スポットへ。旅の一番の思い出になりました！",name3:"Lucas M.",role3:"グルメ旅行者・ニューヨーク",
+  quote4:"韓国には何度も来ていますが、今回の旅は韓国語の先生とホームステイのホストのおかげで本当に特別なものになりました。単なる宿泊先や語学クラス以上のものでした。",name4:"Fides Y.",role4:"シンガポール出身の大学生",
+  quote5:"韓国での時間を思い出させてくれる、意味のあるお土産を買えたのが嬉しかったです。それを見るたびに、旅の素敵な思い出がよみがえります。",name5:"Ryan T.",role5:"サンフランシスコ出身の建築家",
+  quote6:"何年も韓国語を勉強してきましたが、毎日実際に使ったのは今回が初めてでした。先生からビジネス・経済・金融のための上級韓国語を学んだことは、仕事にとても役立っています。",name6:"Anna N.",role6:"香港出身の投資家",
+  cta_heading:"あなたの韓国旅がここから始まる。",cta_sub:"語学学習でも、ホストとの滞在でも、週末のガイドツアーでも。本物の韓国体験があなたを待っています。",
+  cta_btn1:"すべての体験を見る",cta_btn2:"会員割引を受ける",footer_copy:"© 2026 All About Korea, Inc.",sitemap:"サイトマップ",testi_more:"もっと見る"},
+fr:{nav_home:"Accueil",nav_study:"Apprendre le coréen",nav_homestay:"Séjour chez l'habitant",nav_tour:"Visite guidée",nav_travel:"Voyage en Corée",nav_pricing:"Tarifs",nav_signin:"Connexion",
+  hero_title:"Votre porte d'entrée ultime vers la Corée",hero_subheading:"Apprendre, Séjourner et Explorer",hero_desc:"Étudiez le coréen en ligne du niveau débutant à avancé, trouvez des homestays chaleureux à Séoul et découvrez les meilleurs conseils de voyage.",services_heading:"Découvrez nos services",
+  svc_study_title:"Apprendre le coréen",svc_study_desc:"Programmes immersifs du niveau débutant à avancé",
+  svc_homestay_title:"Séjour authentique",svc_homestay_desc:"Vivez avec une famille locale et découvrez la chaleur de l'hospitalité coréenne",
+  svc_tour_title:"Visites guidées par des experts",svc_tour_desc:"Allez au-delà des sites touristiques et découvrez le quotidien authentique en Corée",
+  svc_travel_title:"Emportez la Corée chez vous",svc_travel_desc:"Parcourez une sélection de produits locaux et ramenez un peu de la Corée chez vous.",
+  testi_label:"Témoignages",testi_heading:"Des liens réels,<br>des histoires uniques",
+  quote1:"Pas de manuels ennuyeux, juste de vraies conversations avec un tuteur sympathique. Mon coréen a progressé bien plus vite que prévu !",name1:"Emma W.",role1:"Apprenante, Toronto",
+  quote2:"Séjourner chez un hôte local m'a fait sentir chez moi dès le premier jour. Une expérience coréenne chaleureuse et authentique.",name2:"Sarah J.",role2:"Exploratrice culturelle, Londres",
+  quote3:"La visite guidée nous a menés à des endroits locaux que nous n'aurions jamais trouvés seuls. Le point fort du voyage !",name3:"Lucas M.",role3:"Voyageur gourmand, New York",
+  quote4:"Je suis allée en Corée plusieurs fois, mais ce voyage a été vraiment spécial grâce à mon professeur de coréen et à mon hôte homestay. C'était bien plus qu'un simple logement ou un cours de langue.",name4:"Fides Y.",role4:"Étudiante universitaire de Singapour",
+  quote5:"J'ai adoré pouvoir acheter des souvenirs qui ont du sens et qui me rappellent mon séjour en Corée. Chaque fois que je les vois, ils me rappellent de merveilleux souvenirs de mon voyage.",name5:"Ryan T.",role5:"Architecte de San Francisco",
+  quote6:"J'étudiais le coréen depuis des années, mais c'était la première fois que je l'utilisais vraiment tous les jours. Apprendre le coréen avancé pour les affaires, l'économie et la finance avec mon professeur m'a énormément aidée dans mon travail.",name6:"Anna N.",role6:"Investisseuse de Hong Kong",
+  cta_heading:"Votre aventure coréenne commence ici.",cta_sub:"Apprendre la langue, séjourner chez un hôte ou faire une visite guidée le week-end : votre aventure coréenne vous attend.",
+  cta_btn1:"Explorer toutes les expériences",cta_btn2:"Obtenir des réductions",footer_copy:"© 2026 All About Korea, Inc.",sitemap:"Plan du site",testi_more:"Voir plus"},
+de:{nav_home:"Startseite",nav_study:"Koreanisch lernen",nav_homestay:"Homestay",nav_tour:"Geführte Tour",nav_travel:"Korea-Reise",nav_pricing:"Preise",nav_signin:"Anmelden",
+  hero_title:"Dein ultimatives Tor nach Korea",hero_subheading:"Lernen, Wohnen &amp; Entdecken",hero_desc:"Lerne online Koreanisch vom Anfänger- bis zum Fortgeschrittenenniveau, finde gemütliche Homestays in Seoul und entdecke die besten Reisetipps.",services_heading:"Unsere Angebote entdecken",
+  svc_study_title:"Koreanisch lernen",svc_study_desc:"Immersive Sprachkurse vom Anfänger- bis zum Fortgeschrittenenniveau",
+  svc_homestay_title:"Authentischer Homestay",svc_homestay_desc:"Lebe bei einer lokalen Familie und erlebe koreanische Gastfreundschaft",
+  svc_tour_title:"Geführte Expertentouren",svc_tour_desc:"Erlebe das echte Alltagsleben Koreas abseits der Touristenpfade",
+  svc_travel_title:"Nimm ein Stück Korea mit nach Hause",svc_travel_desc:"Entdecke sorgfältig ausgewählte lokale Produkte und nimm ein Stück Korea mit nach Hause.",
+  testi_label:"Erfahrungsberichte",testi_heading:"Echte Verbindungen,<br>einzigartige Geschichten",
+  quote1:"Keine langweiligen Lehrbücher – nur echte Gespräche mit einem freundlichen Tutor. Mein Koreanisch hat sich viel schneller verbessert als erwartet!",name1:"Emma W.",role1:"Sprachlernerin, Toronto",
+  quote2:"Bei einer lokalen Gastfamilie zu wohnen fühlte sich vom ersten Tag an wie zuhause an. Eine warme, authentische koreanische Erfahrung.",name2:"Sarah J.",role2:"Kulturentdeckerin, London",
+  quote3:"Die geführte Tour brachte uns zu versteckten Orten, die wir alleine nie gefunden hätten. Absolutes Highlight der Reise!",name3:"Lucas M.",role3:"Foodie-Reisender, New York",
+  quote4:"Ich war schon mehrmals in Korea, aber diese Reise war dank meines Koreanischlehrers und meines Homestay-Gastgebers wirklich besonders. Es war viel mehr als nur eine Unterkunft oder ein Sprachkurs.",name4:"Fides Y.",role4:"Universitätsstudentin aus Singapur",
+  quote5:"Ich habe es geliebt, bedeutungsvolle Souvenirs kaufen zu können, die mich an meine Zeit in Korea erinnern. Jedes Mal, wenn ich sie sehe, wecken sie wunderbare Erinnerungen an meine Reise.",name5:"Ryan T.",role5:"Architekt aus San Francisco",
+  quote6:"Ich hatte Jahre Koreanisch gelernt, aber das war das erste Mal, dass ich es wirklich jeden Tag benutzt habe. Fortgeschrittenes Koreanisch für Business, Wirtschaft und Finanzen bei meinem Lehrer zu lernen, hat mir bei meiner Arbeit enorm geholfen.",name6:"Anna N.",role6:"Investorin aus Hongkong",
+  cta_heading:"Deine koreanische Reise beginnt hier.",cta_sub:"Ob Sprache lernen, bei einem Gastgeber wohnen oder eine geführte Wochenendtour – dein authentisches Korea-Abenteuer wartet auf dich.",
+  cta_btn1:"Alle Erlebnisse entdecken",cta_btn2:"Mitgliederrabatte erhalten",footer_copy:"© 2026 All About Korea, Inc.",sitemap:"Sitemap",testi_more:"Mehr anzeigen"},
+pl:{nav_home:"Strona główna",nav_study:"Nauka koreańskiego",nav_homestay:"Homestay",nav_tour:"Wycieczka z przewodnikiem",nav_travel:"Podróż po Korei",nav_pricing:"Cennik",nav_signin:"Zaloguj się",
+  hero_title:"Twoja brama do Korei",hero_subheading:"Ucz się, Mieszkaj i Odkrywaj",hero_desc:"Ucz się koreańskiego online od poziomu podstawowego do zaawansowanego, znajdź przytulne homestaye w Seulu i odkryj najlepsze wskazówki podróżnicze.",services_heading:"Poznaj nasze usługi",
+  svc_study_title:"Nauka koreańskiego",svc_study_desc:"Intensywne programy językowe od poziomu początkującego do zaawansowanego",
+  svc_homestay_title:"Autentyczny Homestay",svc_homestay_desc:"Zamieszkaj z lokalną rodziną i poznaj ciepło koreańskiej gościnności",
+  svc_tour_title:"Wycieczki z ekspertem",svc_tour_desc:"Zobacz coś więcej niż atrakcje turystyczne i poznaj prawdziwe codzienne życie w Korei",
+  svc_travel_title:"Zabierz Koreę do domu",svc_travel_desc:"Przeglądaj starannie wyselekcjonowane lokalne produkty i zabierz ze sobą kawałek Korei.",
+  testi_label:"Opinie",testi_heading:"Prawdziwe relacje,<br>wyjątkowe historie",
+  quote1:"Żadnych nudnych podręczników — tylko prawdziwe rozmowy z przyjaznym lektorem. Mój koreański poprawił się znacznie szybciej, niż się spodziewałam!",name1:"Emma W.",role1:"Uczennica języka, Toronto",
+  quote2:"Pobyt u lokalnej rodziny sprawił, że od pierwszego dnia czułam się jak w domu. To było ciepłe, autentyczne koreańskie doświadczenie.",name2:"Sarah J.",role2:"Odkrywczyni kultury, Londyn",
+  quote3:"Wycieczka z przewodnikiem zabrała nas do lokalnych miejsc, których sami nigdy byśmy nie znaleźli. Zdecydowanie najlepszy moment podróży!",name3:"Lucas M.",role3:"Podróżnik kulinarny, Nowy Jork",
+  quote4:"Byłam w Korei kilka razy, ale ta podróż była naprawdę wyjątkowa dzięki mojej nauczycielce koreańskiego i gospodarzowi homestay. To było o wiele więcej niż tylko miejsce noclegowe czy lekcja języka.",name4:"Fides Y.",role4:"Studentka uniwersytecka z Singapuru",
+  quote5:"Uwielbiałem móc kupić pamiątki, które mają dla mnie znaczenie i przypominają mi czas spędzony w Korei. Za każdym razem, gdy na nie patrzę, wracają wspaniałe wspomnienia z podróży.",name5:"Ryan T.",role5:"Architekt z San Francisco",
+  quote6:"Uczyłam się koreańskiego od lat, ale to była pierwsza okazja, żeby używać go naprawdę codziennie. Nauka zaawansowanego koreańskiego biznesowego, ekonomicznego i finansowego u mojej nauczycielki bardzo pomogła mi w pracy.",name6:"Anna N.",role6:"Inwestorka z Hongkongu",
+  cta_heading:"Twoja koreańska podróż zaczyna się tutaj.",cta_sub:"Nauka języka, pobyt u gospodarza czy weekendowa wycieczka z przewodnikiem — twoja autentyczna koreańska przygoda już na ciebie czeka.",
+  cta_btn1:"Poznaj wszystkie doświadczenia",cta_btn2:"Odbierz rabaty dla członków",footer_copy:"© 2026 All About Korea, Inc.",sitemap:"Mapa strony",testi_more:"Zobacz więcej"}
+};
+
+let currentLang = 'en';
+
+function buildLangMenu(){
+  const menu = document.getElementById('langMenu');
+  menu.innerHTML = LANGS.map(l =>
+    `<button class="lang-item${l.code===currentLang?' active':''}" data-code="${l.code}" onclick="setLang('${l.code}')">${l.flag} ${l.label}</button>`
+  ).join('');
+}
+function toggleLangMenu(){
+  document.getElementById('langMenu').classList.toggle('open');
+}
+function setLang(code){
+  currentLang = code;
+  const dict = T[code] || T.en;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key]!==undefined) el.innerHTML = dict[key];
+  });
+  document.getElementById('langLabel').textContent = code.toUpperCase();
+  document.documentElement.lang = code;
+  document.getElementById('langMenu').classList.remove('open');
+  buildLangMenu();
+}
+document.addEventListener('click', (e)=>{
+  const w = document.querySelector('.lang-wrap');
+  if(w && !w.contains(e.target)) document.getElementById('langMenu').classList.remove('open');
+});
+
+buildLangMenu();
+
+/* ---------- Hero image slider ---------- */
+const HERO_IMAGES = [
+  {src:'Landing Images/Bike.jpeg', alt:'Friends cycling along the Han River at night with the Seoul skyline'},
+  {src:'Landing Images/Dinner.jpeg', alt:'Friends laughing over a Korean meal at a local restaurant'},
+  {src:'Landing Images/Gimbap_together_2K_202607281319.jpeg', alt:'Friends making gimbap together in a home kitchen'},
+  {src:'Landing Images/Hangang noodle.jpeg', alt:'Friends having a picnic with ramen by the Han River'},
+  {src:'Landing Images/Palace.jpeg', alt:'Couple in hanbok taking a selfie at a Korean palace'},
+  {src:'Landing Images/PC room.jpeg', alt:'Friends gaming together at a Korean PC room'},
+  {src:'Landing Images/Study Korean(1).jpeg', alt:'Student and teacher studying Korean together at a cafe'},
+  {src:'Landing Images/Temple1.jpeg', alt:'Friends walking together through a Korean temple courtyard'},
+  {src:'Landing Images/Temple2.jpeg', alt:'Friends chatting together on a temple porch'},
+  {src:'Landing Images/Traditional Market.jpeg', alt:'Friends sharing street food at a traditional Korean market'}
+];
+function heroShuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+const heroOrder = heroShuffle(HERO_IMAGES.slice());
+let heroIndex = 0;
+let heroTimer = null;
+function heroRenderDots(){
+  document.getElementById('heroDots').innerHTML = heroOrder.map((_,i)=>
+    `<button class="hero-dot${i===heroIndex?' active':''}" aria-label="Go to image ${i+1}" onclick="heroGoTo(${i})"></button>`
+  ).join('');
+}
+function heroShow(index){
+  const img = document.getElementById('heroSlideImg');
+  heroIndex = (index + heroOrder.length) % heroOrder.length;
+  img.classList.add('is-fading');
+  setTimeout(()=>{
+    const item = heroOrder[heroIndex];
+    img.src = item.src;
+    img.alt = item.alt;
+    img.classList.remove('is-fading');
+  }, 220);
+  heroRenderDots();
+}
+function heroGoTo(i){ heroShow(i); heroRestartAutoplay(); }
+function heroNext(){ heroGoTo(heroIndex + 1); }
+function heroPrev(){ heroGoTo(heroIndex - 1); }
+function heroRestartAutoplay(){
+  if(heroTimer) clearInterval(heroTimer);
+  heroTimer = setInterval(()=>heroShow(heroIndex + 1), 5000);
+}
+document.getElementById('heroSlideImg').src = heroOrder[0].src;
+document.getElementById('heroSlideImg').alt = heroOrder[0].alt;
+heroRenderDots();
+heroRestartAutoplay();
+
+/* ---------- Scroll reveal ---------- */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); } });
+},{threshold:.15});
+document.querySelectorAll('.fade-in').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
