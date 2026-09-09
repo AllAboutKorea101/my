@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Study Korean – 1장. 선택을 나타낼 때 (Expressing Choices)</title>
+<style>
+  :root{
+    --bg:#F5F5F7;
+    --card:#FFFFFF;
+    --ink:#1D1D1F;
+    --ink-soft:#6E6E73;
+    --line:#E5E5EA;
+    --blue:#0071E3;
+    --blue-deep:#0059B3;
+    --blue-tint:#EAF3FE;
+    --green:#2FA84F;
+    --green-tint:#E7F6EA;
+    --red:#E0393E;
+    --red-tint:#FDECEC;
+    --orange:#C9760A;
+    --orange-tint:#FDF2E3;
+    --purple:#5E5CE6;
+    --purple-tint:#EEEEFD;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:11px;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+    --content-w:720px;
+    --content-pad:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro KR","Apple SD Gothic Neo","Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,textarea{font-family:inherit;}
+
+  /* ── TOPBAR ─────────────────────────────────────────────────── */
+  .topbar{
+    position:sticky;top:0;z-index:200;
+    background:rgba(255,255,255,.78);backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);
+    display:flex;align-items:center;padding:0 16px;height:52px;gap:10px;
+    border-bottom:1px solid rgba(0,0,0,.06);
+  }
+  .burger{background:none;border:none;cursor:pointer;padding:8px;margin-left:-8px;display:flex;flex-direction:column;gap:5px;border-radius:10px;}
+  .burger:active{background:rgba(0,0,0,.06);}
+  .burger span{display:block;width:20px;height:2px;background:var(--ink);border-radius:2px;transition:transform .25s,opacity .25s;}
+  .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .burger.open span:nth-child(2){opacity:0;}
+  .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .topbar-title{font-size:15px;font-weight:600;letter-spacing:-.2px;}
+  .topbar-sub{color:var(--ink-soft);font-size:12px;margin-left:auto;font-weight:500;background:var(--line);padding:3px 10px;border-radius:20px;}
+
+  /* ── DRAWER ─────────────────────────────────────────────────── */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);}
+  .overlay.show{opacity:1;pointer-events:all;}
+  .drawer{position:fixed;left:-300px;top:0;bottom:0;width:300px;background:var(--card);z-index:400;transition:left .3s cubic-bezier(.32,.72,0,1);overflow-y:auto;}
+  .drawer.open{left:0;}
+  .drawer-header{padding:22px 20px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .drawer-header h2{font-size:19px;font-weight:700;letter-spacing:-.3px;}
+  .drawer-header h2 span{color:var(--blue);}
+  .drawer-close{background:var(--bg);border:none;width:30px;height:30px;border-radius:50%;font-size:16px;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .drawer-hr{height:1px;background:var(--line);margin:2px 20px 8px;}
+  .nav-section{padding:6px 10px;}
+  .nav-item{display:flex;align-items:center;gap:13px;padding:13px 12px;color:var(--ink);text-decoration:none;font-size:15.5px;font-weight:600;cursor:pointer;transition:background .15s;border-radius:12px;}
+  .nav-item:active,.nav-item.active{background:var(--blue-tint);color:var(--blue-deep);}
+  .nav-icon{width:22px;height:22px;flex:none;display:flex;align-items:center;justify-content:center;}
+
+  /* ── HERO ───────────────────────────────────────────────────── */
+  .hero{padding:30px 20px 18px;text-align:center;}
+  .hero-badge{display:inline-block;background:var(--purple-tint);color:var(--purple);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:12px;letter-spacing:.2px;}
+  .hero h1{font-size:26px;font-weight:800;line-height:1.3;letter-spacing:-.4px;}
+  .hero .sub{font-size:15px;font-weight:500;color:var(--ink-soft);margin-top:6px;}
+
+  /* ── TABS ───────────────────────────────────────────────────── */
+  .unit-tabs-wrap{position:sticky;top:52px;z-index:150;background:var(--bg);padding:8px var(--content-pad) 12px;max-width:calc(var(--content-w) + 2*var(--content-pad));margin:0 auto;}
+  .unit-tabs{display:flex;gap:6px;overflow-x:auto;background:#E9E9EC;border-radius:14px;padding:4px;scrollbar-width:none;}
+  .unit-tabs::-webkit-scrollbar{display:none;}
+  .unit-tab{flex:1;min-width:max-content;padding:9px 14px;font-size:13px;font-weight:600;color:var(--ink-soft);border-radius:11px;cursor:pointer;white-space:nowrap;text-align:center;transition:all .2s;}
+  .unit-tab.active{color:var(--ink);background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12);}
+
+  /* ── CARDS ──────────────────────────────────────────────────── */
+  .grammar-list{padding:4px var(--content-pad) 40px;display:flex;flex-direction:column;gap:14px;max-width:calc(var(--content-w) + 2*var(--content-pad));margin:0 auto;}
+  .grammar-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;}
+  .card-header{display:flex;align-items:center;padding:16px 18px;cursor:pointer;gap:13px;}
+  .card-num{width:34px;height:34px;border-radius:50%;background:linear-gradient(150deg,var(--blue),var(--blue-deep));color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;}
+  .card-title-wrap{flex:1;min-width:0;}
+  .card-level{font-size:11.5px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+  .card-title{font-size:17px;font-weight:700;color:var(--ink);margin-top:2px;letter-spacing:-.2px;}
+  .card-arrow{font-size:14px;color:var(--ink-soft);transition:transform .3s;flex:none;}
+  .card-arrow.open{transform:rotate(180deg);}
+  .card-body{display:none;padding:0 18px 20px;}
+  .card-body.show{display:block;animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── CONTENT ────────────────────────────────────────────────── */
+  .section-tag{display:inline-block;background:var(--blue-tint);color:var(--blue-deep);font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:20px;margin-bottom:10px;letter-spacing:.2px;}
+  .formula-box{background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;border-radius:var(--radius-md);padding:16px 18px;font-size:16px;font-weight:700;text-align:center;margin-bottom:14px;letter-spacing:.1px;line-height:1.5;}
+  .analogy-box{background:var(--purple-tint);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:14px;}
+  .analogy-box .lbl{font-size:11.5px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+  .analogy-box .pattern-line{font-size:14px;font-weight:700;color:#3A38C4;line-height:1.6;padding:3px 0;}
+  .analogy-box .similar-wrap{margin-top:10px;padding-top:10px;border-top:1px solid rgba(94,92,230,.18);}
+  .analogy-box .similar-item{margin-bottom:7px;}
+  .analogy-box .similar-expr{font-size:13.5px;font-weight:700;color:#3A38C4;}
+  .analogy-box .similar-note{font-size:12px;color:#5E5CE6;margin-top:2px;line-height:1.5;}
+  .analogy-box .similar-note-en{font-size:11.5px;color:#5E5CE6;font-style:italic;margin-top:1px;line-height:1.5;}
+  .rule-card{background:var(--bg);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;}
+  .rule-title{font-size:13.5px;font-weight:700;color:var(--blue-deep);margin-bottom:4px;}
+  .rule-text{font-size:13.5px;color:#3A3A3C;line-height:1.6;}
+  .rule-ex{font-size:12.5px;color:var(--blue-deep);margin-top:6px;font-weight:500;}
+  .examples-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .ex-item{background:var(--bg);border-radius:var(--radius-sm);padding:11px 14px;}
+  .ex-kr{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+  .ex-en{font-size:12.5px;color:var(--ink-soft);}
+
+  /* ── QUIZ ───────────────────────────────────────────────────── */
+  .quiz-section{margin-top:16px;}
+  .quiz-type-label{font-size:12px;font-weight:700;color:#fff;border-radius:20px;padding:4px 13px;display:inline-flex;align-items:center;gap:5px;margin-bottom:10px;}
+  .quiz-desc{font-size:12px;color:var(--ink-soft);margin:-4px 0 10px 2px;}
+  .quiz-q{background:var(--bg);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;}
+  .quiz-q p{font-size:14.5px;color:var(--ink);font-weight:600;margin-bottom:8px;line-height:1.5;white-space:pre-line;}
+  .quiz-q .en{font-size:12.5px;color:var(--ink-soft);font-weight:400;margin-top:-4px;margin-bottom:9px;white-space:pre-line;}
+  .passage-box{background:#fff;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px;font-size:14px;line-height:1.7;color:var(--ink);border:1px solid var(--line);white-space:pre-line;}
+
+  .ox-row{display:flex;gap:8px;margin-bottom:4px;}
+  .ox-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;min-height:44px;border-radius:12px;border:none;background:#fff;font-size:14px;font-weight:700;cursor:pointer;color:var(--ink);transition:all .15s;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+  .ox-btn:active{transform:scale(.97);}
+  .ox-btn.correct{background:var(--green);color:#fff;}
+  .ox-btn.wrong{background:var(--red);color:#fff;}
+  .ox-btn:disabled{cursor:default;}
+
+  .mc-opt{margin-bottom:8px;}
+  .mc-btn{display:block;width:100%;text-align:left;padding:12px 14px;min-height:44px;border-radius:12px;border:none;background:#fff;font-size:14px;color:var(--ink);cursor:pointer;transition:all .15s;box-shadow:0 1px 2px rgba(0,0,0,.06);line-height:1.45;}
+  .mc-btn:active{transform:scale(.985);}
+  .mc-btn.correct{background:var(--green);color:#fff;font-weight:600;}
+  .mc-btn.wrong{background:var(--red);color:#fff;}
+  .mc-btn:disabled{cursor:default;}
+  .mc-detail{display:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-top:6px;font-size:12.5px;line-height:1.55;}
+  .mc-detail.show{display:block;animation:fadeIn .2s ease;}
+  .mc-detail.is-correct{border-color:var(--green);background:var(--green-tint);}
+  .mc-detail.is-wrong{border-color:var(--red);background:var(--red-tint);}
+  .mc-detail .fkr{font-weight:700;color:var(--ink);}
+  .mc-detail .fen{color:var(--ink-soft);font-style:italic;margin-top:2px;}
+  .mc-detail .fnote{color:var(--ink-soft);margin-top:5px;}
+  .mc-detail .fnote-en{color:var(--ink-soft);font-style:italic;margin-top:1px;}
+
+  .fill-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14.5px;color:var(--ink);font-weight:600;margin-bottom:8px;line-height:2.1;}
+  .fill-input{border:none;border-bottom:2.5px solid var(--blue);background:none;font-size:15px;font-weight:700;color:var(--blue-deep);min-width:120px;outline:none;text-align:center;padding:4px 6px;}
+  .fill-input::placeholder{color:#B0B0B5;font-weight:500;font-size:12.5px;}
+  .fill-textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-size:14.5px;color:var(--ink);outline:none;padding:11px 13px;resize:vertical;min-height:44px;font-weight:500;line-height:1.5;}
+  .fill-textarea:focus{border-color:var(--blue);}
+  .check-btn{background:var(--blue);color:#fff;border:none;border-radius:980px;padding:11px 22px;font-size:13.5px;font-weight:700;cursor:pointer;margin-top:8px;display:inline-block;min-height:40px;transition:transform .12s,background .15s;}
+  .check-btn:active{transform:scale(.96);background:var(--blue-deep);}
+  .fb{display:none;font-size:12.5px;margin-top:9px;font-weight:600;padding:9px 12px;border-radius:10px;line-height:1.5;}
+  .fb.ok{background:var(--green-tint);color:#1D7A37;display:block;}
+  .fb.no{background:var(--red-tint);color:#B7292D;display:block;}
+  .fb .en-line{display:block;font-weight:400;font-style:italic;opacity:.85;margin-top:3px;}
+
+  /* DIALOGUE */
+  .dialogue-wrap{display:flex;flex-direction:column;gap:8px;}
+  .dialogue-item{display:flex;flex-direction:column;}
+  .bubble-a-wrap{align-items:flex-start;}
+  .bubble-b-wrap{align-items:flex-end;}
+  .who-label{font-size:11px;color:var(--ink-soft);font-weight:700;padding:0 6px;margin-bottom:3px;}
+  .dialogue-bubble{border-radius:16px;padding:11px 15px;max-width:88%;font-size:14px;line-height:1.65;}
+  .bubble-a{background:#fff;color:var(--ink);border-bottom-left-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+  .bubble-b{background:var(--blue);color:#fff;border-bottom-right-radius:4px;}
+  .bubble-en{font-size:11px;opacity:.65;margin-top:4px;}
+  .dia-fill{border:none;border-bottom:2.5px dashed var(--blue-deep);background:rgba(0,113,227,.08);border-radius:4px 4px 0 0;font-size:14px;font-weight:700;color:#1D7A37;min-width:96px;outline:none;padding:2px 6px;margin:0 2px;}
+  .bubble-b .dia-fill{border-bottom-color:#fff;color:#CFF3D8;background:rgba(255,255,255,.15);}
+  .dia-hint{font-size:11px;color:#1D7A37;font-style:italic;margin-top:2px;display:none;padding-left:2px;}
+  .bubble-b .dia-hint{color:#CFF3D8;}
+  .dia-hint.show{display:block;}
+  .dia-row{display:flex;flex-direction:column;margin-bottom:6px;line-height:1.75;}
+  .dia-tip{font-size:11.5px;color:var(--ink-soft);margin:-2px 0 10px 2px;}
+
+  /* TOPIK */
+  .topik-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#1D1D1F,#3A3A3C);color:#fff;font-size:11px;font-weight:800;border-radius:20px;padding:4px 12px;margin-bottom:10px;letter-spacing:.3px;}
+  .topik-instruction{font-size:12.5px;color:var(--ink-soft);margin-bottom:8px;}
+  .topik-sentence{font-size:15px;font-weight:600;color:var(--ink);line-height:1.6;margin-bottom:4px;}
+  .topik-sentence u{text-decoration-color:var(--blue);text-decoration-thickness:2px;text-underline-offset:3px;color:var(--blue-deep);}
+  .topik-sentence-en{font-size:12.5px;color:var(--ink-soft);font-style:italic;margin-bottom:10px;}
+  .topik-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .topik-source{font-size:10.5px;color:var(--ink-soft);text-align:right;margin-top:8px;}
+  .dialogue-scenario{margin-bottom:10px;}
+  .dialogue-scenario .d-line{font-size:13.5px;line-height:1.65;margin-bottom:4px;}
+  .dialogue-scenario .d-who{font-weight:700;color:var(--blue-deep);}
+  .dialogue-scenario .d-blank{font-weight:700;color:var(--ink-soft);font-style:italic;}
+  .docx-fallback-link{display:none;align-items:center;gap:5px;background:var(--orange-tint);border:1.5px solid var(--orange);border-radius:980px;padding:6px 13px;font-size:12px;font-weight:700;color:var(--orange);text-decoration:none;margin-left:8px;min-height:32px;}
+
+  /* DOCX button */
+  .docx-btn{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--line);border-radius:980px;padding:6px 13px;font-size:12px;font-weight:700;color:var(--blue-deep);cursor:pointer;transition:background .15s,transform .12s;vertical-align:middle;flex:none;min-height:32px;}
+  .docx-btn:active{transform:scale(.95);background:var(--blue-tint);}
+  .docx-btn svg{flex:none;}
+  .docx-btn.loading{opacity:.6;pointer-events:none;}
+  .formula-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+  .formula-row .section-tag{margin-bottom:0;}
+
+  .score-chip{display:inline-flex;align-items:center;gap:5px;background:var(--purple-tint);color:var(--purple);font-size:12px;font-weight:700;border-radius:20px;padding:5px 12px;margin-bottom:12px;}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(10px);color:#fff;font-size:13.5px;font-weight:600;padding:12px 20px;border-radius:14px;z-index:500;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.32,.72,0,1);box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:88%;text-align:center;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media (min-width:600px){
+    .hero h1{font-size:30px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <h2>All About <span>Korea</span></h2>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-hr"></div>
+  <div class="nav-section">
+    <a class="nav-item active" href="https://www.businesskorean.com/">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+      Home
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/Study%20Korean/Study%20Korean.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>
+      Study Korean
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/Homestay/Homestay.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></span>
+      Homestay
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/Guided%20Tour/Guided%20Tour.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></span>
+      Guided Tour
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/Korea%20Travel/Korea%20Travel.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
+      Korea Travel
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/payment.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0114 0v1"/></svg></span>
+      Pricing
+    </a>
+  </div>
+</div>
+
+<div class="topbar">
+  <button class="burger" id="burgerBtn" onclick="toggleDrawer()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <span class="topbar-title">🇰🇷 Study Korean</span>
+  <span class="topbar-sub">Advanced</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOPIK Level 5–6 · 고급</div>
+  <h1>1장. 선택을 나타낼 때<br><span class="sub">Expressing Choices</span></h1>
+</div>
+
+<div class="unit-tabs-wrap">
+  <div class="unit-tabs" id="unitTabs">
+    <div class="unit-tab active" onclick="showUnit(0,this)">01 –느니</div>
+    <div class="unit-tab" onclick="showUnit(1,this)">02 –(으)ㄹ 바에야</div>
+    <div class="unit-tab" onclick="showUnit(2,this)">03 –건 –건</div>
+    <div class="unit-tab" onclick="showUnit(3,this)">04 –(느)ㄴ다기보다는</div>
+  </div>
+</div>
+
+<div class="grammar-list" id="grammarList"></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const UNITS = [
+  // ══════════════════ 01 : –느니 ══════════════════
+  {
+    num:"01", level:"Comparing Two Undesirable Options · 비교 선택",
+    title:"V–느니",
+    formula:"V-느니 (차라리) V/A",
+    englishPatterns:[
+      "Rather than V-ing, I'd rather V.",
+      "I'd rather V than V.",
+      "Instead of V-ing, I'll just V."
+    ],
+    analogyExampleKr:"이렇게 기다리느니 그냥 걸어가는 게 낫겠어요.",
+    analogyExampleEn:"Rather than waiting like this, it's better to just walk.",
+    similarKr:[
+      {expr:"-는 것보다(는)",note:"'–느니'보다 조금 더 평범한 표현으로, 같은 비교의 뜻을 나타내요.",noteEn:"A more plain, everyday way to express the same comparison as '–느니.'",
+       exampleKr:"기다리는 것보다(는) 걸어가는 게 낫겠어요.",exampleEn:"It's better to walk than to wait."}
+    ],
+    rules:[
+      {t:"받침 상관없이 어간 + 느니", en:"Attaches directly to the verb stem, with no vowel-harmony change — the same form no matter how the stem ends.",
+       ex:"가다 → 가느니 / 먹다 → 먹느니"},
+      {t:"두 가지 모두 안 좋을 때 사용", en:"Used when the first action is so undesirable that the speaker would rather pick the second (often also imperfect) option.",
+       ex:"이 일을 하느니 그만두겠어요."},
+      {t:"차라리와 자주 함께 사용", en:"Frequently paired with 차라리 (\"rather\") in the following clause to emphasize the preference.",
+       ex:"거짓말을 하느니 차라리 아무 말도 안 할래요."},
+    ],
+    examples:[
+      {kr:"이렇게 기다리느니 그냥 걸어가는 게 낫겠어요.", en:"Rather than waiting like this, it's better to just walk."},
+      {kr:"그 사람이랑 또 싸우느니 그냥 참는 게 나아요.", en:"Rather than fighting with him again, it's better to just endure it."},
+      {kr:"늦게 출발하느니 일찍 나가는 게 마음이 편해요.", en:"Rather than leaving late, it's more comfortable to head out early."},
+      {kr:"집에서 시켜 먹느니 나가서 사 먹는 게 더 빠르겠어요.", en:"Rather than ordering delivery, going out to eat would be faster."},
+      {kr:"이걸 억지로 다 먹느니 조금 남기는 게 나아요.", en:"Rather than forcing myself to finish this, it's better to leave a little."},
+      {kr:"이런 데서 줄 서느니 다른 가게로 가는 게 낫겠어요.", en:"Rather than standing in line here, it's better to go to another shop."},
+      {kr:"매일 야근하느니 이직을 알아보는 게 낫겠어요.", en:"Rather than working overtime every day, it's better to look into changing jobs."},
+      {kr:"버스를 기다리느니 지하철을 타는 게 빠르겠어요.", en:"Rather than waiting for the bus, taking the subway would be faster."},
+      {kr:"대충 끝내느니 시간을 더 들여서 제대로 하는 게 나아요.", en:"Rather than finishing it half-heartedly, it's better to take more time and do it properly."},
+      {kr:"이렇게 미루느니 지금 바로 시작하는 게 낫겠어요.", en:"Rather than putting it off like this, it's better to start right now."},
+      {kr:"혼자 고민하느니 친구한테 물어보는 게 낫겠어요.", en:"Rather than worrying alone, it's better to ask a friend."},
+      {kr:"이 가격에 사느니 다른 데서 알아보는 게 나아요.", en:"Rather than buying it at this price, it's better to look elsewhere."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"'먹다'에 '–느니'를 붙이면 '먹느니'가 되고, '가다'에 붙이면 '가느니'가 돼요. 받침이 있어도 없어도 형태가 같아요.",
+         en:"Adding '–느니' to 먹다 gives 먹느니, and to 가다 gives 가느니 — the form doesn't change.",ans:true,
+         fbKr:"맞아요! '–느니'는 받침이 있든 없든 항상 같은 모양으로 붙어요.",
+         fbEn:"Right! '–느니' attaches the same way regardless of the stem's final sound."},
+        {krSentence:"'–느니'는 두 가지 선택 중에서 더 좋은 쪽을 고를 때 사용해요.",
+         en:"'–느니' is used to pick the better one between two good options.",ans:false,
+         fbKr:"아니에요. '–느니'는 둘 다 별로일 때, 그나마 나은 쪽을 고르는 표현이에요.",
+         fbEn:"No. '–느니' is used when neither option is great — choosing the lesser of two evils."},
+        {krSentence:"'차라리'는 '–느니' 뒤에 자주 함께 쓰여서 의미를 더 강조해요.",
+         en:"'차라리' is often used together after '–느니' to emphasize the meaning.",ans:true,
+         fbKr:"맞아요! '차라리'가 함께 오면 '그럴 바엔 정말 이게 낫다'는 느낌이 더 강해져요.",
+         fbEn:"Right! Adding '차라리' strengthens the sense of 'this is truly the better choice.'"},
+      ],
+      sentence:[
+        {pre:"이렇게",suf:" 그냥 걸어가는 게 낫겠어요.",ans:"기다리느니",hint:"기다리다 + 느니",en:"Rather than waiting like this, it's better to just walk."},
+        {pre:"그 사람이랑 또",suf:" 차라리 참는 게 나아요.",ans:"싸우느니",hint:"싸우다 + 느니",en:"Rather than fighting with him again, it's better to just endure it."},
+        {pre:"이 가격에",suf:" 다른 데서 알아보는 게 나아요.",ans:"사느니",hint:"사다 + 느니",en:"Rather than buying it at this price, it's better to look elsewhere."},
+        {pre:"혼자",suf:" 친구한테 물어보는 게 낫겠어요.",ans:"고민하느니",hint:"고민하다 + 느니",en:"Rather than worrying alone, it's better to ask a friend."},
+        {pre:"이렇게 대충",suf:" 시간을 더 들여서 제대로 하는 게 나아요.",ans:"끝내느니",hint:"끝내다 + 느니",en:"Rather than finishing it half-heartedly like this, it's better to take more time."},
+      ],
+      context:[
+        {scenarioKr:"다음 대화의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"A: 회사에서 계속 부당한 대우를 받고 있어요.\nB: 그렇게 ____ 차라리 이직을 준비하는 게 어때요?",
+         passageEn:"A: I keep getting treated unfairly at work.\nB: Rather than enduring that, why not prepare to change jobs?",
+         options:[
+           {text:"참느니",correct:true,filledKr:"그렇게 참느니 차라리 이직을 준비하는 게 어때요?",filledEn:"Rather than enduring that, why not prepare to change jobs?",noteKr:"참는 것보다 이직 준비가 낫다는 비교라 자연스러워요.",noteEn:"Naturally compares enduring vs. preparing to switch jobs."},
+           {text:"참지만",correct:false,demoKr:"저는 매운 음식을 잘 참지만 이건 너무 매워요.",demoEn:"I usually put up with spicy food well, but this one is too spicy.",noteKr:"'-지만'은 대조를 나타내서 이 문맥과 어울리지 않아요.",noteEn:"'-지만' shows contrast, which doesn't fit this context."},
+           {text:"참으면",correct:false,demoKr:"조금만 더 참으면 곧 끝날 거예요.",demoEn:"If you just endure a little more, it'll be over soon.",noteKr:"'-으면'은 조건을 나타내서 이 문맥과 맞지 않아요.",noteEn:"'-으면' expresses a condition, which doesn't match this context."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이런 식으로 매번 ____ 처음부터 기대를 안 하는 게 나아요.",
+         passageEn:"Rather than getting disappointed like this every time, it's better not to expect anything from the start.",
+         options:[
+           {text:"실망하느니",correct:true,filledKr:"이런 식으로 매번 실망하느니 처음부터 기대를 안 하는 게 나아요.",filledEn:"Rather than getting disappointed like this every time, it's better not to expect anything from the start.",noteKr:"실망하는 것보다 기대를 안 하는 게 낫다는 비교예요.",noteEn:"Compares getting disappointed vs. not expecting anything."},
+           {text:"실망하면서",correct:false,demoKr:"저는 실망하면서도 웃었어요.",demoEn:"I smiled even while feeling disappointed.",noteKr:"'-면서'는 동시 동작을 나타내서 이 문맥과 안 맞아요.",noteEn:"'-면서' shows simultaneous action, not a fit here."},
+           {text:"실망하다가",correct:false,demoKr:"기대하다가 실망했어요.",demoEn:"I was expecting something, and then got disappointed.",noteKr:"'-다가'는 도중에 전환되는 것을 나타내요.",noteEn:"'-다가' shows switching mid-action, not a comparison."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"맛없는 음식을 억지로 ____ 차라리 안 먹는 게 나아요.",
+         passageEn:"Rather than forcing myself to eat food I don't like, it's better not to eat at all.",
+         options:[
+           {text:"먹느니",correct:true,filledKr:"맛없는 음식을 억지로 먹느니 차라리 안 먹는 게 나아요.",filledEn:"Rather than forcing myself to eat food I don't like, it's better not to eat at all.",noteKr:"두 가지 다 좋지 않은 상황 중 나은 쪽을 고르는 문장이에요.",noteEn:"Picks the lesser of two undesirable options."},
+           {text:"먹어서",correct:false,demoKr:"매운 음식을 먹어서 배가 아파요.",demoEn:"My stomach hurts because I ate spicy food.",noteKr:"'-어서'는 이유를 나타내서 이 문맥에 안 맞아요.",noteEn:"'-어서' shows a reason, doesn't fit here."},
+           {text:"먹거나",correct:false,demoKr:"저녁에는 밥을 먹거나 빵을 먹어요.",demoEn:"In the evening, I either eat rice or bread.",noteKr:"'-거나'는 단순 나열이라 비교의 의미가 없어요.",noteEn:"'-거나' just lists options, without the comparative nuance."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이렇게 계속 눈치를 ____ 솔직하게 말하는 게 낫겠어요.",
+         passageEn:"Rather than continuing to tiptoe around like this, it's better to just speak honestly.",
+         options:[
+           {text:"보느니",correct:true,filledKr:"이렇게 계속 눈치를 보느니 솔직하게 말하는 게 낫겠어요.",filledEn:"Rather than continuing to tiptoe around like this, it's better to just speak honestly.",noteKr:"눈치 보는 것보다 솔직히 말하는 게 낫다는 비교예요.",noteEn:"Compares tiptoeing around vs. speaking honestly."},
+           {text:"보고",correct:false,demoKr:"영화를 보고 집에 갔어요.",demoEn:"I watched the movie and then went home.",noteKr:"'-고'는 순서를 나타내서 비교의 뜻이 없어요.",noteEn:"'-고' just shows sequence, no comparison."},
+           {text:"보는데",correct:false,demoKr:"텔레비전을 보는데 전화가 왔어요.",demoEn:"While I was watching TV, a call came in.",noteKr:"'-는데'는 배경 설명이라 이 문맥과 안 맞아요.",noteEn:"'-는데' gives background info, not a fit here."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 가격에 ____ 다른 가게에서 알아보는 게 나아요.",
+         passageEn:"Rather than buying it at this price, it's better to look at other stores.",
+         options:[
+           {text:"사느니",correct:true,filledKr:"이 가격에 사느니 다른 가게에서 알아보는 게 나아요.",filledEn:"Rather than buying it at this price, it's better to look at other stores.",noteKr:"이 가격에 사는 것보다 다른 데를 보는 게 낫다는 비교예요.",noteEn:"Compares buying at this price vs. checking elsewhere."},
+           {text:"사려고",correct:false,demoKr:"신발을 사려고 백화점에 갔어요.",demoEn:"I went to the department store to buy shoes.",noteKr:"'-으려고'는 의도를 나타내서 이 문맥과 안 맞아요.",noteEn:"'-으려고' expresses intention, doesn't fit here."},
+           {text:"사도",correct:false,demoKr:"이걸 사도 별로 안 쓸 것 같아요.",demoEn:"Even if I buy this, I don't think I'll use it much.",noteKr:"'-아도'는 양보를 나타내서 어울리지 않아요.",noteEn:"'-아도' expresses concession, not a fit."},
+         ]},
+      ],
+      correction:[
+        {wrong:"이렇게 기다리는니 그냥 택시를 타는 게 낫겠어요.",wrongEn:"Rather than waiting like this, it's better to just take a taxi.",ans:"이렇게 기다리느니 그냥 택시를 타는 게 낫겠어요.",ansEn:"Rather than waiting like this, it's better to just take a taxi."},
+        {wrong:"혼자 밥을 먹으면 차라리 안 먹는 게 나아요.",wrongEn:"If I eat alone, I'd rather not eat at all.",ans:"혼자 밥을 먹느니 차라리 안 먹는 게 나아요.",ansEn:"Rather than eating alone, I'd rather not eat at all."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"이 프로젝트 너무 힘들어서 그만두고 싶어요.",en:"This project is so hard, I want to quit.",fill:false},
+        {who:"B",kr:"그렇게 힘들게 계속 ___ 팀장님께 어려움을 말씀드리는 게 어때요?",en:"Rather than continuing to struggle like this, why not tell your team lead about the difficulty?",fill:true,base:"버티다",hint:"버티다 + 느니",ans:"버티느니"},
+        {who:"A",kr:"말씀은 드렸는데 별로 달라진 게 없어요.",en:"I did mention it, but not much has changed.",fill:false},
+        {who:"B",kr:"그러면 계속 이 상태로 ___ 팀을 옮기는 것도 생각해 보세요.",en:"Then, rather than staying in this state, consider switching teams too.",fill:true,base:"지내다",hint:"지내다 + 느니",ans:"지내느니"},
+        {who:"A",kr:"그것도 좋은 방법이겠네요. 한번 알아볼게요.",en:"That could be a good option too. I'll look into it.",fill:false},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"이렇게 __기다리느니__ 그냥 택시를 타는 게 낫겠어요.",
+         sentenceEn:"Rather than waiting like this, it's better to just take a taxi.",
+         options:[
+           {text:"기다리는 대신에",correct:true,filledKr:"이렇게 기다리는 대신에 그냥 택시를 타는 게 낫겠어요.",filledEn:"Instead of waiting like this, it's better to just take a taxi.",noteKr:"'대신에'는 '–느니'와 의미가 가장 가까워요.",noteEn:"'대신에' is closest in meaning to '–느니.'"},
+           {text:"기다리기 때문에",correct:false,demoKr:"길이 막히기 때문에 늦었어요.",demoEn:"I was late because the road was jammed.",noteKr:"'때문에'는 이유를 나타내서 의미가 달라요.",noteEn:"'때문에' shows reason, a different meaning."},
+           {text:"기다리는 김에",correct:false,demoKr:"마트에 온 김에 우유도 샀어요.",demoEn:"Since I was at the mart anyway, I also bought milk.",noteKr:"'김에'는 '하는 겸사겸사'라는 뜻이라 달라요.",noteEn:"'김에' means 'while already at it,' a different meaning."},
+           {text:"기다리면서",correct:false,demoKr:"저는 기다리면서 책을 읽었어요.",demoEn:"I read a book while waiting.",noteKr:"'-면서'는 동시 동작이라 의미가 달라요.",noteEn:"'-면서' shows simultaneous action, a different meaning."},
+         ],
+         source:"TOPIK II 유형"},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"여자",kr:"민수 씨, 이 신발 살까 말까 계속 고민돼요."},
+           {who:"남자",kr:"그럼 일단 사고 나중에 후회하는 게 나을까요, 안 사는 게 나을까요?"},
+         ],
+         blankWho:"여자",
+         options:["이렇게 계속 고민하느니 그냥 사는 게 낫겠어요.","이 신발을 신느니 다른 신발을 사는 게 낫겠어요.","돈을 아끼느니 마음 편한 게 낫겠어요.","이 신발을 사느니 발이 편한 신발을 찾아보는 게 낫겠어요."],
+         optsEn:["Rather than keep agonizing like this, I'd rather just buy it.","Rather than wearing these shoes, better to buy different ones.","Rather than saving money, being at ease is better.","Rather than buying these shoes, better to look for more comfortable ones."],
+         ans:0,
+         fbKr:"계속 고민하고 있는 상황에 대한 직접적인 대답이므로, '고민하느니 사는 게 낫다'는 ①번이 가장 정확해요. 나머지는 신발이나 돈과 관련은 있지만, 지금의 '살까 말까 고민' 자체에 대한 대답은 아니에요.",
+         fbEn:"Since this directly responds to her ongoing indecision, ① — 'rather than agonizing, just buy it' — is the most precise reply. The others relate to shoes or money, but don't directly answer her exact dilemma of whether to buy."},
+      ],
+    }
+  },
+  // ══════════════════ 02 : –(으)ㄹ 바에야 ══════════════════
+  {
+    num:"02", level:"Given the Inevitable Situation · 전제된 상황",
+    title:"V–(으)ㄹ 바에야",
+    formula:"V-(으)ㄹ 바에야 (차라리) V",
+    englishPatterns:[
+      "If I'm going to V, I'd rather V.",
+      "Rather than V-ing, I'd rather V.",
+      "If the choice is between A and B, I'd rather B."
+    ],
+    analogyExampleKr:"이렇게 매일 야근할 바에야 이직을 알아보는 게 낫겠어요.",
+    analogyExampleEn:"If I have to work overtime like this every day, I'd rather look for a new job.",
+    similarKr:[],
+    rules:[
+      {t:"받침 없으면 ㄹ 바에야, 받침 있으면 을 바에야", en:"Vowel-ending stems take -ㄹ 바에야; consonant-ending stems take -을 바에야.",
+       ex:"가다 → 갈 바에야 / 먹다 → 먹을 바에야"},
+      {t:"이미 정해진 나쁜 상황을 전제로 함", en:"Implies the unfavorable situation is essentially already set — the speaker proposes an alternative.",
+       ex:"이렇게 살 바에야 차라리 새로 시작하겠어요."},
+      {t:"이렇게/그렇게와 자주 결합", en:"Frequently combined with 이렇게 or 그렇게 to point back at the current bad situation.",
+       ex:"그렇게 대충 할 바에야 안 하는 게 나아요."},
+    ],
+    examples:[
+      {kr:"이렇게 매일 야근할 바에야 이직을 알아보는 게 낫겠어요.", en:"If I have to work overtime like this every day, I'd rather look for a new job."},
+      {kr:"어중간하게 할 바에야 아예 손을 대지 않는 게 나아요.", en:"If it's going to be done half-heartedly, better not to touch it at all."},
+      {kr:"미루다가 늦게 낼 바에야 지금 당장 시작하는 게 낫겠어요.", en:"Rather than putting it off and turning it in late, better to start right now."},
+      {kr:"이 가격에 살 바에야 중고로 사는 게 낫겠어요.", en:"If I have to buy it at this price, I'd rather buy it used."},
+      {kr:"이렇게 매번 싸울 바에야 아예 만나지 않는 게 나아요.", en:"If we're going to fight like this every time, it's better not to meet at all."},
+      {kr:"눈치 보면서 다닐 바에야 회사를 그만두는 게 낫겠어요.", en:"If I have to keep tiptoeing around like this, I'd rather quit the company."},
+      {kr:"이렇게 매일 지각할 바에야 일찍 자는 습관을 들이는 게 낫겠어요.", en:"If I'm going to be late like this every day, I should get in the habit of sleeping early."},
+      {kr:"대충 청소할 바에야 아예 안 하는 게 나아요.", en:"If it's going to be cleaned half-heartedly, better not to clean at all."},
+      {kr:"이렇게 고민만 할 바에야 그냥 해보는 게 낫겠어요.", en:"If I'm just going to keep worrying like this, I might as well just try it."},
+      {kr:"매번 후회할 바에야 신중하게 결정하는 게 낫겠어요.", en:"If I'm going to regret it every time, better to decide carefully."},
+      {kr:"이 상태로 계속 다닐 바에야 병원에 가 보는 게 낫겠어요.", en:"If I'm going to keep going on like this, I should go see a doctor."},
+      {kr:"억지로 웃을 바에야 솔직하게 말하는 게 나아요.", en:"If I have to force a smile, I'd rather just be honest."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"'먹다'처럼 받침이 있는 동사는 '먹을 바에야'가 되고, '가다'처럼 받침이 없는 동사는 '갈 바에야'가 돼요.",
+         en:"Consonant-ending verbs like 먹다 become 먹을 바에야, and vowel-ending verbs like 가다 become 갈 바에야.",ans:true,
+         fbKr:"맞아요! 받침 유무에 따라 '을 바에야' 또는 'ㄹ 바에야'를 골라 써요.",
+         fbEn:"Right! Whether there's a final consonant decides '을 바에야' or 'ㄹ 바에야.'"},
+        {krSentence:"'–(으)ㄹ 바에야'는 아직 일어나지 않았고 서로 상관없는 두 가지 좋은 일을 비교할 때 사용해요.",
+         en:"'-(으)ㄹ 바에야' is used to compare two unrelated, good future events.",ans:false,
+         fbKr:"아니에요. 이미 안 좋은 쪽으로 흘러갈 상황을 전제로, 그럴 바에는 다른 선택을 하겠다는 뜻이에요.",
+         fbEn:"No. It assumes a situation already heading in a bad direction, and proposes a different choice instead."},
+        {krSentence:"'이렇게'나 '그렇게'는 '–(으)ㄹ 바에야'와 자주 함께 쓰여서 지금 상황을 가리켜요.",
+         en:"'이렇게' or '그렇게' are often used together with '-(으)ㄹ 바에야' to point to the current situation.",ans:true,
+         fbKr:"맞아요! '이렇게/그렇게'가 앞에 오면 지금의 좋지 않은 상황을 가리키는 경우가 많아요.",
+         fbEn:"Right! '이렇게/그렇게' often points to the current unfavorable situation."},
+      ],
+      sentence:[
+        {pre:"이렇게 대충",suf:" 아예 하지 않는 게 나아요.",ans:"할 바에야",hint:"하다 + (으)ㄹ 바에야",en:"If it's going to be done half-heartedly like this, better not to do it at all."},
+        {pre:"어차피 늦게",suf:" 오늘은 그냥 쉬는 게 낫겠어요.",ans:"낼 바에야",hint:"내다(제출하다) + (으)ㄹ 바에야",en:"If I'm going to turn it in late anyway, I might as well rest today."},
+        {pre:"이 가격에",suf:" 중고로 사는 게 낫겠어요.",ans:"살 바에야",hint:"사다 + (으)ㄹ 바에야",en:"If I have to buy it at this price, I'd rather buy it used."},
+        {pre:"이렇게 매번",suf:" 아예 만나지 않는 게 나아요.",ans:"싸울 바에야",hint:"싸우다 + (으)ㄹ 바에야",en:"If we're going to fight like this every time, it's better not to meet at all."},
+        {pre:"매번",suf:" 신중하게 결정하는 게 낫겠어요.",ans:"후회할 바에야",hint:"후회하다 + (으)ㄹ 바에야",en:"If I'm going to regret it every time, better to decide carefully."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이렇게 매일 ____ 팀장님한테 인원을 더 요청하는 게 어때요?",
+         passageEn:"If we're going to work overtime like this every day, why not ask the team lead for more staff?",
+         options:[
+           {text:"야근할 바에야",correct:true,filledKr:"이렇게 매일 야근할 바에야 팀장님한테 인원을 더 요청하는 게 어때요?",filledEn:"If we're going to work overtime like this every day, why not ask the team lead for more staff?",noteKr:"야근이 계속될 상황을 전제로 대안을 제시해요.",noteEn:"Assumes overtime will continue, then proposes an alternative."},
+           {text:"야근하지만",correct:false,demoKr:"저는 야근하지만 불만은 없어요.",demoEn:"I work overtime, but I have no complaints.",noteKr:"'-지만'은 단순 대조라 전제의 의미가 없어요.",noteEn:"'-지만' is plain contrast, lacks the 'given that' nuance."},
+           {text:"야근해서",correct:false,demoKr:"야근해서 너무 피곤해요.",demoEn:"I'm very tired because I worked late.",noteKr:"'-어서'는 이유를 나타내서 문맥과 안 맞아요.",noteEn:"'-어서' shows reason, doesn't fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"어차피 다시 만들어야 ____ 지금 처음부터 새로 시작하는 게 낫겠어요.",
+         passageEn:"If I'm going to have to redo it anyway, it's better to start fresh right now.",
+         options:[
+           {text:"할 바에야",correct:true,filledKr:"어차피 다시 만들어야 할 바에야 지금 처음부터 새로 시작하는 게 낫겠어요.",filledEn:"If I'm going to have to redo it anyway, it's better to start fresh right now.",noteKr:"다시 만들 수밖에 없는 상황을 전제로 대안을 제시해요.",noteEn:"Assumes redoing is inevitable, proposes starting over now."},
+           {text:"하거든",correct:false,demoKr:"이따가 시간 되거든 연락해 주세요.",demoEn:"Please contact me later if you have time.",noteKr:"'-거든'은 이유를 설명하는 표현이라 안 맞아요.",noteEn:"'-거든' explains a reason, doesn't fit."},
+           {text:"하느라",correct:false,demoKr:"숙제하느라 밤을 새웠어요.",demoEn:"I stayed up all night doing homework.",noteKr:"'-느라'는 원인을 나타내서 문맥과 안 맞아요.",noteEn:"'-느라' shows cause, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이렇게 매번 ____ 아예 만나지 않는 게 나아요.",
+         passageEn:"If we're going to fight like this every time, it's better not to meet at all.",
+         options:[
+           {text:"싸울 바에야",correct:true,filledKr:"이렇게 매번 싸울 바에야 아예 만나지 않는 게 나아요.",filledEn:"If we're going to fight like this every time, it's better not to meet at all.",noteKr:"싸움이 반복될 상황을 전제로 대안을 제시해요.",noteEn:"Assumes fighting will keep happening, then proposes not meeting."},
+           {text:"싸우다가",correct:false,demoKr:"친구랑 싸우다가 화해했어요.",demoEn:"I was fighting with my friend, and then we made up.",noteKr:"'-다가'는 도중 전환을 나타내서 안 맞아요.",noteEn:"'-다가' shows a mid-action switch, not a fit."},
+           {text:"싸우니까",correct:false,demoKr:"자꾸 싸우니까 사이가 안 좋아졌어요.",demoEn:"Since we keep fighting, our relationship got worse.",noteKr:"'-니까'는 이유라서 이 문맥과 안 맞아요.",noteEn:"'-니까' gives a reason, doesn't fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 상태로 계속 ____ 병원에 가 보는 게 낫겠어요.",
+         passageEn:"If I'm going to keep going on like this, I should go see a doctor.",
+         options:[
+           {text:"지낼 바에야",correct:true,filledKr:"이 상태로 계속 지낼 바에야 병원에 가 보는 게 낫겠어요.",filledEn:"If I'm going to keep going on like this, I should go see a doctor.",noteKr:"이 상태가 계속될 상황을 전제로 대안을 제시해요.",noteEn:"Assumes the state will continue, proposes seeing a doctor."},
+           {text:"지내면서",correct:false,demoKr:"저는 룸메이트랑 잘 지내면서 즐겁게 살아요.",demoEn:"I'm living happily while getting along well with my roommate.",noteKr:"'-면서'는 동시 동작이라 안 맞아요.",noteEn:"'-면서' shows simultaneous action, not a fit."},
+           {text:"지내는데",correct:false,demoKr:"요즘 바쁘게 지내는데 주말엔 좀 쉬려고요.",demoEn:"I've been busy lately, but I plan to rest a bit on the weekend.",noteKr:"'-는데'는 배경 설명이라 안 맞아요.",noteEn:"'-는데' provides background, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"억지로 ____ 솔직하게 말하는 게 나아요.",
+         passageEn:"If I have to force a smile, I'd rather just be honest.",
+         options:[
+           {text:"웃을 바에야",correct:true,filledKr:"억지로 웃을 바에야 솔직하게 말하는 게 나아요.",filledEn:"If I have to force a smile, I'd rather just be honest.",noteKr:"억지 웃음이 계속될 상황을 전제로 대안을 제시해요.",noteEn:"Assumes forced smiling would continue, proposes honesty instead."},
+           {text:"웃어도",correct:false,demoKr:"아무리 웃어도 기분이 나아지지 않았어요.",demoEn:"No matter how much I smiled, I didn't feel better.",noteKr:"'-아도'는 양보를 나타내서 안 맞아요.",noteEn:"'-아도' shows concession, not a fit."},
+           {text:"웃으면서",correct:false,demoKr:"그 사람은 웃으면서 인사했어요.",demoEn:"That person greeted me while smiling.",noteKr:"'-면서'는 동시 동작이라 안 맞아요.",noteEn:"'-면서' shows simultaneous action, not a fit."},
+         ]},
+      ],
+      correction:[
+        {wrong:"이렇게 고생하 바에야 그만두는 게 낫겠어요.",wrongEn:"If I'm going to keep struggling like this, I'd rather quit.",ans:"이렇게 고생할 바에야 그만두는 게 낫겠어요.",ansEn:"If I'm going to keep struggling like this, I'd rather quit."},
+        {wrong:"그 값에 사을 바에야 안 사는 게 나아요.",wrongEn:"If I have to buy it at that price, better not to buy it at all.",ans:"그 값에 살 바에야 안 사는 게 나아요.",ansEn:"If I have to buy it at that price, better not to buy it at all."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"이 프로젝트 정말 힘드네요. 이러다 몸 상하겠어요.",en:"This project is so hard. I'm going to wear myself out at this rate.",fill:false},
+        {who:"B",kr:"맞아요. 이렇게 매일 ___ 팀장님께 인원 충원을 요청하는 게 낫겠어요.",en:"Right. If we're going to keep working overtime like this every day, better to ask the team lead for more staff.",fill:true,base:"야근하다",hint:"야근하다 + (으)ㄹ 바에야",ans:"야근할 바에야"},
+        {who:"A",kr:"저도 그렇게 생각해요. 근데 요청해도 안 들어주시면요?",en:"I think so too. But what if they don't accept the request?",fill:false},
+        {who:"B",kr:"그럴 땐 그냥 참고 ___ 차라리 이직을 준비하려고요.",en:"In that case, rather than just enduring it and staying, I'll prepare to change jobs.",fill:true,base:"다니다",hint:"다니다 + (으)ㄹ 바에야",ans:"다닐 바에야"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"__이렇게 대충 할 바에야__ 아예 안 하는 게 나아요.",
+         sentenceEn:"If it's going to be done half-heartedly like this, better not to do it at all.",
+         options:[
+           {text:"어차피 그렇게 될 거라면",correct:true,filledKr:"어차피 이렇게 대충 그렇게 될 거라면 아예 안 하는 게 나아요.",filledEn:"If it's going to end up that way anyway, better not to do it at all.",noteKr:"'–(으)ㄹ 바에야'는 '어차피 그렇게 될 거라면'과 의미가 비슷해요.",noteEn:"'-(으)ㄹ 바에야' is close in meaning to 'if it's going to end up that way anyway.'"},
+           {text:"그렇게 하고 싶어서",correct:false,demoKr:"이 일을 하고 싶어서 지원했어요.",demoEn:"I applied because I wanted to do this work.",noteKr:"'-고 싶어서'는 바람을 나타내서 의미가 달라요.",noteEn:"'-고 싶어서' shows desire, a different meaning."},
+           {text:"그렇게 할까 봐 걱정돼서",correct:false,demoKr:"시험에 떨어질까 봐 걱정돼요.",demoEn:"I'm worried I might fail the exam.",noteKr:"'-을까 봐'는 걱정을 나타내서 의미가 달라요.",noteEn:"'-을까 봐' shows worry, a different meaning."},
+           {text:"그렇게 하는 김에",correct:false,demoKr:"청소하는 김에 정리도 했어요.",demoEn:"While cleaning, I also tidied up.",noteKr:"'김에'는 '하는 겸사겸사'라는 뜻이라 달라요.",noteEn:"'김에' means 'while already at it,' a different meaning."},
+         ],
+         source:"TOPIK II 유형"},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"여자",kr:"민수 씨, 이 일 계속 이렇게 대충 하는 것 같아요."},
+           {who:"남자",kr:"저도 그렇게 느꼈어요. 어떻게 하면 좋을까요?"},
+         ],
+         blankWho:"여자",
+         options:["이렇게 대충 할 바에야 처음부터 다시 시작하는 게 낫겠어요.","이렇게 매일 야근할 바에야 인원을 더 요청하는 게 낫겠어요.","이 일을 어차피 못 끝낼 바에야 다른 사람한테 맡기는 게 낫겠어요.","이렇게 계속 야근할 바에야 그만두는 게 낫겠어요."],
+         optsEn:["If it's going to be done half-heartedly like this, better to start fresh.","If we're going to work overtime like this every day, better to ask for more staff.","If we're not going to finish this anyway, better to hand it to someone else.","If I have to keep working overtime like this, I'd rather quit."],
+         ans:0,
+         fbKr:"'대충 하고 있다'는 지적에 대한 직접적인 대답이므로, 같은 문제(대충 하는 것)를 다시 짚은 ①번이 가장 정확해요. 나머지는 모두 업무 관련 상황이지만 '대충 하는 것' 자체에 대한 해결책은 아니에요.",
+         fbEn:"Since this directly responds to the remark about doing it half-heartedly, ① — addressing that exact issue — is the most precise. The others are all work-related, but none directly solve the 'half-hearted' problem itself."},
+      ],
+    }
+  },
+  // ══════════════════ 03 : –건 –건 ══════════════════
+  {
+    num:"03", level:"It Doesn't Matter Which · 무관 선택",
+    title:"V/A–건 –건",
+    formula:"V/A-건 V/A-건 (상관없다/마찬가지다)",
+    englishPatterns:[
+      "Whether A or B, it doesn't matter.",
+      "No matter whether A or B, ~",
+      "Regardless of whether A or B, ~"
+    ],
+    analogyExampleKr:"비가 오건 눈이 오건 저는 매일 운동하러 가요.",
+    analogyExampleEn:"Whether it rains or snows, I go exercise every day.",
+    similarKr:[
+      {expr:"-든지 -든지 / -든 -든",note:"의미가 완전히 같고 서로 자유롭게 바꿔 쓸 수 있어요.",noteEn:"Identical in meaning and freely interchangeable with '-건 -건.'",
+       exampleKr:"비가 오든지 눈이 오든지 저는 매일 운동하러 가요.",exampleEn:"Whether it rains or snows, I go exercise every day."}
+    ],
+    rules:[
+      {t:"받침 상관없이 어간 + 건", en:"Attaches directly to the verb or adjective stem, with no batchim rule.",
+       ex:"오다 → 오건 / 먹다 → 먹건 / 좋다 → 좋건"},
+      {t:"명사 + (이)건 (이)건", en:"With nouns, use (이)건 (이)건 to mean \"whether it's N1 or N2.\"",
+       ex:"평일이건 주말이건 상관없어요."},
+      {t:"상관없다/마찬가지다와 함께 사용", en:"Usually followed by expressions like 상관없다 or 마찬가지다 to state the outcome doesn't change.",
+       ex:"비가 오건 눈이 오건 저는 매일 걸어서 출근해요."},
+      {t:"–든지 –든지 / –든 –든과 같은 의미", en:"–든지 –든지 and –든 –든 express the same meaning and can usually replace –건 –건.",
+       ex:"가건 안 가건 = 가든지 안 가든지"},
+    ],
+    examples:[
+      {kr:"비가 오건 눈이 오건 저는 매일 운동하러 가요.", en:"Whether it rains or snows, I go exercise every day."},
+      {kr:"네가 가건 안 가건 나는 상관없어.", en:"Whether you go or not, I don't care."},
+      {kr:"이 일을 오늘 하건 내일 하건 결과는 똑같을 거예요.", en:"Whether we do this today or tomorrow, the result will be the same."},
+      {kr:"사람들이 뭐라고 하건 저는 제 방식대로 할 거예요.", en:"Whatever people say, I'll do it my way."},
+      {kr:"맛있건 없건 저는 다 잘 먹어요.", en:"Whether it's tasty or not, I eat everything well."},
+      {kr:"비싸건 싸건 필요하면 사야죠.", en:"Whether it's expensive or cheap, if I need it, I have to buy it."},
+      {kr:"평일이건 주말이건 카페는 항상 사람이 많아요.", en:"Whether it's a weekday or weekend, the cafe is always crowded."},
+      {kr:"늦건 빠르건 언젠가는 끝날 일이에요.", en:"Whether it's late or early, it's something that will end eventually."},
+      {kr:"좋아하건 싫어하건 해야 할 일은 해야 해요.", en:"Whether you like it or not, you have to do what needs to be done."},
+      {kr:"크건 작건 저는 상관없어요.", en:"Whether it's big or small, I don't mind."},
+      {kr:"이기건 지건 최선을 다하는 게 중요해요.", en:"Whether we win or lose, doing our best is what matters."},
+      {kr:"그가 알건 모르건 저는 사실대로 말할 거예요.", en:"Whether he knows or not, I'm going to tell the truth."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"동사나 형용사 어간에는 받침이 있어도 없어도 그냥 '건'만 붙이면 돼요.",
+         en:"Just attach '건' to a verb or adjective stem, whether it ends in a consonant or not.",ans:true,
+         fbKr:"맞아요! '오건, 먹건, 좋건'처럼 받침과 상관없이 똑같이 '건'을 붙여요.",
+         fbEn:"Right! Just attach '건' regardless of whether the stem ends in a consonant."},
+        {krSentence:"명사 뒤에는 '건'만 쓰고 '이건'은 쓰지 않아요.",
+         en:"After a noun, only '건' is used — never '이건.'",ans:false,
+         fbKr:"아니에요. 명사 뒤에는 '(이)건 (이)건'을 붙여요. 예) 평일이건 주말이건.",
+         fbEn:"No. After a noun, attach '(이)건 (이)건.' e.g. 평일이건 주말이건."},
+        {krSentence:"'–건 –건'은 '–든지 –든지'와 의미가 같아서 서로 바꿔 쓸 수 있어요.",
+         en:"'-건 -건' has the same meaning as '-든지 -든지' and can be swapped freely.",ans:true,
+         fbKr:"맞아요! 두 표현은 의미가 같아서 자유롭게 바꿔 쓸 수 있어요.",
+         fbEn:"Right! The two expressions mean the same and can be used interchangeably."},
+      ],
+      sentence:[
+        {pre:"사람들이 뭐라고",suf:" 저는 제 방식대로 할 거예요.",ans:"하건",hint:"하다 + 건",en:"Whatever people say, I'll do it my way."},
+        {pre:"내일 비가",suf:" 안 오건 소풍은 갈 거예요.",ans:"오건",hint:"오다 + 건",en:"Whether it rains tomorrow or not, we're going on the picnic."},
+        {pre:"음식이",suf:" 없건 저는 다 잘 먹어요.",ans:"맛있건",hint:"맛있다 + 건",en:"Whether it's tasty or not, I eat everything well."},
+        {pre:"값이",suf:" 싸건 필요하면 사야죠.",ans:"비싸건",hint:"비싸다 + 건",en:"Whether it's expensive or cheap, if I need it, I have to buy it."},
+        {pre:"그가",suf:" 모르건 저는 사실대로 말할 거예요.",ans:"알건",hint:"알다 + 건",en:"Whether he knows or not, I'm going to tell the truth."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"결과가 좋____ 나쁘____ 최선을 다한 것으로 만족해요.",
+         passageEn:"Whether the result is good or bad, I'm satisfied that I did my best.",
+         options:[
+           {text:"건 / 건",correct:true,filledKr:"결과가 좋건 나쁘건 최선을 다한 것으로 만족해요.",filledEn:"Whether the result is good or bad, I'm satisfied that I did my best.",noteKr:"좋든 나쁘든 상관없다는 의미로 자연스러워요.",noteEn:"Naturally means 'regardless of good or bad.'"},
+           {text:"지만 / 지만",correct:false,demoKr:"이 옷은 비싸지만 품질이 좋아요.",demoEn:"These clothes are expensive, but the quality is good.",noteKr:"'-지만'을 반복해서 쓰면 어색해요.",noteEn:"Repeating '-지만' like this is unnatural."},
+           {text:"으면 / 으면",correct:false,demoKr:"시간이 있으면 같이 가요.",demoEn:"If you have time, let's go together.",noteKr:"조건을 나타내는 '-으면'은 이 문맥과 안 맞아요.",noteEn:"'-으면' shows condition, not a fit here."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"평일이____ 주말이____ 카페는 항상 사람이 많아요.",
+         passageEn:"Whether it's a weekday or weekend, the cafe is always crowded.",
+         options:[
+           {text:"건 / 건",correct:true,filledKr:"평일이건 주말이건 카페는 항상 사람이 많아요.",filledEn:"Whether it's a weekday or weekend, the cafe is always crowded.",noteKr:"명사 뒤에는 '(이)건 (이)건'을 붙여요.",noteEn:"After nouns, attach '(이)건 (이)건.'"},
+           {text:"라서 / 라서",correct:false,demoKr:"오늘은 주말이라서 늦잠을 잤어요.",demoEn:"Since it's the weekend today, I slept in.",noteKr:"'-라서'는 이유를 나타내서 안 맞아요.",noteEn:"'-라서' shows reason, not a fit."},
+           {text:"니까 / 니까",correct:false,demoKr:"비가 오니까 우산을 가져가세요.",demoEn:"Since it's raining, please take an umbrella.",noteKr:"'-니까'도 이유를 나타내서 안 맞아요.",noteEn:"'-니까' also shows reason, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 일을 오늘 ____ 내일 ____ 결과는 똑같을 거예요.",
+         passageEn:"Whether we do this today or tomorrow, the result will be the same.",
+         options:[
+           {text:"하건 / 하건",correct:true,filledKr:"이 일을 오늘 하건 내일 하건 결과는 똑같을 거예요.",filledEn:"Whether we do this today or tomorrow, the result will be the same.",noteKr:"언제 하든 결과가 같다는 의미로 자연스러워요.",noteEn:"Naturally means the result is the same no matter when."},
+           {text:"하면서 / 하면서",correct:false,demoKr:"저는 노래하면서 청소해요.",demoEn:"I clean while singing.",noteKr:"'-면서'는 동시 동작이라 안 맞아요.",noteEn:"'-면서' shows simultaneous action, not a fit."},
+           {text:"하는데 / 하는데",correct:false,demoKr:"숙제를 하는데 갑자기 정전이 됐어요.",demoEn:"While I was doing homework, the power suddenly went out.",noteKr:"'-는데'는 배경 설명이라 안 맞아요.",noteEn:"'-는데' gives background, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이기____ 지____ 최선을 다하는 게 중요해요.",
+         passageEn:"Whether we win or lose, doing our best is what matters.",
+         options:[
+           {text:"건 / 건",correct:true,filledKr:"이기건 지건 최선을 다하는 게 중요해요.",filledEn:"Whether we win or lose, doing our best is what matters.",noteKr:"승패와 상관없이 중요한 건 최선을 다하는 것이라는 의미예요.",noteEn:"Means what matters is doing your best, regardless of winning or losing."},
+           {text:"던 / 던",correct:false,demoKr:"어릴 때 자주 가던 식당이에요.",demoEn:"This is a restaurant I used to go to often as a kid.",noteKr:"'-던'은 과거 회상을 나타내는 다른 문법이에요.",noteEn:"'-던' is a different grammar point (past recollection)."},
+           {text:"으면 / 으면",correct:false,demoKr:"이기면 기분이 좋을 것 같아요.",demoEn:"I think I'd feel good if we won.",noteKr:"조건을 나타내는 '-으면'은 이 문맥과 안 맞아요.",noteEn:"'-으면' shows condition, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"방이 ____ 작____ 저는 상관없어요.",
+         passageEn:"Whether the room is big or small, I don't mind.",
+         options:[
+           {text:"크건 / 건",correct:true,filledKr:"방이 크건 작건 저는 상관없어요.",filledEn:"Whether the room is big or small, I don't mind.",noteKr:"크기와 상관없다는 의미로 자연스러워요.",noteEn:"Naturally means size doesn't matter."},
+           {text:"크지만 / 지만",correct:false,demoKr:"이 가방은 크지만 가벼워요.",demoEn:"This bag is big, but light.",noteKr:"'-지만'을 이렇게 반복하면 어색해요.",noteEn:"Repeating '-지만' like this is unnatural."},
+           {text:"큰데 / 은데",correct:false,demoKr:"방은 큰데 가구가 별로 없어요.",demoEn:"The room is big, but there isn't much furniture.",noteKr:"'-는데'는 배경 설명이라 안 맞아요.",noteEn:"'-는데' gives background, not a fit."},
+         ]},
+      ],
+      correction:[
+        {wrong:"싸건 비싸지만 저는 이 브랜드만 사요.",wrongEn:"Whether it's cheap or expensive, I only buy this brand.",ans:"싸건 비싸건 저는 이 브랜드만 사요.",ansEn:"Whether it's cheap or expensive, I only buy this brand."},
+        {wrong:"이기던 지던 최선을 다하는 게 중요해요.",wrongEn:"Whether we win or lose, doing our best is what matters.",ans:"이기건 지건 최선을 다하는 게 중요해요.",ansEn:"Whether we win or lose, doing our best is what matters."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"내일 발표 어떻게 될지 너무 긴장되네요.",en:"I'm so nervous about how tomorrow's presentation will go.",fill:false},
+        {who:"B",kr:"너무 걱정하지 마세요. 잘 ___ 안 ___ 최선을 다한 거니까 후회는 없을 거예요.",en:"Don't worry too much. Whether it goes well or not, you did your best, so you won't regret it.",fill:true,base:["되다","되다"],hint:["되다 + 건","되다 + 건"],ans:["되건","되건"]},
+        {who:"A",kr:"고마워요. 그런데 발표 순서가 첫 번째___ 마지막___ 상관없겠죠?",en:"Thanks. But it shouldn't matter whether the presentation order is first or last, right?",fill:true,base:["",""],hint:["번째 + 이건","번째 + 이건"],ans:["이건","이건"]},
+        {who:"B",kr:"네, 순서는 상관없어요. 어차피 다 준비했으니까요.",en:"Right, the order doesn't matter. You've prepared everything anyway.",fill:false},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"사람들이 뭐라고 __하건__ 저는 제 방식대로 할 거예요.",
+         sentenceEn:"Whatever people say, I'll do it my way.",
+         options:[
+           {text:"하든지",correct:true,filledKr:"사람들이 뭐라고 하든지 저는 제 방식대로 할 거예요.",filledEn:"Whatever people say, I'll do it my way.",noteKr:"'–든지'는 '–건'과 의미가 같아요.",noteEn:"'-든지' has the same meaning as '-건.'"},
+           {text:"해서",correct:false,demoKr:"사람들이 그렇게 말해서 기분이 나빴어요.",demoEn:"I felt bad because people said that.",noteKr:"'-어서'는 이유를 나타내서 의미가 달라요.",noteEn:"'-어서' shows reason, a different meaning."},
+           {text:"하다가",correct:false,demoKr:"말을 하다가 갑자기 멈췄어요.",demoEn:"They were talking, and then suddenly stopped.",noteKr:"'-다가'는 중간에 전환을 나타내서 달라요.",noteEn:"'-다가' shows a mid-action switch, a different meaning."},
+           {text:"하려면",correct:false,demoKr:"성공하려면 노력해야 해요.",demoEn:"To succeed, you have to make an effort.",noteKr:"'-으려면'은 조건/목적을 나타내서 달라요.",noteEn:"'-으려면' shows a condition/purpose, a different meaning."},
+         ],
+         source:"TOPIK II 유형"},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"여자",kr:"민수 씨, 이번 여행 날씨가 안 좋으면 어떡하죠?"},
+           {who:"남자",kr:"너무 걱정하지 마세요."},
+         ],
+         blankWho:"여자",
+         options:["날씨가 좋건 나쁘건 저는 그냥 즐겁게 여행할 거예요.","사람이 많건 적건 그 여행지는 항상 예쁘대요.","일정이 바뀌건 안 바뀌건 저는 상관없어요.","비행기가 늦건 안 늦건 공항에는 일찍 가려고요."],
+         optsEn:["Whether the weather is good or bad, I'll just enjoy the trip.","Whether it's crowded or not, that place is always pretty.","Whether the schedule changes or not, I don't mind.","Whether the flight is delayed or not, I'll head to the airport early."],
+         ans:0,
+         fbKr:"날씨 걱정에 대한 직접적인 대답이므로, 날씨를 언급한 ①번만 정확히 일치해요. 나머지는 모두 여행과 관련은 있지만 붐빔·일정·비행기 이야기라 날씨 걱정에 대한 대답은 아니에요.",
+         fbEn:"Since this directly answers her worry about weather, only ① — which mentions weather — truly matches. The others are trip-related but about crowds, schedule, or flight timing — not a reply to the weather concern."},
+      ],
+    }
+  },
+  // ══════════════════ 04 : –(느)ㄴ다기보다는 ══════════════════
+  {
+    num:"04", level:"Refining a Description · 표현 수정",
+    title:"V/A–(느)ㄴ다기보다는",
+    formula:"V-ㄴ/는다기보다는 · A-다기보다는 · N(이)라기보다는",
+    englishPatterns:[
+      "rather than (saying) ~",
+      "it's not so much ~ as ~",
+      "~ is a stretch — it's more like ~"
+    ],
+    analogyExampleKr:"그 사람이 화가 났다기보다는 좀 당황한 것 같아요.",
+    analogyExampleEn:"Rather than saying he was angry, it seems he was more embarrassed.",
+    similarKr:[
+      {expr:"-라기보다는",note:"명사에 붙는 형태로, 의미와 용법이 완전히 같아요.",noteEn:"The noun-attaching form of the same pattern — identical in meaning and usage.",
+       exampleKr:"이건 실수라기보다는 오해였던 것 같아요.",exampleEn:"That was more of a misunderstanding than a mistake."},
+      {expr:"단순히 -보다(는)",note:"뉘앙스는 조금 약해지지만 비슷한 비교의 의미를 전달할 수 있어요.",noteEn:"A simpler form with a weaker nuance, but it can convey a similar comparison.",
+       exampleKr:"그건 실수보다는 오해에 가까워요.",exampleEn:"That's closer to a misunderstanding than a mistake."}
+    ],
+    rules:[
+      {t:"동사: 받침 없으면 –ㄴ다기보다는, 받침 있으면 –는다기보다는", en:"For action verbs: vowel-ending stems take -ㄴ다기보다는; consonant-ending stems take -는다기보다는.",
+       ex:"가다 → 간다기보다는 / 먹다 → 먹는다기보다는"},
+      {t:"형용사: 어간 + 다기보다는", en:"For adjectives, simply attach -다기보다는 to the stem, regardless of batchim.",
+       ex:"예쁘다 → 예쁘다기보다는 / 좋다 → 좋다기보다는"},
+      {t:"명사: N(이)라기보다는", en:"For nouns with 이다: vowel-ending nouns take -라기보다는, consonant-ending nouns take -이라기보다는.",
+       ex:"실수라기보다는 오해였어요. / 사실이라기보다는 소문이에요."},
+      {t:"오히려/차라리와 자주 결합", en:"Often followed by 오히려 in the next clause to highlight the more accurate description.",
+       ex:"화가 났다기보다는 오히려 서운했던 것 같아요."},
+    ],
+    examples:[
+      {kr:"그 사람이 화가 났다기보다는 좀 당황한 것 같아요.", en:"Rather than saying he was angry, it seems he was more embarrassed."},
+      {kr:"이 음식이 맵다기보다는 짜다는 느낌이에요.", en:"Rather than saying this food is spicy, it feels more salty."},
+      {kr:"그건 실수라기보다는 오해였던 것 같아요.", en:"That was more of a misunderstanding than a mistake."},
+      {kr:"바쁘다기보다는 그냥 하기 싫은 거겠죠.", en:"It's not so much that they're busy — they probably just don't want to do it."},
+      {kr:"그 사람은 무뚝뚝하다기보다는 그냥 말이 없는 편이에요.", en:"He's not so much blunt as just quiet."},
+      {kr:"이건 실패라기보다는 좋은 경험이라고 생각해요.", en:"I think this is more of a good experience than a failure."},
+      {kr:"날씨가 춥다기보다는 바람이 좀 세네요.", en:"It's not so much cold as the wind being a bit strong."},
+      {kr:"그 영화는 슬프다기보다는 감동적이었어요.", en:"The movie wasn't so much sad as it was moving."},
+      {kr:"저 사람은 화났다기보다는 그냥 피곤해 보여요.", en:"That person doesn't seem so much angry as just tired."},
+      {kr:"이건 거짓말이라기보다는 조금 과장된 표현이에요.", en:"This isn't so much a lie as a slightly exaggerated way of putting it."},
+      {kr:"요즘 힘들다기보다는 그냥 좀 지친 것 같아요.", en:"These days I'm not so much struggling as just a bit worn out."},
+      {kr:"그 사람 성격이 나쁘다기보다는 솔직한 편이에요.", en:"Their personality isn't so much bad as it is honest."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"동사 '가다'에는 '간다기보다는', '먹다'에는 '먹는다기보다는'을 붙여요.",
+         en:"Attach '간다기보다는' to 가다, and '먹는다기보다는' to 먹다.",ans:true,
+         fbKr:"맞아요! 받침이 없으면 'ㄴ다기보다는', 받침이 있으면 '는다기보다는'을 붙여요.",
+         fbEn:"Right! Vowel-ending stems take 'ㄴ다기보다는', consonant-ending stems take '는다기보다는.'"},
+        {krSentence:"형용사는 동사와 다르게 특별한 받침 규칙이 있어서 형태가 여러 가지예요.",
+         en:"Unlike verbs, adjectives have special batchim rules, so the form varies a lot.",ans:false,
+         fbKr:"아니에요. 형용사는 받침에 상관없이 그냥 어간에 '다기보다는'만 붙이면 돼요.",
+         fbEn:"No. For adjectives, just attach '다기보다는' to the stem, regardless of the final sound."},
+        {krSentence:"'오히려'는 '–다기보다는' 뒤에 자주 함께 나와서 더 정확한 설명을 강조해요.",
+         en:"'오히려' often appears together after '-다기보다는' to emphasize the more accurate description.",ans:true,
+         fbKr:"맞아요! '오히려'가 뒤에 오면 '사실은 이게 더 맞다'는 느낌이 강해져요.",
+         fbEn:"Right! Adding '오히려' strengthens the sense that the following description is more accurate."},
+      ],
+      sentence:[
+        {pre:"그 사람은 화가",suf:" 오히려 서운했던 것 같아요.",ans:"났다기보다는",hint:"나다(화가 나다) + ㄴ다기보다는",en:"Rather than saying he was angry, it seems he was more hurt."},
+        {pre:"이건 실수",suf:" 오해였던 것 같아요.",ans:"라기보다는",hint:"명사(받침 없음) + 라기보다는",en:"This was more of a misunderstanding than a mistake."},
+        {pre:"날씨가",suf:" 바람이 좀 세네요.",ans:"춥다기보다는",hint:"춥다 + 다기보다는",en:"It's not so much cold as the wind being a bit strong."},
+        {pre:"저 사람은",suf:" 그냥 피곤해 보여요.",ans:"화났다기보다는",hint:"화나다 + ㄴ다기보다는",en:"That person doesn't seem so much angry as just tired."},
+        {pre:"그 사람 성격이",suf:" 솔직한 편이에요.",ans:"나쁘다기보다는",hint:"나쁘다 + 다기보다는",en:"Their personality isn't so much bad as it is honest."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"그 사람이 저를 싫어____ 그냥 낯을 가리는 것 같아요.",
+         passageEn:"It's not so much that he dislikes me — he just seems shy around new people.",
+         options:[
+           {text:"한다기보다는",correct:true,filledKr:"그 사람이 저를 싫어한다기보다는 그냥 낯을 가리는 것 같아요.",filledEn:"It's not so much that he dislikes me — he just seems shy around new people.",noteKr:"'싫어한다'는 말보다 '낯을 가린다'는 설명이 더 정확하다는 뜻이에요.",noteEn:"Means 'being shy' is a more accurate description than 'disliking.'"},
+           {text:"하지만",correct:false,demoKr:"저는 커피를 좋아하지만 매일 마시지는 않아요.",demoEn:"I like coffee, but I don't drink it every day.",noteKr:"'-지만'은 단순 대조라 이 뉘앙스가 없어요.",noteEn:"'-지만' is plain contrast, lacks this nuance."},
+           {text:"하니까",correct:false,demoKr:"내일 시험이 있으니까 오늘은 일찍 자야 해요.",demoEn:"Since there's a test tomorrow, I need to sleep early today.",noteKr:"'-니까'는 이유를 나타내서 안 맞아요.",noteEn:"'-니까' shows reason, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 카페는 조용____ 그냥 손님이 별로 없는 것 같아요.",
+         passageEn:"It's not so much that this cafe is quiet — it just doesn't seem to have many customers.",
+         options:[
+           {text:"하다기보다는",correct:true,filledKr:"이 카페는 조용하다기보다는 그냥 손님이 별로 없는 것 같아요.",filledEn:"It's not so much that this cafe is quiet — it just doesn't seem to have many customers.",noteKr:"형용사 어간에 바로 '다기보다는'을 붙여요.",noteEn:"Attach '다기보다는' directly to the adjective stem."},
+           {text:"해서",correct:false,demoKr:"이 카페는 조용해서 공부하기 좋아요.",demoEn:"This cafe is quiet, so it's good for studying.",noteKr:"'-어서'는 이유라서 안 맞아요.",noteEn:"'-어서' shows reason, not a fit."},
+           {text:"하니",correct:false,demoKr:"방이 조용하니 잠이 잘 와요.",demoEn:"Since the room is quiet, I sleep well.",noteKr:"'-니'도 이유를 나타내서 안 맞아요.",noteEn:"'-니' also shows reason, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 영화는 ____ 감동적이었어요.",
+         passageEn:"The movie wasn't so much sad as it was moving.",
+         options:[
+           {text:"슬프다기보다는",correct:true,filledKr:"이 영화는 슬프다기보다는 감동적이었어요.",filledEn:"The movie wasn't so much sad as it was moving.",noteKr:"'슬프다'보다 '감동적이다'가 더 정확한 설명이라는 뜻이에요.",noteEn:"Means 'moving' is a more accurate description than 'sad.'"},
+           {text:"슬프고",correct:false,demoKr:"그 이야기는 슬프고 감동적이에요.",demoEn:"That story is sad and moving.",noteKr:"'-고'는 단순 나열이라 '더 정확한 설명'의 뜻이 없어요.",noteEn:"'-고' is a simple list, lacks the 'more accurate' nuance."},
+           {text:"슬픈데",correct:false,demoKr:"영화는 슬픈데 배우들 연기가 좋았어요.",demoEn:"The movie was sad, but the actors' performances were good.",noteKr:"'-는데'는 배경/대조라 이 뉘앙스와 달라요.",noteEn:"'-는데' gives background/contrast, a different nuance."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이건 ____ 조금 과장된 표현이에요.",
+         passageEn:"This isn't so much a lie as a slightly exaggerated way of putting it.",
+         options:[
+           {text:"거짓말이라기보다는",correct:true,filledKr:"이건 거짓말이라기보다는 조금 과장된 표현이에요.",filledEn:"This isn't so much a lie as a slightly exaggerated way of putting it.",noteKr:"명사(받침 있음) 뒤에는 '이라기보다는'을 붙여요.",noteEn:"After a consonant-ending noun, attach '이라기보다는.'"},
+           {text:"거짓말이지만",correct:false,demoKr:"작은 거짓말이지만 마음이 불편해요.",demoEn:"It's a small lie, but it makes me uncomfortable.",noteKr:"'-지만'은 단순 대조라 안 맞아요.",noteEn:"'-지만' is plain contrast, not a fit."},
+           {text:"거짓말이니까",correct:false,demoKr:"그건 거짓말이니까 믿지 마세요.",demoEn:"That's a lie, so don't believe it.",noteKr:"'-니까'는 이유라서 안 맞아요.",noteEn:"'-니까' shows reason, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"요즘 ____ 그냥 좀 지친 것 같아요.",
+         passageEn:"These days I'm not so much struggling as just a bit worn out.",
+         options:[
+           {text:"힘들다기보다는",correct:true,filledKr:"요즘 힘들다기보다는 그냥 좀 지친 것 같아요.",filledEn:"These days I'm not so much struggling as just a bit worn out.",noteKr:"'힘들다'보다 '지쳤다'가 더 정확한 설명이라는 뜻이에요.",noteEn:"Means 'worn out' is a more accurate description than 'struggling.'"},
+           {text:"힘든데",correct:false,demoKr:"요즘 힘든데 잘 버티고 있어요.",demoEn:"These days are hard, but I'm holding up well.",noteKr:"'-는데'는 배경/대조라 이 뉘앙스와 달라요.",noteEn:"'-는데' gives background/contrast, a different nuance."},
+           {text:"힘들어서",correct:false,demoKr:"요즘 힘들어서 일찍 자요.",demoEn:"Since it's been hard these days, I go to bed early.",noteKr:"'-어서'는 이유라서 안 맞아요.",noteEn:"'-어서' shows reason, not a fit."},
+         ]},
+      ],
+      correction:[
+        {wrong:"이 영화는 슬프다기보 감동적이에요.",wrongEn:"The movie wasn't so much sad as it was moving.",ans:"이 영화는 슬프다기보다는 감동적이에요.",ansEn:"The movie wasn't so much sad as it was moving."},
+        {wrong:"그건 사실 이라기보다는 소문에 가까워요.",wrongEn:"That's more of a rumor than a fact.",ans:"그건 사실이라기보다는 소문에 가까워요.",ansEn:"That's more of a rumor than a fact."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"오늘 발표 잘한 것 같아요?",en:"Do you think you did well on today's presentation?",fill:false},
+        {who:"B",kr:"___ 그냥 무사히 끝낸 것 같아요. 너무 긴장해서 기억이 잘 안 나요.",en:"It's not so much that I did well — I just got through it. I was so nervous I barely remember.",fill:true,base:"잘하다",hint:"잘하다(과거) + 다기보다는",ans:"잘했다기보다는"},
+        {who:"A",kr:"그래도 사람들 반응이 나쁘지 않았어요.",en:"Still, people's reactions weren't bad.",fill:false},
+        {who:"B",kr:"그건 ___ 그냥 다들 예의상 박수 쳐준 것 같아요.",en:"It's not so much that the reaction was good — I think everyone just clapped to be polite.",fill:true,base:"좋다",hint:"좋다 + 다기보다는",ans:"좋다기보다는"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"그건 __실수라기보다는__ 오해였던 것 같아요.",
+         sentenceEn:"That was more of a misunderstanding than a mistake.",
+         options:[
+           {text:"실수라고 하기는 어렵고 차라리",correct:true,filledKr:"그건 실수라고 하기는 어렵고 차라리 오해였던 것 같아요.",filledEn:"It's hard to call that a mistake — it was rather a misunderstanding.",noteKr:"'-라기보다는'은 '~라고 하기는 어렵고 차라리'와 의미가 비슷해요.",noteEn:"'-라기보다는' is close in meaning to 'hard to call it ~, rather.'"},
+           {text:"실수이기 때문에",correct:false,demoKr:"제 실수이기 때문에 제가 사과할게요.",demoEn:"Since it was my mistake, I'll apologize.",noteKr:"'때문에'는 이유를 나타내서 달라요.",noteEn:"'때문에' shows reason, a different meaning."},
+           {text:"실수인데도 불구하고",correct:false,demoKr:"실수인데도 불구하고 아무도 뭐라고 안 했어요.",demoEn:"Even though it was a mistake, no one said anything.",noteKr:"'-는데도 불구하고'는 양보를 나타내서 달라요.",noteEn:"'-는데도 불구하고' shows concession, a different meaning."},
+           {text:"실수라고 할 만큼",correct:false,demoKr:"실수라고 할 만큼 큰 문제는 아니었어요.",demoEn:"It wasn't a big enough problem to call a mistake.",noteKr:"'-을 만큼'은 정도를 나타내서 달라요.",noteEn:"'-을 만큼' shows degree, a different meaning."},
+         ],
+         source:"TOPIK II 유형"},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"여자",kr:"민수 씨, 팀장님이 오늘 좀 화나 보이지 않았어요?"},
+           {who:"남자",kr:"글쎄요, 저는 잘 못 느꼈는데요."},
+         ],
+         blankWho:"여자",
+         options:["화가 났다기보다는 그냥 피곤해 보이던데요.","팀장님은 원래 무뚝뚝하다기보다는 그냥 말이 없는 편이에요.","그건 실수라기보다는 오해였던 것 같아요.","다들 화났다기보다는 그냥 다 지친 것 같아요."],
+         optsEn:["It's not so much that they were angry — they just looked tired.","The team lead isn't so much blunt as just quiet, generally.","That's not so much a mistake as a misunderstanding.","It's not so much that everyone was angry — everyone just seems worn out."],
+         ans:0,
+         fbKr:"팀장님의 '오늘' 모습에 대한 질문이므로 ①번이 가장 정확해요. ②번은 평소 성격 이야기라 '오늘'의 상태가 아니고, ④번은 주어가 '팀장님'이 아니라 '다들'이라 정확한 대답이 아니에요.",
+         fbEn:"Since the question is about the team lead's mood 'today,' ① is most precise. ② describes their general personality, not today's state, and ④ shifts the subject from 'the team lead' to 'everyone,' so neither directly answers."},
+      ],
+    }
+  },
+];
+let currentUnit=0;
+let scoreState={};
+
+function toggleDrawer(){
+  const d=document.getElementById('drawer'),o=document.getElementById('overlay'),b=document.getElementById('burgerBtn');
+  d.classList.toggle('open');o.classList.toggle('show');b.classList.toggle('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('burgerBtn').classList.remove('open');
+}
+function showUnit(idx,tab){
+  currentUnit=idx;
+  document.querySelectorAll('.unit-tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  renderUnit(idx);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderUnit(idx){
+  const u=UNITS[idx];
+  const list=document.getElementById('grammarList');
+  list.innerHTML='';
+  list.appendChild(buildCard(u));
+}
+function buildCard(u){
+  const card=document.createElement('div');
+  card.className='grammar-card';
+  card.innerHTML=`
+    <div class="card-header" onclick="toggleBody(this)">
+      <div class="card-num">${u.num}</div>
+      <div class="card-title-wrap">
+        <div class="card-level">${u.level}</div>
+        <div class="card-title">${u.title}</div>
+      </div>
+      <span class="card-arrow">▾</span>
+    </div>
+    <div class="card-body show">${renderBody(u)}</div>`;
+  return card;
+}
+function toggleBody(hdr){
+  const body=hdr.nextElementSibling;
+  const arrow=hdr.querySelector('.card-arrow');
+  body.classList.toggle('show');
+  arrow.classList.toggle('open');
+}
+function renderBody(u){
+  const uid='u'+u.num;
+  return `
+    <div class="formula-row">
+      <span class="section-tag">📐 문법 공식 · Grammar Formula</span>
+      <button class="docx-btn" id="${uid}docxBtn" onclick="downloadDocx('${uid}')" title="Download as Word (.docx)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        DOCX
+      </button>
+      <a class="docx-fallback-link" id="${uid}docxFallback" href="#" download></a>
+    </div>
+    <div class="formula-box">${u.formula}</div>
+    <div class="analogy-box">
+      <div class="lbl">🔤 영어의 이 표현과 같아요 · Same as this English pattern</div>
+      ${u.englishPatterns.map(p=>`<div class="pattern-line">"${p}"</div>`).join('')}
+      <div style="margin-top:8px;">
+        <div class="ex-item" style="background:#fff;"><div class="ex-kr">${u.analogyExampleKr}</div><div class="ex-en">${u.analogyExampleEn}</div></div>
+      </div>
+    </div>
+    <span class="section-tag">📖 활용 규칙 · Rules</span>
+    ${u.rules.map(r=>`<div class="rule-card"><div class="rule-title">${r.t}</div><div class="rule-text">${r.en}</div><div class="rule-ex">예) ${r.ex}</div></div>`).join('')}
+    <span class="section-tag" style="margin-top:12px;">💬 예문 · Examples</span>
+    <ul class="examples-list">
+      ${u.examples.map(ex=>`<li class="ex-item"><div class="ex-kr">${ex.kr}</div><div class="ex-en">${ex.en}</div></li>`).join('')}
+    </ul>
+    ${renderQuiz(u.quiz,uid)}`;
+}
+
+function countTotal(q){
+  let n=q.ox.length+q.sentence.length+q.context.length+q.correction.length+q.topik.length;
+  q.dialogue.lines.forEach(l=>{ if(l.fill){ n += Array.isArray(l.ans)?l.ans.length:1; } });
+  return n;
+}
+
+function renderQuiz(q,uid){
+  scoreState[uid]={correct:0,answered:0,total:countTotal(q),seen:new Set()};
+  return `<div class="quiz-section">
+    <span class="section-tag" style="background:#FDF2E3;color:#854F0B;">🧪 연습문제 · Practice</span>
+    <div class="score-chip" id="${uid}score">✓ 0/${scoreState[uid].total} 정답</div>
+
+    <div class="quiz-type-label" style="background:#0071E3;">✅ OX 문제 (True / False)</div>
+    <div class="quiz-desc">위 활용 규칙을 얼마나 정확히 이해했는지 확인해요.</div>
+    ${q.ox.map((item,i)=>`<div class="quiz-q">
+      <p>${item.krSentence}</p><p class="en">${item.en}</p>
+      <div class="ox-row">
+        <button class="ox-btn" onclick="checkOX(this,'${uid}',${i},true,${item.ans},'${esc(item.fbKr)}','${esc(item.fbEn)}')">⭕ 맞다</button>
+        <button class="ox-btn" onclick="checkOX(this,'${uid}',${i},false,${item.ans},'${esc(item.fbKr)}','${esc(item.fbEn)}')">❌ 틀리다</button>
+      </div>
+      <div class="fb" id="${uid}ox${i}fb"></div>
+    </div>`).join('')}
+
+    <div class="quiz-type-label" style="background:#2FA84F;">✍️ 문장 완성 (Complete with the Grammar)</div>
+    <div class="quiz-desc">힌트를 참고해서 빈칸을 채워 보세요.</div>
+    ${q.sentence.map((item,i)=>`<div class="quiz-q">
+      <p class="en">${item.en}</p>
+      <div class="fill-wrap">${item.pre} <input class="fill-input" id="${uid}se${i}" placeholder="${item.hint}" type="text"> ${item.suf}</div>
+      <button class="check-btn" onclick="checkFill('${uid}','${i}','${uid}se${i}','${esc(item.ans)}','${uid}se${i}fb')">확인 ✓</button>
+      <div class="fb" id="${uid}se${i}fb"></div>
+    </div>`).join('')}
+
+    <div class="quiz-type-label" style="background:#5E5CE6;">🗣️ 문맥 표현 선택 (Choose the Natural Expression)</div>
+    <div class="quiz-desc">선택 후 모든 보기의 해설과 예문 번역을 확인할 수 있어요.</div>
+    ${q.context.map((item,i)=>renderContextItem(item,uid,i)).join('')}
+
+    <div class="quiz-type-label" style="background:#E0393E;">🛠️ 오류 수정 (Find & Fix the Error)</div>
+    <div class="quiz-desc">문장에서 어색한 부분을 찾아 자연스럽게 고쳐 보세요.</div>
+    ${q.correction.map((item,i)=>`<div class="quiz-q">
+      <p>${item.wrong}</p>
+      <p class="en">${item.wrongEn}</p>
+      <textarea class="fill-textarea" id="${uid}co${i}" placeholder="고친 문장을 써 보세요"></textarea>
+      <button class="check-btn" onclick="checkCorrection('${uid}','${i}','${uid}co${i}','${esc(item.ans)}','${esc(item.ansEn)}','${uid}co${i}fb')">확인 ✓</button>
+      <div class="fb" id="${uid}co${i}fb"></div>
+    </div>`).join('')}
+
+    <div class="quiz-type-label" style="background:#0071E3;">💭 대화 완성 (Complete the Dialogue)</div>
+    <div class="dia-tip">💡 빈칸에 기본형이 미리 적혀 있어요. 클릭해서 정답 형태로 고쳐 보세요! (Blanks are pre-filled with the dictionary form — click and overwrite with the correct form.)</div>
+    <div class="quiz-q">
+      <div class="dialogue-wrap">
+        ${q.dialogue.lines.map((line,li)=>{
+          const isA = line.who==='A';
+          const bubbleCls = isA?'bubble-a':'bubble-b';
+          if(!line.fill){
+            return `<div class="dialogue-item ${isA?'bubble-a-wrap':'bubble-b-wrap'}">
+              <div class="who-label">${line.who}</div>
+              <div class="dialogue-bubble ${bubbleCls}">
+                <div>${line.kr}</div><div class="bubble-en">${line.en}</div>
+              </div></div>`;
+          }
+          const hints = Array.isArray(line.hint) ? line.hint : [line.hint];
+          const bases = Array.isArray(line.base) ? line.base : [line.base];
+          const parts = line.kr.split('___');
+          let rows = [];
+          let curRow = '';
+          parts.forEach((part,pi)=>{
+            curRow += part;
+            if(pi < hints.length){
+              const inputId = uid+'dl'+li+'_'+pi;
+              const baseVal = bases[pi] || '';
+              curRow += `<input class="dia-fill" id="${inputId}" value="${baseVal}" placeholder="${baseVal?'':(hints[pi]||'')}" type="text" onfocus="this.select()">`;
+              if(pi < hints.length-1){
+                rows.push(curRow);
+                curRow = '';
+              }
+            }
+          });
+          if(curRow) rows.push(curRow);
+          const rowsHtml = rows.map((row,ri)=>{
+            const hint = hints[ri];
+            return `<div class="dia-row">${row}<span class="dia-hint" data-hint="${hint||''}">${hint||''}</span></div>`;
+          }).join('');
+          return `<div class="dialogue-item ${isA?'bubble-a-wrap':'bubble-b-wrap'}">
+            <div class="who-label">${line.who}</div>
+            <div class="dialogue-bubble ${bubbleCls}">
+              ${rowsHtml}
+              <div class="bubble-en">${line.en}</div>
+            </div></div>`;
+        }).join('')}
+      </div>
+      <button class="check-btn" style="margin-top:12px;" onclick="checkDialogue('${uid}','${uid}dlf')">답 확인하기 ✓</button>
+      <div class="fb" id="${uid}dlf"></div>
+    </div>
+
+    <div class="quiz-type-label" style="background:linear-gradient(135deg,#1D1D1F,#3A3A3C);">🎯 실전 TOPIK II 유형</div>
+    <div class="quiz-desc">실제 TOPIK II 시험에 나오는 형태의 문제예요.</div>
+    ${renderTopikUnderline(q.topik[0],uid,0)}
+    ${renderTopikDialogue(q.topik[1],uid,1)}
+  </div>`;
+}
+
+function renderContextItem(item,uid,qi){
+  const correctIdx = item.options.findIndex(o=>o.correct);
+  const optsHtml = item.options.map((o,oi)=>`
+    <div class="mc-opt">
+      <button class="mc-btn" onclick="checkContext(this,'${uid}','ct${qi}',${oi},${correctIdx})">${String.fromCharCode(9312+oi)} ${o.text}</button>
+      <div class="mc-detail ${o.correct?'is-correct':'is-wrong'}" id="${uid}ct${qi}d${oi}">
+        <div class="fkr">${o.correct?'✅ '+o.filledKr:'❌ \''+o.text+'\'는 이렇게 써요:'}</div>
+        ${o.correct?'':'<div class="fkr" style="margin-top:2px;">'+o.demoKr+'</div>'}
+        <div class="fen">${o.correct?o.filledEn:o.demoEn}</div>
+        <div class="fnote">${o.noteKr}</div>
+        <div class="fnote-en">${o.noteEn}</div>
+      </div>
+    </div>`).join('');
+  return `<div class="quiz-q">
+    <p>${item.scenarioKr}</p><p class="en">${item.scenarioEn}</p>
+    <div class="passage-box"><div style="font-weight:600;">${item.passageKr}</div><div style="color:var(--ink-soft);font-style:italic;margin-top:6px;font-size:12.5px;">${item.passageEn}</div></div>
+    ${optsHtml}
+  </div>`;
+}
+
+function renderTopikUnderline(item,uid,ti){
+  const correctIdx = item.options.findIndex(o=>o.correct);
+  const sentHtml = item.sentenceKr.replace(/__(.+?)__/,'<u>$1</u>');
+  const optsHtml = item.options.map((o,oi)=>`
+    <div class="mc-opt">
+      <button class="mc-btn" onclick="checkContext(this,'${uid}','tp${ti}',${oi},${correctIdx})">${String.fromCharCode(9312+oi)} ${o.text}</button>
+      <div class="mc-detail ${o.correct?'is-correct':'is-wrong'}" id="${uid}tp${ti}d${oi}">
+        <div class="fkr">${o.correct?'✅ '+o.filledKr:'❌ \''+o.text+'\'는 이렇게 써요:'}</div>
+        ${o.correct?'':'<div class="fkr" style="margin-top:2px;">'+o.demoKr+'</div>'}
+        <div class="fen">${o.correct?o.filledEn:o.demoEn}</div>
+        <div class="fnote">${o.noteKr}</div>
+        <div class="fnote-en">${o.noteEn}</div>
+      </div>
+    </div>`).join('');
+  return `<div class="quiz-q">
+    <div class="topik-badge">TOPIK II</div>
+    <p class="topik-instruction">${item.instructionKr}</p>
+    <p class="topik-instruction" style="font-style:italic;">${item.instructionEn}</p>
+    <div class="topik-sentence">${sentHtml}</div>
+    <div class="topik-sentence-en">${item.sentenceEn}</div>
+    ${optsHtml}
+    <div class="topik-source">${item.source}</div>
+  </div>`;
+}
+
+function renderTopikDialogue(item,uid,ti){
+  const linesHtml = item.lines.map(l=>`<div class="d-line"><span class="d-who">${l.who}:</span> ${l.kr}</div>`).join('');
+  const optsHtml = item.options.map((opt,oi)=>`<button class="mc-btn" onclick="checkTopikDialogue(this,'${uid}',${ti},${oi},${item.ans},'${esc(item.fbKr)}','${esc(item.fbEn)}')">${String.fromCharCode(9312+oi)} ${opt}</button>`).join('');
+  return `<div class="quiz-q">
+    <div class="topik-badge">TOPIK II</div>
+    <p class="topik-instruction">${item.instructionKr}</p>
+    <p class="topik-instruction" style="font-style:italic;">${item.instructionEn}</p>
+    <div class="dialogue-scenario">
+      ${linesHtml}
+      <div class="d-line"><span class="d-who">${item.blankWho}:</span> <span class="d-blank">________</span></div>
+    </div>
+    ${optsHtml}
+    <div class="fb" id="${uid}tp${ti}fb"></div>
+  </div>`;
+}
+
+function esc(s){return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function norm(s){return String(s).trim().replace(/\s+/g,' ').replace(/[.!?]+$/,'');}
+
+function markAnswered(uid,key,isCorrect){
+  const st=scoreState[uid]; if(!st) return;
+  if(st.seen.has(key)) return;
+  st.seen.add(key); st.answered++; if(isCorrect) st.correct++;
+  const el=document.getElementById(uid+'score');
+  if(el) el.textContent=`✓ ${st.correct}/${st.total} 정답 · ${st.answered}/${st.total} 풀이 완료`;
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  if(!t) return;
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+function checkOX(btn,uid,i,val,ans,fbKr,fbEn){
+  const fbEl=document.getElementById(uid+'ox'+i+'fb');
+  btn.parentElement.querySelectorAll('.ox-btn').forEach(b=>b.disabled=true);
+  const correct=val===ans;
+  btn.classList.add(correct?'correct':'wrong');
+  fbEl.innerHTML=fbKr+`<span class="en-line">${fbEn}</span>`;
+  fbEl.className='fb '+(correct?'ok':'no');
+  markAnswered(uid,uid+'ox'+i,correct);
+}
+function checkContext(btn,uid,qIdx,selIdx,correctIdx){
+  const container=btn.closest('.quiz-q');
+  container.querySelectorAll('.mc-btn').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===correctIdx) b.classList.add('correct');
+    else if(i===selIdx) b.classList.add('wrong');
+  });
+  container.querySelectorAll('.mc-detail').forEach(d=>d.classList.add('show'));
+  const ok=selIdx===correctIdx;
+  markAnswered(uid,uid+'_'+qIdx,ok);
+}
+function checkTopikDialogue(btn,uid,i,sel,ans,fbKr,fbEn){
+  const fbEl=document.getElementById(uid+'tp'+i+'fb');
+  btn.parentElement.querySelectorAll('.mc-btn').forEach(b=>b.disabled=true);
+  const correct=sel===ans;
+  btn.classList.add(correct?'correct':'wrong');
+  fbEl.innerHTML=fbKr+`<span class="en-line">${fbEn}</span>`;
+  fbEl.className='fb '+(correct?'ok':'no');
+  markAnswered(uid,uid+'tp'+i,correct);
+}
+function checkFill(uid,i,inpId,ans,fbId){
+  const val=document.getElementById(inpId).value.trim();
+  const fbEl=document.getElementById(fbId);
+  const ok=val===ans;
+  fbEl.textContent=ok?'✓ 정답이에요!':`✗ 다시 확인해 보세요. 정답: ${ans}`;
+  fbEl.className='fb '+(ok?'ok':'no');
+  markAnswered(uid,uid+'se'+i,ok);
+}
+function checkCorrection(uid,i,inpId,ans,ansEn,fbId){
+  const val=document.getElementById(inpId).value;
+  const fbEl=document.getElementById(fbId);
+  const ok=norm(val)===norm(ans);
+  fbEl.innerHTML=(ok?'✓ 정확하게 고쳤어요!':`✗ 다시 확인해 보세요. 모범 답안: ${ans}`)+`<span class="en-line">${ansEn}</span>`;
+  fbEl.className='fb '+(ok?'ok':'no');
+  markAnswered(uid,uid+'co'+i,ok);
+}
+function checkDialogue(uid,fbId){
+  const u=UNITS[currentUnit];
+  const lines=u.quiz.dialogue.lines;
+  let score=0,total=0;
+  lines.forEach((line,li)=>{
+    if(!line.fill)return;
+    const ansList=Array.isArray(line.ans)?line.ans:[line.ans];
+    ansList.forEach((correctAns,pi)=>{
+      total++;
+      const inp=document.getElementById(uid+'dl'+li+'_'+pi);
+      if(!inp)return;
+      const val=inp.value.trim();
+      const ok=val===correctAns;
+      if(ok) score++;
+      const row=inp.closest('.dia-row');
+      const hintEl = row ? row.querySelector('.dia-hint') : null;
+      if(ok){
+        inp.style.color='';
+        if(hintEl){ hintEl.textContent='✓ 정답'; hintEl.classList.add('show'); }
+      } else {
+        inp.style.color='#E0393E';
+        if(hintEl){ hintEl.textContent='정답: '+correctAns; hintEl.classList.add('show'); }
+      }
+      markAnswered(uid,uid+'dl'+li+'_'+pi,ok);
+    });
+  });
+  const fbEl=document.getElementById(fbId);
+  fbEl.textContent=score===total?`✓ 모두 정답이에요! (${score}/${total})`:`점수: ${score}/${total} — 빈칸 아래 정답을 확인해 보세요.`;
+  fbEl.className='fb '+(score===total?'ok':'no');
+}
+// ── DOCX Download ───────────────────────────────────────────────────────
+// Builds the .docx file directly as raw OOXML + a hand-rolled, dependency-
+// free STORE-only ZIP (CRC32 + local/central headers), instead of routing
+// through the large bundled docx.js library. This removes ~1.2MB of
+// third-party code from the page (the only thing it was used for) and
+// removes every layer that could get mangled between "works on this
+// machine" and "works after the page is hosted and opened on a phone":
+// no compression tables, no base64 round-trip, no big minified library —
+// just plain UTF-8 text turned into three small XML files and zipped with
+// STORE (no compression at all). This mirrors the structure of a known-
+// good minimal .docx: [Content_Types].xml + _rels/.rels + word/document.xml,
+// nothing else.
+
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(bytes){
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+function utf8Bytes(str){ return new TextEncoder().encode(str); }
+
+function makeZip(files){
+  const chunks = [];
+  const central = [];
+  let offset = 0;
+  const dosTime = 0, dosDate = 0x21;
+
+  function push(arr){ chunks.push(arr); offset += arr.length; }
+  function u16(n){ return new Uint8Array([n & 0xFF, (n >>> 8) & 0xFF]); }
+  function u32(n){ return new Uint8Array([n & 0xFF, (n >>> 8) & 0xFF, (n >>> 16) & 0xFF, (n >>> 24) & 0xFF]); }
+  function concat(...arrs){
+    let len = 0; arrs.forEach(a=>len+=a.length);
+    const out = new Uint8Array(len);
+    let o=0; arrs.forEach(a=>{ out.set(a,o); o+=a.length; });
+    return out;
+  }
+
+  for (const f of files) {
+    const nameBytes = utf8Bytes(f.name);
+    const data = f.data;
+    const crc = crc32(data);
+    const localOffset = offset;
+
+    push(concat(
+      u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(dosTime), u16(dosDate),
+      u32(crc), u32(data.length), u32(data.length), u16(nameBytes.length), u16(0)
+    ));
+    push(nameBytes);
+    push(data);
+
+    central.push(concat(
+      u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(dosTime), u16(dosDate),
+      u32(crc), u32(data.length), u32(data.length), u16(nameBytes.length), u16(0), u16(0),
+      u16(0), u16(0), u32(0), u32(localOffset), nameBytes
+    ));
+  }
+
+  const centralStart = offset;
+  let centralSize = 0;
+  central.forEach(c => { push(c); centralSize += c.length; });
+
+  push(concat(
+    u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length),
+    u32(centralSize), u32(centralStart), u16(0)
+  ));
+
+  return concat(...chunks);
+}
+
+function xmlEscape(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\r\n/g,' ').replace(/\n/g,' ').replace(/\r/g,' ');
+}
+
+function buildDocxBytes(u){
+  const FONT='Helvetica';
+  const BLUE='0071E3', RED='E0393E', GREY='6E6E73', DARK='1D1D1F';
+  const paras = [];
+
+  function run(text, opts={}){
+    const size = opts.size || 22;
+    let rPr = `<w:rFonts w:ascii="${FONT}" w:hAnsi="${FONT}" w:eastAsia="${FONT}" w:cs="${FONT}"/>`;
+    if(opts.bold) rPr += '<w:b/><w:bCs/>';
+    if(opts.italics) rPr += '<w:i/><w:iCs/>';
+    rPr += `<w:color w:val="${opts.color||DARK}"/>`;
+    rPr += `<w:sz w:val="${size}"/><w:szCs w:val="${size}"/>`;
+    return `<w:r><w:rPr>${rPr}</w:rPr><w:t xml:space="preserve">${xmlEscape(text)}</w:t></w:r>`;
+  }
+  function para(runsXml, pOpts={}){
+    let pPr = `<w:spacing w:line="360"${pOpts.before!=null?` w:before="${pOpts.before}"`:''}${pOpts.after!=null?` w:after="${pOpts.after}"`:''}/>`;
+    if(pOpts.center) pPr += '<w:jc w:val="center"/>';
+    paras.push(`<w:p><w:pPr>${pPr}</w:pPr>${runsXml}</w:p>`);
+  }
+  const p = (text, opts={}) => para(run(text, opts));
+  const sectionHeader = (text) => para(run(text,{bold:true,color:BLUE,size:40}), {before:220, after:100});
+  const circ = (i) => String.fromCharCode(9312+i);
+
+  // ── Title
+  para(run(`1장 · ${u.level}`, {bold:true, color:BLUE}));
+  para(run(u.title, {bold:true, size:36, color:DARK}));
+  p('');
+
+  // ── Formula & English patterns
+  sectionHeader('📐 문법 공식 · Grammar Formula');
+  para(run(u.formula, {bold:true, size:28, color:BLUE}), {center:true});
+  p('');
+  p('🔤 영어의 이 표현과 같아요:', {bold:true, color:GREY});
+  u.englishPatterns.forEach(pt=>{ p('   "'+pt+'"', {italics:true, color:GREY}); });
+  p('');
+  p('   '+u.analogyExampleKr, {bold:true});
+  p('   '+u.analogyExampleEn, {italics:true, color:GREY});
+  p('');
+
+  // ── Rules
+  sectionHeader('📖 활용 규칙 · Rules');
+  u.rules.forEach(r=>{
+    p(r.t, {bold:true, color:BLUE});
+    p(r.en);
+    p('예) '+r.ex, {italics:true, color:BLUE});
+    p('');
+  });
+
+  // ── Examples
+  sectionHeader('💬 예문 · Examples');
+  u.examples.forEach(ex=>{
+    p(ex.kr, {bold:true});
+    p(ex.en, {color:GREY});
+  });
+  p('');
+
+  // ── OX
+  sectionHeader('✅ OX 문제 (True / False)');
+  u.quiz.ox.forEach((item,i)=>{
+    p(`Q${i+1}. ${item.krSentence}`, {bold:true});
+    p('   '+item.en, {italics:true, color:GREY});
+    p('   '+(item.ans?'정답: 맞다 (True)':'정답: 틀리다 (False)'), {color:BLUE, bold:true});
+    p('   '+item.fbKr, {italics:true, color:GREY});
+    p('   '+item.fbEn, {italics:true, color:GREY});
+    p('');
+  });
+
+  // ── Sentence completion
+  sectionHeader('✍️ 문장 완성 (Complete with the Grammar)');
+  u.quiz.sentence.forEach((item,i)=>{
+    p(`Q${i+1}. ${item.en}`, {bold:true});
+    para(
+      run('   '+item.pre+' [ ', {color:DARK}) +
+      run(item.ans, {bold:true, color:BLUE}) +
+      run(' ] '+item.suf, {color:DARK})
+    );
+    p('');
+  });
+
+  // ── Context choice
+  sectionHeader('🗣️ 문맥 표현 선택 (Context Choice)');
+  u.quiz.context.forEach((item,i)=>{
+    p(`Q${i+1}. `+item.scenarioKr.replace(/\n/g,' '), {bold:true});
+    p('   '+item.passageKr.replace(/\n/g,'  /  '));
+    p('   '+item.passageEn.replace(/\n/g,'  /  '), {italics:true, color:GREY});
+    item.options.forEach((opt,oi)=>{
+      p('   '+circ(oi)+' '+opt.text, {color: opt.correct?BLUE:RED, bold:opt.correct});
+    });
+    const correctOpt = item.options.find(o=>o.correct);
+    p('   ✓ '+correctOpt.filledKr, {color:BLUE});
+    p('   '+correctOpt.filledEn, {italics:true, color:GREY});
+    p('');
+  });
+
+  // ── Correction
+  sectionHeader('🛠️ 오류 수정 (Error Correction)');
+  u.quiz.correction.forEach((item,i)=>{
+    p(`Q${i+1}.`, {bold:true});
+    p('   ✗ '+item.wrong, {color:RED});
+    p('   '+item.wrongEn, {italics:true, color:GREY});
+    p('   ✓ '+item.ans, {color:BLUE});
+    p('   '+item.ansEn, {italics:true, color:GREY});
+    p('');
+  });
+
+  // ── Dialogue
+  sectionHeader('💭 대화 완성 (Dialogue)');
+  u.quiz.dialogue.lines.forEach(line=>{
+    const ansList = Array.isArray(line.ans) ? line.ans : (line.ans?[line.ans]:[]);
+    let text = line.kr;
+    ansList.forEach(a=>{ text = text.replace('___', '['+a+']'); });
+    para(
+      run(`${line.who}: `, {bold:true, color: line.who==='A'?BLUE:DARK}) +
+      run(text, {color: line.fill?BLUE:DARK})
+    );
+    p('   ('+line.en+')', {italics:true, color:GREY});
+  });
+  p('');
+
+  // ── TOPIK II
+  sectionHeader('🎯 실전 TOPIK II 유형');
+  const tp1 = u.quiz.topik[0];
+  p(tp1.instructionKr, {bold:true});
+  p(tp1.instructionEn, {italics:true, color:GREY});
+  p('   '+tp1.sentenceKr.replace(/__/g,''), {bold:true});
+  p('   '+tp1.sentenceEn, {italics:true, color:GREY});
+  tp1.options.forEach((opt,oi)=>{
+    p('   '+circ(oi)+' '+opt.text, {color: opt.correct?BLUE:RED, bold:opt.correct});
+  });
+  p('');
+
+  const tp2 = u.quiz.topik[1];
+  p(tp2.instructionKr, {bold:true});
+  p(tp2.instructionEn, {italics:true, color:GREY});
+  tp2.lines.forEach(l=>{ p('   '+l.who+': '+l.kr); });
+  tp2.options.forEach((opt,oi)=>{
+    p('   '+circ(oi)+' '+opt, {color: oi===tp2.ans?BLUE:RED, bold: oi===tp2.ans});
+  });
+  p('   '+tp2.fbKr, {italics:true, color:GREY});
+  p('   '+tp2.fbEn, {italics:true, color:GREY});
+
+  const documentXml =
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
+    '<w:body>' + paras.join('') + '</w:body></w:document>';
+
+  const contentTypesXml =
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+    '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+    '<Default Extension="xml" ContentType="application/xml"/>' +
+    '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' +
+    '</Types>';
+
+  const relsXml =
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+    '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>' +
+    '</Relationships>';
+
+  return makeZip([
+    { name: '[Content_Types].xml', data: utf8Bytes(contentTypesXml) },
+    { name: '_rels/.rels', data: utf8Bytes(relsXml) },
+    { name: 'word/document.xml', data: utf8Bytes(documentXml) },
+  ]);
+}
+
+function showDocxFallback(uid, url, filename){
+  const link = document.getElementById(uid+'docxFallback');
+  if(!link) return;
+  link.textContent = '⬇️ 안 열리면 여기를 탭';
+  link.href = url;
+  link.setAttribute('download', filename);
+  link.style.display = 'inline-flex';
+  const key = '__fbTimer_'+uid;
+  clearTimeout(window[key]);
+  window[key] = setTimeout(()=>{ link.style.display='none'; try{URL.revokeObjectURL(url);}catch(e){} }, 180000);
+}
+
+function downloadDocx(uid){
+  const u = UNITS[currentUnit];
+  const btn = document.getElementById(uid+'docxBtn');
+  if(btn) btn.classList.add('loading');
+
+  try{
+    const bytes = buildDocxBytes(u);
+    const filename = `Korean_Grammar_Ch1_${u.num}_${u.title.replace(/[\/\s]/g,'_')}.docx`;
+    const blob = new Blob([bytes], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ a.remove(); }, 400);
+    showDocxFallback(uid, url, filename);
+    if(btn) btn.classList.remove('loading');
+    showToast('✓ DOCX 파일이 다운로드되었어요. 안 열리면 옆의 링크를 탭해 보세요.');
+  }catch(err){
+    console.error('DOCX generation failed:',err);
+    if(btn) btn.classList.remove('loading');
+    showToast('⚠️ DOCX 생성 중 오류가 발생했어요.');
+  }
+}
+
+renderUnit(0);
+</script>
+</body>
+</html>
