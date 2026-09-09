@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Study Korean – 1장. 추측과 예상을 나타낼 때 (Expressing Conjecture and Supposition)</title>
+<style>
+  :root{
+    --bg:#F5F5F7;
+    --card:#FFFFFF;
+    --ink:#1D1D1F;
+    --ink-soft:#6E6E73;
+    --line:#E5E5EA;
+    --blue:#0071E3;
+    --blue-deep:#0059B3;
+    --blue-tint:#EAF3FE;
+    --green:#2FA84F;
+    --green-tint:#E7F6EA;
+    --red:#E0393E;
+    --red-tint:#FDECEC;
+    --orange:#C9760A;
+    --orange-tint:#FDF2E3;
+    --purple:#5E5CE6;
+    --purple-tint:#EEEEFD;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:11px;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+    --content-w:720px;
+    --content-pad:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro KR","Apple SD Gothic Neo","Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,textarea{font-family:inherit;}
+
+  /* ── TOPBAR ─────────────────────────────────────────────────── */
+  .topbar{
+    position:sticky;top:0;z-index:200;
+    background:rgba(255,255,255,.78);backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);
+    display:flex;align-items:center;padding:0 16px;height:52px;gap:10px;
+    border-bottom:1px solid rgba(0,0,0,.06);
+  }
+  .burger{background:none;border:none;cursor:pointer;padding:8px;margin-left:-8px;display:flex;flex-direction:column;gap:5px;border-radius:10px;}
+  .burger:active{background:rgba(0,0,0,.06);}
+  .burger span{display:block;width:20px;height:2px;background:var(--ink);border-radius:2px;transition:transform .25s,opacity .25s;}
+  .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .burger.open span:nth-child(2){opacity:0;}
+  .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .topbar-title{font-size:15px;font-weight:600;letter-spacing:-.2px;}
+  .topbar-sub{color:var(--ink-soft);font-size:12px;margin-left:auto;font-weight:500;background:var(--line);padding:3px 10px;border-radius:20px;}
+
+  /* ── DRAWER ─────────────────────────────────────────────────── */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);}
+  .overlay.show{opacity:1;pointer-events:all;}
+  .drawer{position:fixed;left:-300px;top:0;bottom:0;width:300px;background:var(--card);z-index:400;transition:left .3s cubic-bezier(.32,.72,0,1);overflow-y:auto;}
+  .drawer.open{left:0;}
+  .drawer-header{padding:22px 20px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .drawer-header h2{font-size:19px;font-weight:700;letter-spacing:-.3px;}
+  .drawer-header h2 span{color:var(--blue);}
+  .drawer-close{background:var(--bg);border:none;width:30px;height:30px;border-radius:50%;font-size:16px;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .drawer-hr{height:1px;background:var(--line);margin:2px 20px 8px;}
+  .nav-section{padding:6px 10px;}
+  .nav-item{display:flex;align-items:center;gap:13px;padding:13px 12px;color:var(--ink);text-decoration:none;font-size:15.5px;font-weight:600;cursor:pointer;transition:background .15s;border-radius:12px;}
+  .nav-item:active,.nav-item.active{background:var(--blue-tint);color:var(--blue-deep);}
+  .nav-icon{width:22px;height:22px;flex:none;display:flex;align-items:center;justify-content:center;}
+
+  /* ── HERO ───────────────────────────────────────────────────── */
+  .hero{padding:30px 20px 18px;text-align:center;}
+  .hero-badge{display:inline-block;background:var(--purple-tint);color:var(--purple);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:12px;letter-spacing:.2px;}
+  .hero h1{font-size:26px;font-weight:800;line-height:1.3;letter-spacing:-.4px;}
+  .hero .sub{font-size:15px;font-weight:500;color:var(--ink-soft);margin-top:6px;}
+
+  /* ── TABS ───────────────────────────────────────────────────── */
+  .unit-tabs-wrap{position:sticky;top:52px;z-index:150;background:var(--bg);padding:8px var(--content-pad) 12px;max-width:calc(var(--content-w) + 2*var(--content-pad));margin:0 auto;display:flex;align-items:center;gap:6px;}
+  .unit-tabs{display:flex;gap:6px;overflow-x:auto;background:#E9E9EC;border-radius:14px;padding:4px;scrollbar-width:none;flex:1;min-width:0;}
+  .unit-tabs::-webkit-scrollbar{display:none;}
+  .unit-tab{flex:1;min-width:max-content;padding:9px 14px;font-size:13px;font-weight:600;color:var(--ink-soft);border-radius:11px;cursor:pointer;white-space:nowrap;text-align:center;transition:all .2s;}
+  .unit-tab.active{color:var(--ink);background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12);}
+  .tabs-nav-btn{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:#fff;border:none;box-shadow:0 1px 4px rgba(0,0,0,.15);color:var(--ink);font-size:15px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
+  .tabs-nav-btn:disabled{opacity:.3;cursor:default;}
+  .tabs-nav-btn.hidden{display:none;}
+
+  /* ── CARDS ──────────────────────────────────────────────────── */
+  .grammar-list{padding:4px var(--content-pad) 40px;display:flex;flex-direction:column;gap:14px;max-width:calc(var(--content-w) + 2*var(--content-pad));margin:0 auto;}
+  .grammar-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;}
+  .card-header{display:flex;align-items:center;padding:16px 18px;cursor:pointer;gap:13px;}
+  .card-num{width:34px;height:34px;border-radius:50%;background:linear-gradient(150deg,var(--blue),var(--blue-deep));color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;}
+  .card-title-wrap{flex:1;min-width:0;}
+  .card-level{font-size:11.5px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+  .card-title{font-size:17px;font-weight:700;color:var(--ink);margin-top:2px;letter-spacing:-.2px;}
+  .card-arrow{font-size:14px;color:var(--ink-soft);transition:transform .3s;flex:none;}
+  .card-arrow.open{transform:rotate(180deg);}
+  .card-body{display:none;padding:0 18px 20px;}
+  .card-body.show{display:block;animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── CONTENT ────────────────────────────────────────────────── */
+  .section-tag{display:inline-block;background:var(--blue-tint);color:var(--blue-deep);font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:20px;margin-bottom:10px;letter-spacing:.2px;}
+  .formula-box{background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;border-radius:var(--radius-md);padding:16px 18px;font-size:16px;font-weight:700;text-align:center;margin-bottom:14px;letter-spacing:.1px;line-height:1.5;}
+  .analogy-box{background:var(--purple-tint);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:14px;}
+  .analogy-box .lbl{font-size:11.5px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+  .analogy-box .pattern-line{font-size:14px;font-weight:700;color:#3A38C4;line-height:1.6;padding:3px 0;}
+  .analogy-box .similar-wrap{margin-top:10px;padding-top:10px;border-top:1px solid rgba(94,92,230,.18);}
+  .analogy-box .similar-item{margin-bottom:7px;}
+  .analogy-box .similar-expr{font-size:13.5px;font-weight:700;color:#3A38C4;}
+  .analogy-box .similar-note{font-size:12px;color:#5E5CE6;margin-top:2px;line-height:1.5;}
+  .analogy-box .similar-note-en{font-size:11.5px;color:#5E5CE6;font-style:italic;margin-top:1px;line-height:1.5;}
+  .rule-card{background:var(--bg);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;}
+  .rule-title{font-size:13.5px;font-weight:700;color:var(--blue-deep);margin-bottom:4px;}
+  .rule-text{font-size:13.5px;color:#3A3A3C;line-height:1.6;}
+  .rule-ex{font-size:12.5px;color:var(--blue-deep);margin-top:6px;font-weight:500;}
+  .examples-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .ex-item{background:var(--bg);border-radius:var(--radius-sm);padding:11px 14px;}
+  .ex-kr{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+  .ex-en{font-size:12.5px;color:var(--ink-soft);}
+
+  /* ── QUIZ ───────────────────────────────────────────────────── */
+  .quiz-section{margin-top:16px;}
+  .quiz-type-label{font-size:12px;font-weight:700;color:#fff;border-radius:20px;padding:4px 13px;display:inline-flex;align-items:center;gap:5px;margin-bottom:10px;}
+  .quiz-desc{font-size:12px;color:var(--ink-soft);margin:-4px 0 10px 2px;}
+  .quiz-q{background:var(--bg);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;}
+  .quiz-q p{font-size:14.5px;color:var(--ink);font-weight:600;margin-bottom:8px;line-height:1.5;white-space:pre-line;}
+  .quiz-q .en{font-size:12.5px;color:var(--ink-soft);font-weight:400;margin-top:-4px;margin-bottom:9px;white-space:pre-line;}
+  .passage-box{background:#fff;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px;font-size:14px;line-height:1.7;color:var(--ink);border:1px solid var(--line);white-space:pre-line;}
+
+  .ox-row{display:flex;gap:8px;margin-bottom:4px;}
+  .ox-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;min-height:44px;border-radius:12px;border:none;background:#fff;font-size:14px;font-weight:700;cursor:pointer;color:var(--ink);transition:all .15s;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+  .ox-btn:active{transform:scale(.97);}
+  .ox-btn.correct{background:var(--green);color:#fff;}
+  .ox-btn.wrong{background:var(--red);color:#fff;}
+  .ox-btn:disabled{cursor:default;}
+
+  .mc-opt{margin-bottom:8px;}
+  .mc-btn{display:block;width:100%;text-align:left;padding:12px 14px;min-height:44px;border-radius:12px;border:none;background:#fff;font-size:14px;color:var(--ink);cursor:pointer;transition:all .15s;box-shadow:0 1px 2px rgba(0,0,0,.06);line-height:1.45;}
+  .mc-btn:active{transform:scale(.985);}
+  .mc-btn.correct{background:var(--green);color:#fff;font-weight:600;}
+  .mc-btn.wrong{background:var(--red);color:#fff;}
+  .mc-btn:disabled{cursor:default;}
+  .mc-detail{display:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-top:6px;font-size:12.5px;line-height:1.55;}
+  .mc-detail.show{display:block;animation:fadeIn .2s ease;}
+  .mc-detail.is-correct{border-color:var(--green);background:var(--green-tint);}
+  .mc-detail.is-wrong{border-color:var(--red);background:var(--red-tint);}
+  .mc-detail .fkr{font-weight:700;color:var(--ink);}
+  .mc-detail .fen{color:var(--ink-soft);font-style:italic;margin-top:2px;}
+  .mc-detail .fnote{color:var(--ink-soft);margin-top:5px;}
+  .mc-detail .fnote-en{color:var(--ink-soft);font-style:italic;margin-top:1px;}
+
+  .fill-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14.5px;color:var(--ink);font-weight:600;margin-bottom:8px;line-height:2.1;}
+  .fill-input{border:none;border-bottom:2.5px solid var(--blue);background:none;font-size:15px;font-weight:700;color:var(--blue-deep);min-width:120px;outline:none;text-align:center;padding:4px 6px;}
+  .fill-input::placeholder{color:#B0B0B5;font-weight:500;font-size:12.5px;}
+  .fill-textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-size:14.5px;color:var(--ink);outline:none;padding:11px 13px;resize:vertical;min-height:44px;font-weight:500;line-height:1.5;}
+  .fill-textarea:focus{border-color:var(--blue);}
+  .check-btn{background:var(--blue);color:#fff;border:none;border-radius:980px;padding:11px 22px;font-size:13.5px;font-weight:700;cursor:pointer;margin-top:8px;display:inline-block;min-height:40px;transition:transform .12s,background .15s;}
+  .check-btn:active{transform:scale(.96);background:var(--blue-deep);}
+  .fb{display:none;font-size:12.5px;margin-top:9px;font-weight:600;padding:9px 12px;border-radius:10px;line-height:1.5;}
+  .fb.ok{background:var(--green-tint);color:#1D7A37;display:block;}
+  .fb.no{background:var(--red-tint);color:#B7292D;display:block;}
+  .fb .en-line{display:block;font-weight:400;font-style:italic;opacity:.85;margin-top:3px;}
+
+  /* DIALOGUE */
+  .dialogue-wrap{display:flex;flex-direction:column;gap:8px;}
+  .dialogue-item{display:flex;flex-direction:column;}
+  .bubble-a-wrap{align-items:flex-start;}
+  .bubble-b-wrap{align-items:flex-end;}
+  .who-label{font-size:11px;color:var(--ink-soft);font-weight:700;padding:0 6px;margin-bottom:3px;}
+  .dialogue-bubble{border-radius:16px;padding:11px 15px;max-width:88%;font-size:14px;line-height:1.65;}
+  .bubble-a{background:#fff;color:var(--ink);border-bottom-left-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+  .bubble-b{background:var(--blue);color:#fff;border-bottom-right-radius:4px;}
+  .bubble-en{font-size:11px;opacity:.65;margin-top:4px;}
+  .dia-fill{border:none;border-bottom:2.5px dashed var(--blue-deep);background:rgba(0,113,227,.08);border-radius:4px 4px 0 0;font-size:14px;font-weight:700;color:#1D7A37;min-width:96px;outline:none;padding:2px 6px;margin:0 2px;}
+  .bubble-b .dia-fill{border-bottom-color:#fff;color:#CFF3D8;background:rgba(255,255,255,.15);}
+  .dia-hint{font-size:11px;color:#1D7A37;font-style:italic;margin-top:2px;display:none;padding-left:2px;}
+  .bubble-b .dia-hint{color:#CFF3D8;}
+  .dia-hint.show{display:block;}
+  .dia-row{display:flex;flex-direction:column;margin-bottom:6px;line-height:1.75;}
+  .dia-tip{font-size:11.5px;color:var(--ink-soft);margin:-2px 0 10px 2px;}
+
+  /* TOPIK */
+  .topik-instruction{font-size:12.5px;color:var(--ink-soft);margin-bottom:8px;}
+  .topik-sentence{font-size:15px;font-weight:600;color:var(--ink);line-height:1.6;margin-bottom:4px;}
+  .topik-sentence u{text-decoration-color:var(--blue);text-decoration-thickness:2px;text-underline-offset:3px;color:var(--blue-deep);}
+  .topik-sentence-en{font-size:12.5px;color:var(--ink-soft);font-style:italic;margin-bottom:10px;}
+  .topik-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .dialogue-scenario{margin-bottom:10px;}
+  .dialogue-scenario .d-line{font-size:13.5px;line-height:1.65;margin-bottom:4px;}
+  .dialogue-scenario .d-who{font-weight:700;color:var(--blue-deep);}
+  .dialogue-scenario .d-blank{font-weight:700;color:var(--ink-soft);font-style:italic;}
+  .docx-fallback-link{display:none;align-items:center;gap:5px;background:var(--orange-tint);border:1.5px solid var(--orange);border-radius:980px;padding:6px 13px;font-size:12px;font-weight:700;color:var(--orange);text-decoration:none;margin-left:8px;min-height:32px;}
+
+  /* DOCX button */
+  .docx-btn{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--line);border-radius:980px;padding:6px 13px;font-size:12px;font-weight:700;color:var(--blue-deep);cursor:pointer;transition:background .15s,transform .12s;vertical-align:middle;flex:none;min-height:32px;}
+  .docx-btn:active{transform:scale(.95);background:var(--blue-tint);}
+  .docx-btn svg{flex:none;}
+  .docx-btn.loading{opacity:.6;pointer-events:none;}
+  .formula-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+  .formula-row .section-tag{margin-bottom:0;}
+
+  .score-chip{display:inline-flex;align-items:center;gap:5px;background:var(--purple-tint);color:var(--purple);font-size:12px;font-weight:700;border-radius:20px;padding:5px 12px;margin-bottom:12px;}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(10px);color:#fff;font-size:13.5px;font-weight:600;padding:12px 20px;border-radius:14px;z-index:500;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.32,.72,0,1);box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:88%;text-align:center;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media (min-width:600px){
+    .hero h1{font-size:30px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <h2>All About <span>Korea</span></h2>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-hr"></div>
+  <div class="nav-section">
+    <a class="nav-item active" href="https://www.businesskorean.com/">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+      Home
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/Study%20Korean/Study%20Korean.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>
+      Study Korean
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/Homestay/Homestay.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></span>
+      Homestay
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/Guided%20Tour/Guided%20Tour.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></span>
+      Guided Tour
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/Korea%20Travel/Korea%20Travel.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
+      Korea Travel
+    </a>
+    <a class="nav-item" href="https://www.businesskorean.com/payment.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0114 0v1"/></svg></span>
+      Pricing
+    </a>
+  </div>
+</div>
+
+<div class="topbar">
+  <button class="burger" id="burgerBtn" onclick="toggleDrawer()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <span class="topbar-title">🇰🇷 Study Korean</span>
+  <span class="topbar-sub">Intermediate</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOPIK Level 3–4 · 중급</div>
+  <h1>1장. 추측과 예상을 나타낼 때<br><span class="sub">Expressing Conjecture and Supposition</span></h1>
+</div>
+
+<div class="unit-tabs-wrap">
+  <button class="tabs-nav-btn hidden" id="tabsNavLeft" onclick="scrollTabs(-1)" aria-label="이전">‹</button>
+  <div class="unit-tabs" id="unitTabs">
+    <div class="unit-tab active" onclick="showUnit(0,this)">01 –아/어 보이다</div>
+    <div class="unit-tab" onclick="showUnit(1,this)">02 –(으)ㄴ/는 모양이다</div>
+    <div class="unit-tab" onclick="showUnit(2,this)">03 –(으)ㄹ 텐데</div>
+    <div class="unit-tab" onclick="showUnit(3,this)">04 –(으)ㄹ 테니까</div>
+    <div class="unit-tab" onclick="showUnit(4,this)">05 –(으)ㄹ걸요</div>
+    <div class="unit-tab" onclick="showUnit(5,this)">06 –(으)ㄹ 줄 몰랐다</div>
+    <div class="unit-tab" onclick="showUnit(6,this)">07 –(으)ㄹ지도 모르다</div>
+  </div>
+  <button class="tabs-nav-btn hidden" id="tabsNavRight" onclick="scrollTabs(1)" aria-label="다음">›</button>
+</div>
+
+<div class="grammar-list" id="grammarList"></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const UNITS = [
+  // ══════════════════ 01 : –아/어 보이다 ══════════════════
+  {
+    num:"01", level:"Based on Appearance · 외견으로 추측", title:"A–아/어 보이다",
+    formula:"A-아/어 보이다",
+    englishPatterns:[
+      "It looks A.",
+      "You/It seem(s) A.",
+      "Judging from how it looks, A."
+    ],
+    analogyExampleKr:"오늘 좀 피곤해 보여요.",
+    analogyExampleEn:"You look a bit tired today.",
+    similarKr:[
+      {expr:"-는 것 같다",note:"눈으로 본 것뿐 아니라 여러 정보를 종합해서 추측할 때도 쓸 수 있어서 '–아/어 보이다'보다 범위가 더 넓어요.",noteEn:"Broader than '–아/어 보이다' — it can be based on general reasoning, not just what you see.",
+       exampleKr:"표정을 보니 피곤한 것 같아요.",exampleEn:"Judging from your expression, you seem tired."}
+    ],
+    rules:[
+      {t:"형용사 어간 모음이 ㅏ,ㅗ면 –아 보이다, 그 외에는 –어 보이다", en:"If the adjective stem's last vowel is ㅏ or ㅗ, attach –아 보이다; otherwise attach –어 보이다.",
+       ex:"좋다 → 좋아 보이다 / 예쁘다 → 예뻐 보이다"},
+      {t:"'하다'로 끝나는 형용사는 모음조화와 상관없이 '하다 → 해'로 바뀌어 '해 보이다'가 됨", en:"For adjectives ending in '하다', the vowel-harmony rule doesn't apply — '하다' irregularly becomes '해', giving '해 보이다'.",
+       ex:"피곤하다 → 피곤해 보이다 / 깨끗하다 → 깨끗해 보이다 / 편하다 → 편해 보이다"},
+      {t:"형용사에만 사용, 동사에는 쓰지 않음", en:"Attaches only to adjective stems — it is not used with action verbs.",
+       ex:"바쁘다 → 바빠 보이다 (O) / 가다 → 가 보이다 (X)"},
+      {t:"실제로 확인한 것이 아니라 겉모습만으로 판단", en:"Expresses a judgment based only on outward appearance, not on a confirmed fact.",
+       ex:"오늘따라 기분이 좋아 보여요."},
+      {t:"ㅂ 불규칙 형용사는 '워' 형태로 바뀜", en:"ㅂ-irregular adjectives change to a '워' form before 보이다.",
+       ex:"어렵다 → 어려워 보이다 / 춥다 → 추워 보이다"},
+    ],
+    examples:[
+      {kr:"오늘따라 얼굴이 피곤해 보여요.", en:"You look more tired than usual today."},
+      {kr:"이 가방이 좀 비싸 보여요.", en:"This bag looks a bit expensive."},
+      {kr:"그 영화는 재미있어 보여서 보고 싶어요.", en:"That movie looks fun, so I want to watch it."},
+      {kr:"할머니께서 요즘 더 건강해 보이세요.", en:"Grandma looks healthier these days."},
+      {kr:"이 문제가 생각보다 어려워 보여요.", en:"This problem looks harder than I thought."},
+      {kr:"새로 산 소파가 정말 편해 보여요.", en:"The new sofa looks really comfortable."},
+      {kr:"그 사람은 나이보다 훨씬 젊어 보여요.", en:"That person looks much younger than their age."},
+      {kr:"오늘 날씨가 좀 쌀쌀해 보이네요.", en:"The weather looks a bit chilly today."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"형용사 어간의 마지막 모음이 'ㅏ'나 'ㅗ'이면 '아 보이다'를, 그 외의 모음이면 '어 보이다'를 붙여요.",
+         en:"If the last vowel of the adjective stem is ㅏ or ㅗ, attach '아 보이다'; for other vowels, attach '어 보이다.'",ans:true,
+         fbKr:"맞아요! 일반적인 아/어 모음조화 규칙을 그대로 따라요.",
+         fbEn:"Right! It follows the standard 아/어 vowel harmony rule."},
+        {krSentence:"'–아/어 보이다'는 '가다', '먹다'와 같은 동사에도 자유롭게 붙여서 쓸 수 있어요.",
+         en:"'-아/어 보이다' can be freely attached to verbs like 가다 or 먹다 as well.",ans:false,
+         fbKr:"아니에요. '–아/어 보이다'는 형용사에만 붙어요. 동사의 추측에는 다른 표현을 써요.",
+         fbEn:"No. '-아/어 보이다' only attaches to adjectives. A different expression is used for guessing about actions."},
+        {krSentence:"'–아/어 보이다'는 실제로 확인한 사실이 아니라 겉모습만 보고 판단한 느낌을 나타내요.",
+         en:"'-아/어 보이다' expresses a judgment based only on outward appearance, not a confirmed fact.",ans:true,
+         fbKr:"맞아요! 실제로는 다를 수도 있지만, 보이는 대로 추측하는 표현이에요.",
+         fbEn:"Right! The reality could be different — this expresses a guess based purely on how something looks."},
+      ],
+      sentence:[
+        {pre:"요즘 얼굴이 좀",suf:" 잘 쉬고 있는지 걱정이에요.",ans:"피곤해 보여서",hint:"피곤하다 + 아/어 보이다 + 서",en:"You look a bit tired these days, so I'm worried whether you're getting enough rest."},
+        {pre:"이 케이크가 정말",suf:" 하나 사고 싶어요.",ans:"맛있어 보여서",hint:"맛있다 + 아/어 보이다 + 서",en:"This cake looks so delicious that I want to buy one."},
+        {pre:"할머니께서 요즘 훨씬",suf:" 마음이 놓여요.",ans:"건강해 보여서",hint:"건강하다 + 아/어 보이다 + 서",en:"Grandma looks much healthier these days, so I feel relieved."},
+        {pre:"이 문제가 너무",suf:" 다른 사람한테 물어봤어요.",ans:"어려워 보여서",hint:"어렵다(ㅂ 불규칙) + 아/어 보이다 + 서",en:"This problem looked too difficult, so I asked someone else."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"저 사람 표정을 보니까 기분이 안 ____ 무슨 일 있는지 물어봐야겠어요.",
+         passageEn:"Judging from that person's expression, they don't look happy — I should ask if something's wrong.",
+         options:[
+           {text:"좋아 보여서",correct:true,filledKr:"저 사람 표정을 보니까 기분이 안 좋아 보여서 무슨 일 있는지 물어봐야겠어요.",filledEn:"Judging from that person's expression, they don't look happy, so I should ask if something's wrong.",noteKr:"표정이라는 겉모습을 보고 판단하는 상황이라 '–아/어 보이다'가 자연스러워요.",noteEn:"Since the judgment is based on their expression (appearance), '-아/어 보이다' fits naturally."},
+           {text:"좋지만",correct:false,demoKr:"이 카페는 분위기는 좋지만 커피 맛은 별로예요.",demoEn:"This cafe has a nice atmosphere, but the coffee isn't great.",noteKr:"'-지만'은 단순 대조라 추측의 뜻이 없어요.",noteEn:"'-지만' is plain contrast, without any sense of guessing."},
+           {text:"좋으니까",correct:false,demoKr:"오늘 기분이 좋으니까 맛있는 거 먹으러 가요.",demoEn:"Since I'm in a good mood today, let's go eat something delicious.",noteKr:"'-으니까'는 확인된 이유를 나타내서 겉모습 판단의 뉘앙스가 없어요.",noteEn:"'-으니까' shows a confirmed reason, without the appearance-based nuance."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 김치찌개 정말 ____ 저도 한 그릇 먹고 싶어요.",
+         passageEn:"This kimchi stew looks so delicious that I want a bowl too.",
+         options:[
+           {text:"맛있어 보여서",correct:true,filledKr:"이 김치찌개 정말 맛있어 보여서 저도 한 그릇 먹고 싶어요.",filledEn:"This kimchi stew looks so delicious that I want a bowl too.",noteKr:"음식의 겉모습을 보고 하는 판단이라 자연스러워요.",noteEn:"A judgment based on how the dish looks, so it fits naturally."},
+           {text:"맛있는데",correct:false,demoKr:"이 식당은 맛있는데 가격이 좀 비싸요.",demoEn:"This restaurant is delicious, but a bit pricey.",noteKr:"'-는데'는 배경 설명이나 대조라 이 문맥과 안 맞아요.",noteEn:"'-는데' gives background or contrast, not a fit here."},
+           {text:"맛있거든요",correct:false,demoKr:"거기 꼭 가 보세요. 진짜 맛있거든요.",demoEn:"You should really go there. It's genuinely delicious.",noteKr:"'-거든요'는 이미 아는 사실을 말해 줄 때 써서 겉모습 추측과 달라요.",noteEn:"'-거든요' shares an already-known fact, different from an appearance-based guess."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"할머니께서 요즘 훨씬 ____ 정말 다행이에요.",
+         passageEn:"Grandma looks much healthier these days — that's such a relief.",
+         options:[
+           {text:"건강해 보여서",correct:true,filledKr:"할머니께서 요즘 훨씬 건강해 보여서 정말 다행이에요.",filledEn:"Grandma looks much healthier these days, so that's such a relief.",noteKr:"실제로 확인한 건 아니지만 보이는 모습으로 판단하는 상황이에요.",noteEn:"Not a confirmed fact — a judgment based on how she looks."},
+           {text:"건강하셔서",correct:false,demoKr:"할머니께서 건강하셔서 우리 모두 안심이에요.",demoEn:"Since grandma is healthy, we're all relieved.",noteKr:"이건 실제로 건강하다는 확정된 사실을 말할 때 써요.",noteEn:"This states health as a confirmed fact, not a visual guess."},
+           {text:"건강하시면",correct:false,demoKr:"할머니께서 건강하시면 여행을 같이 갈 수 있어요.",demoEn:"If grandma is healthy, we can go traveling together.",noteKr:"'-으면'은 조건을 나타내서 안 맞아요.",noteEn:"'-으면' is conditional, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 문제가 생각보다 너무 ____ 다른 사람한테 물어봤어요.",
+         passageEn:"This problem looked so much harder than I expected, so I asked someone else.",
+         options:[
+           {text:"어려워 보여서",correct:true,filledKr:"이 문제가 생각보다 너무 어려워 보여서 다른 사람한테 물어봤어요.",filledEn:"This problem looked so much harder than I expected, so I asked someone else.",noteKr:"문제를 딱 봤을 때의 겉모습 판단이라 자연스러워요.",noteEn:"A judgment based on how the problem looked at first glance."},
+           {text:"어려운데도",correct:false,demoKr:"문제가 어려운데도 끝까지 혼자 풀었어요.",demoEn:"Even though the problem was hard, I solved it alone to the end.",noteKr:"'-는데도'는 양보를 나타내서 안 맞아요.",noteEn:"'-는데도' shows concession, not a fit."},
+           {text:"어려우면",correct:false,demoKr:"문제가 어려우면 선생님께 여쭤보세요.",demoEn:"If the problem is difficult, ask the teacher.",noteKr:"'-으면'은 조건을 나타내서 안 맞아요.",noteEn:"'-으면' is conditional, not a fit."},
+         ]},
+      ],
+      correction:[
+        {wrong:"그 사람은 정말 젊어 보다.",wrongEn:"That person really looks young.",ans:"그 사람은 정말 젊어 보여요.",ansEn:"That person really looks young."},
+        {wrong:"오늘 날씨가 춥어 보여요.",wrongEn:"The weather looks cold today.",ans:"오늘 날씨가 추워 보여요.",ansEn:"The weather looks cold today."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"오늘 민수 씨 표정이 좀 안 좋던데요.",en:"Minsu's expression looked a bit off today.",fill:false},
+        {who:"B",kr:"그러게요. 회사 일 때문에 많이 ___ 걱정이에요.",en:"I know. He looked so stressed because of work, I'm worried.",fill:true,base:"힘들다",hint:"힘들다 + 아/어 보이다",ans:"힘들어 보여서"},
+        {who:"A",kr:"그럼 오늘 저녁에 같이 밥이나 먹자고 할까요?",en:"Should we ask him to grab dinner together tonight then?",fill:false},
+        {who:"B",kr:"좋아요. 기분이 ___ 맛있는 거 사 줘야겠어요.",en:"Good idea. He looks down, so I should treat him to something delicious.",fill:true,base:"안 좋다",hint:"안 좋다 + 아/어 보이다",ans:"안 좋아 보여서"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"이 가방이 생각보다 __비싸 보여요__.",
+         sentenceEn:"This bag looks more expensive than I thought.",
+         options:[
+           {text:"비싼 것 같아요",correct:true,filledKr:"이 가방이 생각보다 비싼 것 같아요.",filledEn:"This bag seems more expensive than I thought.",noteKr:"'–는 것 같다'가 '–아/어 보이다'와 의미가 가장 가까워요.",noteEn:"'–는 것 같다' is closest in meaning to '-아/어 보이다.'"},
+           {text:"비싸기 때문이에요",correct:false,demoKr:"이 가방을 안 산 건 비싸기 때문이에요.",demoEn:"I didn't buy this bag because it's expensive.",noteKr:"'때문이다'는 이유를 나타내서 의미가 달라요.",noteEn:"'때문이다' shows a reason, a different meaning."},
+           {text:"비싸도 되는데",correct:false,demoKr:"이 정도는 비싸도 되는데 더 싼 것도 있어요.",demoEn:"It's fine even if it's this expensive, but there are cheaper ones too.",noteKr:"양보의 뜻이라 달라요.",noteEn:"Expresses concession, a different meaning."},
+           {text:"비싼 척했어요",correct:false,demoKr:"그 사람은 부자인 척했어요.",demoEn:"That person pretended to be rich.",noteKr:"'–는 척하다'는 '가장하다'라는 뜻이라 완전히 달라요.",noteEn:"'-는 척하다' means 'to pretend,' a completely different meaning."},
+         ]},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"여자",kr:"저 옷 가게 좀 보세요. 사람이 하나도 없네요."},
+           {who:"남자",kr:"그러게요. 장사가 잘 안 되나 봐요."},
+         ],
+         blankWho:"여자",
+         options:["네, 요즘 손님이 별로 없어 보여요.","네, 저 가게는 항상 손님이 많아 보여요.","저는 저 가게 옷이 다 예뻐 보여요.","저 가게 사장님이 친절해 보여요."],
+         optsEn:["Yeah, there don't seem to be many customers these days.","Yeah, that shop always seems to have a lot of customers.","I think all the clothes in that shop look pretty.","That shop's owner seems kind."],
+         ans:0,
+         fbKr:"가게에 사람이 없는 상황에 대한 대답이므로, 손님이 적어 보인다고 말하는 ①번이 가장 자연스러워요. 나머지는 상황과 맞지 않거나 다른 화제예요.",
+         fbEn:"Since this responds to the empty store, ① — noting there seem to be few customers — fits best. The others contradict the situation or shift to a different topic."},
+      ],
+    }
+  },
+  // ══════════════════ 02 : –(으)ㄴ/는 모양이다 ══════════════════
+  {
+    num:"02", level:"Guessing from a Situation · 상황 근거 추측", title:"V/A–(으)ㄴ/는 모양이다",
+    formula:"V-는/–(으)ㄴ 모양이다, A-(으)ㄴ 모양이다",
+    englishPatterns:[
+      "It looks like ~ (based on what I notice).",
+      "It seems that ~.",
+      "Judging from the situation, it must be that ~."
+    ],
+    analogyExampleKr:"길이 막히는 걸 보니 사고가 난 모양이에요.",
+    analogyExampleEn:"Seeing that the road is jammed, it looks like there's been an accident.",
+    similarKr:[
+      {expr:"-는 것 같다",note:"'–는 모양이다'보다 더 넓게 쓰이고, 뚜렷한 근거가 없어도 막연하게 추측할 때도 써요.",noteEn:"Used more broadly than '-는 모양이다' — it can express a vague guess even without clear evidence.",
+       exampleKr:"길이 막히는 걸 보니 사고가 난 것 같아요.",exampleEn:"Seeing the traffic, it seems like there's been an accident."}
+    ],
+    rules:[
+      {t:"동사 현재는 –는 모양이다", en:"For a present action, attach –는 모양이다 to the verb stem.",
+       ex:"오다 → 오는 모양이다"},
+      {t:"동사 과거는 –(으)ㄴ 모양이다", en:"For a completed action, attach –(으)ㄴ 모양이다 to the verb stem.",
+       ex:"오다 → 온 모양이다"},
+      {t:"형용사와 '이다'는 –(으)ㄴ 모양이다 / 인 모양이다", en:"Adjectives take –(으)ㄴ 모양이다, and nouns take 인 모양이다.",
+       ex:"바쁘다 → 바쁜 모양이다 / 학생 → 학생인 모양이다"},
+      {t:"눈에 보이는 근거를 바탕으로 한 추측", en:"Unlike a pure guess, this expresses an inference drawn from some observable evidence or situation.",
+       ex:"우산을 쓰고 오는 걸 보니 비가 오는 모양이에요."},
+    ],
+    examples:[
+      {kr:"우산을 쓰고 오는 걸 보니 비가 오는 모양이에요.", en:"Seeing people come in with umbrellas, it looks like it's raining."},
+      {kr:"전화를 안 받는 걸 보니 바쁜 모양이에요.", en:"Since he's not picking up, he must be busy."},
+      {kr:"불이 꺼진 걸 보니 다들 퇴근한 모양이에요.", en:"The lights are off, so it looks like everyone's gone home."},
+      {kr:"사람들이 줄을 서 있는 걸 보니 여기가 유명한 식당인 모양이에요.", en:"People are lining up, so this must be a famous restaurant."},
+      {kr:"얼굴이 빨개진 걸 보니 화가 난 모양이에요.", en:"Their face turned red, so they must be angry."},
+      {kr:"짐을 다 싼 걸 보니 이사 가는 모양이에요.", en:"All the boxes are packed, so it looks like they're moving."},
+      {kr:"표정이 밝은 걸 보니 시험을 잘 본 모양이에요.", en:"Their expression is bright, so it seems they did well on the exam."},
+      {kr:"가게 문이 닫혀 있는 걸 보니 오늘 쉬는 날인 모양이에요.", en:"The shop's shutters are down, so it must be a day off today."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"동사의 현재 상황을 추측할 때는 '–는 모양이다', 이미 끝난 일을 추측할 때는 '–(으)ㄴ 모양이다'를 써요.",
+         en:"For guessing about a present verb situation, use '-는 모양이다'; for something already finished, use '-(으)ㄴ 모양이다.'",ans:true,
+         fbKr:"맞아요! 동사는 현재와 과거의 형태가 서로 달라요.",
+         fbEn:"Right! The verb form differs for present and past."},
+        {krSentence:"명사 뒤에는 '모양이다'를 바로 붙여요. 예를 들어 '학생 모양이다'처럼 써요.",
+         en:"With a noun, '모양이다' is attached directly — for example, '학생 모양이다.'",ans:false,
+         fbKr:"아니에요. 명사 뒤에는 '이다'를 넣어서 '학생인 모양이다'처럼 써야 해요.",
+         fbEn:"No. With nouns you need '이다' first, giving '학생인 모양이다.'"},
+        {krSentence:"'–(으)ㄴ/는 모양이다'는 아무 근거 없이 그냥 막연하게 짐작할 때 주로 사용해요.",
+         en:"'-(으)ㄴ/는 모양이다' is mainly used to make a vague guess with no evidence at all.",ans:false,
+         fbKr:"아니에요. 이 표현은 눈으로 보거나 들은 근거를 바탕으로 추측할 때 사용해요.",
+         fbEn:"No. This expression is used when the guess is based on some observable evidence."},
+      ],
+      sentence:[
+        {pre:"다들 우산을 쓰고 오는 걸 보니 밖에 비가",suf:" 창문 좀 열지 말아야겠어요.",ans:"오는 모양이에요",hint:"오다 + 는 모양이다",en:"Seeing everyone come in with umbrellas, it must be raining outside — I'd better not open the window."},
+        {pre:"전화를 몇 번이나 걸었는데 안 받는 걸 보니",suf:" 나중에 다시 걸어야겠어요.",ans:"바쁜 모양이에요",hint:"바쁘다 + (으)ㄴ 모양이다",en:"I've called several times and he's not picking up — he must be busy, I'll call again later."},
+        {pre:"사무실에 불이 다 꺼진 걸 보니 다들",suf:" 저도 이제 퇴근할게요.",ans:"퇴근한 모양이에요",hint:"퇴근하다 + (으)ㄴ 모양이다",en:"The office lights are all off, so it looks like everyone's gone home — I'll head out too."},
+        {pre:"이 가게 앞에 항상 줄이 긴 걸 보니 여기가",suf:" 저희도 한번 먹어 봐요.",ans:"유명한 식당인 모양이에요",hint:"식당(명사) + 인 모양이다",en:"There's always a long line in front of this place, so it must be a famous restaurant — let's try it too."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"아이들이 조용한 걸 보니 다들 낮잠을 ____ 살짝 들어가 볼게요.",
+         passageEn:"The kids are so quiet — it looks like they're all taking a nap. I'll go peek in quietly.",
+         options:[
+           {text:"자는 모양이에요",correct:true,filledKr:"아이들이 조용한 걸 보니 다들 낮잠을 자는 모양이에요.",filledEn:"The kids are so quiet — it looks like they're all taking a nap.",noteKr:"조용하다는 관찰(근거)을 바탕으로 한 추측이라 자연스러워요.",noteEn:"An evidence-based inference from the observed quiet, so it fits naturally."},
+           {text:"자기 때문에",correct:false,demoKr:"아이들이 낮잠을 자기 때문에 집이 조용해요.",demoEn:"The house is quiet because the kids are napping.",noteKr:"원인과 결과의 순서가 반대라 이 문맥과 안 맞아요.",noteEn:"Reverses cause and effect, so it doesn't fit here."},
+           {text:"자도록",correct:false,demoKr:"아이들이 잘 자도록 불을 꺼 줬어요.",demoEn:"I turned off the light so the kids could sleep well.",noteKr:"'-도록'은 목적을 나타내서 추측이 아니에요.",noteEn:"'-도록' shows purpose, not a guess."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"저 집 마당에 짐이 잔뜩 쌓여 있는 걸 보니 곧 ____ 인사라도 드리러 가야겠어요.",
+         passageEn:"Their yard is piled with boxes — it looks like they're moving soon. I should go say hello.",
+         options:[
+           {text:"이사 가는 모양이에요",correct:true,filledKr:"저 집 마당에 짐이 잔뜩 쌓여 있는 걸 보니 곧 이사 가는 모양이에요.",filledEn:"Their yard is piled with boxes — it looks like they're moving soon.",noteKr:"짐이 쌓인 모습을 근거로 한 추측이에요.",noteEn:"An inference based on the piled-up boxes as evidence."},
+           {text:"이사 가느라",correct:false,demoKr:"이사 가느라 요즘 정신이 없어요.",demoEn:"I've been so busy lately because of moving.",noteKr:"'-느라'는 바쁜 이유를 나타내서 안 맞아요.",noteEn:"'-느라' shows the reason for being busy, not a fit here."},
+           {text:"이사 갈 텐데",correct:false,demoKr:"내일 이사 갈 텐데 오늘은 좀 쉬세요.",demoEn:"You'll probably be moving tomorrow, so rest a bit today.",noteKr:"'–(으)ㄹ 텐데'는 보통 조언이 뒤따르는 다른 종류의 추측이라 안 맞아요.",noteEn:"'-(으)ㄹ 텐데' is a different kind of supposition usually followed by advice, not a fit here."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"얼굴빛이 안 좋고 기침도 계속하는 걸 보니 ____ 병원에 가 보라고 해야겠어요.",
+         passageEn:"Their complexion looks bad and they keep coughing — they must be sick. I should tell them to see a doctor.",
+         options:[
+           {text:"아픈 모양이에요",correct:true,filledKr:"얼굴빛이 안 좋고 기침도 계속하는 걸 보니 아픈 모양이에요.",filledEn:"Their complexion looks bad and they keep coughing — they must be sick.",noteKr:"안색과 기침이라는 근거를 바탕으로 한 추측이에요.",noteEn:"An inference based on complexion and coughing as evidence."},
+           {text:"아파서",correct:false,demoKr:"어제 너무 아파서 하루 종일 누워 있었어요.",demoEn:"I was so sick yesterday that I lay down all day.",noteKr:"'-아서'는 이유를 나타내서 이 문맥과 안 맞아요.",noteEn:"'-아서' shows reason, not a fit here."},
+           {text:"아픈데도",correct:false,demoKr:"몸이 아픈데도 회사에 나갔어요.",demoEn:"Even though I was sick, I went to work.",noteKr:"'-는데도'는 양보를 나타내서 추측이 아니에요.",noteEn:"'-는데도' shows concession, not a guess."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"교실에 아무도 없고 불도 꺼져 있는 걸 보니 수업이 벌써 ____ 그냥 돌아가야겠어요.",
+         passageEn:"The classroom is empty and the lights are off — class must have already ended. I guess I should just head back.",
+         options:[
+           {text:"끝난 모양이에요",correct:true,filledKr:"교실에 아무도 없고 불도 꺼져 있는 걸 보니 수업이 벌써 끝난 모양이에요.",filledEn:"The classroom is empty and the lights are off — class must have already ended.",noteKr:"빈 교실과 꺼진 불이라는 근거를 바탕으로 한 추측이에요.",noteEn:"An inference based on the empty room and turned-off lights."},
+           {text:"끝나기 전에",correct:false,demoKr:"수업이 끝나기 전에 미리 나왔어요.",demoEn:"I left before class ended.",noteKr:"추측이 아니라 시간 순서를 나타내요.",noteEn:"Doesn't express a guess — just a time sequence."},
+           {text:"끝나거든요",correct:false,demoKr:"이 수업은 항상 정시에 끝나거든요.",demoEn:"This class always ends right on time, you know.",noteKr:"'-거든요'는 이미 아는 사실을 알려 줄 때 써서 지금의 근거 추측과 달라요.",noteEn:"'-거든요' shares an already-known fact, not the same as an evidence-based guess right now."},
+         ]},
+      ],
+      correction:[
+        {wrong:"불이 다 꺼진 걸 보니 다들 잔 모양이예요.",wrongEn:"The lights are all off, so it looks like everyone's asleep.",ans:"불이 다 꺼진 걸 보니 다들 자는 모양이에요.",ansEn:"The lights are all off, so it looks like everyone's asleep."},
+        {wrong:"저 사람 표정을 보니 화가 나은 모양이에요.",wrongEn:"Judging from his expression, he seems to be angry.",ans:"저 사람 표정을 보니 화가 난 모양이에요.",ansEn:"Judging from his expression, he seems to be angry."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"오늘 민수 씨가 계속 한숨을 쉬네요.",en:"Minsu keeps sighing today.",fill:false},
+        {who:"B",kr:"그러게요. 회사에 무슨 안 좋은 일이 ___ 나중에 물어봐야겠어요.",en:"I know. It seems like something bad happened at work — I'll ask him later.",fill:true,base:"있다",hint:"있다 + 는 모양이다",ans:"있는 모양이에요"},
+        {who:"A",kr:"저도 그렇게 생각했어요. 얼굴빛도 좀 안 좋아 보였어요.",en:"I thought so too. His complexion looked off as well.",fill:false},
+        {who:"B",kr:"맞아요. 며칠 잠도 잘 못 ___ 얼굴이 많이 피곤해 보였어요.",en:"Right. It looks like he hasn't been sleeping well for days — he looked really tired.",fill:true,base:"자다",hint:"못 자다 + (으)ㄴ 모양이다",ans:"잔 모양이에요"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"다들 우산을 쓰고 오는 걸 보니 __비가 오는 모양이에요__.",
+         sentenceEn:"Seeing everyone come in with umbrellas, it seems to be raining.",
+         options:[
+           {text:"비가 오나 봐요",correct:true,filledKr:"다들 우산을 쓰고 오는 걸 보니 비가 오나 봐요.",filledEn:"Seeing everyone come in with umbrellas, it seems to be raining.",noteKr:"'–나 보다'도 근거를 바탕으로 한 추측이라 의미가 가장 비슷해요.",noteEn:"'-나 보다' also expresses an evidence-based guess, closest in meaning."},
+           {text:"비가 오기 마련이에요",correct:false,demoKr:"봄에는 가끔 비가 오기 마련이에요.",demoEn:"It's only natural for it to rain sometimes in spring.",noteKr:"'–기 마련이다'는 당연한 일이라는 뜻이라 달라요.",noteEn:"'-기 마련이다' means 'it's only natural,' a different meaning."},
+           {text:"비가 오는 대로",correct:false,demoKr:"비가 오는 대로 바로 출발합시다.",demoEn:"Let's leave as soon as it starts raining.",noteKr:"'–는 대로'는 '~하자마자'라는 뜻이라 달라요.",noteEn:"'-는 대로' means 'as soon as,' a different meaning."},
+           {text:"비가 오는 척해요",correct:false,demoKr:"그 사람은 아픈 척했어요.",demoEn:"That person pretended to be sick.",noteKr:"'–는 척하다'는 '가장하다'라는 뜻이라 완전히 달라요.",noteEn:"'-는 척하다' means 'to pretend,' a completely different meaning."},
+         ]},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 남자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the man.",
+         lines:[
+           {who:"남자",kr:"수미 씨, 옆집이 요즘 너무 조용하지 않아요?"},
+           {who:"여자",kr:"그러고 보니 그러네요. 무슨 일 있나요?"},
+         ],
+         blankWho:"남자",
+         options:["짐이 다 빠진 걸 보니 이사 간 모양이에요.","옆집은 원래 시끄러운 편이에요.","저는 요즘 낮에 집에 없어서 잘 몰라요.","이 동네는 대체로 조용한 곳이에요."],
+         optsEn:["Seeing that all the belongings are gone, it looks like they moved out.","That house is usually noisy, actually.","I haven't been home much during the day lately, so I don't really know.","This neighborhood is generally a quiet place."],
+         ans:0,
+         fbKr:"'조용하다'는 관찰에 대해 이유를 근거를 들어 추측하는 대답이 자연스러우므로 ①번이 가장 적절해요. 나머지는 질문에 대한 직접적인 답이 아니에요.",
+         fbEn:"Since the natural reply gives an evidence-based guess for why it's quiet, ① fits best. The others don't directly answer the question."},
+      ],
+    }
+  },
+  // ══════════════════ 03 : –(으)ㄹ 텐데 ══════════════════
+  {
+    num:"03", level:"Supposition + Related Comment · 추측과 뒷말", title:"V/A–(으)ㄹ 텐데",
+    formula:"V/A-(으)ㄹ 텐데 (~), N일 텐데",
+    englishPatterns:[
+      "I suppose/expect ~, so ~.",
+      "It's probably ~, but ~.",
+      "I'd guess ~ — (so/but) ~."
+    ],
+    analogyExampleKr:"밖에 비가 올 텐데 우산 가져가세요.",
+    analogyExampleEn:"I expect it'll rain outside, so take an umbrella.",
+    similarKr:[
+      {expr:"–(으)ㄹ 것 같은데",note:"의미가 비슷하지만 '–(으)ㄹ 텐데'가 좀 더 확신에 찬 추측을 나타내요.",noteEn:"Similar in meaning, but '-(으)ㄹ 텐데' expresses a more confident supposition.",
+       exampleKr:"밖에 비가 올 것 같은데 우산 가져가세요.",exampleEn:"It seems like it might rain outside, so take an umbrella."}
+    ],
+    rules:[
+      {t:"받침 없으면 –ㄹ 텐데, 받침 있으면 –을 텐데", en:"Vowel-ending stems take –ㄹ 텐데; consonant-ending stems take –을 텐데.",
+       ex:"오다 → 올 텐데 / 먹다 → 먹을 텐데"},
+      {t:"추측 뒤에 관련된 걱정, 제안, 조언이 이어짐", en:"The supposition is usually followed by a related worry, suggestion, or piece of advice.",
+       ex:"길이 막힐 텐데 일찍 출발하세요."},
+      {t:"아마와 자주 함께 사용", en:"Often paired with 아마 (\"probably\") at the start of the sentence.",
+       ex:"아마 지금쯤 도착했을 텐데 연락이 없네요."},
+      {t:"과거 추측은 –았/었을 텐데", en:"For a past supposition, use –았/었을 텐데.",
+       ex:"많이 힘들었을 텐데 고생하셨어요."},
+    ],
+    examples:[
+      {kr:"밖에 비가 올 텐데 우산 가져가세요.", en:"I expect it'll rain outside, so take an umbrella."},
+      {kr:"길이 많이 막힐 텐데 조금 일찍 출발하는 게 어때요?", en:"The roads will probably be jammed, so why not leave a bit earlier?"},
+      {kr:"아마 지금쯤 회의가 끝났을 텐데 왜 연락이 없을까요?", en:"The meeting has probably ended by now — I wonder why there's no word."},
+      {kr:"이 시간엔 사람이 많을 텐데 예약하고 가는 게 낫겠어요.", en:"It'll probably be crowded at this time, so we'd better make a reservation."},
+      {kr:"많이 피곤하셨을 텐데 좀 쉬세요.", en:"You must have been very tired, so please get some rest."},
+      {kr:"혼자 옮기기 무거울 텐데 도와드릴게요.", en:"It'll probably be too heavy to move alone, so let me help you."},
+      {kr:"지금 출발해도 늦을 텐데 택시를 타는 게 좋겠어요.", en:"Even if you leave now, you'll probably be late, so it'd be best to take a taxi."},
+      {kr:"이 옷은 좀 작을 텐데 큰 사이즈로 바꿔 드릴까요?", en:"This clothing will probably be a bit small — shall I exchange it for a bigger size?"},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"동사·형용사 어간에 받침이 없으면 'ㄹ 텐데', 받침이 있으면 '을 텐데'를 붙여요.",
+         en:"For a vowel-ending stem, attach 'ㄹ 텐데'; for a consonant-ending stem, attach '을 텐데.'",ans:true,
+         fbKr:"맞아요! 받침 유무에 따라 형태가 달라져요.",
+         fbEn:"Right! The form changes depending on whether the stem ends in a consonant."},
+        {krSentence:"'–(으)ㄹ 텐데' 뒤에는 보통 앞의 추측과 관련된 걱정이나 제안이 이어져요.",
+         en:"'-(으)ㄹ 텐데' is usually followed by a related worry or suggestion that connects to the supposition.",ans:true,
+         fbKr:"맞아요! 그냥 추측으로 끝나지 않고, 관련된 말이 자연스럽게 이어져요.",
+         fbEn:"Right! It doesn't just end with the guess — a related comment naturally follows."},
+        {krSentence:"'–(으)ㄹ 텐데'는 과거의 일을 추측할 때는 절대 사용할 수 없어요.",
+         en:"'-(으)ㄹ 텐데' can never be used to guess about a past event.",ans:false,
+         fbKr:"아니에요. 과거를 추측할 때는 '–았/었을 텐데'로 써요.",
+         fbEn:"No. For a past supposition, use '-았/었을 텐데.'"},
+      ],
+      sentence:[
+        {pre:"밖에 비가",suf:" 우산 챙겨 가세요.",ans:"올 텐데",hint:"오다 + (으)ㄹ 텐데",en:"It'll probably rain outside, so bring an umbrella."},
+        {pre:"이 시간엔 길이 많이",suf:" 조금 더 일찍 출발하는 게 좋겠어요.",ans:"막힐 텐데",hint:"막히다 + (으)ㄹ 텐데",en:"The roads will probably be very jammed at this time, so it's better to leave a bit earlier."},
+        {pre:"어제 밤새 일하느라",suf:" 오늘은 일찍 들어가서 쉬세요.",ans:"힘드셨을 텐데",hint:"힘들다(존대,과거) + 았/었을 텐데",en:"You must have been exhausted from working all night — go home early and rest today."},
+        {pre:"혼자 옮기기",suf:" 제가 좀 도와드릴게요.",ans:"무거울 텐데",hint:"무겁다(ㅂ 불규칙) + (으)ㄹ 텐데",en:"It'll probably be too heavy to carry alone, so let me help you."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 시간엔 식당에 사람이 많이 ____ 미리 예약하고 가는 게 낫겠어요.",
+         passageEn:"It'll probably be crowded at the restaurant at this time, so it'd be better to make a reservation first.",
+         options:[
+           {text:"많을 텐데",correct:true,filledKr:"이 시간엔 식당에 사람이 많이 많을 텐데 미리 예약하고 가는 게 낫겠어요.",filledEn:"It'll probably be crowded at the restaurant at this time, so it'd be better to make a reservation first.",noteKr:"추측 뒤에 제안이 이어지는 전형적인 형태예요.",noteEn:"A typical pattern of supposition followed by a suggestion."},
+           {text:"많은데도",correct:false,demoKr:"사람이 많은데도 자리를 금방 찾았어요.",demoEn:"Even though it was crowded, we found a seat quickly.",noteKr:"'-는데도'는 양보를 나타내서 안 맞아요.",noteEn:"'-는데도' shows concession, not a fit."},
+           {text:"많거든요",correct:false,demoKr:"주말에는 이 식당에 사람이 항상 많거든요.",demoEn:"This restaurant is always crowded on weekends, you know.",noteKr:"'-거든요'는 이미 아는 사실을 알려 줄 때 써서 추측+제안의 흐름과 달라요.",noteEn:"'-거든요' shares an already-known fact, different from a supposition leading to advice."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"아마 지금쯤 비행기가 ____ 공항에 마중 나갈까요?",
+         passageEn:"The plane has probably landed by now — should we head to the airport to pick them up?",
+         options:[
+           {text:"도착했을 텐데",correct:true,filledKr:"아마 지금쯤 비행기가 도착했을 텐데 공항에 마중 나갈까요?",filledEn:"The plane has probably landed by now — should we head to the airport to pick them up?",noteKr:"과거 상황에 대한 추측이라 '–았/었을 텐데'를 써요.",noteEn:"A supposition about a past event, so '-았/었을 텐데' is used."},
+           {text:"도착하는 대로",correct:false,demoKr:"도착하는 대로 전화 주세요.",demoEn:"Call me as soon as you arrive.",noteKr:"'–는 대로'는 '~하자마자'라는 뜻이라 안 맞아요.",noteEn:"'-는 대로' means 'as soon as,' not a fit."},
+           {text:"도착하더라도",correct:false,demoKr:"조금 늦게 도착하더라도 걱정하지 마세요.",demoEn:"Even if you arrive a bit late, don't worry.",noteKr:"'-더라도'는 양보를 나타내서 안 맞아요.",noteEn:"'-더라도' shows concession, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"지금 나가도 회의에 ____ 택시를 타는 게 낫겠어요.",
+         passageEn:"Even leaving now, we'll probably be late for the meeting, so we'd better take a taxi.",
+         options:[
+           {text:"늦을 텐데",correct:true,filledKr:"지금 나가도 회의에 늦을 텐데 택시를 타는 게 낫겠어요.",filledEn:"Even leaving now, we'll probably be late for the meeting, so we'd better take a taxi.",noteKr:"추측 뒤에 대안을 제시하는 자연스러운 흐름이에요.",noteEn:"A natural flow of supposition followed by an alternative."},
+           {text:"늦어서",correct:false,demoKr:"길이 막혀서 회의에 늦어서 죄송합니다.",demoEn:"I'm sorry I'm late for the meeting because of traffic.",noteKr:"'-어서'는 이미 벌어진 일의 이유라 안 맞아요.",noteEn:"'-어서' explains the reason for something that already happened, not a fit."},
+           {text:"늦더라도",correct:false,demoKr:"조금 늦더라도 꼭 오세요.",demoEn:"Even if you're a bit late, please make sure to come.",noteKr:"'-더라도'는 양보를 나타내서 안 맞아요.",noteEn:"'-더라도' shows concession, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"어제 밤새 일하느라 많이 ____ 오늘은 일찍 퇴근하세요.",
+         passageEn:"You must have been so exhausted from working through the night — please leave work early today.",
+         options:[
+           {text:"피곤하셨을 텐데",correct:true,filledKr:"어제 밤새 일하느라 많이 피곤하셨을 텐데 오늘은 일찍 퇴근하세요.",filledEn:"You must have been so exhausted from working through the night — please leave work early today.",noteKr:"확인되지 않은 상태에 대한 추측이라 '–(으)ㄹ 텐데'가 자연스러워요.",noteEn:"A supposition about an unconfirmed state, so '-(으)ㄹ 텐데' fits naturally."},
+           {text:"피곤하시니까",correct:false,demoKr:"피곤하시니까 오늘은 일찍 주무세요.",demoEn:"Since you're tired, please go to bed early today.",noteKr:"'-으니까'는 확인된 이유를 말할 때 자연스럽고, 확실하지 않은 추측에는 '–(으)ㄹ 텐데'가 더 어울려요.",noteEn:"'-으니까' fits a confirmed reason; for an unconfirmed guess, '-(으)ㄹ 텐데' is more natural."},
+           {text:"피곤하시더니",correct:false,demoKr:"어제는 피곤하시더니 오늘은 괜찮아 보이시네요.",demoEn:"You seemed tired yesterday, but you look fine today.",noteKr:"'-더니'는 직접 관찰한 과거 상태를 보고할 때 써서 이 문맥과 안 맞아요.",noteEn:"'-더니' reports a directly observed past state, not a fit here."},
+         ]},
+      ],
+      correction:[
+        {wrong:"길이 막힐 튼데 일찍 출발하세요.",wrongEn:"The roads will probably be jammed, so leave early.",ans:"길이 막힐 텐데 일찍 출발하세요.",ansEn:"The roads will probably be jammed, so leave early."},
+        {wrong:"많이 힘드셨을 텐대 고생하셨어요.",wrongEn:"You must have been very tired — thanks for your hard work.",ans:"많이 힘드셨을 텐데 고생하셨어요.",ansEn:"You must have been very tired — thanks for your hard work."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"내일 아침 일찍 출발해야 하는데 걱정이에요.",en:"I have to leave early tomorrow morning, and I'm worried.",fill:false},
+        {who:"B",kr:"그 시간엔 길이 많이 ___ 30분 정도 여유 있게 나가는 게 좋겠어요.",en:"The roads will probably be really jammed at that time, so it'd be good to leave with about 30 minutes to spare.",fill:true,base:"막히다",hint:"막히다 + (으)ㄹ 텐데",ans:"막힐 텐데"},
+        {who:"A",kr:"그러네요. 저녁까지 도착하려면 서둘러야겠어요.",en:"You're right. I'll need to hurry to arrive by evening.",fill:false},
+        {who:"B",kr:"네, 오늘 하루 종일 운전하시면 많이 ___ 중간에 좀 쉬면서 가세요.",en:"Right, driving all day today will probably be exhausting — take some breaks along the way.",fill:true,base:"피곤하다",hint:"피곤하다(존대) + (으)ㄹ 텐데",ans:"피곤하실 텐데"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"많이 __피곤하셨을 텐데__ 오늘은 일찍 들어가서 쉬세요.",
+         sentenceEn:"You must have been so tired — please go home and rest early today.",
+         options:[
+           {text:"피곤하셨을 것 같은데",correct:true,filledKr:"많이 피곤하셨을 것 같은데 오늘은 일찍 들어가서 쉬세요.",filledEn:"You seem like you must have been so tired — please go home and rest early today.",noteKr:"'–(으)ㄹ 것 같은데'가 의미와 뒤 문장 구조까지 가장 비슷해요.",noteEn:"'-(으)ㄹ 것 같은데' is closest in both meaning and the following sentence structure."},
+           {text:"피곤하시기 때문에",correct:false,demoKr:"몸이 피곤하시기 때문에 무리하지 마세요.",demoEn:"Since you're tired, please don't overdo it.",noteKr:"확정된 이유를 나타내서 추측의 뉘앙스가 없어요.",noteEn:"States a confirmed reason, lacking the supposition nuance."},
+           {text:"피곤하신 대신에",correct:false,demoKr:"이 일은 힘든 대신에 보수가 좋아요.",demoEn:"This job is hard, but in exchange the pay is good.",noteKr:"'–는 대신에'는 '대가로'라는 뜻이라 완전히 달라요.",noteEn:"'-는 대신에' means 'in exchange for,' a completely different meaning."},
+           {text:"피곤하신 나머지",correct:false,demoKr:"너무 피곤한 나머지 자리에서 그대로 잠들었어요.",demoEn:"I was so tired that I fell asleep right where I was.",noteKr:"'–는 나머지'는 '~한 결과'라는 뜻이라 달라요.",noteEn:"'-는 나머지' means 'as a result of being so ~,' a different meaning."},
+         ]},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"여자",kr:"저녁에 눈이 많이 온다고 하던데 어떻게 하죠?"},
+           {who:"남자",kr:"그러게요, 길이 미끄러울 것 같은데 걱정이네요."},
+         ],
+         blankWho:"여자",
+         options:["그럼 차 대신 지하철을 타는 게 안전할 텐데 그렇게 할까요?","눈이 안 올 텐데 걱정하지 마세요.","저는 원래 눈을 좋아하는 편이에요.","내일은 날씨가 맑을 텐데 다행이에요."],
+         optsEn:["Then it'd probably be safer to take the subway instead of driving — should we do that?","It probably won't snow, so don't worry.","I actually like snow.","It'll probably be clear tomorrow, which is a relief."],
+         ans:0,
+         fbKr:"길이 미끄러울 거라는 걱정에 대한 대답으로 대안을 제시하는 ①번이 가장 자연스러워요. 나머지는 상황과 맞지 않거나 반대되는 내용이에요.",
+         fbEn:"① naturally responds to the worry about slippery roads by suggesting an alternative. The others don't match the situation or contradict it."},
+      ],
+    }
+  },
+  // ══════════════════ 04 : –(으)ㄹ 테니까 ══════════════════
+  {
+    num:"04", level:"Intention or Supposition + Advice · 의지·추측과 제안", title:"V/A–(으)ㄹ 테니까",
+    formula:"V-(으)ㄹ 테니까 (제가 ~할게요/~하세요)",
+    englishPatterns:[
+      "I'll surely ~, so (you) ~.",
+      "It'll probably be ~, so ~.",
+      "Since I'm going to ~, ~."
+    ],
+    analogyExampleKr:"제가 운전할 테니까 좀 쉬세요.",
+    analogyExampleEn:"I'll drive, so please get some rest.",
+    similarKr:[
+      {expr:"-(으)ㄹ 테니",note:"'–(으)ㄹ 테니까'를 조금 더 짧게 줄인 형태로, 의미와 쓰임이 거의 같아요.",noteEn:"A slightly shortened form of '-(으)ㄹ 테니까,' nearly identical in meaning and use.",
+       exampleKr:"제가 운전할 테니 좀 쉬세요.",exampleEn:"I'll drive, so please get some rest."}
+    ],
+    rules:[
+      {t:"1인칭 주어 + 의지: '제가 ~할 테니까'", en:"With a first-person subject, it expresses the speaker's firm intention, followed by a request or suggestion for the listener.",
+       ex:"제가 도와드릴 테니까 걱정하지 마세요."},
+      {t:"3인칭/사물 주어 + 추측: '~일/할 테니까'", en:"With a third-person or non-human subject, it expresses a confident supposition, also followed by advice.",
+       ex:"이 시간엔 사람이 많을 테니까 예약하세요."},
+      {t:"받침 없으면 –ㄹ 테니까, 받침 있으면 –을 테니까", en:"Vowel-ending stems take –ㄹ 테니까; consonant-ending stems take –을 테니까.",
+       ex:"가다 → 갈 테니까 / 먹다 → 먹을 테니까"},
+      {t:"뒤 문장에 청유·명령이 자주 옴", en:"The following clause is often a suggestion (-읍시다/-으세요) or a command, since the speaker is offering a reason for it.",
+       ex:"제가 살 테니까 마음껏 드세요."},
+    ],
+    examples:[
+      {kr:"제가 운전할 테니까 좀 쉬세요.", en:"I'll drive, so please get some rest."},
+      {kr:"오늘은 제가 살 테니까 마음껏 드세요.", en:"I'll treat you today, so eat as much as you like."},
+      {kr:"곧 도착할 테니까 조금만 기다려 주세요.", en:"I'll be there soon, so please wait just a bit."},
+      {kr:"이 시간엔 사람이 많을 테니까 미리 예약하세요.", en:"It'll probably be crowded at this time, so make a reservation in advance."},
+      {kr:"제가 자료를 준비할 테니까 발표는 맡아 주세요.", en:"I'll prepare the materials, so please take charge of the presentation."},
+      {kr:"날씨가 추울 테니까 옷을 따뜻하게 입으세요.", en:"It'll probably be cold, so dress warmly."},
+      {kr:"이 문제는 제가 해결할 테니까 걱정하지 마세요.", en:"I'll take care of this problem, so don't worry."},
+      {kr:"짐이 무거울 테니까 제가 대신 들게요.", en:"The luggage will probably be heavy, so let me carry it instead."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"주어가 '나/저'일 때는 '–(으)ㄹ 테니까'가 화자의 강한 의지를 나타내요.",
+         en:"When the subject is 'I,' '-(으)ㄹ 테니까' expresses the speaker's firm intention.",ans:true,
+         fbKr:"맞아요! 화자가 직접 하겠다는 다짐을 나타내고 뒤에 제안이 이어져요.",
+         fbEn:"Right! It shows the speaker's own resolve, followed by a suggestion."},
+        {krSentence:"'–(으)ㄹ 테니까' 뒤에는 항상 과거형만 올 수 있어요.",
+         en:"'-(으)ㄹ 테니까' can only ever be followed by a past-tense clause.",ans:false,
+         fbKr:"아니에요. 뒤에는 보통 제안이나 명령, 부탁 등이 와요.",
+         fbEn:"No. It's usually followed by a suggestion, command, or request."},
+        {krSentence:"주어가 사람이 아니거나 3인칭일 때는 '–(으)ㄹ 테니까'가 의지가 아니라 추측을 나타내요.",
+         en:"When the subject is non-human or third-person, '-(으)ㄹ 테니까' expresses a supposition rather than intention.",ans:true,
+         fbKr:"맞아요! 이때는 확신에 찬 추측이라는 의미가 돼요.",
+         fbEn:"Right! In that case it functions as a confident guess."},
+      ],
+      sentence:[
+        {pre:"제가 먼저",suf:" 뒤따라오세요.",ans:"갈 테니까",hint:"가다 + (으)ㄹ 테니까",en:"I'll go first, so follow along behind me."},
+        {pre:"오늘 저녁은 제가",suf:" 편하게 드세요.",ans:"살 테니까",hint:"사다 + (으)ㄹ 테니까",en:"I'll treat you to dinner tonight, so eat comfortably."},
+        {pre:"주말이라 사람이 많이",suf:" 지금 바로 출발하는 게 좋겠어요.",ans:"많을 테니까",hint:"많다 + (으)ㄹ 테니까",en:"There will probably be a lot of people since it's the weekend, so it'd be good to leave right now."},
+        {pre:"제가 발표 자료를",suf:" 팀장님께 보고는 부탁드려요.",ans:"준비할 테니까",hint:"준비하다 + (으)ㄹ 테니까",en:"I'll prepare the presentation materials, so please take care of reporting it to the team lead."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"제가 이 짐을 ____ 그쪽 가방 좀 들어 주시겠어요?",
+         passageEn:"I'll carry these bags, so could you hold that bag over there for me?",
+         options:[
+           {text:"들 테니까",correct:true,filledKr:"제가 이 짐을 들 테니까 그쪽 가방 좀 들어 주시겠어요?",filledEn:"I'll carry these bags, so could you hold that bag over there for me?",noteKr:"1인칭의 의지 뒤에 부탁이 이어지는 전형적인 형태예요.",noteEn:"A typical pattern of first-person intention followed by a request."},
+           {text:"들었으니까",correct:false,demoKr:"짐을 벌써 다 들었으니까 이제 출발합시다.",demoEn:"I've already picked up all the bags, so let's get going now.",noteKr:"이미 끝난 일에 대한 이유라 안 맞아요.",noteEn:"A reason for something already finished, not a fit here."},
+           {text:"들더라도",correct:false,demoKr:"짐이 무겁더라도 혼자 들 수 있어요.",demoEn:"Even if the bags are heavy, I can carry them alone.",noteKr:"'-더라도'는 양보를 나타내서 안 맞아요.",noteEn:"'-더라도' shows concession, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"주말이라 식당에 사람이 ____ 미리 예약하고 가요.",
+         passageEn:"It'll probably be crowded at the restaurant since it's the weekend, so let's make a reservation beforehand.",
+         options:[
+           {text:"많을 테니까",correct:true,filledKr:"주말이라 식당에 사람이 많을 테니까 미리 예약하고 가요.",filledEn:"It'll probably be crowded at the restaurant since it's the weekend, so let's make a reservation beforehand.",noteKr:"확신에 찬 추측 뒤에 제안이 이어지는 자연스러운 흐름이에요.",noteEn:"A natural flow of confident supposition followed by a suggestion."},
+           {text:"많아서",correct:false,demoKr:"사람이 너무 많아서 자리가 없었어요.",demoEn:"There were so many people that there were no seats.",noteKr:"'-어서'는 이미 벌어진 일의 이유라 미래의 제안과 안 맞아요.",noteEn:"'-어서' gives a reason for something already past, not a fit with a future suggestion."},
+           {text:"많지만",correct:false,demoKr:"이 식당은 사람이 많지만 회전이 빨라요.",demoEn:"This restaurant is crowded, but tables turn over quickly.",noteKr:"'-지만'은 대조를 나타내서 안 맞아요.",noteEn:"'-지만' shows contrast, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"제가 여기서 ____ 먼저 들어가서 자리 잡아 두세요.",
+         passageEn:"I'll wait here, so go on in first and grab us a table.",
+         options:[
+           {text:"기다릴 테니까",correct:true,filledKr:"제가 여기서 기다릴 테니까 먼저 들어가서 자리 잡아 두세요.",filledEn:"I'll wait here, so go on in first and grab us a table.",noteKr:"1인칭의 의지를 밝히고 상대에게 부탁하는 흐름이에요.",noteEn:"States the speaker's own intention, then asks a favor of the listener."},
+           {text:"기다리는 동안",correct:false,demoKr:"기다리는 동안 커피나 한 잔 하고 계세요.",demoEn:"While you're waiting, go ahead and have a cup of coffee.",noteKr:"'–는 동안'은 '~하는 사이에'라는 뜻이라 안 맞아요.",noteEn:"'-는 동안' means 'while,' not a fit."},
+           {text:"기다리자마자",correct:false,demoKr:"기다리자마자 바로 이름이 불렸어요.",demoEn:"As soon as I started waiting, my name was called.",noteKr:"'–자마자'는 '~하자 곧바로'라는 뜻이라 안 맞아요.",noteEn:"'-자마자' means 'as soon as,' not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"밖이 많이 ____ 옷을 좀 더 챙겨 입으세요.",
+         passageEn:"It'll probably be quite cold outside, so put on some warmer clothes.",
+         options:[
+           {text:"추울 테니까",correct:true,filledKr:"밖이 많이 추울 테니까 옷을 좀 더 챙겨 입으세요.",filledEn:"It'll probably be quite cold outside, so put on some warmer clothes.",noteKr:"3인칭(날씨)에 대한 확신에 찬 추측 뒤에 조언이 이어져요.",noteEn:"A confident supposition about the weather (third-person), followed by advice."},
+           {text:"춥거든요",correct:false,demoKr:"겨울에는 여기가 정말 춥거든요.",demoEn:"It's really cold here in winter, you know.",noteKr:"'-거든요'는 이미 아는 사실을 알려 줄 때 써서 새로운 추측+조언의 흐름과 달라요.",noteEn:"'-거든요' shares an already-known fact, different from a fresh supposition leading to advice."},
+           {text:"추운 반면에",correct:false,demoKr:"낮에는 따뜻한 반면에 밤에는 추워요.",demoEn:"While it's warm during the day, it's cold at night.",noteKr:"'–는 반면에'는 대조를 나타내서 안 맞아요.",noteEn:"'-는 반면에' shows contrast, not a fit."},
+         ]},
+      ],
+      correction:[
+        {wrong:"제가 운전할 테니까 좀 쉬십시오세요.",wrongEn:"I'll drive, so please rest.",ans:"제가 운전할 테니까 좀 쉬세요.",ansEn:"I'll drive, so please rest."},
+        {wrong:"이 시간엔 사람이 많을테니 예약하세요.",wrongEn:"It'll be crowded at this time, so make a reservation.",ans:"이 시간엔 사람이 많을 테니까 예약하세요.",ansEn:"It'll be crowded at this time, so make a reservation."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"내일 발표 준비 때문에 너무 바빠서 걱정이에요.",en:"I'm so busy preparing for tomorrow's presentation that I'm worried.",fill:false},
+        {who:"B",kr:"제가 자료 정리는 ___ 발표 연습에만 집중하세요.",en:"I'll help you organize the materials, so just focus on practicing your presentation.",fill:true,base:"돕다",hint:"돕다(ㅂ 불규칙) + (으)ㄹ 테니까",ans:"도울 테니까"},
+        {who:"A",kr:"정말 고마워요. 큰 힘이 될 것 같아요.",en:"Thank you so much. That'll be a huge help.",fill:false},
+        {who:"B",kr:"별말씀을요. 시간 되는 대로 제가 바로 ___ 그때까지 조금만 기다려 주세요.",en:"No problem at all. I'll come over as soon as I can, so please just wait a little until then.",fill:true,base:"가다",hint:"가다 + (으)ㄹ 테니까",ans:"갈 테니까"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"제가 먼저 __갈 테니까__ 천천히 따라오세요.",
+         sentenceEn:"I'll go on ahead, so take your time and follow behind.",
+         options:[
+           {text:"갈 것이니까",correct:true,filledKr:"제가 먼저 갈 것이니까 천천히 따라오세요.",filledEn:"I'll go on ahead, so take your time and follow behind.",noteKr:"'–(으)ㄹ 것이다'의 의지 표현이 '–(으)ㄹ 테니까'와 의미가 가장 가까워요.",noteEn:"The intention expressed by '-(으)ㄹ 것이다' is closest in meaning to '-(으)ㄹ 테니까.'"},
+           {text:"가기 위해서",correct:false,demoKr:"먼저 도착하기 위해서 일찍 출발했어요.",demoEn:"I left early in order to arrive first.",noteKr:"'–기 위해서'는 목적을 나타내서 달라요.",noteEn:"'-기 위해서' shows purpose, a different meaning."},
+           {text:"가는 김에",correct:false,demoKr:"마트에 가는 김에 우유도 사 왔어요.",demoEn:"While I was going to the mart, I bought milk too.",noteKr:"'–는 김에'는 '~하는 것을 이용해서'라는 뜻이라 달라요.",noteEn:"'-는 김에' means 'while already at it,' a different meaning."},
+           {text:"가는 반면에",correct:false,demoKr:"저는 걸어가는 반면에 친구는 뛰어갔어요.",demoEn:"While I walked, my friend ran.",noteKr:"'–는 반면에'는 대조를 나타내서 달라요.",noteEn:"'-는 반면에' shows contrast, a different meaning."},
+         ]},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 남자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the man.",
+         lines:[
+           {who:"남자",kr:"이 상자들 혼자 옮기기 너무 무거워 보이는데요."},
+           {who:"여자",kr:"그러게요, 저 혼자는 좀 힘들 것 같아요."},
+         ],
+         blankWho:"남자",
+         options:["그럼 제가 도와드릴 테니까 같이 옮겨요.","그럼 저 혼자 다 옮길 테니까 쉬고 계세요.","이 상자는 별로 안 무거울 테니까 걱정 마세요.","저는 오늘 일이 있어서 못 도와드릴 것 같아요."],
+         optsEn:["Then I'll help you, so let's carry them together.","Then I'll carry them all myself, so please just rest.","This box probably isn't that heavy, so don't worry.","I have something to do today, so I don't think I can help."],
+         ans:0,
+         fbKr:"상대방이 힘들다고 한 상황에 자연스럽게 이어지는 제안은 함께 돕겠다는 ①번이에요. ②번은 상대의 말과 맞지 않고, ③번은 상황과 반대되며, ④번은 도움을 거절하는 내용이에요.",
+         fbEn:"① naturally follows the woman's remark that it'll be hard alone, by offering to help together. ② contradicts what she said, ③ goes against the situation, and ④ declines to help."},
+      ],
+    }
+  },
+  // ══════════════════ 05 : –(으)ㄹ걸요 ══════════════════
+  {
+    num:"05", level:"Casual Spoken Guess · 구어체 추측", title:"V/A–(으)ㄹ걸요",
+    formula:"V/A-(으)ㄹ걸요 (구어체)",
+    englishPatterns:[
+      "I bet ~.",
+      "I'd guess ~.",
+      "I think you'll find that ~."
+    ],
+    analogyExampleKr:"지금 가면 아마 문 닫았을걸요.",
+    analogyExampleEn:"If you go now, I bet it's already closed.",
+    similarKr:[
+      {expr:"-(으)ㄹ 거예요",note:"단순한 미래·추측을 나타내는 '–(으)ㄹ 거예요'와 달리, '–(으)ㄹ걸요'는 상대가 모르고 있는 정보를 살짝 알려 주거나 약하게 반박하는 느낌이 있어요.",noteEn:"Unlike the plain future/guess '-(으)ㄹ 거예요,' '-(으)ㄹ걸요' carries a nuance of gently informing or mildly correcting the listener.",
+       exampleKr:"지금 가면 문 닫았을 거예요.",exampleEn:"If you go now, it'll probably be closed."}
+    ],
+    rules:[
+      {t:"받침 없으면 –ㄹ걸요, 받침 있으면 –을걸요", en:"Vowel-ending stems take –ㄹ걸요; consonant-ending stems take –을걸요.",
+       ex:"가다 → 갈걸요 / 먹다 → 먹을걸요"},
+      {t:"말할 때만 쓰는 구어체 표현", en:"This is a spoken-only expression — it is not used in formal writing.",
+       ex:"아마 지금 없을걸요. (O) / 보고서에는 사용하지 않음"},
+      {t:"문장 끝을 살짝 올려서 말함", en:"The sentence-final intonation rises slightly, softening the guess.",
+       ex:"그 영화 별로 안 재미있을걸요? ↗"},
+      {t:"과거 추측은 –았/었을걸요", en:"For a past supposition, use –았/었을걸요.",
+       ex:"벌써 다 팔렸을걸요."},
+    ],
+    examples:[
+      {kr:"지금 가면 아마 문 닫았을걸요.", en:"If you go now, I bet it's already closed."},
+      {kr:"그 식당은 주말엔 자리가 없을걸요.", en:"That restaurant probably won't have seats on the weekend."},
+      {kr:"민수 씨는 벌써 퇴근했을걸요.", en:"Minsu probably already left work."},
+      {kr:"이 시간엔 지하철이 더 빠를걸요.", en:"The subway is probably faster at this time."},
+      {kr:"그 영화는 아마 재미없을걸요.", en:"That movie's probably not very interesting."},
+      {kr:"표는 벌써 다 팔렸을걸요.", en:"The tickets have probably already sold out."},
+      {kr:"이 옷은 세탁하면 좀 줄어들걸요.", en:"This clothing will probably shrink if you wash it."},
+      {kr:"그 사람은 한국어를 잘 못할걸요.", en:"That person probably can't speak Korean well."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"'–(으)ㄹ걸요'는 보고서나 이메일 같은 문어체에서도 자유롭게 사용해요.",
+         en:"'-(으)ㄹ걸요' is freely used in written forms like reports or emails.",ans:false,
+         fbKr:"아니에요. '–(으)ㄹ걸요'는 말할 때만 쓰는 구어체 표현이에요.",
+         fbEn:"No. '-(으)ㄹ걸요' is a spoken-only expression."},
+        {krSentence:"'–(으)ㄹ걸요'는 상대방이 모르고 있을 만한 정보를 부드럽게 알려 주는 느낌이 있어요.",
+         en:"'-(으)ㄹ걸요' carries a nuance of gently letting the listener know something they may not have realized.",ans:true,
+         fbKr:"맞아요! 단정적으로 말하지 않고 부드럽게 정보를 전해요.",
+         fbEn:"Right! It softly conveys information rather than stating it assertively."},
+        {krSentence:"과거의 일을 추측할 때는 '–았/었을걸요'의 형태로 써요.",
+         en:"For guessing about a past event, the form '-았/었을걸요' is used.",ans:true,
+         fbKr:"맞아요! 예를 들어 '벌써 팔렸을걸요'처럼 써요.",
+         fbEn:"Right! For example, '벌써 팔렸을걸요.'"},
+      ],
+      sentence:[
+        {pre:"이 시간엔 지하철이 버스보다",suf:" 지하철 타고 가세요.",ans:"빠를걸요",hint:"빠르다 + (으)ㄹ걸요",en:"The subway is probably faster than the bus at this time — take the subway."},
+        {pre:"그 콘서트 표는 벌써 다",suf:" 다음엔 미리 예매해 두는 게 좋을 거예요.",ans:"팔렸을걸요",hint:"팔리다(과거) + 았/었을걸요",en:"The concert tickets have probably already sold out — next time it'd be good to book in advance."},
+        {pre:"이 시간에 전화하면 민수 씨가 아마",suf:" 문자로 남겨 보세요.",ans:"자고 있을걸요",hint:"자고 있다 + (으)ㄹ걸요",en:"If you call at this hour, Minsu's probably asleep — try leaving a text instead."},
+        {pre:"그 식당은 주말엔 사람이 많아서 자리가",suf:" 미리 예약하는 게 나아요.",ans:"없을걸요",hint:"없다 + (으)ㄹ걸요",en:"That restaurant gets crowded on weekends, so there probably won't be a table — it's better to reserve ahead."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"지금 그 가게에 가도 벌써 문을 ____ 내일 다시 가는 게 어때요?",
+         passageEn:"Even if you go to that shop now, it's probably already closed — why not go again tomorrow?",
+         options:[
+           {text:"닫았을걸요",correct:true,filledKr:"지금 그 가게에 가도 벌써 문을 닫았을걸요.",filledEn:"Even if you go to that shop now, it's probably already closed.",noteKr:"확신 있는 구어체 추측이라 '–(으)ㄹ걸요'가 자연스러워요.",noteEn:"A confident but casual spoken guess, so '-(으)ㄹ걸요' fits naturally."},
+           {text:"닫았거든요",correct:false,demoKr:"이 시간에는 원래 문을 닫았거든요.",demoEn:"It's always closed at this hour, you know.",noteKr:"'-거든요'는 확실히 아는 사실을 근거로 말할 때 써서 부드러운 추측과는 느낌이 달라요.",noteEn:"'-거든요' states a fact the speaker is certain of, a different nuance from a soft guess."},
+           {text:"닫았는데도",correct:false,demoKr:"문을 닫았는데도 사람들이 줄을 서 있었어요.",demoEn:"Even though it was closed, people were still lined up.",noteKr:"'-는데도'는 양보를 나타내서 안 맞아요.",noteEn:"'-는데도' shows concession, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"오늘 발표는 민수 씨보다 수미 씨가 더 잘 ____ 제 생각엔 그래요.",
+         passageEn:"I think Sumi will probably do better in today's presentation than Minsu — that's my guess.",
+         options:[
+           {text:"할걸요",correct:true,filledKr:"오늘 발표는 민수 씨보다 수미 씨가 더 잘할걸요.",filledEn:"I bet Sumi will do better in today's presentation than Minsu.",noteKr:"화자의 개인적인 추측을 부드럽게 말하는 구어체 표현이에요.",noteEn:"A casual, spoken way to softly state the speaker's personal guess."},
+           {text:"하니까",correct:false,demoKr:"수미 씨가 발표를 잘하니까 믿음이 가요.",demoEn:"Since Sumi presents well, I trust her.",noteKr:"확인된 이유를 나타내서 추측이 아니에요.",noteEn:"States a confirmed reason, not a guess."},
+           {text:"하잖아요",correct:false,demoKr:"수미 씨는 원래 발표를 잘하잖아요.",demoEn:"You know Sumi's always good at presenting, right?",noteKr:"'-잖아요'는 서로 이미 아는 사실을 확인할 때 써서 새로운 추측과는 달라요.",noteEn:"'-잖아요' confirms a fact both already know, different from a fresh guess."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 옷을 뜨거운 물로 세탁하면 아마 ____ 찬물로 빠세요.",
+         passageEn:"If you wash this in hot water, it'll probably shrink — wash it in cold water.",
+         options:[
+           {text:"줄어들걸요",correct:true,filledKr:"이 옷을 뜨거운 물로 세탁하면 아마 줄어들걸요.",filledEn:"If you wash this in hot water, it'll probably shrink.",noteKr:"상대가 몰랐을 정보를 부드럽게 알려 주는 흐름이에요.",noteEn:"Gently informs the listener of something they may not have known."},
+           {text:"줄어드는데",correct:false,demoKr:"이 옷은 원래 좀 줄어드는데 그래도 괜찮아요.",demoEn:"This piece already shrinks a bit normally, but it's still fine.",noteKr:"'-는데'는 배경/대조라 이 경고성 추측과는 달라요.",noteEn:"'-는데' gives background/contrast, different from this cautionary guess."},
+           {text:"줄어들더라도",correct:false,demoKr:"조금 줄어들더라도 이 디자인이 좋아요.",demoEn:"Even if it shrinks a little, I like this design.",noteKr:"'-더라도'는 양보를 나타내서 안 맞아요.",noteEn:"'-더라도' shows concession, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"그 사람은 아직 한국에 온 지 얼마 안 돼서 한국어를 잘 ____ 천천히 말씀해 주세요.",
+         passageEn:"That person hasn't been in Korea long, so they probably can't speak Korean well — please speak slowly.",
+         options:[
+           {text:"못할걸요",correct:true,filledKr:"그 사람은 아직 한국에 온 지 얼마 안 돼서 한국어를 잘 못할걸요.",filledEn:"That person hasn't been in Korea long, so they probably can't speak Korean well.",noteKr:"상대가 모를 만한 정보를 미리 알려 주는 자연스러운 흐름이에요.",noteEn:"Naturally informs the listener of something they might not have known."},
+           {text:"못해서",correct:false,demoKr:"한국어를 잘 못해서 영어로 설명했어요.",demoEn:"Since I couldn't speak Korean well, I explained in English.",noteKr:"'-어서'는 과거 행동의 이유라 지금의 추측과 안 맞아요.",noteEn:"'-어서' gives a reason for a past action, not a fit with a present guess."},
+           {text:"못하지만",correct:false,demoKr:"한국어는 잘 못하지만 열심히 배우고 있어요.",demoEn:"I'm not good at Korean, but I'm studying hard.",noteKr:"'-지만'은 대조를 나타내서 안 맞아요.",noteEn:"'-지만' shows contrast, not a fit."},
+         ]},
+      ],
+      correction:[
+        {wrong:"그 영화 별로 안 재미있르걸요.",wrongEn:"That movie's probably not very interesting.",ans:"그 영화 별로 안 재미있을걸요.",ansEn:"That movie's probably not very interesting."},
+        {wrong:"표는 벌써 다 팔았을걸요.",wrongEn:"The tickets have probably already sold out.",ans:"표는 벌써 다 팔렸을걸요.",ansEn:"The tickets have probably already sold out."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"이 카페 커피 맛있나요? 처음 와 봐서요.",en:"Is the coffee at this cafe good? It's my first time here.",fill:false},
+        {who:"B",kr:"음, 저도 잘 모르지만 다른 지점보다는 좀 ___ 한번 마셔 보세요.",en:"Well, I'm not totally sure either, but it's probably a bit better than the other branches — give it a try.",fill:true,base:"낫다",hint:"낫다(ㅅ 불규칙) + (으)ㄹ걸요",ans:"나을걸요"},
+        {who:"A",kr:"그럼 디저트는 어떤 게 맛있을까요?",en:"Then which dessert would be good?",fill:false},
+        {who:"B",kr:"다른 손님들이 치즈케이크를 많이 시키는 걸 보니 그게 아마 제일 ___",en:"I've seen a lot of other customers order the cheesecake, so that's probably the most popular.",fill:true,base:"인기 있다",hint:"인기 있다 + (으)ㄹ걸요",ans:"인기 있을걸요"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"지금 가도 표는 벌써 __다 팔렸을걸요__.",
+         sentenceEn:"Even if you go now, the tickets have probably already sold out.",
+         options:[
+           {text:"다 팔렸을 거예요",correct:true,filledKr:"지금 가도 표는 벌써 다 팔렸을 거예요.",filledEn:"Even if you go now, the tickets have probably already sold out.",noteKr:"'–(으)ㄹ 거예요'도 추측을 나타내서 의미가 가장 비슷해요. '–(으)ㄹ걸요'보다는 조금 더 단정적으로 들려요.",noteEn:"'-(으)ㄹ 거예요' also expresses a guess and is closest in meaning, though it sounds slightly more assertive than '-(으)ㄹ걸요.'"},
+           {text:"다 팔린 셈이에요",correct:false,demoKr:"열 장 중에 아홉 장이 나갔으니 거의 다 팔린 셈이에요.",demoEn:"Nine out of ten went, so it's practically all sold.",noteKr:"'–(으)ㄴ 셈이다'는 '거의 그렇다고 볼 수 있다'는 뜻이라 더 확정적이에요.",noteEn:"'-(으)ㄴ 셈이다' means 'can be counted as,' a more definite meaning."},
+           {text:"다 팔리기 마련이에요",correct:false,demoKr:"인기 있는 공연은 표가 빨리 팔리기 마련이에요.",demoEn:"Popular shows are bound to sell out fast.",noteKr:"'-기 마련이다'는 '당연히 그렇다'는 뜻이라 달라요.",noteEn:"'-기 마련이다' means 'it's only natural,' a different meaning."},
+           {text:"다 팔릴 뻔했어요",correct:false,demoKr:"표가 다 팔릴 뻔했는데 마지막 한 장을 겨우 구했어요.",demoEn:"The tickets almost sold out, but I barely got the last one.",noteKr:"'–(으)ㄹ 뻔하다'는 '거의 그렇게 될 뻔했다'는 뜻이라 완전히 달라요.",noteEn:"'-(으)ㄹ 뻔하다' means 'almost happened,' a completely different meaning."},
+         ]},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"여자",kr:"이 시간에 버스 타면 회사에 늦지 않을까요?"},
+           {who:"남자",kr:"글쎄요, 지금 나가면 딱 맞을 것 같긴 한데요."},
+         ],
+         blankWho:"여자",
+         options:["그래도 길이 막히면 좀 늦을걸요. 지하철 타는 게 낫겠어요.","버스가 지하철보다 항상 빠를걸요.","저는 원래 지각을 자주 하는 편이에요.","이 노선은 배차 간격이 짧을걸요."],
+         optsEn:["Still, if traffic's bad, we'll probably be a bit late — the subway seems better.","The bus is probably always faster than the subway.","I'm usually the type to be late a lot, actually.","This bus route probably has short intervals between buses."],
+         ans:0,
+         fbKr:"버스로는 늦을 수도 있다는 걱정에 이어 지하철을 제안하는 ①번이 대화 흐름상 가장 자연스러워요. 나머지는 대화 맥락과 어울리지 않아요.",
+         fbEn:"① naturally continues the worry about being late by bus and suggests the subway instead. The others don't fit the flow of the conversation."},
+      ],
+    }
+  },
+  // ══════════════════ 06 : –(으)ㄴ/는/(으)ㄹ 줄 몰랐다(알았다) ══════════════════
+  {
+    num:"06", level:"Mistaken Assumption / Surprise · 예상 밖의 사실", title:"V/A–(으)ㄴ/는/(으)ㄹ 줄 몰랐다(알았다)",
+    formula:"V/A-는/–(으)ㄴ/–(으)ㄹ 줄 몰랐다(알았다)",
+    englishPatterns:[
+      "I didn't know/expect that ~.",
+      "I thought (mistakenly) that ~.",
+      "I had no idea that ~."
+    ],
+    analogyExampleKr:"이 영화가 이렇게 슬플 줄 몰랐어요.",
+    analogyExampleEn:"I didn't know this movie would be this sad.",
+    similarKr:[
+      {expr:"–(으)ㄹ 거라고 생각 못 했다",note:"뜻을 풀어 쓴 표현으로 의미는 비슷하지만, '–(으)ㄹ 줄 몰랐다'가 훨씬 더 자연스럽고 간결해요.",noteEn:"A paraphrased version with a similar meaning, but '-(으)ㄹ 줄 몰랐다' is far more natural and concise.",
+       exampleKr:"이 영화가 이렇게 슬플 거라고 생각 못 했어요.",exampleEn:"I couldn't have imagined this movie would be this sad."}
+    ],
+    rules:[
+      {t:"현재 사실에 대한 놀라움: 동사–는 줄, 형용사–(으)ㄴ 줄", en:"For surprise about a present fact, use –는 줄 for verbs and –(으)ㄴ 줄 for adjectives.",
+       ex:"밖에 비가 오는 줄 몰랐어요. / 이렇게 매운 줄 몰랐어요."},
+      {t:"미래·가정에 대한 놀라움: –(으)ㄹ 줄", en:"For surprise about a future or hypothetical outcome, use –(으)ㄹ 줄.",
+       ex:"시험이 이렇게 어려울 줄 몰랐어요."},
+      {t:"몰랐다=예상 못 함, 알았다=잘못 예상함", en:"몰랐다 means the speaker had no idea at all; 알았다 means the speaker wrongly assumed the opposite.",
+       ex:"저는 오늘 회의가 없는 줄 알았어요. (사실은 있었음)"},
+      {t:"과거 사실은 –(으)ㄴ 줄 몰랐다/알았다", en:"For a completed past fact, use –(으)ㄴ 줄 몰랐다/알았다.",
+       ex:"그 사람이 벌써 결혼한 줄 몰랐어요."},
+    ],
+    examples:[
+      {kr:"이 영화가 이렇게 슬플 줄 몰랐어요.", en:"I didn't know this movie would be this sad."},
+      {kr:"오늘 회의가 없는 줄 알았는데 있었네요.", en:"I thought there was no meeting today, but there was."},
+      {kr:"그 사람이 벌써 결혼한 줄 몰랐어요.", en:"I didn't know that person had already gotten married."},
+      {kr:"이 음식이 이렇게 매울 줄 몰랐어요.", en:"I didn't know this food would be this spicy."},
+      {kr:"저는 민수 씨가 회사를 그만둔 줄 몰랐어요.", en:"I had no idea Minsu had quit the company."},
+      {kr:"시험이 이렇게 어려울 줄 몰랐어요.", en:"I didn't know the test would be this hard."},
+      {kr:"저는 오늘이 공휴일인 줄 알았어요.", en:"I thought today was a holiday."},
+      {kr:"그 사람이 한국어를 이렇게 잘하는 줄 몰랐어요.", en:"I had no idea that person spoke Korean this well."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"'몰랐다'는 전혀 예상하지 못했다는 뜻이고, '알았다'는 반대로 잘못 예상했다는 뜻이에요.",
+         en:"'몰랐다' means having no idea at all, while '알았다' means having wrongly assumed the opposite.",ans:true,
+         fbKr:"맞아요! '몰랐다'는 몰랐던 것, '알았다'는 반대로 착각했던 것을 나타내요.",
+         fbEn:"Right! '몰랐다' means having no idea, while '알았다' means having wrongly assumed the opposite."},
+        {krSentence:"미래나 가정의 일에 놀랄 때는 '–(으)ㄹ 줄 몰랐다'를 사용해요.",
+         en:"For surprise about a future or hypothetical outcome, '-(으)ㄹ 줄 몰랐다' is used.",ans:true,
+         fbKr:"맞아요! '이렇게 힘들 줄 몰랐어요'처럼 아직 겪지 않은 결과에 대한 놀라움을 나타내요.",
+         fbEn:"Right! It expresses surprise about an outcome you hadn't experienced yet, as in '이렇게 힘들 줄 몰랐어요.'"},
+        {krSentence:"'–(으)ㄴ/는/(으)ㄹ 줄 몰랐다(알았다)'는 항상 안 좋은 일에만 사용할 수 있어요.",
+         en:"'-(으)ㄴ/는/(으)ㄹ 줄 몰랐다(알았다)' can only be used for unpleasant surprises.",ans:false,
+         fbKr:"아니에요. 좋은 일이든 안 좋은 일이든 예상과 다른 사실에 놀랐을 때 모두 사용할 수 있어요.",
+         fbEn:"No. It can be used for both pleasant and unpleasant surprises, whenever reality differs from expectation."},
+      ],
+      sentence:[
+        {pre:"이 음식이 이렇게",suf:" 물을 좀 더 주문할게요.",ans:"매울 줄 몰랐어요",hint:"맵다(ㅂ 불규칙) + (으)ㄹ 줄 몰랐다",en:"I didn't know this food would be this spicy — I'll order some more water."},
+        {pre:"저는 오늘 회의가",suf:" 자료를 준비 안 해 왔어요.",ans:"없는 줄 알았어요",hint:"없다 + 는 줄 알다",en:"I thought there was no meeting today, so I didn't bring the materials."},
+        {pre:"그 사람이 벌써",suf:" 청첩장을 못 받아서 몰랐어요.",ans:"결혼한 줄 몰랐어요",hint:"결혼하다(과거) + (으)ㄴ 줄 몰랐다",en:"I had no idea that person had already gotten married — I never got an invitation, so I didn't know."},
+        {pre:"시험이 이렇게",suf:" 좀 더 미리 공부할걸 그랬어요.",ans:"어려울 줄 몰랐어요",hint:"어렵다(ㅂ 불규칙) + (으)ㄹ 줄 몰랐다",en:"I didn't know the exam would be this hard — I should have studied earlier."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"저는 이 가게가 오늘 ____ 문이 닫혀 있어서 깜짝 놀랐어요.",
+         passageEn:"I thought this shop was open today, but I was surprised to find it closed.",
+         options:[
+           {text:"여는 줄 알았는데",correct:true,filledKr:"저는 이 가게가 오늘 여는 줄 알았는데 문이 닫혀 있어서 깜짝 놀랐어요.",filledEn:"I thought this shop was open today, but I was surprised to find it closed.",noteKr:"잘못 예상했다가 사실과 달라 놀란 상황이라 '알았는데'가 자연스러워요.",noteEn:"A mistaken assumption followed by a surprising reality, so '알았는데' fits naturally."},
+           {text:"열기 때문에",correct:false,demoKr:"이 가게는 일찍 열기 때문에 사람이 많아요.",demoEn:"This shop is crowded because it opens early.",noteKr:"'때문에'는 이유를 나타내서 착각의 뜻이 없어요.",noteEn:"'때문에' gives a reason, without the mistaken-belief nuance."},
+           {text:"열더니",correct:false,demoKr:"이 가게는 예전엔 일찍 열더니 요즘은 늦게 여네요.",demoEn:"This shop used to open early, but these days it opens late.",noteKr:"'-더니'는 과거에 직접 관찰한 변화를 나타내서 안 맞아요.",noteEn:"'-더니' reports a directly observed past change, not a fit here."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"저는 민수 씨가 벌써 회사를 ____ 오늘 사무실에서 만나서 놀랐어요.",
+         passageEn:"I had no idea Minsu had already quit the company, so I was surprised to run into him at the office today.",
+         options:[
+           {text:"그만둔 줄 알았는데",correct:true,filledKr:"저는 민수 씨가 벌써 회사를 그만둔 줄 알았는데 오늘 사무실에서 만나서 놀랐어요.",filledEn:"I thought Minsu had already quit the company, so I was surprised to run into him at the office today.",noteKr:"잘못된 예상(그만뒀다고 믿음)과 실제(만남)가 다른 상황이에요.",noteEn:"The mistaken assumption (thinking he'd quit) contrasts with the actual event (meeting him)."},
+           {text:"그만두더라도",correct:false,demoKr:"회사를 그만두더라도 연락은 계속할 거예요.",demoEn:"Even if I quit the company, I'll keep in touch.",noteKr:"'-더라도'는 양보를 나타내서 착각의 뜻이 없어요.",noteEn:"'-더라도' shows concession, without the mistaken-belief nuance."},
+           {text:"그만두기 무섭게",correct:false,demoKr:"회사를 그만두기 무섭게 새 일자리를 구했어요.",demoEn:"No sooner had he quit the company than he found a new job.",noteKr:"'–기 무섭게'는 '~하자마자'라는 뜻이라 완전히 달라요.",noteEn:"'-기 무섭게' means 'as soon as,' a completely different meaning."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 영화가 이렇게 ____ 손수건을 안 챙겨서 후회했어요.",
+         passageEn:"I didn't know this movie would be this sad, so I regretted not bringing tissues.",
+         options:[
+           {text:"슬플 줄 몰랐어요",correct:true,filledKr:"이 영화가 이렇게 슬플 줄 몰랐어요.",filledEn:"I didn't know this movie would be this sad.",noteKr:"아직 겪기 전에는 몰랐던 결과에 대한 놀라움이에요.",noteEn:"Surprise about an outcome not known until experiencing it."},
+           {text:"슬프기는 하지만",correct:false,demoKr:"이 영화는 슬프기는 하지만 희망적인 결말이에요.",demoEn:"This movie is sad, but it has a hopeful ending.",noteKr:"'-기는 하지만'은 대조를 나타내서 놀라움이 아니에요.",noteEn:"'-기는 하지만' shows contrast, not surprise."},
+           {text:"슬플 뿐만 아니라",correct:false,demoKr:"이 영화는 슬플 뿐만 아니라 감동적이기도 해요.",demoEn:"This movie isn't just sad — it's also moving.",noteKr:"'–(으)ㄹ 뿐만 아니라'는 '~할 뿐 아니라 또한'이라는 뜻이라 완전히 달라요.",noteEn:"'-(으)ㄹ 뿐만 아니라' means 'not only... but also,' a completely different meaning."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"저는 오늘이 평일인 ____ 회사에 갔다가 아무도 없어서 당황했어요.",
+         passageEn:"I thought today was a weekday, so I was flustered to find no one at the office when I went in.",
+         options:[
+           {text:"줄 알았는데",correct:true,filledKr:"저는 오늘이 평일인 줄 알았는데 회사에 갔다가 아무도 없어서 당황했어요.",filledEn:"I thought today was a weekday, so I was flustered to find no one at the office when I went in.",noteKr:"착각한 믿음과 실제 사실(공휴일이었음)이 서로 반대되는 상황이에요.",noteEn:"The mistaken belief and the actual fact (it was a holiday) contrast with each other."},
+           {text:"줄 알기 때문에",correct:false,demoKr:"오늘이 평일인 줄 알기 때문에 출근했어요.",demoEn:"Since I thought today was a weekday, I went to work.",noteKr:"'–는 줄 알다' 뒤에 '때문에'를 바로 붙이면 어색해요. 보통 '–는데'로 반전을 나타내요.",noteEn:"Attaching '때문에' right after '-는 줄 알다' sounds awkward; '-는데' is normally used to show the twist."},
+           {text:"줄 알아서",correct:false,demoKr:"저는 오늘이 휴일인 줄 알아서 늦잠을 잤어요.",demoEn:"Since I thought today was a holiday, I slept in.",noteKr:"'-아서'는 그 뒤 행동의 이유를 말할 때 쓰고, 여기처럼 예상이 빗나갔다는 반전에는 '–는데'가 더 자연스러워요.",noteEn:"'-아서' explains the reason for the following action; for the twist of a mistaken expectation like here, '-는데' is more natural."},
+         ]},
+      ],
+      correction:[
+        {wrong:"이 시험이 이렇게 어려운지 몰랐어요.",wrongEn:"I didn't know this exam would be this hard.",ans:"이 시험이 이렇게 어려울 줄 몰랐어요.",ansEn:"I didn't know this exam would be this hard."},
+        {wrong:"저는 그 사람이 결혼하는 줄 몰랐어요.",wrongEn:"I didn't know that person had gotten married.",ans:"저는 그 사람이 결혼한 줄 몰랐어요.",ansEn:"I didn't know that person had gotten married."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"어제 그 콘서트 어땠어요?",en:"How was that concert yesterday?",fill:false},
+        {who:"B",kr:"정말 좋았어요! 근데 표가 이렇게 빨리 다 ___ 하마터면 못 볼 뻔했어요.",en:"It was really great! But I had no idea the tickets would sell out this fast — I almost couldn't get in.",fill:true,base:"팔리다",hint:"팔리다 + (으)ㄹ 줄 몰랐다",ans:"팔릴 줄 몰랐어요"},
+        {who:"A",kr:"저도 놀랐어요. 그 가수가 이렇게 인기가 많은 줄 몰랐거든요.",en:"I was surprised too. I didn't know that singer was this popular.",fill:false},
+        {who:"B",kr:"맞아요. 저도 처음엔 사람이 이렇게 많이 ___ 미리 자리를 못 잡았어요.",en:"Right. At first, I didn't expect so many people to come either, so I couldn't grab a seat in advance.",fill:true,base:"오다",hint:"오다 + (으)ㄹ 줄 모르다 + 아서",ans:"올 줄 몰라서"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"이 시험이 이렇게 __어려울 줄 몰랐어요__.",
+         sentenceEn:"I didn't know this exam would be this hard.",
+         options:[
+           {text:"어려울 거라고 생각하지 못했어요",correct:true,filledKr:"이 시험이 이렇게 어려울 거라고 생각하지 못했어요.",filledEn:"I hadn't thought this exam would be this hard.",noteKr:"의미가 가장 가까운 풀어 쓴 표현이에요.",noteEn:"The closest paraphrased expression in meaning."},
+           {text:"어려운 셈이에요",correct:false,demoKr:"작년보다는 이번 시험이 쉬운 셈이에요.",demoEn:"This exam is, relatively speaking, easier than last year's.",noteKr:"'–(으)ㄴ 셈이다'는 '대체로 그렇다고 볼 수 있다'는 뜻이라 달라요.",noteEn:"'-(으)ㄴ 셈이다' means 'more or less counts as,' a different meaning."},
+           {text:"어려울 지경이에요",correct:false,demoKr:"너무 바빠서 밥 먹을 시간도 없을 지경이에요.",demoEn:"I'm so busy I don't even have time to eat.",noteKr:"'–(으)ㄹ 지경이다'는 '~할 정도까지 이르다'는 뜻이라 달라요.",noteEn:"'-(으)ㄹ 지경이다' means 'to the point where,' a different meaning."},
+           {text:"어려운 법이에요",correct:false,demoKr:"처음 배우는 건 다 어려운 법이에요.",demoEn:"Anything you're learning for the first time is bound to be hard.",noteKr:"'–는 법이다'는 '당연히 그렇다'는 뜻이라 달라요.",noteEn:"'-는 법이다' means 'it's only natural,' a different meaning."},
+         ]},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"남자",kr:"수미 씨, 어제 소개팅 어땠어요?"},
+           {who:"여자",kr:"사실 좀 놀랐어요."},
+         ],
+         blankWho:"여자",
+         options:["그 사람이 제 대학 후배인 줄 몰랐거든요.","그 사람은 항상 친절한 편이에요.","저는 소개팅을 별로 안 좋아해요.","다음에 또 나갈 생각이에요."],
+         optsEn:["I had no idea that person was my junior from college.","That person is usually pretty kind.","I don't really like blind dates.","I'm thinking of going on another one."],
+         ans:0,
+         fbKr:"'놀랐다'는 말에 이어질 자연스러운 이유는 예상하지 못했던 사실을 알게 됐다는 ①번이에요. 나머지는 '놀랐다'는 말과 바로 연결되지 않아요.",
+         fbEn:"① naturally explains her surprise by revealing an unexpected fact. The others don't directly connect to 'I was surprised.'"},
+      ],
+    }
+  },
+  // ══════════════════ 07 : –(으)ㄹ지도 모르다 ══════════════════
+  {
+    num:"07", level:"Weak Possibility · 약한 가능성", title:"V/A–(으)ㄹ지도 모르다",
+    formula:"V/A-(으)ㄹ지도 모르다",
+    englishPatterns:[
+      "It might/may be ~.",
+      "Perhaps ~.",
+      "There's a chance that ~."
+    ],
+    analogyExampleKr:"혹시 오늘 비가 올지도 몰라요.",
+    analogyExampleEn:"It might rain today, just so you know.",
+    similarKr:[
+      {expr:"–(으)ㄹ 수도 있다",note:"의미가 거의 같고 자유롭게 바꿔 쓸 수 있어요.",noteEn:"Nearly identical in meaning and freely interchangeable with '-(으)ㄹ지도 모르다.'",
+       exampleKr:"혹시 오늘 비가 올 수도 있어요.",exampleEn:"It might rain today, just so you know."}
+    ],
+    rules:[
+      {t:"받침 없으면 –ㄹ지도 모르다, 받침 있으면 –을지도 모르다", en:"Vowel-ending stems take –ㄹ지도 모르다; consonant-ending stems take –을지도 모르다.",
+       ex:"오다 → 올지도 모르다 / 늦다 → 늦을지도 모르다"},
+      {t:"–(으)ㄹ 텐데/–(으)ㄹ걸요보다 확신이 약함", en:"Expresses a weaker degree of certainty than –(으)ㄹ 텐데 or –(으)ㄹ걸요 — a mere possibility, not a confident guess.",
+       ex:"틀릴지도 모르지만 한번 말해 볼게요."},
+      {t:"혹시와 자주 함께 사용", en:"Often paired with 혹시 (\"just in case,\" \"by any chance\") at the start of the sentence.",
+       ex:"혹시 늦을지도 모르니까 먼저 드세요."},
+      {t:"과거 가능성은 –았/었을지도 모르다", en:"For a past possibility, use –았/었을지도 모르다.",
+       ex:"제가 그때 실수했을지도 몰라요."},
+    ],
+    examples:[
+      {kr:"혹시 오늘 비가 올지도 몰라요.", en:"It might rain today, just so you know."},
+      {kr:"제가 틀릴지도 모르지만 한번 말해 볼게요.", en:"I might be wrong, but let me say it anyway."},
+      {kr:"이 정보가 오래돼서 지금은 다를지도 몰라요.", en:"This information is old, so it might be different now."},
+      {kr:"그 사람이 벌써 도착했을지도 몰라요.", en:"That person might have already arrived."},
+      {kr:"길이 막혀서 좀 늦을지도 모르니까 먼저 시작하세요.", en:"I might be a bit late because of traffic, so please start without me."},
+      {kr:"이 약이 효과가 없을지도 몰라요.", en:"This medicine might not be effective."},
+      {kr:"제 기억이 잘못됐을지도 몰라요.", en:"My memory might be wrong."},
+      {kr:"다음 주에는 계획이 바뀔지도 몰라요.", en:"The plan might change next week."},
+    ],
+    quiz:{
+      ox:[
+        {krSentence:"'–(으)ㄹ지도 모르다'는 '–(으)ㄹ 텐데'나 '–(으)ㄹ걸요'보다 확신이 더 약한 가능성을 나타내요.",
+         en:"'-(으)ㄹ지도 모르다' expresses a weaker possibility than '-(으)ㄹ 텐데' or '-(으)ㄹ걸요.'",ans:true,
+         fbKr:"맞아요! 확실하지 않은 그저 하나의 가능성을 말할 때 써요.",
+         fbEn:"Right! It's used for a mere, uncertain possibility."},
+        {krSentence:"'–(으)ㄹ지도 모르다'는 '혹시'와 함께 자주 쓰여서 '만약을 대비해서'라는 느낌을 더해요.",
+         en:"'-(으)ㄹ지도 모르다' is often paired with '혹시,' adding a sense of 'just in case.'",ans:true,
+         fbKr:"맞아요! '혹시 ~일지도 몰라요'는 아주 자연스러운 조합이에요.",
+         fbEn:"Right! '혹시 ~일지도 몰라요' is a very natural combination."},
+        {krSentence:"과거의 가능성을 말할 때는 '–(으)ㄹ지도 몰랐다'로만 써야 하고 '–았/었을지도 모르다'는 틀린 표현이에요.",
+         en:"For a past possibility, only '-(으)ㄹ지도 몰랐다' is correct, and '-았/었을지도 모르다' is wrong.",ans:false,
+         fbKr:"아니에요. 과거의 가능성은 '–았/었을지도 모르다'로 쓰는 게 맞아요.",
+         fbEn:"No. The correct form for a past possibility is '-았/었을지도 모르다.'"},
+      ],
+      sentence:[
+        {pre:"혹시 오늘 비가",suf:" 우산을 챙겨 가세요.",ans:"올지도 모르니까",hint:"오다 + (으)ㄹ지도 모르다 + 니까",en:"It might rain today, so take an umbrella just in case."},
+        {pre:"제가 틀렸을지도",suf:" 다시 한번 확인해 주세요.",ans:"모르니까",hint:"모르다 + 니까",en:"I might be wrong, so please double-check for me."},
+        {pre:"길이 막혀서 조금",suf:" 먼저 식사하고 계세요.",ans:"늦을지도 몰라요",hint:"늦다 + (으)ㄹ지도 모르다",en:"I might be a bit late because of traffic — please go ahead and start eating."},
+        {pre:"그 사람이 벌써",suf:" 전화로 확인해 볼게요.",ans:"도착했을지도 몰라요",hint:"도착하다(과거) + 았/었을지도 모르다",en:"That person might have already arrived — I'll check by phone."},
+      ],
+      context:[
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"내일 갑자기 일정이 ____ 미리 확인해 보고 알려 드릴게요.",
+         passageEn:"The schedule might suddenly change tomorrow, so let me check in advance and let you know.",
+         options:[
+           {text:"바뀔지도 몰라서",correct:true,filledKr:"내일 갑자기 일정이 바뀔지도 몰라서 미리 확인해 보고 알려 드릴게요.",filledEn:"The schedule might suddenly change tomorrow, so let me check in advance and let you know.",noteKr:"약한 가능성을 근거로 조심스럽게 행동을 제안하는 흐름이에요.",noteEn:"Cautiously proposes an action based on a weak possibility."},
+           {text:"바뀌기 때문에",correct:false,demoKr:"일정이 자주 바뀌기 때문에 항상 다시 확인해요.",demoEn:"Since the schedule changes often, I always double-check.",noteKr:"'때문에'는 확인된 이유를 나타내서 단순 가능성과 달라요.",noteEn:"'때문에' states a confirmed reason, different from a mere possibility."},
+           {text:"바뀌더라도",correct:false,demoKr:"일정이 바뀌더라도 크게 상관없어요.",demoEn:"Even if the schedule changes, it doesn't matter much.",noteKr:"'-더라도'는 양보를 나타내서 안 맞아요.",noteEn:"'-더라도' shows concession, not a fit."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"이 약이 사람에 따라 효과가 ____ 며칠 더 지켜보세요.",
+         passageEn:"This medicine might not be effective depending on the person, so keep an eye on it for a few more days.",
+         options:[
+           {text:"없을지도 모르니까",correct:true,filledKr:"이 약이 사람에 따라 효과가 없을지도 모르니까 며칠 더 지켜보세요.",filledEn:"This medicine might not be effective depending on the person, so keep an eye on it for a few more days.",noteKr:"약한 가능성 뒤에 조심스러운 조언이 이어져요.",noteEn:"A weak possibility followed by cautious advice."},
+           {text:"없기는 하지만",correct:false,demoKr:"효과가 없기는 하지만 부작용도 없어요.",demoEn:"It may not be effective, but at least there are no side effects.",noteKr:"'-기는 하지만'은 대조를 나타내서 안 맞아요.",noteEn:"'-기는 하지만' shows contrast, not a fit."},
+           {text:"없는 대신",correct:false,demoKr:"이 약은 효과가 강한 대신 부작용이 있어요.",demoEn:"This medicine is strong, but in exchange it has side effects.",noteKr:"'–는 대신'은 '대가로'라는 뜻이라 완전히 달라요.",noteEn:"'-는 대신' means 'in exchange for,' a completely different meaning."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"제 기억이 ____ 문서를 다시 한번 확인해 볼게요.",
+         passageEn:"My memory might be wrong, so let me double-check the document.",
+         options:[
+           {text:"잘못됐을지도 몰라서",correct:true,filledKr:"제 기억이 잘못됐을지도 몰라서 문서를 다시 한번 확인해 볼게요.",filledEn:"My memory might be wrong, so let me double-check the document.",noteKr:"자신 없는 상태를 겸손하게 나타내는 자연스러운 표현이에요.",noteEn:"A natural, humble way to express uncertainty."},
+           {text:"잘못됐기 마련이라서",correct:false,demoKr:"사람의 기억은 시간이 지나면 잘못되기 마련이에요.",demoEn:"Memory is bound to become inaccurate over time.",noteKr:"'–기 마련이다'는 '당연히 그렇다'는 뜻이라 달라요.",noteEn:"'-기 마련이다' means 'it's only natural,' a different meaning."},
+           {text:"잘못된 나머지",correct:false,demoKr:"너무 긴장한 나머지 기억이 잘못됐어요.",demoEn:"I was so nervous that my memory got mixed up.",noteKr:"'–는 나머지'는 '~한 결과'라는 뜻이라 달라요.",noteEn:"'-는 나머지' means 'as a result of being so ~,' a different meaning."},
+         ]},
+        {scenarioKr:"다음 문장의 빈칸에 가장 자연스러운 표현을 고르세요.",scenarioEn:"Choose the most natural expression for the blank.",
+         passageKr:"혹시 다음 주에 계획이 ____ 미리 말씀드릴게요.",
+         passageEn:"The plan might change next week, so let me tell you in advance just in case.",
+         options:[
+           {text:"바뀔지도 몰라서",correct:true,filledKr:"혹시 다음 주에 계획이 바뀔지도 몰라서 미리 말씀드릴게요.",filledEn:"The plan might change next week, so let me tell you in advance just in case.",noteKr:"'혹시'와 함께 쓰여 약한 가능성을 미리 알려 주는 상황이에요.",noteEn:"Paired with '혹시,' it pre-emptively flags a weak possibility."},
+           {text:"바뀌는 대로",correct:false,demoKr:"계획이 바뀌는 대로 바로 연락드릴게요.",demoEn:"I'll contact you as soon as the plan changes.",noteKr:"'–는 대로'는 '~하자마자'라는 뜻이라 안 맞아요.",noteEn:"'-는 대로' means 'as soon as,' not a fit."},
+           {text:"바뀌므로",correct:false,demoKr:"일정이 바뀌므로 다시 공지하겠습니다.",demoEn:"As the schedule has changed, we will notify you again.",noteKr:"'–므로'는 확정된 공식적인 이유를 나타내서 단순 가능성과 안 맞아요.",noteEn:"'-므로' states a confirmed, formal reason, not a fit with a mere possibility."},
+         ]},
+      ],
+      correction:[
+        {wrong:"혹시 오늘 비가 올지 몰라서 우산을 챙겼어요.",wrongEn:"It might rain today, so I brought an umbrella just in case.",ans:"혹시 오늘 비가 올지도 몰라서 우산을 챙겼어요.",ansEn:"It might rain today, so I brought an umbrella just in case."},
+        {wrong:"제가 틀렸을 지도 몰르니까 다시 확인해 주세요.",wrongEn:"I might be wrong, so please check again.",ans:"제가 틀렸을지도 모르니까 다시 확인해 주세요.",ansEn:"I might be wrong, so please check again."},
+      ],
+      dialogue:{lines:[
+        {who:"A",kr:"내일 등산 가기로 했는데 일기예보 확인해 봤어요?",en:"We planned to go hiking tomorrow — did you check the weather forecast?",fill:false},
+        {who:"B",kr:"네, 근데 오후에 갑자기 비가 ___ 우산이나 우비를 챙기는 게 좋을 것 같아요.",en:"Yes, but it might suddenly rain in the afternoon, so I think it'd be good to bring an umbrella or a raincoat.",fill:true,base:"오다",hint:"오다 + (으)ㄹ지도 모르다",ans:"올지도 몰라서"},
+        {who:"A",kr:"그래요? 그럼 날짜를 바꾸는 게 나을까요?",en:"Really? Should we change the date, then?",fill:false},
+        {who:"B",kr:"음, 예보가 ___ 일단 내일 아침에 다시 한번 확인해 봐요.",en:"Well, the forecast might be wrong, so let's just check again tomorrow morning first.",fill:true,base:"틀리다",hint:"틀리다 + (으)ㄹ지도 모르다",ans:"틀릴지도 모르니까"},
+      ]},
+      topik:[
+        {kind:"underline",
+         instructionKr:"다음 밑줄 친 부분과 의미가 가장 비슷한 것을 고르십시오.",
+         instructionEn:"Choose the option closest in meaning to the underlined part. (2 points each)",
+         sentenceKr:"길이 막혀서 좀 __늦을지도 몰라요__.",
+         sentenceEn:"I might be a bit late because of traffic.",
+         options:[
+           {text:"늦을 수도 있어요",correct:true,filledKr:"길이 막혀서 좀 늦을 수도 있어요.",filledEn:"I might be a bit late because of traffic.",noteKr:"'–(으)ㄹ 수도 있다'는 의미상 거의 완전히 같아서 가장 가까워요.",noteEn:"'-(으)ㄹ 수도 있다' is nearly identical in meaning, so it's the closest."},
+           {text:"늦기 마련이에요",correct:false,demoKr:"출퇴근 시간에는 길이 막히기 마련이에요.",demoEn:"Traffic is bound to be jammed during rush hour.",noteKr:"'-기 마련이다'는 '당연히 그렇다'는 뜻이라 달라요.",noteEn:"'-기 마련이다' means 'it's only natural,' a different meaning."},
+           {text:"늦을 리가 없어요",correct:false,demoKr:"이렇게 일찍 나왔는데 늦을 리가 없어요.",demoEn:"I left this early, so there's no way I'll be late.",noteKr:"'–(으)ㄹ 리가 없다'는 '그럴 가능성이 없다'는 뜻이라 정반대예요.",noteEn:"'-(으)ㄹ 리가 없다' means 'there's no way,' the opposite meaning."},
+           {text:"늦는 셈이에요",correct:false,demoKr:"매번 5분씩 늦으니까 거의 습관적으로 늦는 셈이에요.",demoEn:"I'm late by five minutes every time, so it's practically a habit at this point.",noteKr:"'–는 셈이다'는 '결국 그런 것과 같다'는 뜻이라 달라요.",noteEn:"'-는 셈이다' means 'amounts to, counts as,' a different meaning."},
+         ]},
+        {kind:"dialogue",
+         instructionKr:"다음을 읽고 여자의 마지막 말로 가장 알맞은 것을 고르십시오.",
+         instructionEn:"Read the following and choose the most appropriate last line for the woman.",
+         lines:[
+           {who:"여자",kr:"민수 씨한테 몇 번 연락했는데 답이 없네요."},
+           {who:"남자",kr:"저도 그래요. 무슨 일 있나 걱정되네요."},
+         ],
+         blankWho:"여자",
+         options:["휴대폰 배터리가 없어서 연락을 못 받고 있을지도 몰라요.","민수 씨는 항상 연락을 잘 받는 편이에요.","저는 원래 연락을 자주 안 하는 편이에요.","민수 씨한테 무슨 일이 있었던 게 확실해요."],
+         optsEn:["His phone battery might have died, so he might not be able to answer.","Minsu is usually good about answering messages.","I'm usually not great about keeping in touch, myself.","I'm sure something happened to Minsu."],
+         ans:0,
+         fbKr:"연락이 안 되는 상황에 대해 가능한 이유를 조심스럽게 추측하는 ①번이 대화 흐름에 가장 자연스러워요. ④번처럼 단정적으로 말하는 것은 '–(으)ㄹ지도 모르다'의 약한 추측 느낌과 맞지 않아요.",
+         fbEn:"① naturally offers a tentative possible reason for why he isn't answering. ④ states it as a certainty, which doesn't match the weak, tentative nuance of '-(으)ㄹ지도 모르다.'"},
+      ],
+    }
+  },
+];
+let currentUnit=0;
+let scoreState={};
+
+function toggleDrawer(){
+  const d=document.getElementById('drawer'),o=document.getElementById('overlay'),b=document.getElementById('burgerBtn');
+  d.classList.toggle('open');o.classList.toggle('show');b.classList.toggle('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('burgerBtn').classList.remove('open');
+}
+function showUnit(idx,tab){
+  currentUnit=idx;
+  document.querySelectorAll('.unit-tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  renderUnit(idx);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function scrollTabs(dir){
+  const wrap=document.getElementById('unitTabs');
+  if(!wrap) return;
+  wrap.scrollBy({left:dir*140,behavior:'smooth'});
+}
+function updateTabsNav(){
+  const wrap=document.getElementById('unitTabs');
+  const left=document.getElementById('tabsNavLeft');
+  const right=document.getElementById('tabsNavRight');
+  if(!wrap||!left||!right) return;
+  const scrollable=wrap.scrollWidth>wrap.clientWidth+2;
+  left.classList.toggle('hidden',!scrollable);
+  right.classList.toggle('hidden',!scrollable);
+  left.disabled=wrap.scrollLeft<=2;
+  right.disabled=wrap.scrollLeft>=wrap.scrollWidth-wrap.clientWidth-2;
+}
+function renderUnit(idx){
+  const u=UNITS[idx];
+  const list=document.getElementById('grammarList');
+  list.innerHTML='';
+  list.appendChild(buildCard(u));
+}
+function buildCard(u){
+  const card=document.createElement('div');
+  card.className='grammar-card';
+  card.innerHTML=`
+    <div class="card-header" onclick="toggleBody(this)">
+      <div class="card-num">${u.num}</div>
+      <div class="card-title-wrap">
+        <div class="card-level">${u.level}</div>
+        <div class="card-title">${u.title}</div>
+      </div>
+      <span class="card-arrow">▾</span>
+    </div>
+    <div class="card-body show">${renderBody(u)}</div>`;
+  return card;
+}
+function toggleBody(hdr){
+  const body=hdr.nextElementSibling;
+  const arrow=hdr.querySelector('.card-arrow');
+  body.classList.toggle('show');
+  arrow.classList.toggle('open');
+}
+function renderBody(u){
+  const uid='u'+u.num;
+  return `
+    <div class="formula-row">
+      <span class="section-tag">📐 문법 공식 · Grammar Formula</span>
+      <button class="docx-btn" id="${uid}docxBtn" onclick="downloadDocx('${uid}')" title="Download as Word (.docx)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        DOCX
+      </button>
+      <a class="docx-fallback-link" id="${uid}docxFallback" href="#" download></a>
+    </div>
+    <div class="formula-box">${u.formula}</div>
+    <div class="analogy-box">
+      <div class="lbl">🔤 영어의 이 표현과 같아요 · Same as this English pattern</div>
+      ${u.englishPatterns.map(p=>`<div class="pattern-line">"${p}"</div>`).join('')}
+      <div style="margin-top:8px;">
+        <div class="ex-item" style="background:#fff;"><div class="ex-kr">${u.analogyExampleKr}</div><div class="ex-en">${u.analogyExampleEn}</div></div>
+      </div>
+    </div>
+    <span class="section-tag">📖 활용 규칙 · Rules</span>
+    ${u.rules.map(r=>`<div class="rule-card"><div class="rule-title">${r.t}</div><div class="rule-text">${r.en}</div><div class="rule-ex">예) ${r.ex}</div></div>`).join('')}
+    <span class="section-tag" style="margin-top:12px;">💬 예문 · Examples</span>
+    <ul class="examples-list">
+      ${u.examples.map(ex=>`<li class="ex-item"><div class="ex-kr">${ex.kr}</div><div class="ex-en">${ex.en}</div></li>`).join('')}
+    </ul>
+    ${renderQuiz(u.quiz,uid)}`;
+}
+
+function countTotal(q){
+  let n=q.ox.length+q.sentence.length+q.context.length+q.correction.length+q.topik.length;
+  q.dialogue.lines.forEach(l=>{ if(l.fill){ n += Array.isArray(l.ans)?l.ans.length:1; } });
+  return n;
+}
+
+function renderQuiz(q,uid){
+  scoreState[uid]={correct:0,answered:0,total:countTotal(q),seen:new Set()};
+  return `<div class="quiz-section">
+    <span class="section-tag" style="background:#FDF2E3;color:#854F0B;">🧪 연습문제 · Practice</span>
+    <div class="score-chip" id="${uid}score">✓ 0/${scoreState[uid].total} 정답</div>
+
+    <div class="quiz-type-label" style="background:#0071E3;">✅ OX 문제 (True / False)</div>
+    <div class="quiz-desc">위 활용 규칙을 얼마나 정확히 이해했는지 확인해요.</div>
+    ${q.ox.map((item,i)=>`<div class="quiz-q">
+      <p>${item.krSentence}</p><p class="en">${item.en}</p>
+      <div class="ox-row">
+        <button class="ox-btn" onclick="checkOX(this,'${uid}',${i},true,${item.ans},'${esc(item.fbKr)}','${esc(item.fbEn)}')">⭕ 맞다</button>
+        <button class="ox-btn" onclick="checkOX(this,'${uid}',${i},false,${item.ans},'${esc(item.fbKr)}','${esc(item.fbEn)}')">❌ 틀리다</button>
+      </div>
+      <div class="fb" id="${uid}ox${i}fb"></div>
+    </div>`).join('')}
+
+    <div class="quiz-type-label" style="background:#2FA84F;">✍️ 문장 완성 (Complete with the Grammar)</div>
+    <div class="quiz-desc">힌트를 참고해서 빈칸을 채워 보세요.</div>
+    ${q.sentence.map((item,i)=>`<div class="quiz-q">
+      <p class="en">${item.en}</p>
+      <div class="fill-wrap">${item.pre} <input class="fill-input" id="${uid}se${i}" placeholder="${item.hint}" type="text"> ${item.suf}</div>
+      <button class="check-btn" onclick="checkFill('${uid}','${i}','${uid}se${i}','${esc(item.ans)}','${uid}se${i}fb')">확인 ✓</button>
+      <div class="fb" id="${uid}se${i}fb"></div>
+    </div>`).join('')}
+
+    <div class="quiz-type-label" style="background:#5E5CE6;">🗣️ 문맥 표현 선택 (Choose the Natural Expression)</div>
+    <div class="quiz-desc">선택 후 모든 보기의 해설과 예문 번역을 확인할 수 있어요.</div>
+    ${q.context.map((item,i)=>renderContextItem(item,uid,i)).join('')}
+
+    <div class="quiz-type-label" style="background:#E0393E;">🛠️ 오류 수정 (Find & Fix the Error)</div>
+    <div class="quiz-desc">문장에서 어색한 부분을 찾아 자연스럽게 고쳐 보세요.</div>
+    ${q.correction.map((item,i)=>`<div class="quiz-q">
+      <p>${item.wrong}</p>
+      <p class="en">${item.wrongEn}</p>
+      <textarea class="fill-textarea" id="${uid}co${i}" placeholder="고친 문장을 써 보세요"></textarea>
+      <button class="check-btn" onclick="checkCorrection('${uid}','${i}','${uid}co${i}','${esc(item.ans)}','${esc(item.ansEn)}','${uid}co${i}fb')">확인 ✓</button>
+      <div class="fb" id="${uid}co${i}fb"></div>
+    </div>`).join('')}
+
+    <div class="quiz-type-label" style="background:#0071E3;">💭 대화 완성 (Complete the Dialogue)</div>
+    <div class="dia-tip">💡 빈칸에 기본형이 미리 적혀 있어요. 클릭해서 정답 형태로 고쳐 보세요! (Blanks are pre-filled with the dictionary form — click and overwrite with the correct form.)</div>
+    <div class="quiz-q">
+      <div class="dialogue-wrap">
+        ${q.dialogue.lines.map((line,li)=>{
+          const isA = line.who==='A';
+          const bubbleCls = isA?'bubble-a':'bubble-b';
+          if(!line.fill){
+            return `<div class="dialogue-item ${isA?'bubble-a-wrap':'bubble-b-wrap'}">
+              <div class="who-label">${line.who}</div>
+              <div class="dialogue-bubble ${bubbleCls}">
+                <div>${line.kr}</div><div class="bubble-en">${line.en}</div>
+              </div></div>`;
+          }
+          const hints = Array.isArray(line.hint) ? line.hint : [line.hint];
+          const bases = Array.isArray(line.base) ? line.base : [line.base];
+          const parts = line.kr.split('___');
+          let rows = [];
+          let curRow = '';
+          parts.forEach((part,pi)=>{
+            curRow += part;
+            if(pi < hints.length){
+              const inputId = uid+'dl'+li+'_'+pi;
+              const baseVal = bases[pi] || '';
+              curRow += `<input class="dia-fill" id="${inputId}" value="${baseVal}" placeholder="${baseVal?'':(hints[pi]||'')}" type="text" onfocus="this.select()">`;
+              if(pi < hints.length-1){
+                rows.push(curRow);
+                curRow = '';
+              }
+            }
+          });
+          if(curRow) rows.push(curRow);
+          const rowsHtml = rows.map((row,ri)=>{
+            const hint = hints[ri];
+            return `<div class="dia-row">${row}<span class="dia-hint" data-hint="${hint||''}">${hint||''}</span></div>`;
+          }).join('');
+          return `<div class="dialogue-item ${isA?'bubble-a-wrap':'bubble-b-wrap'}">
+            <div class="who-label">${line.who}</div>
+            <div class="dialogue-bubble ${bubbleCls}">
+              ${rowsHtml}
+              <div class="bubble-en">${line.en}</div>
+            </div></div>`;
+        }).join('')}
+      </div>
+      <button class="check-btn" style="margin-top:12px;" onclick="checkDialogue('${uid}','${uid}dlf')">답 확인하기 ✓</button>
+      <div class="fb" id="${uid}dlf"></div>
+    </div>
+
+    <div class="quiz-type-label" style="background:linear-gradient(135deg,#1D1D1F,#3A3A3C);">🎯 심화 실전 문제</div>
+    <div class="quiz-desc">이 문법을 활용한 실전 문제로 마무리해 보세요.</div>
+    ${renderTopikUnderline(q.topik[0],uid,0)}
+    ${renderTopikDialogue(q.topik[1],uid,1)}
+  </div>`;
+}
+
+function renderContextItem(item,uid,qi){
+  const correctIdx = item.options.findIndex(o=>o.correct);
+  const optsHtml = item.options.map((o,oi)=>`
+    <div class="mc-opt">
+      <button class="mc-btn" onclick="checkContext(this,'${uid}','ct${qi}',${oi},${correctIdx})">${String.fromCharCode(9312+oi)} ${o.text}</button>
+      <div class="mc-detail ${o.correct?'is-correct':'is-wrong'}" id="${uid}ct${qi}d${oi}">
+        <div class="fkr">${o.correct?'✅ '+o.filledKr:'❌ \''+o.text+'\'는 이렇게 써요:'}</div>
+        ${o.correct?'':'<div class="fkr" style="margin-top:2px;">'+o.demoKr+'</div>'}
+        <div class="fen">${o.correct?o.filledEn:o.demoEn}</div>
+        <div class="fnote">${o.noteKr}</div>
+        <div class="fnote-en">${o.noteEn}</div>
+      </div>
+    </div>`).join('');
+  return `<div class="quiz-q">
+    <p>${item.scenarioKr}</p><p class="en">${item.scenarioEn}</p>
+    <div class="passage-box"><div style="font-weight:600;">${item.passageKr}</div><div style="color:var(--ink-soft);font-style:italic;margin-top:6px;font-size:12.5px;">${item.passageEn}</div></div>
+    ${optsHtml}
+  </div>`;
+}
+
+function renderTopikUnderline(item,uid,ti){
+  const correctIdx = item.options.findIndex(o=>o.correct);
+  const sentHtml = item.sentenceKr.replace(/__(.+?)__/,'<u>$1</u>');
+  const optsHtml = item.options.map((o,oi)=>`
+    <div class="mc-opt">
+      <button class="mc-btn" onclick="checkContext(this,'${uid}','tp${ti}',${oi},${correctIdx})">${String.fromCharCode(9312+oi)} ${o.text}</button>
+      <div class="mc-detail ${o.correct?'is-correct':'is-wrong'}" id="${uid}tp${ti}d${oi}">
+        <div class="fkr">${o.correct?'✅ '+o.filledKr:'❌ \''+o.text+'\'는 이렇게 써요:'}</div>
+        ${o.correct?'':'<div class="fkr" style="margin-top:2px;">'+o.demoKr+'</div>'}
+        <div class="fen">${o.correct?o.filledEn:o.demoEn}</div>
+        <div class="fnote">${o.noteKr}</div>
+        <div class="fnote-en">${o.noteEn}</div>
+      </div>
+    </div>`).join('');
+  return `<div class="quiz-q">
+    <p class="topik-instruction">${item.instructionKr}</p>
+    <p class="topik-instruction" style="font-style:italic;">${item.instructionEn}</p>
+    <div class="topik-sentence">${sentHtml}</div>
+    <div class="topik-sentence-en">${item.sentenceEn}</div>
+    ${optsHtml}
+  </div>`;
+}
+
+function renderTopikDialogue(item,uid,ti){
+  const linesHtml = item.lines.map(l=>`<div class="d-line"><span class="d-who">${l.who}:</span> ${l.kr}</div>`).join('');
+  const optsHtml = item.options.map((opt,oi)=>`<button class="mc-btn" onclick="checkTopikDialogue(this,'${uid}',${ti},${oi},${item.ans},'${esc(item.fbKr)}','${esc(item.fbEn)}')">${String.fromCharCode(9312+oi)} ${opt}</button>`).join('');
+  return `<div class="quiz-q">
+    <p class="topik-instruction">${item.instructionKr}</p>
+    <p class="topik-instruction" style="font-style:italic;">${item.instructionEn}</p>
+    <div class="dialogue-scenario">
+      ${linesHtml}
+      <div class="d-line"><span class="d-who">${item.blankWho}:</span> <span class="d-blank">________</span></div>
+    </div>
+    ${optsHtml}
+    <div class="fb" id="${uid}tp${ti}fb"></div>
+  </div>`;
+}
+
+function esc(s){return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function norm(s){return String(s).trim().replace(/\s+/g,' ').replace(/[.!?]+$/,'');}
+
+function markAnswered(uid,key,isCorrect){
+  const st=scoreState[uid]; if(!st) return;
+  if(st.seen.has(key)) return;
+  st.seen.add(key); st.answered++; if(isCorrect) st.correct++;
+  const el=document.getElementById(uid+'score');
+  if(el) el.textContent=`✓ ${st.correct}/${st.total} 정답 · ${st.answered}/${st.total} 풀이 완료`;
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  if(!t) return;
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+function checkOX(btn,uid,i,val,ans,fbKr,fbEn){
+  const fbEl=document.getElementById(uid+'ox'+i+'fb');
+  btn.parentElement.querySelectorAll('.ox-btn').forEach(b=>b.disabled=true);
+  const correct=val===ans;
+  btn.classList.add(correct?'correct':'wrong');
+  fbEl.innerHTML=fbKr+`<span class="en-line">${fbEn}</span>`;
+  fbEl.className='fb '+(correct?'ok':'no');
+  markAnswered(uid,uid+'ox'+i,correct);
+}
+function checkContext(btn,uid,qIdx,selIdx,correctIdx){
+  const container=btn.closest('.quiz-q');
+  container.querySelectorAll('.mc-btn').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===correctIdx) b.classList.add('correct');
+    else if(i===selIdx) b.classList.add('wrong');
+  });
+  container.querySelectorAll('.mc-detail').forEach(d=>d.classList.add('show'));
+  const ok=selIdx===correctIdx;
+  markAnswered(uid,uid+'_'+qIdx,ok);
+}
+function checkTopikDialogue(btn,uid,i,sel,ans,fbKr,fbEn){
+  const fbEl=document.getElementById(uid+'tp'+i+'fb');
+  btn.parentElement.querySelectorAll('.mc-btn').forEach(b=>b.disabled=true);
+  const correct=sel===ans;
+  btn.classList.add(correct?'correct':'wrong');
+  fbEl.innerHTML=fbKr+`<span class="en-line">${fbEn}</span>`;
+  fbEl.className='fb '+(correct?'ok':'no');
+  markAnswered(uid,uid+'tp'+i,correct);
+}
+function checkFill(uid,i,inpId,ans,fbId){
+  const val=document.getElementById(inpId).value.trim();
+  const fbEl=document.getElementById(fbId);
+  const ok=val===ans;
+  fbEl.textContent=ok?'✓ 정답이에요!':`✗ 다시 확인해 보세요. 정답: ${ans}`;
+  fbEl.className='fb '+(ok?'ok':'no');
+  markAnswered(uid,uid+'se'+i,ok);
+}
+function checkCorrection(uid,i,inpId,ans,ansEn,fbId){
+  const val=document.getElementById(inpId).value;
+  const fbEl=document.getElementById(fbId);
+  const ok=norm(val)===norm(ans);
+  fbEl.innerHTML=(ok?'✓ 정확하게 고쳤어요!':`✗ 다시 확인해 보세요. 모범 답안: ${ans}`)+`<span class="en-line">${ansEn}</span>`;
+  fbEl.className='fb '+(ok?'ok':'no');
+  markAnswered(uid,uid+'co'+i,ok);
+}
+function checkDialogue(uid,fbId){
+  const u=UNITS[currentUnit];
+  const lines=u.quiz.dialogue.lines;
+  let score=0,total=0;
+  lines.forEach((line,li)=>{
+    if(!line.fill)return;
+    const ansList=Array.isArray(line.ans)?line.ans:[line.ans];
+    ansList.forEach((correctAns,pi)=>{
+      total++;
+      const inp=document.getElementById(uid+'dl'+li+'_'+pi);
+      if(!inp)return;
+      const val=inp.value.trim();
+      const ok=val===correctAns;
+      if(ok) score++;
+      const row=inp.closest('.dia-row');
+      const hintEl = row ? row.querySelector('.dia-hint') : null;
+      if(ok){
+        inp.style.color='';
+        if(hintEl){ hintEl.textContent='✓ 정답'; hintEl.classList.add('show'); }
+      } else {
+        inp.style.color='#E0393E';
+        if(hintEl){ hintEl.textContent='정답: '+correctAns; hintEl.classList.add('show'); }
+      }
+      markAnswered(uid,uid+'dl'+li+'_'+pi,ok);
+    });
+  });
+  const fbEl=document.getElementById(fbId);
+  fbEl.textContent=score===total?`✓ 모두 정답이에요! (${score}/${total})`:`점수: ${score}/${total} — 빈칸 아래 정답을 확인해 보세요.`;
+  fbEl.className='fb '+(score===total?'ok':'no');
+}
+// ── DOCX Download ───────────────────────────────────────────────────────
+// Builds the .docx file directly as raw OOXML + a hand-rolled, dependency-
+// free STORE-only ZIP (CRC32 + local/central headers), instead of routing
+// through the large bundled docx.js library. This removes ~1.2MB of
+// third-party code from the page (the only thing it was used for) and
+// removes every layer that could get mangled between "works on this
+// machine" and "works after the page is hosted and opened on a phone":
+// no compression tables, no base64 round-trip, no big minified library —
+// just plain UTF-8 text turned into three small XML files and zipped with
+// STORE (no compression at all). This mirrors the structure of a known-
+// good minimal .docx: [Content_Types].xml + _rels/.rels + word/document.xml,
+// nothing else.
+
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(bytes){
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+function utf8Bytes(str){ return new TextEncoder().encode(str); }
+
+function makeZip(files){
+  const chunks = [];
+  const central = [];
+  let offset = 0;
+  const dosTime = 0, dosDate = 0x21;
+
+  function push(arr){ chunks.push(arr); offset += arr.length; }
+  function u16(n){ return new Uint8Array([n & 0xFF, (n >>> 8) & 0xFF]); }
+  function u32(n){ return new Uint8Array([n & 0xFF, (n >>> 8) & 0xFF, (n >>> 16) & 0xFF, (n >>> 24) & 0xFF]); }
+  function concat(...arrs){
+    let len = 0; arrs.forEach(a=>len+=a.length);
+    const out = new Uint8Array(len);
+    let o=0; arrs.forEach(a=>{ out.set(a,o); o+=a.length; });
+    return out;
+  }
+
+  for (const f of files) {
+    const nameBytes = utf8Bytes(f.name);
+    const data = f.data;
+    const crc = crc32(data);
+    const localOffset = offset;
+
+    push(concat(
+      u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(dosTime), u16(dosDate),
+      u32(crc), u32(data.length), u32(data.length), u16(nameBytes.length), u16(0)
+    ));
+    push(nameBytes);
+    push(data);
+
+    central.push(concat(
+      u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(dosTime), u16(dosDate),
+      u32(crc), u32(data.length), u32(data.length), u16(nameBytes.length), u16(0), u16(0),
+      u16(0), u16(0), u32(0), u32(localOffset), nameBytes
+    ));
+  }
+
+  const centralStart = offset;
+  let centralSize = 0;
+  central.forEach(c => { push(c); centralSize += c.length; });
+
+  push(concat(
+    u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length),
+    u32(centralSize), u32(centralStart), u16(0)
+  ));
+
+  return concat(...chunks);
+}
+
+function xmlEscape(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\r\n/g,' ').replace(/\n/g,' ').replace(/\r/g,' ');
+}
+
+function buildDocxBytes(u){
+  const FONT='Helvetica';
+  const BLUE='0071E3', RED='E0393E', GREY='6E6E73', DARK='1D1D1F';
+  const paras = [];
+
+  function run(text, opts={}){
+    const size = opts.size || 22;
+    let rPr = `<w:rFonts w:ascii="${FONT}" w:hAnsi="${FONT}" w:eastAsia="${FONT}" w:cs="${FONT}"/>`;
+    if(opts.bold) rPr += '<w:b/><w:bCs/>';
+    if(opts.italics) rPr += '<w:i/><w:iCs/>';
+    rPr += `<w:color w:val="${opts.color||DARK}"/>`;
+    rPr += `<w:sz w:val="${size}"/><w:szCs w:val="${size}"/>`;
+    return `<w:r><w:rPr>${rPr}</w:rPr><w:t xml:space="preserve">${xmlEscape(text)}</w:t></w:r>`;
+  }
+  function para(runsXml, pOpts={}){
+    let pPr = `<w:spacing w:line="360"${pOpts.before!=null?` w:before="${pOpts.before}"`:''}${pOpts.after!=null?` w:after="${pOpts.after}"`:''}/>`;
+    if(pOpts.center) pPr += '<w:jc w:val="center"/>';
+    paras.push(`<w:p><w:pPr>${pPr}</w:pPr>${runsXml}</w:p>`);
+  }
+  const p = (text, opts={}) => para(run(text, opts));
+  const sectionHeader = (text) => para(run(text,{bold:true,color:BLUE,size:40}), {before:220, after:100});
+  const circ = (i) => String.fromCharCode(9312+i);
+
+  // ── Title
+  para(run(`1장 · ${u.level}`, {bold:true, color:BLUE}));
+  para(run(u.title, {bold:true, size:36, color:DARK}));
+  p('');
+
+  // ── Formula & English patterns
+  sectionHeader('📐 문법 공식 · Grammar Formula');
+  para(run(u.formula, {bold:true, size:28, color:BLUE}), {center:true});
+  p('');
+  p('🔤 영어의 이 표현과 같아요:', {bold:true, color:GREY});
+  u.englishPatterns.forEach(pt=>{ p('   "'+pt+'"', {italics:true, color:GREY}); });
+  p('');
+  p('   '+u.analogyExampleKr, {bold:true});
+  p('   '+u.analogyExampleEn, {italics:true, color:GREY});
+  p('');
+
+  // ── Rules
+  sectionHeader('📖 활용 규칙 · Rules');
+  u.rules.forEach(r=>{
+    p(r.t, {bold:true, color:BLUE});
+    p(r.en);
+    p('예) '+r.ex, {italics:true, color:BLUE});
+    p('');
+  });
+
+  // ── Examples
+  sectionHeader('💬 예문 · Examples');
+  u.examples.forEach(ex=>{
+    p(ex.kr, {bold:true});
+    p(ex.en, {color:GREY});
+  });
+  p('');
+
+  // ── OX
+  sectionHeader('✅ OX 문제 (True / False)');
+  u.quiz.ox.forEach((item,i)=>{
+    p(`Q${i+1}. ${item.krSentence}`, {bold:true});
+    p('   '+item.en, {italics:true, color:GREY});
+    p('   '+(item.ans?'정답: 맞다 (True)':'정답: 틀리다 (False)'), {color:BLUE, bold:true});
+    p('   '+item.fbKr, {italics:true, color:GREY});
+    p('   '+item.fbEn, {italics:true, color:GREY});
+    p('');
+  });
+
+  // ── Sentence completion
+  sectionHeader('✍️ 문장 완성 (Complete with the Grammar)');
+  u.quiz.sentence.forEach((item,i)=>{
+    p(`Q${i+1}. ${item.en}`, {bold:true});
+    para(
+      run('   '+item.pre+' [ ', {color:DARK}) +
+      run(item.ans, {bold:true, color: BLUE}) +
+      run(' ] '+item.suf, {color:DARK})
+    );
+    p('');
+  });
+
+  // ── Context choice
+  sectionHeader('🗣️ 문맥 표현 선택 (Context Choice)');
+  u.quiz.context.forEach((item,i)=>{
+    p(`Q${i+1}. `+item.scenarioKr.replace(/\n/g,' '), {bold:true});
+    p('   '+item.passageKr.replace(/\n/g,'  /  '));
+    p('   '+item.passageEn.replace(/\n/g,'  /  '), {italics:true, color:GREY});
+    item.options.forEach((opt,oi)=>{
+      p('   '+circ(oi)+' '+opt.text, {color: opt.correct?BLUE:RED, bold:opt.correct});
+    });
+    const correctOpt = item.options.find(o=>o.correct);
+    p('   ✓ '+correctOpt.filledKr, {color:BLUE});
+    p('   '+correctOpt.filledEn, {italics:true, color:GREY});
+    p('');
+  });
+
+  // ── Correction
+  sectionHeader('🛠️ 오류 수정 (Error Correction)');
+  u.quiz.correction.forEach((item,i)=>{
+    p(`Q${i+1}.`, {bold:true});
+    p('   ✗ '+item.wrong, {color:RED});
+    p('   '+item.wrongEn, {italics:true, color:GREY});
+    p('   ✓ '+item.ans, {color:BLUE});
+    p('   '+item.ansEn, {italics:true, color:GREY});
+    p('');
+  });
+
+  // ── Dialogue
+  sectionHeader('💭 대화 완성 (Dialogue)');
+  u.quiz.dialogue.lines.forEach(line=>{
+    const ansList = Array.isArray(line.ans) ? line.ans : (line.ans?[line.ans]:[]);
+    let text = line.kr;
+    ansList.forEach(a=>{ text = text.replace('___', '['+a+']'); });
+    para(
+      run(`${line.who}: `, {bold:true, color: line.who==='A'?BLUE:DARK}) +
+      run(text, {color: line.fill?BLUE:DARK})
+    );
+    p('   ('+line.en+')', {italics:true, color:GREY});
+  });
+  p('');
+
+  // ── Advanced practice
+  sectionHeader('🎯 심화 실전 문제');
+  const tp1 = u.quiz.topik[0];
+  p(tp1.instructionKr, {bold:true});
+  p(tp1.instructionEn, {italics:true, color:GREY});
+  p('   '+tp1.sentenceKr.replace(/__/g,''), {bold:true});
+  p('   '+tp1.sentenceEn, {italics:true, color:GREY});
+  tp1.options.forEach((opt,oi)=>{
+    p('   '+circ(oi)+' '+opt.text, {color: opt.correct?BLUE:RED, bold:opt.correct});
+  });
+  p('');
+
+  const tp2 = u.quiz.topik[1];
+  p(tp2.instructionKr, {bold:true});
+  p(tp2.instructionEn, {italics:true, color:GREY});
+  tp2.lines.forEach(l=>{ p('   '+l.who+': '+l.kr); });
+  tp2.options.forEach((opt,oi)=>{
+    p('   '+circ(oi)+' '+opt, {color: oi===tp2.ans?BLUE:RED, bold: oi===tp2.ans});
+  });
+  p('   '+tp2.fbKr, {italics:true, color:GREY});
+  p('   '+tp2.fbEn, {italics:true, color:GREY});
+
+  const documentXml =
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
+    '<w:body>' + paras.join('') + '</w:body></w:document>';
+
+  const contentTypesXml =
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+    '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+    '<Default Extension="xml" ContentType="application/xml"/>' +
+    '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' +
+    '</Types>';
+
+  const relsXml =
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+    '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>' +
+    '</Relationships>';
+
+  return makeZip([
+    { name: '[Content_Types].xml', data: utf8Bytes(contentTypesXml) },
+    { name: '_rels/.rels', data: utf8Bytes(relsXml) },
+    { name: 'word/document.xml', data: utf8Bytes(documentXml) },
+  ]);
+}
+
+function showDocxFallback(uid, url, filename){
+  const link = document.getElementById(uid+'docxFallback');
+  if(!link) return;
+  link.textContent = '⬇️ 안 열리면 여기를 탭';
+  link.href = url;
+  link.setAttribute('download', filename);
+  link.style.display = 'inline-flex';
+  const key = '__fbTimer_'+uid;
+  clearTimeout(window[key]);
+  window[key] = setTimeout(()=>{ link.style.display='none'; try{URL.revokeObjectURL(url);}catch(e){} }, 180000);
+}
+
+function downloadDocx(uid){
+  const u = UNITS[currentUnit];
+  const btn = document.getElementById(uid+'docxBtn');
+  if(btn) btn.classList.add('loading');
+
+  try{
+    const bytes = buildDocxBytes(u);
+    const filename = `Korean_Intermediate_Ch1_${u.num}_${u.title.replace(/[\/\s]/g,'_')}.docx`;
+    const blob = new Blob([bytes], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ a.remove(); }, 400);
+    showDocxFallback(uid, url, filename);
+    if(btn) btn.classList.remove('loading');
+    showToast('✓ DOCX 파일이 다운로드되었어요. 안 열리면 옆의 링크를 탭해 보세요.');
+  }catch(err){
+    console.error('DOCX generation failed:',err);
+    if(btn) btn.classList.remove('loading');
+    showToast('⚠️ DOCX 생성 중 오류가 발생했어요.');
+  }
+}
+
+renderUnit(0);
+(function(){
+  const wrap=document.getElementById('unitTabs');
+  if(wrap){
+    wrap.addEventListener('scroll',updateTabsNav);
+    window.addEventListener('resize',updateTabsNav);
+  }
+  updateTabsNav();
+})();
+</script>
+</body>
+</html>
