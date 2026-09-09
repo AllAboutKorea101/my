@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HangulCraft Store | 애플 감성의 프리미엄 한국어 교재 스토어</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        * {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+        }
+
+        /* Glassmorphism elements */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        /* Chart container constraint */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 580px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 360px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F5F7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D1D6;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #99999E;
+        }
+
+        .book-shadow {
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.25), 0 5px 12px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-shadow-hover {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .book-shadow-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 28px 45px -12px rgba(0, 0, 0, 0.3), 0 8px 18px -4px rgba(0, 0, 0, 0.12);
+        }
+    </style>
+</head>
+<body class="bg-[#F5F5F7] text-[#1D1D1F] antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Chosen Palette: Apple Store Clean (Neutral Warm Light #F5F5F7, Slate #1D1D1F, Royal Blue #0071E3, Teal & Amber Accents) -->
+    <!-- Application Structure Plan:
+         1. Global Header: Apple-style frosted glass top bar with Store branding, Category quick links, Search preview, and Shopping Bag with live item count badge.
+         2. Hero Product Stage: Featured flagship book ("Hangul Masterclass 2026") presented with Apple product launch layout, 3D CSS book cover, key stats, instant cart add, and preview trigger.
+         3. Interactive Product Catalog (Filterable Store Grid): Filter books by Level (전체, 입문/초급, 중급, 고급/비즈니스, 세트/번들). Cards feature instant quick-preview and add-to-cart.
+         4. Dynamic Bundle Builder (나만의 학습 키트): Interactive Bento grid where users select textbook + workbook + app pass + notebook with live price calculator and discount perks.
+         5. Curriculum Radar Analytics: Chart.js Canvas visualization displaying skill distribution (어휘, 문법, 말하기, 듣기, 쓰기) for selected textbooks.
+         6. Slide-Over Cart Drawer & Instant Checkout Modal: Functional state-driven cart drawer supporting quantity adjustment, coupon code, and simulated checkout flow.
+         7. Interactive Book Sample Preview Modal: Dynamic modal allowing users to read sample pages, toggle English translations, and play sample audio clips.
+    -->
+    <!-- Visualization & Content Choices:
+         - Standard Book Visuals: Styled HTML/CSS 3D book covers with realistic gradients and spine highlights (NO SVG).
+         - Skill Balance Chart: Chart.js Canvas Radar chart showing balance of 5 core learning dimensions (NO SVG/Mermaid).
+         - Cart & Preview UI: Pure Vanilla JS reactive state pattern without external heavy libraries.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Global Top Navigation Bar -->
+    <header class="sticky top-0 z-40 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 sm:h-14 flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <a href="#" class="text-base sm:text-lg font-bold tracking-tight text-[#1D1D1F] flex items-center space-x-1.5">
+                    <span> HangulCraft</span>
+                    <span class="text-[10px] bg-black text-white px-2 py-0.5 rounded-full font-medium tracking-normal">Store</span>
+                </a>
+                <nav class="hidden md:flex space-x-6 text-xs font-medium text-gray-600">
+                    <a href="#featured" class="hover:text-black transition">플래그십 교재</a>
+                    <a href="#catalog" class="hover:text-black transition">교재 라인업</a>
+                    <a href="#bundle-builder" class="hover:text-black transition">번들 키트 구성</a>
+                    <a href="#analytics" class="hover:text-black transition">커리큘럼 분석</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center space-x-4 text-xs font-medium">
+                <button onclick="toggleCart()" class="relative p-2 text-gray-800 hover:text-black transition focus:outline-none">
+                    <span class="font-bold">장바구니</span>
+                    <span id="cart-badge" class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold text-white bg-[#0071E3] rounded-full min-w-[18px]">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
+
+        <!-- Intro Banner / Section Header -->
+        <div class="text-center pt-4 pb-2 space-y-2">
+            <span class="text-xs font-bold text-[#0071E3] uppercase tracking-widest">Store Showcase</span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#1D1D1F]">
+                당신의 한국어 여정을 위한 <br class="sm:hidden">
+                <span class="bg-gradient-to-r from-[#0071E3] via-indigo-600 to-purple-600 bg-clip-text text-transparent">완벽한 설계.</span>
+            </h1>
+            <p class="text-xs sm:text-base text-gray-500 max-w-2xl mx-auto">
+                절제된 디자인, 입체적인 음성 오디오, 체계적인 단계별 커리큘럼. 교재 선택부터 학습까지 애플 스타일의 명쾌한 가치를 경험하세요.
+            </p>
+        </div>
+
+        <!-- Section 1: Hero Flagship Showcase -->
+        <section id="featured" class="bg-white rounded-3xl p-6 sm:p-12 border border-gray-200/80 shadow-sm relative overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Left Details -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center space-x-2 bg-blue-50 text-[#0071E3] px-3 py-1 rounded-full text-xs font-bold">
+                        <span>New Flagship</span>
+                        <span>·</span>
+                        <span>2026 Master Edition</span>
+                    </div>
+                    
+                    <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#1D1D1F] leading-tight">
+                        한글 마스터클래스 : <br>
+                        <span class="text-gray-500 font-normal">발음부터 고급 문장까지 한번에.</span>
+                    </h2>
+
+                    <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+                        전 세계 50만 학습자가 선택한 베스트셀러의 완결판. 한글 자모의 조형 원리부터 실전 대화 스크립트, HQ 음원 QR 코드까지 포함된 올인원 프리미엄 양장본입니다.
+                    </p>
+
+                    <div class="grid grid-cols-3 gap-3 py-2 max-w-lg">
+                        <div class="bg-[#F5F5F7] p-3 rounded-2xl text-center">
+                            <span class="block text-xs text-gray-400 font-medium">총 페이지</span>
+                            <span class="text-sm sm:text-base font-bold text-[#1D1D1F]">380 Pages</span>
+                        </div>
+                        <div class="bg-[#F5F5F7] p-3 rounded-2xl text-center">
+                            <span class="block text-xs text-gray-400 font-medium">오디오 트랙</span>
+                            <span class="text-sm sm:text-base font-bold text-[#0071E3]">120+ Tracks</span>
+                        </div>
+                        <div class="bg-[#F5F5F7] p-3 rounded-2xl text-center">
+                            <span class="block text-xs text-gray-400 font-medium">난이도</span>
+                            <span class="text-sm sm:text-base font-bold text-teal-600">All Levels</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <button onclick="addToCart(1)" class="bg-[#0071E3] hover:bg-[#0077ED] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-full transition shadow-sm flex items-center space-x-2">
+                            <span>장바구니 담기</span>
+                            <span>—</span>
+                            <span>₩45,000</span>
+                        </button>
+                        <button onclick="openPreview(1)" class="bg-[#F5F5F7] hover:bg-gray-200 text-[#1D1D1F] font-bold text-xs sm:text-sm px-5 py-3 rounded-full transition">
+                            샘플 미리보기 ➔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right 3D Book Graphic Simulation (Pure CSS/HTML, NO SVG) -->
+                <div class="lg:col-span-5 flex justify-center items-center py-6">
+                    <div class="relative group cursor-pointer" onclick="openPreview(1)">
+                        <!-- Glow Aura -->
+                        <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-xl opacity-25 group-hover:opacity-40 transition duration-500"></div>
+                        
+                        <!-- Book Cover Mockup -->
+                        <div class="relative w-52 sm:w-64 h-72 sm:h-88 bg-gradient-to-br from-slate-900 via-gray-900 to-black rounded-r-xl rounded-l-sm book-shadow book-shadow-hover p-6 flex flex-col justify-between border-l-8 border-gray-700 text-white">
+                            <div class="space-y-1">
+                                <span class="text-[9px] tracking-widest text-blue-400 font-bold uppercase block">HangulCraft Publishing</span>
+                                <span class="text-xs text-gray-400 font-light">Korean Master Series</span>
+                            </div>
+                            <div class="my-auto space-y-2">
+                                <div class="w-10 h-0.5 bg-blue-500 mb-2"></div>
+                                <h3 class="text-xl sm:text-2xl font-black tracking-tight leading-tight">한글<br>마스터클래스</h3>
+                                <p class="text-[10px] text-gray-400 font-mono">2026 FULL EDITION</p>
+                            </div>
+                            <div class="flex justify-between items-end text-[10px] text-gray-400 border-t border-gray-800 pt-3">
+                                <span>Native Audio Included</span>
+                                <span class="font-bold text-white">VOL. 01</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Interactive Catalog (Filter & Grid) -->
+        <section id="catalog" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold text-[#0071E3] uppercase tracking-wider">Product Catalog</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-[#1D1D1F]">교재 전체 라인업</h2>
+                </div>
+
+                <!-- Category Filter Buttons -->
+                <div class="flex flex-wrap gap-1.5 bg-gray-200/70 p-1 rounded-2xl text-xs font-medium">
+                    <button onclick="filterCatalog('all')" id="filter-all" class="filter-btn active bg-white text-black px-3.5 py-1.5 rounded-xl shadow-sm transition">전체 보기</button>
+                    <button onclick="filterCatalog('beginner')" id="filter-beginner" class="filter-btn text-gray-600 px-3.5 py-1.5 rounded-xl hover:text-black transition">입문/초급</button>
+                    <button onclick="filterCatalog('intermediate')" id="filter-intermediate" class="filter-btn text-gray-600 px-3.5 py-1.5 rounded-xl hover:text-black transition">중급</button>
+                    <button onclick="filterCatalog('advanced')" id="filter-advanced" class="filter-btn text-gray-600 px-3.5 py-1.5 rounded-xl hover:text-black transition">고급/Pro</button>
+                    <button onclick="filterCatalog('bundle')" id="filter-bundle" class="filter-btn text-gray-600 px-3.5 py-1.5 rounded-xl hover:text-black transition">세트/번들</button>
+                </div>
+            </div>
+
+            <!-- Product Cards Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Javascript will dynamically render products here -->
+            </div>
+        </section>
+
+        <!-- Section 3: Interactive Custom Bundle Builder -->
+        <section id="bundle-builder" class="bg-white rounded-3xl p-6 sm:p-10 border border-gray-200/80 shadow-sm space-y-6">
+            <div class="max-w-2xl">
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Custom Kit Builder</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-[#1D1D1F] mt-1">나만의 맞춤 학습 번들 만들기</h2>
+                <p class="text-xs sm:text-sm text-gray-500 mt-1">
+                    교재와 함께 오디오 워크북, 연습 노트, 디지털 패스를 조합하세요. 2개 이상 선택 시 <strong>15% 추가 할인</strong>이 자동 적용됩니다.
+                </p>
+            </div>
+
+            <!-- Bento Layout Module Checklist -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Component 1 (Main Book) -->
+                    <label class="glass-card p-4 rounded-2xl flex items-start space-x-3 cursor-pointer border-2 border-blue-500 bg-blue-50/20">
+                        <input type="checkbox" checked disabled class="mt-1 accent-[#0071E3] rounded">
+                        <div class="flex-1 text-xs">
+                            <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 inline-block">기본 구성</span>
+                            <h4 class="font-bold text-sm text-[#1D1D1F]">한글 마스터클래스 교재</h4>
+                            <p class="text-gray-500 text-[11px] mt-0.5">380페이지 정식 메인 도서</p>
+                            <span class="text-[#0071E3] font-bold text-xs mt-2 block">₩45,000</span>
+                        </div>
+                    </label>
+
+                    <!-- Component 2 (Audio Workbook) -->
+                    <label class="glass-card p-4 rounded-2xl flex items-start space-x-3 cursor-pointer hover:border-gray-300 transition">
+                        <input type="checkbox" id="bundle-opt-1" onchange="calculateBundle()" class="mt-1 accent-[#0071E3] rounded">
+                        <div class="flex-1 text-xs">
+                            <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 inline-block">추가 옵션</span>
+                            <h4 class="font-bold text-sm text-[#1D1D1F]">오디오 실전 워크북</h4>
+                            <p class="text-gray-500 text-[11px] mt-0.5">듣기 평가 및 받아쓰기 문제집</p>
+                            <span class="text-gray-800 font-bold text-xs mt-2 block">+ ₩16,000</span>
+                        </div>
+                    </label>
+
+                    <!-- Component 3 (Practice Notebook) -->
+                    <label class="glass-card p-4 rounded-2xl flex items-start space-x-3 cursor-pointer hover:border-gray-300 transition">
+                        <input type="checkbox" id="bundle-opt-2" onchange="calculateBundle()" class="mt-1 accent-[#0071E3] rounded">
+                        <div class="flex-1 text-xs">
+                            <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 inline-block">추가 옵션</span>
+                            <h4 class="font-bold text-sm text-[#1D1D1F]">한글 획순 쓰기 노트 (2권)</h4>
+                            <p class="text-gray-500 text-[11px] mt-0.5">자모음 획순 교정 격자 노트</p>
+                            <span class="text-gray-800 font-bold text-xs mt-2 block">+ ₩9,000</span>
+                        </div>
+                    </label>
+
+                    <!-- Component 4 (Digital Audio Pass) -->
+                    <label class="glass-card p-4 rounded-2xl flex items-start space-x-3 cursor-pointer hover:border-gray-300 transition">
+                        <input type="checkbox" id="bundle-opt-3" onchange="calculateBundle()" class="mt-1 accent-[#0071E3] rounded">
+                        <div class="flex-1 text-xs">
+                            <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 inline-block">디지털 패스</span>
+                            <h4 class="font-bold text-sm text-[#1D1D1F]">평생 오디오 앱 스트리밍권</h4>
+                            <p class="text-gray-500 text-[11px] mt-0.5">스마트폰 앱 무제한 음원 재생</p>
+                            <span class="text-gray-800 font-bold text-xs mt-2 block">+ ₩12,000</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Bundle Total Calculation Card -->
+                <div class="md:col-span-4 bg-[#F5F5F7] p-6 rounded-2xl border border-gray-200 text-center space-y-4">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider block">번들 결제 요약</span>
+                    <div>
+                        <div id="bundle-original-price" class="text-xs text-gray-400 line-through">원가: ₩45,000</div>
+                        <div id="bundle-final-price" class="text-2xl sm:text-3xl font-extrabold text-[#1D1D1F] mt-0.5">₩45,000</div>
+                        <div id="bundle-discount-badge" class="inline-block mt-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                            기본 단품 구성
+                        </div>
+                    </div>
+                    <button onclick="addBundleToCart()" class="w-full bg-[#0071E3] hover:bg-blue-600 text-white font-bold text-xs sm:text-sm py-3 rounded-full transition shadow-sm">
+                        선택한 번들 장바구니 담기
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Curriculum Radar Analytics Section -->
+        <section id="analytics" class="bg-white rounded-3xl p-6 sm:p-10 border border-gray-200/80 shadow-sm space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-5 space-y-4">
+                    <span class="text-xs font-bold text-teal-600 uppercase tracking-wider">Curriculum Balance</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-[#1D1D1F]">교재별 영역 밸런스 분석</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                        HangulCraft 교재는 언어 학습의 5대 핵심 영역(어휘, 문법, 말하기, 듣기, 쓰기)을 정밀하게 계량화하여 설계되었습니다.
+                    </p>
+                    <div class="space-y-2 pt-2">
+                        <label class="block text-xs font-bold text-gray-500">교재 선택하여 분석 비교:</label>
+                        <select id="chart-book-select" onchange="updateChartData()" class="w-full text-xs font-medium p-3 bg-[#F5F5F7] border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500">
+                            <option value="1">한글 마스터클래스 (올인원)</option>
+                            <option value="2">입문자를 위한 한글 첫걸음 (기초)</option>
+                            <option value="3">실전 비즈니스 한국어 Pro (고급)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Radar Chart Container -->
+                <div class="lg:col-span-7 bg-[#F5F5F7] p-6 rounded-2xl flex flex-col justify-between">
+                    <div class="text-center mb-2">
+                        <span id="chart-title-text" class="text-xs font-bold text-gray-800">한글 마스터클래스 학습 영역 비중</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="curriculumRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Slide-Over Shopping Cart Drawer -->
+    <div id="cart-drawer-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col justify-between">
+        <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-bold text-[#1D1D1F]">장바구니 (<span id="cart-count-text">0</span>)</h3>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-black font-bold text-lg px-2">✕</button>
+        </div>
+
+        <!-- Cart Items List Container -->
+        <div id="cart-items-container" class="p-6 overflow-y-auto flex-1 space-y-4">
+            <!-- Dynamic Cart Items Rendered Here -->
+        </div>
+
+        <!-- Cart Footer & Checkout Button -->
+        <div class="p-6 border-t border-gray-100 bg-[#F5F5F7] space-y-4">
+            <div class="space-y-1 text-xs">
+                <div class="flex justify-between text-gray-500">
+                    <span>소계</span>
+                    <span id="cart-subtotal">₩0</span>
+                </div>
+                <div class="flex justify-between text-gray-500">
+                    <span>배송비</span>
+                    <span id="cart-shipping">무료</span>
+                </div>
+                <div class="flex justify-between text-sm font-extrabold text-[#1D1D1F] pt-2 border-t border-gray-200">
+                    <span>총 결제금액</span>
+                    <span id="cart-total" class="text-[#0071E3]">₩0</span>
+                </div>
+            </div>
+
+            <button onclick="simulateCheckout()" class="w-full bg-[#0071E3] hover:bg-blue-600 text-white font-bold text-xs sm:text-sm py-3.5 rounded-full transition shadow-sm">
+                 Pay / 주문 결제하기
+            </button>
+        </div>
+    </aside>
+
+    <!-- Interactive Book Preview Modal -->
+    <div id="preview-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto border border-gray-100 shadow-2xl">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span id="modal-level-badge" class="text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full">SAMPLE PREVIEW</span>
+                    <h3 id="modal-title" class="text-xl sm:text-2xl font-bold text-[#1D1D1F] mt-1">한글 마스터클래스 미리보기</h3>
+                </div>
+                <button onclick="closePreview()" class="text-gray-400 hover:text-black font-bold text-lg px-2">✕</button>
+            </div>
+
+            <!-- Preview Content Sheet -->
+            <div class="bg-[#F5F5F7] p-6 rounded-2xl border border-gray-200 space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-gray-300">
+                    <span class="text-xs font-bold text-gray-600">Chapter 02 · 실전 인삿말과 소개</span>
+                    <button onclick="toggleTranslation()" id="trans-btn" class="text-[11px] bg-white border border-gray-300 px-2.5 py-1 rounded-lg font-medium hover:bg-gray-50">
+                        영문 번역 보기 ON
+                    </button>
+                </div>
+
+                <div id="preview-text-box" class="space-y-3 text-sm leading-relaxed text-[#1D1D1F]">
+                    <p class="font-semibold text-base text-[#0071E3]">"안녕하세요! 저는 한국어를 배우는 학생입니다."</p>
+                    <p id="trans-text-1" class="text-xs text-gray-500 italic">("Hello! I am a student learning Korean.")</p>
+                    <p class="pt-2">한국어의 기본적인 인사는 상대방에 대한 존경의 의미를 담고 있습니다. '안녕'은 평화와 건강을 뜻합니다.</p>
+                </div>
+
+                <!-- Audio Sample Player Simulator -->
+                <div class="bg-white p-3.5 rounded-xl border border-gray-200 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <button onclick="toggleAudio()" id="audio-play-btn" class="w-8 h-8 rounded-full bg-[#0071E3] text-white font-bold flex items-center justify-center text-xs">
+                            ▶
+                        </button>
+                        <div>
+                            <div class="text-xs font-bold text-gray-800">Track 04. Native Speaker Dialogue</div>
+                            <div class="text-[10px] text-gray-400">00:15 / 00:45</div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-medium border border-emerald-200">HQ 320kbps</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-2">
+                <button onclick="closePreview()" class="px-5 py-2.5 rounded-full text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200">닫기</button>
+                <button id="modal-cart-btn" onclick="" class="px-6 py-2.5 rounded-full text-xs font-bold text-white bg-[#0071E3] hover:bg-blue-600 shadow-sm">
+                    이 교재 담기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-20 py-12 text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 pb-8 border-b border-gray-100">
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3">교재 쇼핑</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#catalog" onclick="filterCatalog('beginner')" class="hover:underline">입문/초급 교재</a></li>
+                        <li><a href="#catalog" onclick="filterCatalog('intermediate')" class="hover:underline">중급 교재</a></li>
+                        <li><a href="#catalog" onclick="filterCatalog('advanced')" class="hover:underline">고급/Pro 교재</a></li>
+                        <li><a href="#catalog" onclick="filterCatalog('bundle')" class="hover:underline">특별 번들 세트</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3">학습 지원</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">오디오 MP3 다운로드</a></li>
+                        <li><a href="#" class="hover:underline">교재 보충 자료실</a></li>
+                        <li><a href="#" class="hover:underline">전용 오디오 앱 안내</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3">고객 센터</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">주문 및 배송 조회</a></li>
+                        <li><a href="#" class="hover:underline">해외 배송 서비스</a></li>
+                        <li><a href="#" class="hover:underline">반품 및 환불 정책</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3">HangulCraft</h4>
+                    <p class="leading-relaxed text-gray-400">
+                        애플의 디자인 철학으로 완성한 프리미엄 한국어 교재 출판 브랜드입니다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center text-gray-400 space-y-2 sm:space-y-0">
+                <p>© 2026 HangulCraft Inc. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:underline">개인정보 처리방침</a>
+                    <a href="#" class="hover:underline">이용약관</a>
+                    <a href="#" class="hover:underline">쿠키 설정</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Database of Korean Textbooks
+        const products = [
+            {
+                id: 1,
+                title: "한글 마스터클래스",
+                subtitle: "발음부터 실전 대화까지 완벽 가이드",
+                category: "beginner",
+                categoryLabel: "입문/초급",
+                price: 45000,
+                rating: 4.9,
+                badge: "BESTSELLER",
+                badgeColor: "bg-amber-100 text-amber-800",
+                coverGradient: "from-slate-900 via-gray-900 to-black",
+                textColor: "text-amber-300",
+                audioTracks: 120,
+                pages: 380
+            },
+            {
+                id: 2,
+                title: "입문자를 위한 한글 첫걸음",
+                subtitle: "자모음 획순과 기초 음성 원리",
+                category: "beginner",
+                categoryLabel: "입문/초급",
+                price: 28000,
+                rating: 4.8,
+                badge: "입문 추천",
+                badgeColor: "bg-teal-100 text-teal-800",
+                coverGradient: "from-emerald-800 via-teal-900 to-slate-900",
+                textColor: "text-emerald-300",
+                audioTracks: 60,
+                pages: 210
+            },
+            {
+                id: 3,
+                title: "실전 한국어 회화 Level 2",
+                subtitle: "상황별 생활 대화 및 오디오 스크립트",
+                category: "intermediate",
+                categoryLabel: "중급",
+                price: 34000,
+                rating: 4.9,
+                badge: "중급 인기",
+                badgeColor: "bg-purple-100 text-purple-800",
+                coverGradient: "from-indigo-900 via-purple-950 to-slate-900",
+                textColor: "text-purple-300",
+                audioTracks: 95,
+                pages: 290
+            },
+            {
+                id: 4,
+                title: "실전 비즈니스 한국어 Pro",
+                subtitle: "이메일, 회의, 토론 고급 정밀 문법",
+                category: "advanced",
+                categoryLabel: "고급/Pro",
+                price: 48000,
+                rating: 5.0,
+                badge: "PRO EDITION",
+                badgeColor: "bg-blue-100 text-blue-800",
+                coverGradient: "from-blue-950 via-slate-900 to-black",
+                textColor: "text-blue-300",
+                audioTracks: 110,
+                pages: 420
+            },
+            {
+                id: 5,
+                title: "K-Culture 감성 한국어 에세이",
+                subtitle: "드라마 및 노래 가사로 배우는 스토리텔링",
+                category: "intermediate",
+                categoryLabel: "중급",
+                price: 32000,
+                rating: 4.7,
+                badge: "감성 추천",
+                badgeColor: "bg-rose-100 text-rose-800",
+                coverGradient: "from-rose-900 via-pink-950 to-slate-900",
+                textColor: "text-rose-300",
+                audioTracks: 45,
+                pages: 240
+            },
+            {
+                id: 6,
+                title: "한글 완벽 마스터 풀 패키지",
+                subtitle: "초급~고급 교재 3권 + 오디오 워크북 세트",
+                category: "bundle",
+                categoryLabel: "세트/번들",
+                price: 98000,
+                rating: 5.0,
+                badge: "20% 할인 번들",
+                badgeColor: "bg-emerald-100 text-emerald-800",
+                coverGradient: "from-amber-800 via-slate-900 to-black",
+                textColor: "text-amber-400",
+                audioTracks: 300,
+                pages: 980
+            }
+        ];
+
+        // State Management
+        let cart = [];
+        let currentFilter = 'all';
+        let chartInstance = null;
+        let isAudioPlaying = false;
+        let showTranslation = true;
+
+        // Render Catalog Grid
+        function renderCatalog(filter = 'all') {
+            const grid = document.getElementById('product-grid');
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="glass-card rounded-3xl p-6 flex flex-col justify-between space-y-5 book-shadow-hover transition duration-300">
+                    <!-- Book Visual Box -->
+                    <div class="bg-[#F5F5F7] rounded-2xl p-6 flex items-center justify-center cursor-pointer" onclick="openPreview(${p.id})">
+                        <div class="w-36 h-48 bg-gradient-to-br ${p.coverGradient} rounded-r-lg rounded-l-xs book-shadow p-4 flex flex-col justify-between text-white border-l-4 border-gray-600">
+                            <span class="text-[8px] tracking-widest text-gray-400 font-bold uppercase">HangulCraft</span>
+                            <div>
+                                <h4 class="text-sm font-bold leading-tight">${p.title}</h4>
+                                <span class="text-[9px] ${p.textColor} font-mono">${p.categoryLabel}</span>
+                            </div>
+                            <span class="text-[8px] text-gray-400">HQ Audio Included</span>
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full ${p.badgeColor}">${p.badge}</span>
+                            <span class="text-xs text-gray-400 font-medium">★ ${p.rating}</span>
+                        </div>
+                        <h3 class="text-base font-bold text-[#1D1D1F] leading-snug">${p.title}</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">${p.subtitle}</p>
+                    </div>
+
+                    <!-- Price & Actions -->
+                    <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
+                        <span class="text-base font-extrabold text-[#1D1D1F]">₩${p.price.toLocaleString()}</span>
+                        <div class="space-x-1.5">
+                            <button onclick="openPreview(${p.id})" class="px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition">미리보기</button>
+                            <button onclick="addToCart(${p.id})" class="px-3.5 py-1.5 rounded-full text-xs font-bold text-white bg-[#0071E3] hover:bg-blue-600 transition shadow-xs">담기</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Switcher
+        function filterCatalog(category) {
+            currentFilter = category;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-black', 'shadow-sm');
+                btn.classList.add('text-gray-600');
+            });
+            const activeBtn = document.getElementById(`filter-${category}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-600');
+                activeBtn.classList.add('bg-white', 'text-black', 'shadow-sm');
+            }
+            renderCatalog(category);
+        }
+
+        // Add Product To Cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            toggleCart(true); // Open drawer
+        }
+
+        // Bundle Calculation
+        function calculateBundle() {
+            const basePrice = 45000;
+            let addOnPrice = 0;
+            let count = 1;
+
+            if (document.getElementById('bundle-opt-1').checked) { addOnPrice += 16000; count++; }
+            if (document.getElementById('bundle-opt-2').checked) { addOnPrice += 9000; count++; }
+            if (document.getElementById('bundle-opt-3').checked) { addOnPrice += 12000; count++; }
+
+            const rawTotal = basePrice + addOnPrice;
+            let finalTotal = rawTotal;
+            let discountText = "기본 단품 구성";
+
+            if (count >= 2) {
+                finalTotal = Math.round(rawTotal * 0.85); // 15% discount
+                discountText = `번들 15% 세트 할인 적용 (-₩${(rawTotal - finalTotal).toLocaleString()})`;
+            }
+
+            document.getElementById('bundle-original-price').innerText = `원가: ₩${rawTotal.toLocaleString()}`;
+            document.getElementById('bundle-final-price').innerText = `₩${finalTotal.toLocaleString()}`;
+            document.getElementById('bundle-discount-badge').innerText = discountText;
+        }
+
+        function addBundleToCart() {
+            let bundleTitle = "한글 커스텀 학습 키트";
+            let bundlePrice = 45000;
+            let addOnPrice = 0;
+            let count = 1;
+
+            if (document.getElementById('bundle-opt-1').checked) { addOnPrice += 16000; count++; }
+            if (document.getElementById('bundle-opt-2').checked) { addOnPrice += 9000; count++; }
+            if (document.getElementById('bundle-opt-3').checked) { addOnPrice += 12000; count++; }
+
+            const rawTotal = bundlePrice + addOnPrice;
+            const finalTotal = count >= 2 ? Math.round(rawTotal * 0.85) : rawTotal;
+
+            const customBundleItem = {
+                id: Date.now(),
+                title: bundleTitle,
+                subtitle: `${count}개 항목 구성 번들 키트`,
+                price: finalTotal,
+                quantity: 1
+            };
+
+            cart.push(customBundleItem);
+            updateCartUI();
+            toggleCart(true);
+        }
+
+        // Cart Drawer Toggle
+        function toggleCart(forceOpen = false) {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-drawer-overlay');
+
+            if (forceOpen || drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        // Update Cart Drawer Contents
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            document.getElementById('cart-badge').innerText = totalCount;
+            document.getElementById('cart-count-text').innerText = totalCount;
+            document.getElementById('cart-subtotal').innerText = `₩${subtotal.toLocaleString()}`;
+            document.getElementById('cart-total').innerText = `₩${subtotal.toLocaleString()}`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 space-y-2 text-gray-400">
+                        <p class="text-sm font-medium">장바구니가 비어 있습니다.</p>
+                        <p class="text-xs">마음에 드는 한국어 교재를 담아보세요.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="p-3.5 bg-[#F5F5F7] rounded-2xl flex items-center justify-between text-xs">
+                    <div>
+                        <h4 class="font-bold text-gray-800">${item.title}</h4>
+                        <div class="text-gray-400 mt-0.5">₩${item.price.toLocaleString()}</div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 rounded-md bg-white border border-gray-300 font-bold flex items-center justify-center hover:bg-gray-100">-</button>
+                        <span class="font-bold w-4 text-center">${item.quantity}</span>
+                        <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 rounded-md bg-white border border-gray-300 font-bold flex items-center justify-center hover:bg-gray-100">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeQty(id, delta) {
+            const idx = cart.findIndex(item => item.id === id);
+            if (idx !== -1) {
+                cart[idx].quantity += delta;
+                if (cart[idx].quantity <= 0) {
+                    cart.splice(idx, 1);
+                }
+            }
+            updateCartUI();
+        }
+
+        function simulateCheckout() {
+            if (cart.length === 0) {
+                alert("장바구니가 비어 있습니다.");
+                return;
+            }
+            alert(" Apple Pay 결제창으로 연결됩니다.\n(시뮬레이션: 주문이 성공적으로 완료되었습니다!)");
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        // Preview Modal Controls
+        function openPreview(productId) {
+            const p = products.find(item => item.id === productId) || products[0];
+            document.getElementById('modal-title').innerText = `${p.title} 미리보기`;
+            document.getElementById('modal-level-badge').innerText = p.categoryLabel;
+            document.getElementById('modal-cart-btn').setAttribute('onclick', `addToCart(${p.id}); closePreview();`);
+
+            const modal = document.getElementById('preview-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closePreview() {
+            const modal = document.getElementById('preview-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            isAudioPlaying = false;
+            document.getElementById('audio-play-btn').innerText = '▶';
+        }
+
+        function toggleTranslation() {
+            showTranslation = !showTranslation;
+            const transBox = document.getElementById('trans-text-1');
+            const btn = document.getElementById('trans-btn');
+            if (showTranslation) {
+                transBox.style.display = 'block';
+                btn.innerText = '영문 번역 보기 ON';
+            } else {
+                transBox.style.display = 'none';
+                btn.innerText = '영문 번역 보기 OFF';
+            }
+        }
+
+        function toggleAudio() {
+            isAudioPlaying = !isAudioPlaying;
+            const btn = document.getElementById('audio-play-btn');
+            btn.innerText = isAudioPlaying ? '❚❚' : '▶';
+        }
+
+        // Chart.js Radar Chart Setup
+        function initRadarChart() {
+            const ctx = document.getElementById('curriculumRadarChart').getContext('2d');
+            
+            const chartData = {
+                labels: ['어휘 (Vocabulary)', '문법 (Grammar)', '말하기 (Speaking)', '듣기 (Listening)', '쓰기 (Writing)'],
+                datasets: [{
+                    label: '학습 영역 비중 (%)',
+                    data: [85, 90, 95, 88, 75],
+                    backgroundColor: 'rgba(0, 113, 227, 0.15)',
+                    borderColor: '#0071E3',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#0071E3'
+                }]
+            };
+
+            chartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.08)' },
+                            grid: { color: 'rgba(0,0,0,0.06)' },
+                            suggestedMin: 40,
+                            suggestedMax: 100,
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartData() {
+            const val = document.getElementById('chart-book-select').value;
+            const titleEl = document.getElementById('chart-title-text');
+
+            if (val === "1") {
+                chartInstance.data.datasets[0].data = [85, 90, 95, 88, 75];
+                titleEl.innerText = "한글 마스터클래스 학습 영역 비중";
+            } else if (val === "2") {
+                chartInstance.data.datasets[0].data = [95, 60, 80, 90, 95];
+                titleEl.innerText = "입문자를 위한 한글 첫걸음 학습 영역 비중";
+            } else if (val === "3") {
+                chartInstance.data.datasets[0].data = [90, 98, 85, 70, 95];
+                titleEl.innerText = "실전 비즈니스 한국어 Pro 학습 영역 비중";
+            }
+            chartInstance.update();
+        }
+
+        // On Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCatalog('all');
+            initRadarChart();
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
