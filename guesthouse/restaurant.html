@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seoul Bib Gourmand Guide</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥟</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F1E4;
+    --paper-card:#FFFDF7;
+    --ink:#20281F;
+    --ink-soft:#5B6156;
+    --celadon:#5D7F63;
+    --celadon-dark:#3F5A45;
+    --ochre:#B5502E;
+    --ochre-soft:#E9C7A9;
+    --line:#DED2B4;
+    --shadow: 2px 3px 0 rgba(32,40,31,0.06);
+    --radius: 3px;
+    --font-display: 'Fraunces', 'Noto Serif KR', ui-serif, Georgia, serif;
+    --font-body: 'Inter', -apple-system, 'Noto Sans KR', 'Malgun Gothic', 'Hiragino Sans', 'Noto Sans SC', 'Noto Sans JP', sans-serif;
+  }
+  :root:not([data-theme="light"]){
+    /* keep a single warm paper theme regardless of system scheme -- this is an editorial guide, not a UI surface */
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--ochre-soft);}
+
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 24px 80px;
+  }
+
+  /* ---- Header ---- */
+  header{
+    padding:28px 0 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .mark{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+  }
+  .mark svg{width:34px;height:34px;flex:none;transform:translateY(4px);}
+  .titles h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(28px,4.4vw,40px);
+    margin:0;
+    letter-spacing:-0.01em;
+    line-height:1.05;
+  }
+  .titles p{
+    margin:6px 0 0;
+    color:var(--ink-soft);
+    font-size:14.5px;
+    max-width:46ch;
+  }
+  .header-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex:none;
+  }
+
+  /* language select */
+  .lang-select{
+    position:relative;
+  }
+  .lang-select select{
+    appearance:none;
+    -webkit-appearance:none;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:13.5px;
+    background:var(--paper-card);
+    border:1px solid var(--ink);
+    color:var(--ink);
+    padding:9px 30px 9px 14px;
+    border-radius:20px;
+    cursor:pointer;
+  }
+  .lang-select::after{
+    content:"";
+    position:absolute;
+    right:13px;
+    top:50%;
+    width:7px;height:7px;
+    border-right:1.5px solid var(--ink);
+    border-bottom:1.5px solid var(--ink);
+    transform:translateY(-65%) rotate(45deg);
+    pointer-events:none;
+  }
+  select:focus-visible, button:focus-visible, a:focus-visible{
+    outline:2px solid var(--celadon-dark);
+    outline-offset:2px;
+  }
+
+  /* ---- District sections ---- */
+  .district{
+    margin-top:36px;
+  }
+  main{display:block;margin-top:28px;}
+  .district-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:10px;
+    margin-bottom:20px;
+  }
+  .district-head h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:23px;
+    margin:0;
+  }
+  .district-count{
+    color:var(--ink-soft);
+    font-size:13px;
+    white-space:nowrap;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+  }
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr;}
+  }
+
+  .card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 18px 16px;
+    box-shadow:var(--shadow);
+  }
+  .card-top{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .stamp{
+    flex:none;
+    width:30px;height:30px;
+    border-radius:50%;
+    border:1.5px solid var(--ochre);
+    color:var(--ochre);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display);
+    font-size:13px;
+    font-weight:600;
+    transform:rotate(-6deg);
+  }
+  .card h3{
+    font-family:var(--font-display);
+    font-size:18px;
+    font-weight:600;
+    margin:0;
+    line-height:1.25;
+  }
+  .card .dishes{
+    margin:10px 0 12px;
+    font-size:14px;
+    color:var(--ink);
+  }
+  .card-bottom{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    border-top:1px dashed var(--line);
+    padding-top:10px;
+  }
+  .price{
+    font-size:13px;
+    font-weight:600;
+    color:var(--celadon-dark);
+  }
+  .address{
+    font-size:12px;
+    color:var(--ink-soft);
+    text-align:left;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="mark">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="20" cy="20" r="18.5" stroke="#B5502E" stroke-width="1.5"/>
+        <path d="M13 24c2-7 5-11 7-11s5 4 7 11" stroke="#B5502E" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M12 24h16" stroke="#B5502E" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="titles">
+        <h1 id="t-title">Seoul Bib Gourmand Guide</h1>
+        <p id="t-subtitle">Michelin Guide Seoul — great taste, honest prices</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="lang-select">
+        <select id="langPicker" aria-label="Language"></select>
+      </div>
+    </div>
+  </header>
+
+  <main id="districts"></main>
+
+</div>
+
+<script>
+/* ---------------------------------------------------------
+   DATA — 30 Bib Gourmand restaurants, deduplicated
+--------------------------------------------------------- */
+const restaurants = [
+  // District 1: Jongno-gu
+  {d:1, name:"안덕 (Andeok)", addr:"서울특별시 종로구 자하문로17길 18",
+    dishes:{en:"North Korean-style dumpling soup, cold beef noodles, fried peppers",zh:"朝鲜式饺子汤、冷牛肉面、炸辣椒",ja:"北朝鮮式餃子スープ、牛肉冷麺、唐辛子フライ",ko:"이북식 만둣국, 소고기 냉국수, 고추튀김",es:"Sopa de dumplings al estilo norcoreano, fideos fríos de res, pimientos fritos",pt:"Sopa de dumplings ao estilo norte-coreano, macarrão frio de carne, pimentões fritos"},
+    price:"₩10,000s"},
+  {d:1, name:"안동국시 소호정 (Andong Guksi Sohojeong)", addr:"서울특별시 종로구 북촌로 65",
+    dishes:{en:"Andong-style knife-cut noodles, rice & meat soup, boiled pork",zh:"安东刀切面、汤饭、白切肉",ja:"安東カルグクス、クッパ、茹で豚肉",ko:"안동국시, 국밥, 수육",es:"Fideos cortados a cuchillo estilo Andong, sopa de arroz con carne, cerdo hervido",pt:"Macarrão cortado à faca estilo Andong, sopa de arroz com carne, porco cozido"},
+    price:"~₩15,000"},
+  {d:1, name:"찬양집 (Chanyangjip)", addr:"서울특별시 종로구 돈화문로11가길 25",
+    dishes:{en:"Seafood knife-cut noodle soup, dumplings",zh:"海鲜刀切面、饺子",ja:"海鮮カルグクス、餃子",ko:"해물칼국수, 만두",es:"Sopa de fideos con mariscos, dumplings",pt:"Sopa de macarrão com frutos do mar, dumplings"},
+    price:"₩8,000–9,000"},
+  {d:1, name:"개성만두궁 (Gaeseong Mandu Gung)", addr:"서울특별시 종로구 인사동10길 11-3",
+    dishes:{en:"Kaesong-style dumpling soup, twisted rice-cake soup, dumpling hot pot",zh:"开城式饺子汤、麻花年糕汤、饺子火锅",ja:"開城式餃子スープ、ジョレンイトック雑煮、餃子鍋",ko:"개성만두국, 조랭이떡국, 만두전골",es:"Sopa de dumplings estilo Kaesong, sopa de pastel de arroz trenzado, hot pot de dumplings",pt:"Sopa de dumplings ao estilo Kaesong, sopa de bolinho de arroz trançado, hot pot de dumplings"},
+    price:"~₩15,000"},
+  {d:1, name:"황생가칼국수 (Hwangsaengga Kalguksu)", addr:"서울특별시 종로구 북촌로5길 78",
+    dishes:{en:"Bone-broth knife-cut noodles, dumpling soup, boiled pork",zh:"骨汤刀切面、饺子汤、白切肉",ja:"骨スープカルグクス、餃子スープ、茹で豚肉",ko:"사골칼국수, 만두국, 수육",es:"Fideos en caldo de huesos, sopa de dumplings, cerdo hervido",pt:"Macarrão em caldo de osso, sopa de dumplings, porco cozido"},
+    price:"₩10,000s"},
+  {d:1, name:"삼청동수제비 (Samcheongdong Sujebi)", addr:"서울특별시 종로구 삼청로 101",
+    dishes:{en:"Hand-torn noodle soup, potato pancake, sweet rice dumplings",zh:"手撕面片汤、土豆煎饼、糯米圆子",ja:"すいとん、ジャガイモチヂミ、もち米団子",ko:"수제비, 감자전, 찹쌀옹심이",es:"Sopa de masa desgarrada a mano, panqueque de papa, bolitas de arroz glutinoso",pt:"Sopa de massa rasgada à mão, panqueca de batata, bolinhas de arroz glutinoso"},
+    price:"~₩10,000"},
+  {d:1, name:"미진 (Mijin)", addr:"서울특별시 종로구 종로 19, 타워8빌딩 1층",
+    dishes:{en:"Chilled buckwheat noodles, buckwheat pancake rolls, udon",zh:"冷荞麦面、荞麦煎饼卷、乌冬面",ja:"冷そば（板そば）、そば粉クレープ、うどん",ko:"메밀국수(판모밀), 메밀전병, 우동",es:"Fideos fríos de trigo sarraceno, rollos de panqueque de trigo sarraceno, udon",pt:"Macarrão frio de trigo-sarraceno, rolinhos de panqueca de trigo-sarraceno, udon"},
+    price:"₩10,000s"},
+  {d:1, name:"부촌육회 / 형제육회 (Bucheon Yukhoe)", addr:"서울특별시 종로구 종로 200-4 (광장시장)",
+    dishes:{en:"Raw beef tartare (yukhoe), spicy yukhoe with noodles",zh:"生牛肉刺身（生拌牛肉）、生牛肉拌面",ja:"ユッケ（牛肉の刺身）、ユッケタンタンイ",ko:"육회, 육회탕탕이",es:"Tartar de res crudo (yukhoe), yukhoe picante con fideos",pt:"Tártaro de carne crua (yukhoe), yukhoe picante com macarrão"},
+    price:"~₩19,000"},
+
+  // District 2: Jung-gu
+  {d:2, name:"유림면 (Yurimmyeon)", addr:"서울특별시 중구 서소문로 139-1",
+    dishes:{en:"Buckwheat noodles, spicy mixed noodles, hot noodle soup",zh:"荞麦面、辣拌面、热汤面",ja:"そば、ビビン麺、鍋焼き麺",ko:"메밀국수, 비비국수, 냄비국수",es:"Fideos de trigo sarraceno, fideos mixtos picantes, sopa de fideos caliente",pt:"Macarrão de trigo-sarraceno, macarrão misto picante, sopa de macarrão quente"},
+    price:"~₩10,000"},
+  {d:2, name:"서령 (Seoryeong)", addr:"서울특별시 중구 세종대로 14, 화상통신회관 1층",
+    dishes:{en:"Pyongyang-style cold noodles (sunmyeon), perilla oil noodles, grilled pork neck",zh:"平壤风味冷面（纯面）、紫苏油面、烤猪颈肉",ja:"平壌式冷麺（スンミョン）、エゴマ油麺、豚トロ焼き",ko:"순면(평양냉면), 들기름 순면, 항정 제육",es:"Fideos fríos al estilo Pyongyang (sunmyeon), fideos con aceite de perilla, cuello de cerdo a la parrilla",pt:"Macarrão frio ao estilo Pyongyang (sunmyeon), macarrão com óleo de perila, pescoço de porco grelhado"},
+    price:"₩16,000–18,000"},
+  {d:2, name:"광화문국밥 (Gwanghwamun Gukbap)", addr:"서울특별시 중구 세종대로21길 53",
+    dishes:{en:"Pork & rice soup, rice soup, boiled pork",zh:"猪肉汤饭、汤饭、白切肉",ja:"豚クッパ、クッパ、茹で豚肉",ko:"돼지국밥, 국밥, 수육",es:"Sopa de cerdo con arroz, sopa de arroz, cerdo hervido",pt:"Sopa de porco com arroz, sopa de arroz, porco cozido"},
+    price:"₩10,000s"},
+  {d:2, name:"고사리 익스프레스 (Gosari Express)", addr:"서울특별시 중구 퇴계로85길 12-10 (신당중앙시장)",
+    dishes:{en:"Bracken-fern oil noodles (vegan), Taiwanese-style savory pancake",zh:"蕨菜油拌面（纯素）、台式煎饼",ja:"ワラビ油混ぜ麺（ヴィーガン）、台湾風お焼き",ko:"고사리 오일 소스 비빔면, 대만식 전병 (비건)",es:"Fideos con aceite de helecho (vegano), panqueque salado estilo taiwanés",pt:"Macarrão com óleo de samambaia (vegano), panqueca salgada ao estilo taiwanês"},
+    price:"₩10,000–20,000"},
+  {d:2, name:"소바키리 스즈 (Sobakiri Suzu)", addr:"서울특별시 중구 신당동 337-51",
+    dishes:{en:"Cold soba noodles (zaru soba), tempura set",zh:"冷荞麦面（盛荞麦）、天妇罗套餐",ja:"ざるそば、天ぷらセット",ko:"자루 소바, 텐푸라 세트",es:"Soba fría (zaru soba), set de tempura",pt:"Soba fria (zaru soba), combo de tempurá"},
+    price:"low ₩10,000s"},
+  {d:2, name:"필동면옥 (Pildong Myeonok)", addr:"서울특별시 중구 서애로 26",
+    dishes:{en:"Pyongyang-style cold noodles, boiled pork, dumplings",zh:"平壤冷面、白切肉、饺子",ja:"平壌冷麺、茹で豚肉、餃子",ko:"평양냉면, 수육, 만두",es:"Fideos fríos estilo Pyongyang, cerdo hervido, dumplings",pt:"Macarrão frio ao estilo Pyongyang, porco cozido, dumplings"},
+    price:"~₩14,000"},
+  {d:2, name:"만족오향족발 (Manjok Ohyang Jokbal)", addr:"서울특별시 중구 서소문로 레코드길 34-1",
+    dishes:{en:"Five-spice pig's trotters, garlic pig's trotters",zh:"五香猪蹄、蒜香猪蹄",ja:"五香豚足、ニンニク豚足",ko:"오향족발, 마늘족발",es:"Patas de cerdo a las cinco especias, patas de cerdo al ajo",pt:"Pé de porco cinco-especiarias, pé de porco ao alho"},
+    price:"₩30,000–40,000"},
+  {d:2, name:"명동교자 (Myeongdong Kyoja)", addr:"서울특별시 중구 명동10길 29",
+    dishes:{en:"Knife-cut noodles, dumplings, spicy mixed noodles",zh:"刀切面、饺子、辣拌面",ja:"カルグクス、餃子、ビビン麺",ko:"칼국수, 만두, 비빔국수",es:"Fideos cortados a cuchillo, dumplings, fideos mixtos picantes",pt:"Macarrão cortado à faca, dumplings, macarrão misto picante"},
+    price:"~₩11,000"},
+  {d:2, name:"우래옥 (Woo Lae Oak)", addr:"서울특별시 중구 창경궁로 62-29",
+    dishes:{en:"Traditional Pyongyang cold noodles, bulgogi",zh:"传统平壤冷面、烤牛肉（不古鸡）",ja:"伝統平壌冷麺、プルコギ",ko:"전통 평양냉면, 불고기",es:"Fideos fríos tradicionales de Pyongyang, bulgogi",pt:"Macarrão frio tradicional de Pyongyang, bulgogi"},
+    price:"noodles ₩16,000 / bulgogi ₩37,000"},
+  {d:2, name:"오장동흥남집 (Ojang-dong Heungnamjip)", addr:"서울특별시 중구 마른내로 114",
+    dishes:{en:"Raw-fish cold noodles (Hamhung-style), spicy mixed cold noodles",zh:"生鱼冷面（咸兴式）、辣拌冷面",ja:"刺身冷麺（咸興式）、ビビン冷麺",ko:"회냉면(함흥냉면), 비빔냉면",es:"Fideos fríos con pescado crudo (estilo Hamhung), fideos fríos picantes mixtos",pt:"Macarrão frio com peixe cru (estilo Hamhung), macarrão frio picante misto"},
+    price:"~₩15,000"},
+  {d:2, name:"하동관 (Hadongkwan)", addr:"서울특별시 중구 명동9길 10",
+    dishes:{en:"Beef bone soup (gomtang), boiled beef",zh:"牛骨汤、白切牛肉",ja:"コムタン（牛骨スープ）、茹で牛肉",ko:"곰탕, 수육",es:"Sopa de huesos de res (gomtang), res hervida",pt:"Sopa de osso de boi (gomtang), carne bovina cozida"},
+    price:"₩15,000 / special ₩18,000"},
+  {d:2, name:"충무로지리산황토집 (Chungmuro Jirisan Hwangtojip)", addr:"서울특별시 중구 퇴계로42길 9",
+    dishes:{en:"Rustic fermented soybean stew, soybean pulp stew, roasted duck",zh:"乡土大酱汤、豆渣汤、烤鸭",ja:"田舎風チョングッチャン、コンビジチゲ、鴨の炭火焼き",ko:"토속 청국장, 콩비지, 오리구이",es:"Estofado rústico de soja fermentada, estofado de pulpa de soja, pato asado",pt:"Ensopado rústico de soja fermentada, ensopado de polpa de soja, pato assado"},
+    price:"₩10,000s"},
+  {d:2, name:"금돼지식당 (Geumdwaeji Sikdang)", addr:"서울특별시 중구 다산로 149",
+    dishes:{en:"Grilled pork belly, snowflake pork collar, whole pork & kimchi stew",zh:"烤五花肉、雪花梅花肉、猪肉泡菜锅",ja:"本サムギョプサル、雪降り豚トロ、豚肉キムチチゲ",ko:"본삼겹, 눈꽃목살, 통돼지김치찌개",es:"Panceta de cerdo a la parrilla, cuello de cerdo \"copo de nieve\", estofado de cerdo entero con kimchi",pt:"Barriga de porco grelhada, pescoço de porco \"floco de neve\", ensopado de porco inteiro com kimchi"},
+    price:"~₩19,000 / serving"},
+
+  // District 3: Mapo-gu
+  {d:3, name:"황금콩밭 (Hwanggeum Kongbat)", addr:"서울특별시 마포구 마포대로16길 9",
+    dishes:{en:"Tofu dishes, fresh soft tofu, fermented soybean stew, bossam",zh:"豆腐料理、生豆腐、清麹酱汤、菜包肉",ja:"豆腐料理、生豆腐、チョングッチャン、ポッサム",ko:"두부요리, 생두부, 청국장, 보쌈",es:"Platos de tofu, tofu suave fresco, estofado de soja fermentada, bossam",pt:"Pratos de tofu, tofu macio fresco, ensopado de soja fermentada, bossam"},
+    price:"stew ₩10,000s / hot pot ₩30,000–40,000"},
+  {d:3, name:"마포옥 (Mapo-ok)", addr:"서울특별시 마포구 토정로 312",
+    dishes:{en:"Beef bone soup (seolleongtang), blood sausage soup",zh:"牛骨浓汤（雪浓汤）、血肠汤",ja:"ソルロンタン（牛骨スープ）、スンデクッ",ko:"양지설렁탕, 선지국",es:"Sopa de huesos de res (seolleongtang), sopa de morcilla",pt:"Sopa de osso de boi (seolleongtang), sopa de morcela"},
+    price:"₩18,000 / special ₩27,000"},
+
+  // District 4: Yongsan-gu
+  {d:4, name:"오일제 (Oiljae)", addr:"서울특별시 용산구 한강로1가 180-1",
+    dishes:{en:"Perilla & seaweed rice hot-pot set meal",zh:"紫苏籽海带饭石锅套餐",ja:"エゴマわかめ釜飯定食",ko:"들깨 미역국 솥밥 정식",es:"Comida de olla de arroz con perilla y algas",pt:"Refeição de panela de arroz com perila e algas"},
+    price:"upper ₩10,000s"},
+  {d:4, name:"능동미나리 (Neungdong Minari)", addr:"서울특별시 용산구 한강대로40길 28",
+    dishes:{en:"Water-celery beef bone soup, water-celery pork hot pot",zh:"水芹牛骨汤、水芹猪肉火锅",ja:"セリのコムタン、セリの豚肉すき焼き風鍋",ko:"미나리 곰탕, 미나리 수육전골",es:"Sopa de huesos de res con minari, hot pot de cerdo con minari",pt:"Sopa de osso de boi com minari, hot pot de porco com minari"},
+    price:"~₩15,000"},
+  {d:4, name:"유한 (Yuhan)", addr:"서울특별시 용산구 한남대로27길 23, 지하1층",
+    dishes:{en:"Thai bistro dishes — roasted duck breast, Thai-style sausage",zh:"泰式小酒馆料理——烤鸭胸、泰式香肠",ja:"タイビストロ料理－ローストダック、タイ風ソーセージ",ko:"타이 비스트로 요리(구운 오리 가슴살, 태국식 소시지 등)",es:"Platos de bistró tailandés — pechuga de pato asada, salchicha estilo tailandés",pt:"Pratos de bistrô tailandês — peito de pato assado, linguiça ao estilo tailandês"},
+    price:"₩20,000–30,000"},
+
+  // District 5: Gangnam / Seocho / Songpa
+  {d:5, name:"3대 삼계장인 (3rd-Gen Samgyetang Masters)", addr:"서울특별시 서초구 반포대로28길 56-3",
+    dishes:{en:"Pine-nut ginseng chicken soup, mung-bean ginseng chicken soup, mugwort ginseng chicken soup",zh:"松子参鸡汤、绿豆参鸡汤、艾草参鸡汤",ja:"松の実サムゲタン、緑豆サムゲタン、よもぎサムゲタン",ko:"잣 삼계탕, 녹두 삼계탕, 쑥 삼계탕",es:"Sopa de pollo con ginseng y piñones, sopa de pollo con ginseng y frijol mungo, sopa de pollo con ginseng y artemisa",pt:"Sopa de frango com ginseng e pinhões, sopa de frango com ginseng e feijão-mungo, sopa de frango com ginseng e artemísia"},
+    price:"₩18,000–20,000"},
+  {d:5, name:"면서울 (Myeon Seoul)", addr:"서울특별시 강남구 (선릉로 인근)",
+    dishes:{en:"Perilla oil noodles, bracken-fern noodles, whole-wheat mixed noodles",zh:"紫苏油面、蕨菜面、全麦拌面",ja:"エゴマ油麺、ワラビ麺、全粒粉ビビン麺",ko:"들기름면, 고사리면, 통밀 비빔면",es:"Fideos con aceite de perilla, fideos de helecho, fideos mixtos de trigo integral",pt:"Macarrão com óleo de perila, macarrão de samambaia, macarrão misto de trigo integral"},
+    price:"~₩15,000"},
+  {d:5, name:"피양옥 (Piyangok)", addr:"서울특별시 강남구 도산대로51길 10",
+    dishes:{en:"Pyongyang cold noodles, mixed meat platter (eobokjaengban), dumpling hot pot",zh:"平壤冷面、什锦肉盘（御腹争盘）、饺子火锅",ja:"平壌冷麺、オボクジェンバン（肉盛り合わせ）、餃子鍋",ko:"평양냉면, 어복쟁반, 만두전골",es:"Fideos fríos de Pyongyang, plato mixto de carnes (eobokjaengban), hot pot de dumplings",pt:"Macarrão frio de Pyongyang, prato misto de carnes (eobokjaengban), hot pot de dumplings"},
+    price:"noodles ₩15,000 / platter ₩60,000s"},
+  {d:5, name:"봉피양 (Bongpiyang)", addr:"서울특별시 송파구 양재대로71길 1-4",
+    dishes:{en:"Pyongyang cold noodles, bone-in pork ribs",zh:"平壤冷面、带骨猪排",ja:"平壌冷麺、豚骨付きカルビ",ko:"평양냉면, 돼지본갈비",es:"Fideos fríos de Pyongyang, costillas de cerdo con hueso",pt:"Macarrão frio de Pyongyang, costelinha de porco com osso"},
+    price:"noodles ₩16,000 / ribs ₩30,000s"}
+];
+
+const districtNames = {
+  en:["Jongno-gu — Seochon, Bukchon & Samcheong-dong","Jung-gu — Myeongdong, Euljiro & Sindang","Mapo-gu","Yongsan-gu — Hannam-dong","Gangnam, Seocho & Songpa-gu"],
+  zh:["钟路区 — 西村、北村与三清洞","中区 — 明洞、乙支路与新堂洞","麻浦区","龙山区 — 汉南洞","江南、瑞草与松坡区"],
+  ja:["鍾路区－西村・北村・三清洞","中区－明洞・乙支路・新堂洞","麻浦区","龍山区－漢南洞","江南・瑞草・松坡区"],
+  ko:["종로구 — 서촌, 북촌 & 삼청동","중구 — 명동, 을지로 & 신당동","마포구","용산구 — 한남동","강남, 서초 & 송파구"],
+  es:["Jongno-gu — Seochon, Bukchon y Samcheong-dong","Jung-gu — Myeongdong, Euljiro y Sindang","Mapo-gu","Yongsan-gu — Hannam-dong","Gangnam, Seocho y Songpa-gu"],
+  pt:["Jongno-gu — Seochon, Bukchon e Samcheong-dong","Jung-gu — Myeongdong, Euljiro e Sindang","Mapo-gu","Yongsan-gu — Hannam-dong","Gangnam, Seocho e Songpa-gu"]
+};
+
+const i18n = {
+  en:{title:"Seoul Bib Gourmand Guide",
+      subtitle:"Michelin Guide Seoul — great taste, honest prices",
+      intro:"A pocket map of Seoul's Michelin <strong>Bib Gourmand</strong> restaurants, grouped by neighborhood — great food at a fair price, without the fine-dining bill.",
+      dishesLabel:"Signature dishes", priceLabel:"Price", addrLabel:"Address",
+      count:(n)=>n+" restaurants", download:"Download HTML",
+      foot:"Bib Gourmand is a Michelin Guide distinction for restaurants offering great food at moderate prices (usually ₩45,000 or less per person). Selections change year to year — worth a quick check before you go, and expect a wait at peak mealtimes.",
+      langName:"English"},
+  zh:{title:"首尔米其林必比登指南",
+      subtitle:"米其林指南首尔版 — 美味实惠，价格公道",
+      intro:"按街区整理的首尔米其林<strong>必比登（Bib Gourmand）</strong>餐厅口袋地图——用亲民的价格享受高水准的美味。",
+      dishesLabel:"招牌菜", priceLabel:"价格", addrLabel:"地址",
+      count:(n)=>n+" 家餐厅", download:"下载 HTML",
+      foot:"必比登（Bib Gourmand）是米其林指南授予的认证，表彰以合理价格（通常人均4.5万韩元以下）提供美味佳肴的餐厅。入选名单每年都会调整，建议出发前再次确认，用餐高峰时段可能需要排队等位。",
+      langName:"中文"},
+  ja:{title:"ソウル・ビブグルマンガイド",
+      subtitle:"ミシュランガイド ソウル－美味しくてお手頃な価格",
+      intro:"エリア別にまとめた、ソウルのミシュラン<strong>ビブグルマン</strong>レストランのポケットマップ。気取らない値段で、確かな美味しさを。",
+      dishesLabel:"代表メニュー", priceLabel:"価格帯", addrLabel:"住所",
+      count:(n)=>n+"軒", download:"HTMLをダウンロード",
+      foot:"ビブグルマンは、手頃な価格（通常1人あたり約45,000ウォン以下）で優れた料理を提供するレストランに贈られるミシュランガイドの称号です。選定店は毎年見直されるため、訪問前の確認をおすすめします。ピーク時間帯は行列ができることもあります。",
+      langName:"日本語"},
+  ko:{title:"서울 빕 구르망 가이드",
+      subtitle:"미쉐린 가이드 서울 — 훌륭한 맛, 합리적인 가격",
+      intro:"동네별로 정리한 서울 미쉐린 <strong>빕 구르망(Bib Gourmand)</strong> 레스토랑 포켓 지도예요. 부담 없는 가격에 훌륭한 맛을 즐길 수 있는 곳들이에요.",
+      dishesLabel:"대표 메뉴", priceLabel:"가격대", addrLabel:"주소",
+      count:(n)=>n+"곳", download:"HTML 다운로드",
+      foot:"빕 구르망은 합리적인 가격(보통 1인당 4만 5천 원 이하)에 훌륭한 맛과 정성을 선사하는 레스토랑에 미쉐린 가이드가 수여하는 등급입니다. 매년 선정 결과가 바뀔 수 있으니 방문 전 확인을 권장하며, 식사 시간대에는 대기가 있을 수 있습니다.",
+      langName:"한국어"},
+  es:{title:"Guía Bib Gourmand de Seúl",
+      subtitle:"Guía Michelin Seúl — gran sabor, precios justos",
+      intro:"Un mapa de bolsillo de los restaurantes <strong>Bib Gourmand</strong> de la Guía Michelin en Seúl, agrupados por barrio: gran comida a precio justo, sin la cuenta de la alta cocina.",
+      dishesLabel:"Platos destacados", priceLabel:"Precio", addrLabel:"Dirección",
+      count:(n)=>n+" restaurantes", download:"Descargar HTML",
+      foot:"Bib Gourmand es una distinción de la Guía Michelin para restaurantes que ofrecen comida excelente a precios moderados (generalmente ₩45,000 o menos por persona). La selección cambia cada año, así que conviene verificarla antes de ir; espera algo de fila en horas pico.",
+      langName:"Español"},
+  pt:{title:"Guia Bib Gourmand de Seul",
+      subtitle:"Guia Michelin Seul — ótimo sabor, preço justo",
+      intro:"Um mapa de bolso dos restaurantes <strong>Bib Gourmand</strong> do Guia Michelin em Seul, organizados por bairro: comida excelente a um preço justo, sem a conta de um restaurante sofisticado.",
+      dishesLabel:"Pratos principais", priceLabel:"Preço", addrLabel:"Endereço",
+      count:(n)=>n+" restaurantes", download:"Baixar HTML",
+      foot:"Bib Gourmand é uma distinção do Guia Michelin para restaurantes que oferecem ótima comida a preços moderados (geralmente ₩45.000 ou menos por pessoa). A seleção muda a cada ano — vale conferir antes de ir, e espere alguma fila nos horários de pico.",
+      langName:"Português"}
+};
+
+let currentLang = "en";
+
+function render(lang){
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  const t = i18n[lang];
+
+  document.getElementById("t-title").textContent = t.title;
+  document.getElementById("t-subtitle").textContent = t.subtitle;
+  document.title = t.title;
+
+  const districtsEl = document.getElementById("districts");
+  districtsEl.innerHTML = "";
+
+  for(let d=1; d<=5; d++){
+    const items = restaurants.filter(r => r.d === d);
+    const section = document.createElement("section");
+    section.className = "district";
+
+    const head = document.createElement("div");
+    head.className = "district-head";
+    head.innerHTML = `<h2>${districtNames[lang][d-1]}</h2><span class="district-count">${t.count(items.length)}</span>`;
+    section.appendChild(head);
+
+    const grid = document.createElement("div");
+    grid.className = "grid";
+
+    items.forEach(r => {
+      const card = document.createElement("article");
+      card.className = "card";
+      const initial = r.name.trim().charAt(0);
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="stamp" aria-hidden="true">${initial}</div>
+          <h3>${r.name}</h3>
+        </div>
+        <div class="dishes">${r.dishes[lang]}</div>
+        <div class="card-bottom">
+          <span class="price">${t.priceLabel}: ${r.price}</span>
+          <span class="address">${t.addrLabel}: ${r.addr}</span>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    districtsEl.appendChild(section);
+  }
+}
+
+function buildLangPicker(){
+  const sel = document.getElementById("langPicker");
+  Object.keys(i18n).forEach(code=>{
+    const opt = document.createElement("option");
+    opt.value = code;
+    opt.textContent = i18n[code].langName;
+    sel.appendChild(opt);
+  });
+  sel.value = currentLang;
+  sel.addEventListener("change", e => render(e.target.value));
+}
+
+buildLangPicker();
+render(currentLang);
+</script>
+</body>
+</html>
