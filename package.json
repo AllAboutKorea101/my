@@ -1,7 +1,7 @@
 {
   "name": "functions",
   "description": "Cloud Functions for All About Korea (PayPal payment verification)",
-  "engines": { "node": "20" },
+  "engines": { "node": "24.x" },
   "main": "index.js",
   "dependencies": {
     "firebase-admin": "^12.0.0",
