@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TOPIK I 필수 단어장 · Essential Vocabulary</title>
+<style>
+:root{
+  --bg:#F5F5F7; --card:#FFFFFF; --ink:#1D1D1F; --ink2:#6E6E73; --ink3:#999999;
+  --line:#E5E5EA; --line2:#F0F0F3; --soft:#FBFBFD; --fill:#F5F5F7;
+  --blue:#0071E3; --blue-soft:#E8F1FC; --green:#1E8E3E; --green-soft:#E6F4EA; --red:#D93025; --red-soft:#FCE8E6;
+  --radius:16px; --side:300px;
+  --sans:"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.45}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+svg.i{width:18px;height:18px;flex:none}
+svg.i.s{width:15px;height:15px}
+
+/* ---------- Layout ---------- */
+.app{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:min(86vw,var(--side));background:var(--card);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;z-index:40;transform:translateX(-102%);transition:transform .25s ease}
+.sidebar.open{transform:none;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:30;opacity:0;pointer-events:none;transition:opacity .25s}
+.backdrop.show{opacity:1;pointer-events:auto}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:10px 12px;
+  background:rgba(245,245,247,.86);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line)}
+.topbar .title{font-weight:700;font-size:15px;flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:0;background:transparent}
+.iconbtn:hover{background:var(--line2)}
+.main{padding:16px 16px 48px;max-width:920px;margin:0 auto}
+@media (min-width:1024px){
+  .sidebar{transform:none;width:var(--side);position:fixed}
+  .backdrop,.topbar{display:none}
+  .main{margin-left:var(--side);max-width:none;padding:32px 40px 64px}
+  .main>*{max-width:880px;margin-left:auto;margin-right:auto}
+}
+
+/* ---------- Sidebar ---------- */
+.side-head{padding:18px 16px 12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;letter-spacing:-.5px}
+.brand b{display:block;font-size:15px;letter-spacing:-.2px}
+.brand small{display:block;font-size:11.5px;color:var(--ink2)}
+.search{position:relative;margin-top:14px}
+.search input{width:100%;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--fill);padding:0 34px 0 34px;font-size:14px;outline:none}
+.search input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px var(--blue-soft)}
+.search .mag{position:absolute;left:10px;top:10px;color:var(--ink3)}
+.search .clr{position:absolute;right:4px;top:4px;width:30px;height:30px;border:0;background:transparent;border-radius:8px;color:var(--ink3);display:none}
+.search.has .clr{display:block}
+.side-scroll{flex:1;overflow-y:auto;padding:8px 8px 24px;overscroll-behavior:contain}
+.nav-cat{margin-top:10px}
+.nav-cat h4{margin:0;padding:8px 10px 4px;font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;display:flex;gap:6px;align-items:center}
+.nav-cat h4 .dot{width:7px;height:7px;border-radius:50%}
+.nav-u{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;font-size:14px}
+.nav-u:hover{background:var(--fill)}
+.nav-u .n{font-family:var(--mono);font-size:11px;color:var(--ink3);width:22px;flex:none}
+.nav-u .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-u .t small{color:var(--ink3);font-size:11.5px;margin-left:4px}
+.nav-u.active{background:var(--ink);color:#fff}
+.nav-u.active .n,.nav-u.active .t small{color:rgba(255,255,255,.65)}
+
+/* ---------- Search results ---------- */
+.results{display:flex;flex-direction:column;gap:2px}
+.results .rh{font-size:11px;font-weight:700;color:var(--ink3);padding:10px 10px 4px;text-transform:uppercase;letter-spacing:.3px}
+.res{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px}
+.res:hover{background:var(--fill)}
+.res .k{font-weight:700;font-size:15px}
+.res .r{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.res .e{font-size:13px;color:var(--ink2);flex:1;text-align:right;min-width:0}
+.res .u{font-size:11px;color:var(--ink3);white-space:nowrap}
+.res mark{background:#FFF3B0;color:inherit;border-radius:3px;padding:0 1px}
+.empty{padding:20px 12px;color:var(--ink2);font-size:14px;text-align:center}
+.home .results-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px;margin-top:10px}
+
+/* ---------- Home ---------- */
+.hero{padding:14px 2px 6px}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.8px;color:var(--ink3);text-transform:uppercase}
+.hero h1{font-size:28px;letter-spacing:-.6px;margin:6px 0 4px;line-height:1.2}
+.hero p{margin:0;color:var(--ink2);font-size:14.5px}
+.stats{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600}
+.home .search{margin-top:18px}
+.home .search input{height:46px;font-size:15px;background:var(--card);border-radius:12px}
+.home .search .mag{top:14px}.home .search .clr{top:8px}
+.cat-sec{margin-top:28px}
+.cat-sec h2{font-size:17px;margin:0 0 10px;display:flex;align-items:center;gap:8px;letter-spacing:-.2px}
+.cat-sec h2 small{font-size:12.5px;color:var(--ink2);font-weight:500}
+.cat-sec h2 .dot{width:10px;height:10px;border-radius:50%}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:600px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1280px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.ucard{position:relative;display:flex;flex-direction:column;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px 13px;transition:transform .15s,box-shadow .15s,border-color .15s;min-height:84px}
+.ucard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06);border-color:var(--line)}
+.ucard:active{transform:scale(.98)}
+.ucard .n{font-family:var(--mono);font-size:11px;font-weight:600;border-radius:6px;padding:1px 6px;align-self:flex-start;margin-bottom:6px}
+.ucard b{font-size:16px;letter-spacing:-.3px;line-height:1.25}
+.ucard small{font-size:12px;color:var(--ink2);line-height:1.3}
+
+/* ---------- Unit ---------- */
+.back{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;color:var(--blue);font-weight:600;padding:4px 0;margin-bottom:6px}
+@media (min-width:1024px){.back{display:none}}
+.uhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-bottom:14px}
+.crumb{font-size:12px;color:var(--ink2);display:flex;align-items:center;gap:6px;font-weight:600}
+.crumb .dot{width:8px;height:8px;border-radius:50%}
+.uhead .label{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1px;color:var(--ink3);margin-top:8px}
+.uhead h1{margin:2px 0 0;font-size:26px;letter-spacing:-.6px;line-height:1.2}
+.uhead h1 span{font-weight:500;color:var(--ink2);font-size:.72em;letter-spacing:-.2px}
+@media (min-width:1024px){.uhead h1{font-size:32px}}
+.pn{display:flex;gap:6px;flex:none}
+.pn a,.pn span{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center}
+.pn a:hover{background:var(--fill)}
+.pn span{opacity:.35}
+
+.tabs{display:flex;background:#E8E8ED;border-radius:12px;padding:3px;gap:2px}
+.tab{flex:1;border:0;background:transparent;border-radius:9px;padding:9px 6px;font-size:13.5px;font-weight:600;color:var(--ink2);display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.tab small{font-size:10.5px;font-weight:500;opacity:.8}
+.tab[aria-selected=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+@media (min-width:600px){.tab{flex-direction:row;justify-content:center;gap:6px;font-size:14px}.tab small{font-size:12px}}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 12px}
+.pill{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 11px;border-radius:9px;border:1px solid var(--line);background:var(--card);font-size:12.5px;font-weight:600;white-space:nowrap}
+.pill:hover{background:var(--fill)}
+.pill.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.pill.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.pill.primary:hover{background:#0062c4}
+.pill label{color:var(--ink2);font-weight:600;font-size:11.5px}
+.pill select{border:0;background:transparent;font-weight:600;font-size:12.5px;outline:none;cursor:pointer;max-width:170px;min-width:0}
+.pill .l2{display:inline}
+.pill .l2 small{font-size:inherit;font-weight:inherit}
+@media (max-width:719px){
+  .toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .toolbar .grow{display:none}
+  .pill{height:auto;min-height:40px;padding:6px 10px;justify-content:center;white-space:normal}
+  .pill.sel{flex-direction:column;align-items:stretch;gap:0;padding:5px 10px}
+  .pill.sel label{font-size:10.5px}
+  .pill.sel select{max-width:none;width:100%;font-size:13px}
+  .pill .l2{display:flex;flex-direction:column;line-height:1.15;text-align:left}
+  .pill .l2 small{font-size:10.5px;font-weight:500;opacity:.8}
+}
+.toolbar .grow{flex:1}
+
+/* ---------- Word list ---------- */
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 6px;box-shadow:0 10px 30px rgba(0,0,0,.04)}
+.thead,.wrow{display:grid;grid-template-columns:26px minmax(0,1fr) auto;grid-template-areas:"num ko en" "num ro en";column-gap:10px;padding:0 10px}
+.thead{display:none}
+.wrow{padding:12px 10px;align-items:center;transition:background .2s}
+.wrow+.wrow{border-top:1px solid var(--line2)}
+.wrow:hover{background:var(--soft)}
+.wrow.playing{background:var(--blue-soft)}
+.wrow.flash{animation:flash 2s ease}
+@keyframes flash{0%,40%{background:#FFF3B0}100%{background:transparent}}
+.c-num{grid-area:num;font-family:var(--mono);font-size:11.5px;color:var(--ink3);align-self:center}
+.c-ko{grid-area:ko;display:flex;align-items:center;gap:4px;min-width:0}
+.c-ko b{font-size:19px;letter-spacing:-.3px}
+.c-ro{grid-area:ro;font-family:var(--mono);font-size:13px;color:var(--ink2)}
+.c-en{grid-area:en;text-align:right;font-size:14px;font-weight:600;max-width:46vw}
+.c-en .note{display:block;font-size:11px;color:var(--ink3);font-weight:500;margin-top:1px}
+.spk{width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:var(--ink3);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.spk:hover{color:var(--blue);background:var(--blue-soft)}
+@media (min-width:720px){
+  .thead,.wrow{grid-template-columns:40px 1.25fr 1.25fr 1fr;grid-template-areas:"num ko ro en"}
+  .thead{display:grid;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;padding:12px 10px 10px;border-bottom:1px solid var(--line)}
+  .thead span:last-child{text-align:right}
+  .c-en{max-width:none}
+  .wrow{padding:13px 10px}
+}
+.hide-ro .c-ro .v,.hide-en .c-en .v{filter:blur(6px);user-select:none;cursor:pointer;transition:filter .2s}
+.hide-ro .c-ro .v.reveal,.hide-en .c-en .v.reveal{filter:none}
+@media (hover:hover){.hide-ro .c-ro .v:hover,.hide-en .c-en .v:hover{filter:none}}
+.tip{font-size:12px;color:var(--ink3);margin:10px 4px 0;text-align:center}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:16px}
+.fc-count{font-family:var(--mono);font-size:12.5px;color:var(--ink2)}
+.fc-bar{width:100%;max-width:520px;height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.fc-bar i{display:block;height:100%;background:var(--ink);border-radius:4px;transition:width .25s}
+.card3d{outline:none;color:var(--ink);width:100%;max-width:520px;aspect-ratio:1.45/1;perspective:1200px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+@media (max-width:480px){.card3d{aspect-ratio:1/1.05}}
+.card3d .inner{position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
+.card3d.flipped .inner{transform:rotateY(180deg)}
+.face{color:var(--ink);position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:22px;
+  box-shadow:0 18px 40px rgba(0,0,0,.07);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.face.back{transform:rotateY(180deg)}
+.face .big{font-size:44px;font-weight:800;letter-spacing:-1px;line-height:1.15}
+.face .big.en{font-size:30px;letter-spacing:-.4px}
+.face .ro{font-family:var(--mono);color:var(--ink2);font-size:16px;margin-top:10px}
+.face .mid{font-size:24px;font-weight:700;margin-top:14px;letter-spacing:-.3px}
+.face .note{font-size:13px;color:var(--ink3);margin-top:6px}
+.face .hint{position:absolute;bottom:14px;font-size:11.5px;color:var(--ink3)}
+.face .side-tag{position:absolute;top:14px;left:16px;font-size:10.5px;font-weight:700;letter-spacing:.6px;color:var(--ink3);text-transform:uppercase}
+.fc-ctrl{display:flex;gap:10px;align-items:center}
+.round{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center}
+.round:hover{background:var(--fill)}
+.round.main-btn{width:60px;height:60px;background:var(--ink);color:#fff;border-color:var(--ink)}
+.round.main-btn:hover{background:#000}
+.round:disabled{opacity:.3;cursor:default}
+.fc-opts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+
+/* ---------- Quiz ---------- */
+.qz-start{display:grid;gap:10px;margin-top:16px}
+@media (min-width:720px){.qz-start{grid-template-columns:repeat(3,1fr)}}
+.qtype{text-align:left;border:1px solid var(--line);background:var(--card);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:6px;transition:transform .15s,box-shadow .15s}
+.qtype:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.07)}
+.qtype .ic{width:40px;height:40px;border-radius:12px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;margin-bottom:6px}
+.qtype b{font-size:15.5px}
+.qtype small{color:var(--ink2);font-size:12.5px}
+.qz-intro{margin-top:16px;color:var(--ink2);font-size:13.5px}
+.qbox{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 18px;margin-top:16px;box-shadow:0 10px 30px rgba(0,0,0,.04)}
+.qtop{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--ink2);font-weight:600}
+.qtop .qt{font-family:var(--mono)}
+.qprompt{text-align:center;padding:26px 0 22px}
+.qprompt .ask{font-size:12.5px;color:var(--ink3);font-weight:600;margin-bottom:10px}
+.qprompt .word{font-size:40px;font-weight:800;letter-spacing:-.8px;line-height:1.2}
+.qprompt .word.en{font-size:28px;letter-spacing:-.3px}
+.qprompt .sub{font-size:13px;color:var(--ink3);margin-top:4px}
+.listen-btn{width:92px;height:92px;border-radius:50%;border:0;background:var(--blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(0,113,227,.3)}
+.listen-btn svg{width:38px;height:38px}
+.listen-btn:active{transform:scale(.96)}
+.opts{display:grid;gap:8px}
+@media (min-width:600px){.opts{grid-template-columns:1fr 1fr}}
+.opt{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:14px 16px;text-align:left;font-size:16px;font-weight:600;display:flex;align-items:center;gap:12px;min-height:56px}
+.opt .k{font-family:var(--mono);font-size:11px;color:var(--ink3);width:18px;height:18px;border:1px solid var(--line);border-radius:5px;display:flex;align-items:center;justify-content:center;flex:none}
+.opt:hover:not(:disabled){border-color:var(--ink3);background:var(--soft)}
+.opt.ko{font-size:19px}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.opt.wrong{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.opt.dim{opacity:.45}
+.feedback{margin-top:14px;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:14px}
+.feedback.ok{background:var(--green-soft);color:var(--green)}
+.feedback.no{background:var(--red-soft);color:var(--red)}
+.feedback .fx{flex:1;color:var(--ink)}
+.feedback .fx b{font-size:16px}
+.feedback .fx .r{font-family:var(--mono);color:var(--ink2);font-size:12.5px;margin:0 4px}
+.qnext{display:flex;justify-content:flex-end;margin-top:14px}
+.btn{height:44px;padding:0 18px;border-radius:12px;border:0;background:var(--ink);color:#fff;font-weight:700;font-size:14.5px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:#000}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--fill)}
+.btn.blue{background:var(--blue)}
+.result{text-align:center;padding:10px 0 4px}
+.ring{width:128px;height:128px;margin:6px auto 12px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .sc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .sc b{font-size:32px;letter-spacing:-1px}
+.ring .sc small{font-size:12px;color:var(--ink2)}
+.result h3{margin:0;font-size:20px}
+.result p{margin:4px 0 0;color:var(--ink2);font-size:14px}
+.wronglist{margin-top:18px;text-align:left}
+.wronglist h4{font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin:0 0 6px}
+.wronglist .wl{display:flex;align-items:center;gap:10px;padding:10px 4px;border-top:1px solid var(--line2)}
+.wronglist .wl b{font-size:16px}
+.wronglist .wl .r{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.wronglist .wl .e{flex:1;text-align:right;font-size:13.5px;font-weight:600}
+.actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px}
+
+/* ---------- Bottom nav ---------- */
+.bnav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.bnav a,.bnav .ph{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.bnav a:hover{background:var(--soft)}
+.bnav .ph{visibility:hidden}
+.bnav .d{font-size:11.5px;color:var(--ink3);font-weight:600}
+.bnav .t{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bnav .nx{text-align:right;align-items:flex-end}
+.foot{margin-top:28px;text-align:center;font-size:11.5px;color:var(--ink3)}
+
+/* ---------- Print (A4, same look as the reference sheet) ---------- */
+#print-sheet{display:none}
+@media print{
+  @page{size:A4 portrait;margin:0}
+  body{background:#fff!important}
+  .app{display:none!important}
+  #print-sheet{display:block;padding:15mm 15mm;font-family:var(--sans);color:#1D1D1F}
+  .ps-head{border-bottom:1px solid #E5E5EA;padding-bottom:5mm;margin-bottom:6mm}
+  .ps-head span{font-size:9pt;font-weight:700;letter-spacing:1px;color:#999;text-transform:uppercase}
+  .ps-head h1{font-size:22pt;margin:2mm 0 0;letter-spacing:-.5px}
+  .ps-head h1 small{font-size:.6em;color:#6E6E73;font-weight:500}
+  .ps-row{display:grid;grid-template-columns:10mm 1.3fr 1.3fr 1fr;align-items:center;padding:3.6mm 2mm;border-bottom:1px solid #F0F0F3;break-inside:avoid}
+  .ps-row.h{font-size:8pt;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #E5E5EA;padding-top:0}
+  .ps-row .n{font-family:var(--mono);font-size:8.5pt;color:#999}
+  .ps-row .k{font-size:15pt;font-weight:800}
+  .ps-row .r{font-family:var(--mono);font-size:10.5pt;color:#6E6E73}
+  .ps-row .e{text-align:right;font-size:10.5pt;font-weight:600}
+  .ps-row .e small{display:block;font-size:8pt;color:#999;font-weight:500}
+  .ps-row .blank{display:inline-block;min-width:32mm;border-bottom:1px solid #C7C7CC;height:5mm}
+  .ps-foot{margin-top:8mm;padding-top:4mm;border-top:1px solid #F0F0F3;display:flex;justify-content:space-between;font-family:var(--mono);font-size:8pt;color:#999}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Units">
+    <div class="side-head">
+      <a class="brand" href="#/">
+        <div class="logo">TI</div>
+        <div><b>TOPIK I 필수 단어장</b><small>Essential Vocabulary · 100 Units</small></div>
+      </a>
+      <div class="search" id="side-search-box">
+        <svg class="i s mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="side-search" type="text" enterkeyhint="search" placeholder="단어 검색 Search words" autocomplete="off" aria-label="Search words">
+        <button class="clr" aria-label="Clear" data-clear="side-search">✕</button>
+      </div>
+    </div>
+    <div class="side-scroll" id="side-scroll"></div>
+  </aside>
+  <div class="backdrop" id="backdrop"></div>
+  <header class="topbar">
+    <button class="iconbtn" id="menu-btn" aria-label="Open unit list">
+      <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="title" id="top-title">TOPIK I 필수 단어장</div>
+    <a class="iconbtn" href="#/" aria-label="Home">
+      <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg>
+    </a>
+  </header>
+  <main class="main" id="view"></main>
+</div>
+<div id="print-sheet"></div>
+
+<script>
+const CATS = [{"id":"people","ko":"사람과 관계","en":"People & Relationships"},{"id":"body","ko":"몸과 건강","en":"Body & Health"},{"id":"food","ko":"음식","en":"Food"},{"id":"home","ko":"집","en":"Home"},{"id":"clothes","ko":"옷과 쇼핑","en":"Clothes & Shopping"},{"id":"time","ko":"숫자와 시간","en":"Numbers & Time"},{"id":"places","ko":"위치와 장소","en":"Places & Locations"},{"id":"school","ko":"학교와 일","en":"School & Work"},{"id":"comm","ko":"통신과 서비스","en":"Communication & Services"},{"id":"travel","ko":"교통과 여행","en":"Transport & Travel"},{"id":"nature","ko":"자연","en":"Nature"},{"id":"culture","ko":"여가와 문화","en":"Leisure & Culture"},{"id":"mind","ko":"생각과 감각","en":"Thoughts & Senses"}];
+const UNITS = [{"n":1,"ko":"가족","en":"Family","cat":"people","w":[{"ko":"아버지","ro":"abeoji","en":"Father"},{"ko":"어머니","ro":"eomeoni","en":"Mother"},{"ko":"부모님","ro":"bumonim","en":"Parents"},{"ko":"할아버지","ro":"harabeoji","en":"Grandfather"},{"ko":"할머니","ro":"halmeoni","en":"Grandmother"},{"ko":"형","ro":"hyeong","en":"Older brother","note":"male speaker"},{"ko":"누나","ro":"nuna","en":"Older sister","note":"male speaker"},{"ko":"오빠","ro":"oppa","en":"Older brother","note":"female speaker"},{"ko":"언니","ro":"eonni","en":"Older sister","note":"female speaker"},{"ko":"동생","ro":"dongsaeng","en":"Younger sibling"}]},{"n":2,"ko":"친척","en":"Relatives","cat":"people","w":[{"ko":"친척","ro":"chincheok","en":"Relative"},{"ko":"삼촌","ro":"samchon","en":"Uncle","note":"father's brother"},{"ko":"고모","ro":"gomo","en":"Aunt","note":"father's sister"},{"ko":"외삼촌","ro":"oesamchon","en":"Uncle","note":"mother's brother"},{"ko":"이모","ro":"imo","en":"Aunt","note":"mother's sister"},{"ko":"사촌","ro":"sachon","en":"Cousin"},{"ko":"조카","ro":"joka","en":"Niece / Nephew"},{"ko":"손자","ro":"sonja","en":"Grandson"},{"ko":"손녀","ro":"sonnyeo","en":"Granddaughter"},{"ko":"외할머니","ro":"oehalmeoni","en":"Grandmother","note":"mother's side"}]},{"n":3,"ko":"사람","en":"People","cat":"people","w":[{"ko":"사람","ro":"saram","en":"Person"},{"ko":"남자","ro":"namja","en":"Man"},{"ko":"여자","ro":"yeoja","en":"Woman"},{"ko":"아이","ro":"ai","en":"Child"},{"ko":"어른","ro":"eoreun","en":"Adult"},{"ko":"청소년","ro":"cheongsonyeon","en":"Teenager"},{"ko":"친구","ro":"chingu","en":"Friend"},{"ko":"이웃","ro":"iut","en":"Neighbor"},{"ko":"손님","ro":"sonnim","en":"Guest; Customer"},{"ko":"외국인","ro":"oegugin","en":"Foreigner"}]},{"n":4,"ko":"연애와 결혼","en":"Love & Marriage","cat":"people","w":[{"ko":"연애","ro":"yeonae","en":"Dating; Romance"},{"ko":"데이트","ro":"deiteu","en":"Date"},{"ko":"남자 친구","ro":"namja chingu","en":"Boyfriend"},{"ko":"여자 친구","ro":"yeoja chingu","en":"Girlfriend"},{"ko":"결혼","ro":"gyeolhon","en":"Marriage"},{"ko":"신랑","ro":"sillang","en":"Groom"},{"ko":"신부","ro":"sinbu","en":"Bride"},{"ko":"부부","ro":"bubu","en":"Married couple"},{"ko":"남편","ro":"nampyeon","en":"Husband"},{"ko":"아내","ro":"anae","en":"Wife"}]},{"n":5,"ko":"나이와 일생","en":"Life Stages","cat":"people","w":[{"ko":"나이","ro":"nai","en":"Age"},{"ko":"인생","ro":"insaeng","en":"Life"},{"ko":"출생","ro":"chulsaeng","en":"Birth"},{"ko":"아기","ro":"agi","en":"Baby"},{"ko":"어린이","ro":"eorini","en":"Kid"},{"ko":"학생","ro":"haksaeng","en":"Student"},{"ko":"청년","ro":"cheongnyeon","en":"Young adult"},{"ko":"중년","ro":"jungnyeon","en":"Middle age"},{"ko":"노인","ro":"noin","en":"Elderly person"},{"ko":"은퇴","ro":"euntoe","en":"Retirement"}]},{"n":6,"ko":"자기소개","en":"Self-Introduction","cat":"people","w":[{"ko":"이름","ro":"ireum","en":"Name"},{"ko":"성","ro":"seong","en":"Family name"},{"ko":"성함","ro":"seongham","en":"Name","note":"honorific"},{"ko":"인사","ro":"insa","en":"Greeting"},{"ko":"자기소개","ro":"jagisogae","en":"Self-introduction"},{"ko":"국적","ro":"gukjeok","en":"Nationality"},{"ko":"주소","ro":"juso","en":"Address"},{"ko":"연락처","ro":"yeollakcheo","en":"Contact information"},{"ko":"고향","ro":"gohyang","en":"Hometown"},{"ko":"소개","ro":"sogae","en":"Introduction"}]},{"n":7,"ko":"나라","en":"Countries","cat":"people","w":[{"ko":"한국","ro":"hanguk","en":"Korea"},{"ko":"미국","ro":"miguk","en":"USA"},{"ko":"중국","ro":"jungguk","en":"China"},{"ko":"일본","ro":"ilbon","en":"Japan"},{"ko":"영국","ro":"yeongguk","en":"UK"},{"ko":"프랑스","ro":"peurangseu","en":"France"},{"ko":"독일","ro":"dogil","en":"Germany"},{"ko":"베트남","ro":"beteunam","en":"Vietnam"},{"ko":"캐나다","ro":"kaenada","en":"Canada"},{"ko":"호주","ro":"hoju","en":"Australia"}]},{"n":8,"ko":"언어","en":"Languages","cat":"people","w":[{"ko":"언어","ro":"eoneo","en":"Language"},{"ko":"한국어","ro":"hangugeo","en":"Korean"},{"ko":"영어","ro":"yeongeo","en":"English"},{"ko":"중국어","ro":"junggugeo","en":"Chinese"},{"ko":"일본어","ro":"ilboneo","en":"Japanese"},{"ko":"스페인어","ro":"seupeineo","en":"Spanish"},{"ko":"프랑스어","ro":"peurangseueo","en":"French"},{"ko":"베트남어","ro":"beteunameo","en":"Vietnamese"},{"ko":"독일어","ro":"dogireo","en":"German"},{"ko":"외국어","ro":"oegugeo","en":"Foreign language"}]},{"n":9,"ko":"직업","en":"Jobs & Professions","cat":"people","w":[{"ko":"선생님","ro":"seonsaengnim","en":"Teacher"},{"ko":"의사","ro":"uisa","en":"Doctor"},{"ko":"간호사","ro":"ganhosa","en":"Nurse"},{"ko":"회사원","ro":"hoesawon","en":"Office worker"},{"ko":"경찰관","ro":"gyeongchalgwan","en":"Police officer"},{"ko":"요리사","ro":"yorisa","en":"Chef; Cook"},{"ko":"운전기사","ro":"unjeongisa","en":"Driver"},{"ko":"소방관","ro":"sobanggwan","en":"Firefighter"},{"ko":"은행원","ro":"eunhaengwon","en":"Bank clerk"},{"ko":"공무원","ro":"gongmuwon","en":"Civil servant"}]},{"n":10,"ko":"감정","en":"Feelings","cat":"people","w":[{"ko":"기분","ro":"gibun","en":"Mood; Feeling"},{"ko":"사랑","ro":"sarang","en":"Love"},{"ko":"행복","ro":"haengbok","en":"Happiness"},{"ko":"기쁨","ro":"gippeum","en":"Joy"},{"ko":"슬픔","ro":"seulpeum","en":"Sadness"},{"ko":"화","ro":"hwa","en":"Anger"},{"ko":"걱정","ro":"geokjeong","en":"Worry"},{"ko":"웃음","ro":"useum","en":"Laughter"},{"ko":"눈물","ro":"nunmul","en":"Tears"},{"ko":"스트레스","ro":"seuteureseu","en":"Stress"}]},{"n":11,"ko":"얼굴","en":"Face & Head","cat":"body","w":[{"ko":"머리","ro":"meori","en":"Head"},{"ko":"머리카락","ro":"meorikarak","en":"Hair"},{"ko":"얼굴","ro":"eolgul","en":"Face"},{"ko":"눈","ro":"nun","en":"Eye","note":"homonym: 눈 = snow (Unit 51)"},{"ko":"코","ro":"ko","en":"Nose"},{"ko":"입","ro":"ip","en":"Mouth"},{"ko":"입술","ro":"ipsul","en":"Lips"},{"ko":"귀","ro":"gwi","en":"Ear"},{"ko":"눈썹","ro":"nunsseop","en":"Eyebrow"},{"ko":"목","ro":"mok","en":"Neck; Throat"}]},{"n":12,"ko":"몸","en":"Body","cat":"body","w":[{"ko":"어깨","ro":"eokkae","en":"Shoulder"},{"ko":"팔","ro":"pal","en":"Arm","note":"homonym: 팔 = eight (Unit 44)"},{"ko":"손","ro":"son","en":"Hand"},{"ko":"손가락","ro":"songarak","en":"Finger"},{"ko":"가슴","ro":"gaseum","en":"Chest"},{"ko":"배","ro":"bae","en":"Belly; Stomach","note":"homonym: 배 = ship (Unit 76)"},{"ko":"등","ro":"deung","en":"Back"},{"ko":"허리","ro":"heori","en":"Waist; Lower back"},{"ko":"다리","ro":"dari","en":"Leg"},{"ko":"발","ro":"bal","en":"Foot"}]},{"n":13,"ko":"증상","en":"Illness & Symptoms","cat":"body","w":[{"ko":"감기","ro":"gamgi","en":"Cold"},{"ko":"기침","ro":"gichim","en":"Cough"},{"ko":"콧물","ro":"konmul","en":"Runny nose"},{"ko":"두통","ro":"dutong","en":"Headache"},{"ko":"복통","ro":"boktong","en":"Stomachache"},{"ko":"치통","ro":"chitong","en":"Toothache"},{"ko":"몸살","ro":"momsal","en":"Body aches"},{"ko":"설사","ro":"seolsa","en":"Diarrhea"},{"ko":"알레르기","ro":"allereugi","en":"Allergy"},{"ko":"상처","ro":"sangcheo","en":"Wound; Cut"}]},{"n":14,"ko":"병원과 약국","en":"Hospital & Pharmacy","cat":"body","w":[{"ko":"병원","ro":"byeongwon","en":"Hospital; Clinic"},{"ko":"약국","ro":"yakguk","en":"Pharmacy"},{"ko":"약","ro":"yak","en":"Medicine"},{"ko":"진료","ro":"jillyo","en":"Medical treatment"},{"ko":"접수","ro":"jeopsu","en":"Registration; Reception"},{"ko":"주사","ro":"jusa","en":"Injection; Shot"},{"ko":"처방전","ro":"cheobangjeon","en":"Prescription"},{"ko":"입원","ro":"ibwon","en":"Hospitalization"},{"ko":"수술","ro":"susul","en":"Surgery"},{"ko":"응급실","ro":"eunggeupsil","en":"Emergency room"}]},{"n":15,"ko":"하루 일과","en":"Daily Routine","cat":"body","w":[{"ko":"기상","ro":"gisang","en":"Waking up"},{"ko":"세수","ro":"sesu","en":"Washing one's face"},{"ko":"양치","ro":"yangchi","en":"Brushing teeth"},{"ko":"샤워","ro":"syawo","en":"Shower"},{"ko":"목욕","ro":"mogyok","en":"Bath"},{"ko":"화장","ro":"hwajang","en":"Makeup"},{"ko":"외출","ro":"oechul","en":"Going out"},{"ko":"귀가","ro":"gwiga","en":"Returning home"},{"ko":"낮잠","ro":"natjam","en":"Nap"},{"ko":"잠","ro":"jam","en":"Sleep"}]},{"n":16,"ko":"운동과 건강","en":"Fitness & Health","cat":"body","w":[{"ko":"건강","ro":"geongang","en":"Health"},{"ko":"운동","ro":"undong","en":"Exercise"},{"ko":"헬스장","ro":"helseujang","en":"Gym"},{"ko":"요가","ro":"yoga","en":"Yoga"},{"ko":"달리기","ro":"dalligi","en":"Running"},{"ko":"산책","ro":"sanchaek","en":"Walk; Stroll"},{"ko":"스트레칭","ro":"seuteureching","en":"Stretching"},{"ko":"줄넘기","ro":"julleomgi","en":"Jump rope"},{"ko":"마라톤","ro":"maraton","en":"Marathon"},{"ko":"다이어트","ro":"daieoteu","en":"Diet"}]},{"n":17,"ko":"한국 음식","en":"Korean Food","cat":"food","w":[{"ko":"김치","ro":"gimchi","en":"Kimchi"},{"ko":"비빔밥","ro":"bibimbap","en":"Bibimbap","note":"mixed rice"},{"ko":"불고기","ro":"bulgogi","en":"Bulgogi","note":"marinated beef"},{"ko":"갈비","ro":"galbi","en":"Galbi","note":"grilled ribs"},{"ko":"삼겹살","ro":"samgyeopsal","en":"Grilled pork belly"},{"ko":"김치찌개","ro":"gimchijjigae","en":"Kimchi stew"},{"ko":"된장찌개","ro":"doenjangjjigae","en":"Soybean paste stew"},{"ko":"삼계탕","ro":"samgyetang","en":"Ginseng chicken soup"},{"ko":"냉면","ro":"naengmyeon","en":"Cold noodles"},{"ko":"잡채","ro":"japchae","en":"Glass noodle stir-fry"}]},{"n":18,"ko":"분식","en":"Street Food & Snacks","cat":"food","w":[{"ko":"떡볶이","ro":"tteokbokki","en":"Spicy rice cakes"},{"ko":"김밥","ro":"gimbap","en":"Gimbap","note":"seaweed rice roll"},{"ko":"순대","ro":"sundae","en":"Korean blood sausage"},{"ko":"어묵","ro":"eomuk","en":"Fish cake"},{"ko":"라면","ro":"ramyeon","en":"Ramen"},{"ko":"튀김","ro":"twigim","en":"Fried snacks"},{"ko":"만두","ro":"mandu","en":"Dumplings"},{"ko":"쫄면","ro":"jjolmyeon","en":"Spicy chewy noodles"},{"ko":"호떡","ro":"hotteok","en":"Sweet filled pancake"},{"ko":"붕어빵","ro":"bungeoppang","en":"Fish-shaped bread"}]},{"n":19,"ko":"과일","en":"Fruits","cat":"food","w":[{"ko":"사과","ro":"sagwa","en":"Apple"},{"ko":"바나나","ro":"banana","en":"Banana"},{"ko":"딸기","ro":"ttalgi","en":"Strawberry"},{"ko":"포도","ro":"podo","en":"Grapes"},{"ko":"수박","ro":"subak","en":"Watermelon"},{"ko":"귤","ro":"gyul","en":"Tangerine"},{"ko":"복숭아","ro":"boksunga","en":"Peach"},{"ko":"참외","ro":"chamoe","en":"Korean melon"},{"ko":"감","ro":"gam","en":"Persimmon"},{"ko":"오렌지","ro":"orenji","en":"Orange"}]},{"n":20,"ko":"채소","en":"Vegetables","cat":"food","w":[{"ko":"배추","ro":"baechu","en":"Napa cabbage"},{"ko":"무","ro":"mu","en":"Radish"},{"ko":"당근","ro":"danggeun","en":"Carrot"},{"ko":"양파","ro":"yangpa","en":"Onion"},{"ko":"감자","ro":"gamja","en":"Potato"},{"ko":"고구마","ro":"goguma","en":"Sweet potato"},{"ko":"오이","ro":"oi","en":"Cucumber"},{"ko":"마늘","ro":"maneul","en":"Garlic"},{"ko":"고추","ro":"gochu","en":"Chili pepper"},{"ko":"파","ro":"pa","en":"Green onion"}]},{"n":21,"ko":"고기와 해산물","en":"Meat & Seafood","cat":"food","w":[{"ko":"고기","ro":"gogi","en":"Meat"},{"ko":"소고기","ro":"sogogi","en":"Beef"},{"ko":"돼지고기","ro":"dwaejigogi","en":"Pork"},{"ko":"닭고기","ro":"dakgogi","en":"Chicken","note":"meat"},{"ko":"생선","ro":"saengseon","en":"Fish","note":"as food"},{"ko":"연어","ro":"yeoneo","en":"Salmon"},{"ko":"새우","ro":"saeu","en":"Shrimp"},{"ko":"오징어","ro":"ojingeo","en":"Squid"},{"ko":"조개","ro":"jogae","en":"Clam"},{"ko":"게","ro":"ge","en":"Crab"}]},{"n":22,"ko":"곡물과 식재료","en":"Grains & Staples","cat":"food","w":[{"ko":"쌀","ro":"ssal","en":"Rice","note":"uncooked"},{"ko":"밥","ro":"bap","en":"Cooked rice; Meal"},{"ko":"콩","ro":"kong","en":"Beans"},{"ko":"두부","ro":"dubu","en":"Tofu"},{"ko":"계란","ro":"gyeran","en":"Egg"},{"ko":"밀가루","ro":"milgaru","en":"Flour"},{"ko":"국수","ro":"guksu","en":"Noodles"},{"ko":"떡","ro":"tteok","en":"Rice cake"},{"ko":"김","ro":"gim","en":"Dried seaweed"},{"ko":"치즈","ro":"chijeu","en":"Cheese"}]},{"n":23,"ko":"양념","en":"Seasonings","cat":"food","w":[{"ko":"소금","ro":"sogeum","en":"Salt"},{"ko":"설탕","ro":"seoltang","en":"Sugar"},{"ko":"후추","ro":"huchu","en":"Black pepper"},{"ko":"간장","ro":"ganjang","en":"Soy sauce"},{"ko":"고추장","ro":"gochujang","en":"Red chili paste"},{"ko":"된장","ro":"doenjang","en":"Soybean paste"},{"ko":"고춧가루","ro":"gochutgaru","en":"Red chili powder"},{"ko":"식초","ro":"sikcho","en":"Vinegar"},{"ko":"참기름","ro":"chamgireum","en":"Sesame oil"},{"ko":"기름","ro":"gireum","en":"Oil"}]},{"n":24,"ko":"음료","en":"Drinks","cat":"food","w":[{"ko":"물","ro":"mul","en":"Water"},{"ko":"커피","ro":"keopi","en":"Coffee"},{"ko":"차","ro":"cha","en":"Tea"},{"ko":"녹차","ro":"nokcha","en":"Green tea"},{"ko":"우유","ro":"uyu","en":"Milk"},{"ko":"주스","ro":"juseu","en":"Juice"},{"ko":"콜라","ro":"kolla","en":"Cola"},{"ko":"맥주","ro":"maekju","en":"Beer"},{"ko":"소주","ro":"soju","en":"Soju"},{"ko":"음료수","ro":"eumnyosu","en":"Beverage"}]},{"n":25,"ko":"간식과 디저트","en":"Snacks & Desserts","cat":"food","w":[{"ko":"간식","ro":"gansik","en":"Snack"},{"ko":"빵","ro":"ppang","en":"Bread"},{"ko":"케이크","ro":"keikeu","en":"Cake"},{"ko":"과자","ro":"gwaja","en":"Chips; Crackers"},{"ko":"쿠키","ro":"kuki","en":"Cookie"},{"ko":"초콜릿","ro":"chokollit","en":"Chocolate"},{"ko":"사탕","ro":"satang","en":"Candy"},{"ko":"젤리","ro":"jelli","en":"Jelly; Gummies"},{"ko":"아이스크림","ro":"aiseukeurim","en":"Ice cream"},{"ko":"빙수","ro":"bingsu","en":"Shaved ice dessert"}]},{"n":26,"ko":"식사와 요리","en":"Meals & Cooking","cat":"food","w":[{"ko":"식사","ro":"siksa","en":"Meal"},{"ko":"아침","ro":"achim","en":"Breakfast; Morning"},{"ko":"점심","ro":"jeomsim","en":"Lunch"},{"ko":"저녁","ro":"jeonyeok","en":"Dinner; Evening"},{"ko":"야식","ro":"yasik","en":"Late-night snack"},{"ko":"음식","ro":"eumsik","en":"Food"},{"ko":"요리","ro":"yori","en":"Cooking; Dish"},{"ko":"국","ro":"guk","en":"Soup"},{"ko":"도시락","ro":"dosirak","en":"Packed lunch"},{"ko":"레시피","ro":"resipi","en":"Recipe"}]},{"n":27,"ko":"식당","en":"Restaurant","cat":"food","w":[{"ko":"식당","ro":"sikdang","en":"Restaurant"},{"ko":"메뉴","ro":"menyu","en":"Menu"},{"ko":"주문","ro":"jumun","en":"Order"},{"ko":"반찬","ro":"banchan","en":"Side dishes"},{"ko":"일인분","ro":"irinbun","en":"One serving"},{"ko":"예약","ro":"yeyak","en":"Reservation"},{"ko":"자리","ro":"jari","en":"Seat; Spot"},{"ko":"계산","ro":"gyesan","en":"Paying the bill"},{"ko":"포장","ro":"pojang","en":"Takeout; Wrapping"},{"ko":"배달","ro":"baedal","en":"Delivery"}]},{"n":28,"ko":"식기","en":"Tableware","cat":"food","w":[{"ko":"숟가락","ro":"sutgarak","en":"Spoon"},{"ko":"젓가락","ro":"jeotgarak","en":"Chopsticks"},{"ko":"포크","ro":"pokeu","en":"Fork"},{"ko":"칼","ro":"kal","en":"Knife"},{"ko":"접시","ro":"jeopsi","en":"Plate"},{"ko":"그릇","ro":"geureut","en":"Bowl"},{"ko":"컵","ro":"keop","en":"Cup"},{"ko":"쟁반","ro":"jaengban","en":"Tray"},{"ko":"냄비","ro":"naembi","en":"Pot"},{"ko":"프라이팬","ro":"peuraipaen","en":"Frying pan"}]},{"n":29,"ko":"집의 구조","en":"Rooms of the House","cat":"home","w":[{"ko":"방","ro":"bang","en":"Room"},{"ko":"거실","ro":"geosil","en":"Living room"},{"ko":"부엌","ro":"bueok","en":"Kitchen"},{"ko":"화장실","ro":"hwajangsil","en":"Restroom; Toilet"},{"ko":"욕실","ro":"yoksil","en":"Bathroom","note":"with a bath/shower"},{"ko":"현관","ro":"hyeongwan","en":"Entrance; Front door area"},{"ko":"베란다","ro":"beranda","en":"Balcony"},{"ko":"창문","ro":"changmun","en":"Window"},{"ko":"문","ro":"mun","en":"Door"},{"ko":"마당","ro":"madang","en":"Yard"}]},{"n":30,"ko":"가구","en":"Furniture","cat":"home","w":[{"ko":"침대","ro":"chimdae","en":"Bed"},{"ko":"책상","ro":"chaeksang","en":"Desk"},{"ko":"의자","ro":"uija","en":"Chair"},{"ko":"소파","ro":"sopa","en":"Sofa"},{"ko":"식탁","ro":"siktak","en":"Dining table"},{"ko":"옷장","ro":"otjang","en":"Wardrobe"},{"ko":"책장","ro":"chaekjang","en":"Bookshelf"},{"ko":"서랍","ro":"seorap","en":"Drawer"},{"ko":"선반","ro":"seonban","en":"Shelf"},{"ko":"거울","ro":"geoul","en":"Mirror"}]},{"n":31,"ko":"가전제품","en":"Home Appliances","cat":"home","w":[{"ko":"냉장고","ro":"naengjanggo","en":"Refrigerator"},{"ko":"세탁기","ro":"setakgi","en":"Washing machine"},{"ko":"텔레비전","ro":"tellebijeon","en":"Television"},{"ko":"에어컨","ro":"eeokeon","en":"Air conditioner"},{"ko":"선풍기","ro":"seonpunggi","en":"Electric fan"},{"ko":"청소기","ro":"cheongsogi","en":"Vacuum cleaner"},{"ko":"전자레인지","ro":"jeonjareinji","en":"Microwave"},{"ko":"밥솥","ro":"bapsot","en":"Rice cooker"},{"ko":"오븐","ro":"obeun","en":"Oven"},{"ko":"드라이기","ro":"deuraigi","en":"Hair dryer"}]},{"n":32,"ko":"주방용품","en":"Kitchenware","cat":"home","w":[{"ko":"가스레인지","ro":"gaseureinji","en":"Gas stove"},{"ko":"싱크대","ro":"singkeudae","en":"Kitchen sink"},{"ko":"도마","ro":"doma","en":"Cutting board"},{"ko":"주전자","ro":"jujeonja","en":"Kettle"},{"ko":"국자","ro":"gukja","en":"Ladle"},{"ko":"뒤집개","ro":"dwijipgae","en":"Spatula"},{"ko":"병따개","ro":"byeongttagae","en":"Bottle opener"},{"ko":"행주","ro":"haengju","en":"Dish towel"},{"ko":"수세미","ro":"susemi","en":"Dish sponge"},{"ko":"앞치마","ro":"apchima","en":"Apron"}]},{"n":33,"ko":"생활용품","en":"Household Goods","cat":"home","w":[{"ko":"휴지","ro":"hyuji","en":"Tissue; Toilet paper"},{"ko":"수건","ro":"sugeon","en":"Towel"},{"ko":"비누","ro":"binu","en":"Soap"},{"ko":"샴푸","ro":"syampu","en":"Shampoo"},{"ko":"칫솔","ro":"chitsol","en":"Toothbrush"},{"ko":"치약","ro":"chiyak","en":"Toothpaste"},{"ko":"면도기","ro":"myeondogi","en":"Razor"},{"ko":"세제","ro":"seje","en":"Detergent"},{"ko":"휴지통","ro":"hyujitong","en":"Trash can"},{"ko":"우산","ro":"usan","en":"Umbrella"}]},{"n":34,"ko":"침실과 인테리어","en":"Bedroom & Decor","cat":"home","w":[{"ko":"이불","ro":"ibul","en":"Blanket; Comforter"},{"ko":"베개","ro":"begae","en":"Pillow"},{"ko":"담요","ro":"damnyo","en":"Throw blanket"},{"ko":"커튼","ro":"keoteun","en":"Curtain"},{"ko":"전등","ro":"jeondeung","en":"Light; Lamp"},{"ko":"벽시계","ro":"byeoksigye","en":"Wall clock"},{"ko":"달력","ro":"dallyeok","en":"Calendar"},{"ko":"액자","ro":"aekja","en":"Picture frame"},{"ko":"옷걸이","ro":"otgeori","en":"Hanger"},{"ko":"화분","ro":"hwabun","en":"Flowerpot"}]},{"n":35,"ko":"집안일","en":"Housework","cat":"home","w":[{"ko":"청소","ro":"cheongso","en":"Cleaning"},{"ko":"빨래","ro":"ppallae","en":"Laundry"},{"ko":"설거지","ro":"seolgeoji","en":"Washing dishes"},{"ko":"다림질","ro":"darimjil","en":"Ironing"},{"ko":"정리","ro":"jeongni","en":"Tidying up"},{"ko":"분리수거","ro":"bullisugeo","en":"Sorting recyclables"},{"ko":"먼지","ro":"meonji","en":"Dust"},{"ko":"걸레","ro":"geolle","en":"Rag; Mop"},{"ko":"빗자루","ro":"bitjaru","en":"Broom"},{"ko":"고무장갑","ro":"gomujanggap","en":"Rubber gloves"}]},{"n":36,"ko":"주거","en":"Housing","cat":"home","w":[{"ko":"아파트","ro":"apateu","en":"Apartment"},{"ko":"주택","ro":"jutaek","en":"House"},{"ko":"원룸","ro":"wollum","en":"Studio apartment"},{"ko":"고시원","ro":"gosiwon","en":"Small single-room lodging"},{"ko":"하숙집","ro":"hasukjip","en":"Boarding house"},{"ko":"집주인","ro":"jipjuin","en":"Landlord"},{"ko":"월세","ro":"wolse","en":"Monthly rent"},{"ko":"전세","ro":"jeonse","en":"Jeonse","note":"lump-sum deposit lease"},{"ko":"관리비","ro":"gwallibi","en":"Maintenance fee"},{"ko":"이사","ro":"isa","en":"Moving (house)"}]},{"n":37,"ko":"옷","en":"Clothing","cat":"clothes","w":[{"ko":"옷","ro":"ot","en":"Clothes"},{"ko":"티셔츠","ro":"tisyeocheu","en":"T-shirt"},{"ko":"셔츠","ro":"syeocheu","en":"Shirt"},{"ko":"바지","ro":"baji","en":"Pants"},{"ko":"청바지","ro":"cheongbaji","en":"Jeans"},{"ko":"치마","ro":"chima","en":"Skirt"},{"ko":"원피스","ro":"wonpiseu","en":"Dress"},{"ko":"스웨터","ro":"seuweteo","en":"Sweater"},{"ko":"재킷","ro":"jaekit","en":"Jacket"},{"ko":"코트","ro":"koteu","en":"Coat"}]},{"n":38,"ko":"신발과 가방","en":"Shoes, Bags & More","cat":"clothes","w":[{"ko":"신발","ro":"sinbal","en":"Shoes"},{"ko":"운동화","ro":"undonghwa","en":"Sneakers"},{"ko":"구두","ro":"gudu","en":"Dress shoes"},{"ko":"양말","ro":"yangmal","en":"Socks"},{"ko":"가방","ro":"gabang","en":"Bag"},{"ko":"모자","ro":"moja","en":"Hat; Cap"},{"ko":"장갑","ro":"janggap","en":"Gloves"},{"ko":"목도리","ro":"mokdori","en":"Scarf"},{"ko":"넥타이","ro":"nektai","en":"Necktie"},{"ko":"벨트","ro":"belteu","en":"Belt"}]},{"n":39,"ko":"장신구와 소품","en":"Accessories","cat":"clothes","w":[{"ko":"반지","ro":"banji","en":"Ring"},{"ko":"목걸이","ro":"mokgeori","en":"Necklace"},{"ko":"귀걸이","ro":"gwigeori","en":"Earrings"},{"ko":"팔찌","ro":"paljji","en":"Bracelet"},{"ko":"손목시계","ro":"sonmoksigye","en":"Wristwatch"},{"ko":"안경","ro":"angyeong","en":"Glasses"},{"ko":"선글라스","ro":"seongeullaseu","en":"Sunglasses"},{"ko":"지갑","ro":"jigap","en":"Wallet"},{"ko":"화장품","ro":"hwajangpum","en":"Cosmetics"},{"ko":"향수","ro":"hyangsu","en":"Perfume"}]},{"n":40,"ko":"색깔","en":"Colors","cat":"clothes","w":[{"ko":"빨간색","ro":"ppalgansaek","en":"Red"},{"ko":"주황색","ro":"juhwangsaek","en":"Orange","note":"color"},{"ko":"노란색","ro":"noransaek","en":"Yellow"},{"ko":"초록색","ro":"choroksaek","en":"Green"},{"ko":"파란색","ro":"paransaek","en":"Blue"},{"ko":"보라색","ro":"borasaek","en":"Purple"},{"ko":"분홍색","ro":"bunhongsaek","en":"Pink"},{"ko":"갈색","ro":"galsaek","en":"Brown"},{"ko":"검은색","ro":"geomeunsaek","en":"Black"},{"ko":"흰색","ro":"huinsaek","en":"White"}]},{"n":41,"ko":"모양과 무늬","en":"Shapes & Patterns","cat":"clothes","w":[{"ko":"모양","ro":"moyang","en":"Shape"},{"ko":"크기","ro":"keugi","en":"Size"},{"ko":"동그라미","ro":"donggeurami","en":"Circle"},{"ko":"세모","ro":"semo","en":"Triangle"},{"ko":"네모","ro":"nemo","en":"Square"},{"ko":"하트","ro":"hateu","en":"Heart"},{"ko":"점","ro":"jeom","en":"Dot"},{"ko":"선","ro":"seon","en":"Line"},{"ko":"줄무늬","ro":"julmunui","en":"Stripes"},{"ko":"체크무늬","ro":"chekeumunui","en":"Checked pattern"}]},{"n":42,"ko":"쇼핑","en":"Shopping","cat":"clothes","w":[{"ko":"가격","ro":"gagyeok","en":"Price"},{"ko":"할인","ro":"harin","en":"Discount"},{"ko":"세일","ro":"seil","en":"Sale"},{"ko":"사이즈","ro":"saijeu","en":"Size","note":"clothing"},{"ko":"카드","ro":"kadeu","en":"Card"},{"ko":"현금","ro":"hyeongeum","en":"Cash"},{"ko":"거스름돈","ro":"geoseureumdon","en":"Change","note":"money back"},{"ko":"영수증","ro":"yeongsujeung","en":"Receipt"},{"ko":"교환","ro":"gyohwan","en":"Exchange"},{"ko":"환불","ro":"hwanbul","en":"Refund"}]},{"n":43,"ko":"고유어 숫자","en":"Native Korean Numbers","cat":"time","w":[{"ko":"하나","ro":"hana","en":"One"},{"ko":"둘","ro":"dul","en":"Two"},{"ko":"셋","ro":"set","en":"Three"},{"ko":"넷","ro":"net","en":"Four"},{"ko":"다섯","ro":"daseot","en":"Five"},{"ko":"여섯","ro":"yeoseot","en":"Six"},{"ko":"일곱","ro":"ilgop","en":"Seven"},{"ko":"여덟","ro":"yeodeol","en":"Eight"},{"ko":"아홉","ro":"ahop","en":"Nine"},{"ko":"열","ro":"yeol","en":"Ten"}]},{"n":44,"ko":"한자어 숫자","en":"Sino-Korean Numbers","cat":"time","w":[{"ko":"일","ro":"il","en":"One"},{"ko":"이","ro":"i","en":"Two"},{"ko":"삼","ro":"sam","en":"Three"},{"ko":"사","ro":"sa","en":"Four"},{"ko":"오","ro":"o","en":"Five"},{"ko":"육","ro":"yuk","en":"Six"},{"ko":"칠","ro":"chil","en":"Seven"},{"ko":"팔","ro":"pal","en":"Eight","note":"homonym: 팔 = arm (Unit 12)"},{"ko":"구","ro":"gu","en":"Nine"},{"ko":"십","ro":"sip","en":"Ten"}]},{"n":45,"ko":"단위","en":"Counters","cat":"time","w":[{"ko":"개","ro":"gae","en":"Counter for things"},{"ko":"명","ro":"myeong","en":"Counter for people"},{"ko":"마리","ro":"mari","en":"Counter for animals"},{"ko":"권","ro":"gwon","en":"Counter for books"},{"ko":"장","ro":"jang","en":"Counter for flat things","note":"paper, tickets"},{"ko":"병","ro":"byeong","en":"Counter for bottles"},{"ko":"잔","ro":"jan","en":"Counter for cups/glasses"},{"ko":"대","ro":"dae","en":"Counter for vehicles/machines"},{"ko":"벌","ro":"beol","en":"Counter for clothes"},{"ko":"살","ro":"sal","en":"Counter for age","note":"years old"}]},{"n":46,"ko":"요일","en":"Days of the Week","cat":"time","w":[{"ko":"월요일","ro":"woryoil","en":"Monday"},{"ko":"화요일","ro":"hwayoil","en":"Tuesday"},{"ko":"수요일","ro":"suyoil","en":"Wednesday"},{"ko":"목요일","ro":"mogyoil","en":"Thursday"},{"ko":"금요일","ro":"geumyoil","en":"Friday"},{"ko":"토요일","ro":"toyoil","en":"Saturday"},{"ko":"일요일","ro":"iryoil","en":"Sunday"},{"ko":"요일","ro":"yoil","en":"Day of the week"},{"ko":"주말","ro":"jumal","en":"Weekend"},{"ko":"평일","ro":"pyeongil","en":"Weekday"}]},{"n":47,"ko":"날짜","en":"Dates","cat":"time","w":[{"ko":"날짜","ro":"naljja","en":"Date"},{"ko":"오늘","ro":"oneul","en":"Today"},{"ko":"어제","ro":"eoje","en":"Yesterday"},{"ko":"내일","ro":"naeil","en":"Tomorrow"},{"ko":"그저께","ro":"geujeokke","en":"The day before yesterday"},{"ko":"모레","ro":"more","en":"The day after tomorrow"},{"ko":"이번 주","ro":"ibeon ju","en":"This week"},{"ko":"다음 달","ro":"daeum dal","en":"Next month"},{"ko":"작년","ro":"jangnyeon","en":"Last year"},{"ko":"올해","ro":"olhae","en":"This year"}]},{"n":48,"ko":"시간","en":"Time","cat":"time","w":[{"ko":"시간","ro":"sigan","en":"Time; Hour"},{"ko":"시","ro":"si","en":"O'clock"},{"ko":"분","ro":"bun","en":"Minute"},{"ko":"초","ro":"cho","en":"Second"},{"ko":"반","ro":"ban","en":"Half","note":"e.g. 2:30"},{"ko":"오전","ro":"ojeon","en":"A.M.; Morning"},{"ko":"오후","ro":"ohu","en":"P.M.; Afternoon"},{"ko":"새벽","ro":"saebyeok","en":"Dawn; Early morning"},{"ko":"낮","ro":"nat","en":"Daytime"},{"ko":"밤","ro":"bam","en":"Night"}]},{"n":49,"ko":"기간","en":"Time Periods","cat":"time","w":[{"ko":"하루","ro":"haru","en":"One day"},{"ko":"일주일","ro":"iljuil","en":"One week"},{"ko":"한 달","ro":"han dal","en":"One month"},{"ko":"일 년","ro":"il lyeon","en":"One year"},{"ko":"기간","ro":"gigan","en":"Period"},{"ko":"처음","ro":"cheoeum","en":"First time; Beginning"},{"ko":"마지막","ro":"majimak","en":"Last; End"},{"ko":"과거","ro":"gwageo","en":"Past"},{"ko":"현재","ro":"hyeonjae","en":"Present"},{"ko":"미래","ro":"mirae","en":"Future"}]},{"n":50,"ko":"계절","en":"Seasons","cat":"time","w":[{"ko":"계절","ro":"gyejeol","en":"Season"},{"ko":"봄","ro":"bom","en":"Spring"},{"ko":"여름","ro":"yeoreum","en":"Summer"},{"ko":"가을","ro":"gaeul","en":"Autumn; Fall"},{"ko":"겨울","ro":"gyeoul","en":"Winter"},{"ko":"장마","ro":"jangma","en":"Rainy season"},{"ko":"단풍","ro":"danpung","en":"Autumn leaves"},{"ko":"더위","ro":"deowi","en":"Heat"},{"ko":"추위","ro":"chuwi","en":"Cold","note":"weather"},{"ko":"황사","ro":"hwangsa","en":"Yellow dust"}]},{"n":51,"ko":"날씨","en":"Weather","cat":"time","w":[{"ko":"날씨","ro":"nalssi","en":"Weather"},{"ko":"비","ro":"bi","en":"Rain"},{"ko":"눈","ro":"nun","en":"Snow","note":"homonym: 눈 = eye (Unit 11)"},{"ko":"바람","ro":"baram","en":"Wind"},{"ko":"구름","ro":"gureum","en":"Cloud"},{"ko":"햇빛","ro":"haetbit","en":"Sunlight"},{"ko":"안개","ro":"angae","en":"Fog"},{"ko":"번개","ro":"beongae","en":"Lightning"},{"ko":"태풍","ro":"taepung","en":"Typhoon"},{"ko":"기온","ro":"gion","en":"Temperature","note":"air"}]},{"n":52,"ko":"위치","en":"Positions","cat":"places","w":[{"ko":"위","ro":"wi","en":"Top; Above"},{"ko":"아래","ro":"arae","en":"Bottom; Below"},{"ko":"앞","ro":"ap","en":"Front"},{"ko":"뒤","ro":"dwi","en":"Back; Behind"},{"ko":"옆","ro":"yeop","en":"Side; Next to"},{"ko":"안","ro":"an","en":"Inside"},{"ko":"밖","ro":"bak","en":"Outside"},{"ko":"사이","ro":"sai","en":"Between"},{"ko":"오른쪽","ro":"oreunjjok","en":"Right side"},{"ko":"왼쪽","ro":"oenjjok","en":"Left side"}]},{"n":53,"ko":"방향","en":"Directions","cat":"places","w":[{"ko":"동쪽","ro":"dongjjok","en":"East"},{"ko":"서쪽","ro":"seojjok","en":"West"},{"ko":"남쪽","ro":"namjjok","en":"South"},{"ko":"북쪽","ro":"bukjjok","en":"North"},{"ko":"방향","ro":"banghyang","en":"Direction"},{"ko":"길","ro":"gil","en":"Road; Way"},{"ko":"골목","ro":"golmok","en":"Alley"},{"ko":"근처","ro":"geuncheo","en":"Nearby area"},{"ko":"건너편","ro":"geonneopyeon","en":"Across the street"},{"ko":"맞은편","ro":"majeunpyeon","en":"Opposite side"}]},{"n":54,"ko":"동네","en":"Neighborhood","cat":"places","w":[{"ko":"은행","ro":"eunhaeng","en":"Bank"},{"ko":"우체국","ro":"ucheguk","en":"Post office"},{"ko":"경찰서","ro":"gyeongchalseo","en":"Police station"},{"ko":"소방서","ro":"sobangseo","en":"Fire station"},{"ko":"도서관","ro":"doseogwan","en":"Library"},{"ko":"공원","ro":"gongwon","en":"Park"},{"ko":"세탁소","ro":"setakso","en":"Dry cleaner"},{"ko":"미용실","ro":"miyongsil","en":"Hair salon"},{"ko":"빵집","ro":"ppangjip","en":"Bakery"},{"ko":"주유소","ro":"juyuso","en":"Gas station"}]},{"n":55,"ko":"가게","en":"Shops","cat":"places","w":[{"ko":"가게","ro":"gage","en":"Shop; Store"},{"ko":"시장","ro":"sijang","en":"Market"},{"ko":"마트","ro":"mateu","en":"Supermarket"},{"ko":"편의점","ro":"pyeonuijeom","en":"Convenience store"},{"ko":"백화점","ro":"baekhwajeom","en":"Department store"},{"ko":"서점","ro":"seojeom","en":"Bookstore"},{"ko":"꽃집","ro":"kkotjip","en":"Flower shop"},{"ko":"문구점","ro":"mungujeom","en":"Stationery store"},{"ko":"안경점","ro":"angyeongjeom","en":"Optician"},{"ko":"옷 가게","ro":"ot gage","en":"Clothing store"}]},{"n":56,"ko":"여가 장소","en":"Leisure Spots","cat":"places","w":[{"ko":"카페","ro":"kape","en":"Café"},{"ko":"영화관","ro":"yeonghwagwan","en":"Movie theater"},{"ko":"박물관","ro":"bangmulgwan","en":"Museum"},{"ko":"미술관","ro":"misulgwan","en":"Art gallery"},{"ko":"동물원","ro":"dongmurwon","en":"Zoo"},{"ko":"놀이공원","ro":"norigongwon","en":"Amusement park"},{"ko":"노래방","ro":"noraebang","en":"Karaoke room"},{"ko":"피시방","ro":"pisibang","en":"PC café","note":"internet café"},{"ko":"찜질방","ro":"jjimjilbang","en":"Korean sauna"},{"ko":"수영장","ro":"suyeongjang","en":"Swimming pool"}]},{"n":57,"ko":"건물","en":"Buildings","cat":"places","w":[{"ko":"건물","ro":"geonmul","en":"Building"},{"ko":"빌딩","ro":"bilding","en":"High-rise building"},{"ko":"층","ro":"cheung","en":"Floor; Story"},{"ko":"계단","ro":"gyedan","en":"Stairs"},{"ko":"지하","ro":"jiha","en":"Basement"},{"ko":"옥상","ro":"oksang","en":"Rooftop"},{"ko":"로비","ro":"robi","en":"Lobby"},{"ko":"벽","ro":"byeok","en":"Wall"},{"ko":"지붕","ro":"jibung","en":"Roof"},{"ko":"탑","ro":"tap","en":"Tower"}]},{"n":58,"ko":"안내 표지","en":"Signs & Facilities","cat":"places","w":[{"ko":"입구","ro":"ipgu","en":"Entrance"},{"ko":"출구","ro":"chulgu","en":"Exit"},{"ko":"비상구","ro":"bisanggu","en":"Emergency exit"},{"ko":"엘리베이터","ro":"ellibeiteo","en":"Elevator"},{"ko":"에스컬레이터","ro":"eseukeolleiteo","en":"Escalator"},{"ko":"안내 데스크","ro":"annae deseukeu","en":"Information desk"},{"ko":"표지판","ro":"pyojipan","en":"Sign"},{"ko":"금연","ro":"geumyeon","en":"No smoking"},{"ko":"주의","ro":"juui","en":"Caution"},{"ko":"분실물","ro":"bunsilmul","en":"Lost item"}]},{"n":59,"ko":"도시와 시골","en":"City & Countryside","cat":"places","w":[{"ko":"도시","ro":"dosi","en":"City"},{"ko":"시골","ro":"sigol","en":"Countryside"},{"ko":"동네","ro":"dongne","en":"Neighborhood"},{"ko":"마을","ro":"maeul","en":"Village"},{"ko":"수도","ro":"sudo","en":"Capital city"},{"ko":"지방","ro":"jibang","en":"Region outside the capital"},{"ko":"농촌","ro":"nongchon","en":"Farming village"},{"ko":"어촌","ro":"eochon","en":"Fishing village"},{"ko":"중심","ro":"jungsim","en":"Center"},{"ko":"인구","ro":"ingu","en":"Population"}]},{"n":60,"ko":"한국의 지역","en":"Places in Korea","cat":"places","w":[{"ko":"서울","ro":"seoul","en":"Seoul"},{"ko":"부산","ro":"busan","en":"Busan"},{"ko":"인천","ro":"incheon","en":"Incheon"},{"ko":"대구","ro":"daegu","en":"Daegu"},{"ko":"대전","ro":"daejeon","en":"Daejeon"},{"ko":"광주","ro":"gwangju","en":"Gwangju"},{"ko":"경주","ro":"gyeongju","en":"Gyeongju"},{"ko":"제주도","ro":"jejudo","en":"Jeju Island"},{"ko":"강원도","ro":"gangwondo","en":"Gangwon Province"},{"ko":"한강","ro":"hangang","en":"Han River"}]},{"n":61,"ko":"관공서와 서류","en":"Public Offices & Documents","cat":"places","w":[{"ko":"주민센터","ro":"juminsenteo","en":"Community service center"},{"ko":"출입국사무소","ro":"churipguksamuso","en":"Immigration office"},{"ko":"대사관","ro":"daesagwan","en":"Embassy"},{"ko":"신분증","ro":"sinbunjeung","en":"ID card"},{"ko":"외국인등록증","ro":"oegugindeungnokjeung","en":"Alien registration card"},{"ko":"비자","ro":"bija","en":"Visa"},{"ko":"신청서","ro":"sincheongseo","en":"Application form"},{"ko":"서명","ro":"seomyeong","en":"Signature"},{"ko":"증명사진","ro":"jeungmyeongsajin","en":"ID photo"},{"ko":"번호표","ro":"beonhopyo","en":"Queue number ticket"}]},{"n":62,"ko":"학교 시설","en":"School Facilities","cat":"school","w":[{"ko":"학교","ro":"hakgyo","en":"School"},{"ko":"교실","ro":"gyosil","en":"Classroom"},{"ko":"교문","ro":"gyomun","en":"School gate"},{"ko":"운동장","ro":"undongjang","en":"Playground; Sports field"},{"ko":"강당","ro":"gangdang","en":"Auditorium"},{"ko":"교무실","ro":"gyomusil","en":"Teachers' office"},{"ko":"기숙사","ro":"gisuksa","en":"Dormitory"},{"ko":"매점","ro":"maejeom","en":"School store"},{"ko":"사물함","ro":"samulham","en":"Locker"},{"ko":"칠판","ro":"chilpan","en":"Blackboard"}]},{"n":63,"ko":"학교생활","en":"School Life","cat":"school","w":[{"ko":"수업","ro":"sueop","en":"Class; Lesson"},{"ko":"숙제","ro":"sukje","en":"Homework"},{"ko":"시험","ro":"siheom","en":"Exam; Test"},{"ko":"성적","ro":"seongjeok","en":"Grades"},{"ko":"교과서","ro":"gyogwaseo","en":"Textbook"},{"ko":"학년","ro":"hangnyeon","en":"School year; Grade"},{"ko":"입학","ro":"iphak","en":"Entering school"},{"ko":"졸업","ro":"joreop","en":"Graduation"},{"ko":"방학","ro":"banghak","en":"School vacation"},{"ko":"개학","ro":"gaehak","en":"Start of school term"}]},{"n":64,"ko":"과목","en":"School Subjects","cat":"school","w":[{"ko":"과목","ro":"gwamok","en":"Subject"},{"ko":"국어","ro":"gugeo","en":"Korean language class"},{"ko":"수학","ro":"suhak","en":"Math"},{"ko":"과학","ro":"gwahak","en":"Science"},{"ko":"사회","ro":"sahoe","en":"Social studies"},{"ko":"역사","ro":"yeoksa","en":"History"},{"ko":"지리","ro":"jiri","en":"Geography"},{"ko":"도덕","ro":"dodeok","en":"Ethics"},{"ko":"미술","ro":"misul","en":"Art"},{"ko":"체육","ro":"cheyuk","en":"Physical education"}]},{"n":65,"ko":"학용품","en":"Stationery","cat":"school","w":[{"ko":"연필","ro":"yeonpil","en":"Pencil"},{"ko":"볼펜","ro":"bolpen","en":"Ballpoint pen"},{"ko":"색연필","ro":"saengnyeonpil","en":"Colored pencil"},{"ko":"지우개","ro":"jiugae","en":"Eraser"},{"ko":"공책","ro":"gongchaek","en":"Notebook"},{"ko":"종이","ro":"jongi","en":"Paper"},{"ko":"필통","ro":"piltong","en":"Pencil case"},{"ko":"자","ro":"ja","en":"Ruler"},{"ko":"가위","ro":"gawi","en":"Scissors"},{"ko":"풀","ro":"pul","en":"Glue"}]},{"n":66,"ko":"대학교","en":"University","cat":"school","w":[{"ko":"대학교","ro":"daehakgyo","en":"University"},{"ko":"학과","ro":"hakgwa","en":"Department"},{"ko":"전공","ro":"jeongong","en":"Major"},{"ko":"교수","ro":"gyosu","en":"Professor"},{"ko":"강의","ro":"gangui","en":"Lecture"},{"ko":"학기","ro":"hakgi","en":"Semester"},{"ko":"수강 신청","ro":"sugang sincheong","en":"Course registration"},{"ko":"등록금","ro":"deungnokgeum","en":"Tuition"},{"ko":"장학금","ro":"janghakgeum","en":"Scholarship"},{"ko":"동아리","ro":"dongari","en":"Club"}]},{"n":67,"ko":"직장","en":"Workplace","cat":"school","w":[{"ko":"회사","ro":"hoesa","en":"Company"},{"ko":"사무실","ro":"samusil","en":"Office"},{"ko":"사장","ro":"sajang","en":"Company president; Boss"},{"ko":"동료","ro":"dongnyo","en":"Coworker"},{"ko":"회의","ro":"hoeui","en":"Meeting"},{"ko":"출근","ro":"chulgeun","en":"Going to work"},{"ko":"퇴근","ro":"toegeun","en":"Leaving work"},{"ko":"월급","ro":"wolgeup","en":"Monthly salary"},{"ko":"휴가","ro":"hyuga","en":"Vacation; Leave"},{"ko":"출장","ro":"chuljang","en":"Business trip"}]},{"n":68,"ko":"사무용품","en":"Office Supplies","cat":"school","w":[{"ko":"프린터","ro":"peurinteo","en":"Printer"},{"ko":"복사기","ro":"boksagi","en":"Copy machine"},{"ko":"보고서","ro":"bogoseo","en":"Report"},{"ko":"파일","ro":"pail","en":"File folder"},{"ko":"명함","ro":"myeongham","en":"Business card"},{"ko":"계산기","ro":"gyesangi","en":"Calculator"},{"ko":"스테이플러","ro":"seuteipeulleo","en":"Stapler"},{"ko":"클립","ro":"keullip","en":"Paper clip"},{"ko":"포스트잇","ro":"poseuteuit","en":"Sticky note"},{"ko":"도장","ro":"dojang","en":"Personal seal; Stamp"}]},{"n":69,"ko":"공구","en":"Tools","cat":"school","w":[{"ko":"망치","ro":"mangchi","en":"Hammer"},{"ko":"못","ro":"mot","en":"Nail"},{"ko":"드라이버","ro":"deuraibeo","en":"Screwdriver"},{"ko":"톱","ro":"top","en":"Saw"},{"ko":"삽","ro":"sap","en":"Shovel"},{"ko":"줄자","ro":"julja","en":"Tape measure"},{"ko":"사다리","ro":"sadari","en":"Ladder"},{"ko":"밧줄","ro":"batjul","en":"Rope"},{"ko":"테이프","ro":"teipeu","en":"Tape"},{"ko":"전구","ro":"jeongu","en":"Light bulb"}]},{"n":70,"ko":"전자기기","en":"Electronics","cat":"comm","w":[{"ko":"휴대폰","ro":"hyudaepon","en":"Cell phone"},{"ko":"스마트폰","ro":"seumateupon","en":"Smartphone"},{"ko":"컴퓨터","ro":"keompyuteo","en":"Computer"},{"ko":"노트북","ro":"noteubuk","en":"Laptop"},{"ko":"태블릿","ro":"taebeullit","en":"Tablet"},{"ko":"마우스","ro":"mauseu","en":"Mouse"},{"ko":"이어폰","ro":"ieopon","en":"Earphones"},{"ko":"스피커","ro":"seupikeo","en":"Speaker"},{"ko":"카메라","ro":"kamera","en":"Camera"},{"ko":"충전기","ro":"chungjeongi","en":"Charger"}]},{"n":71,"ko":"인터넷","en":"Internet","cat":"comm","w":[{"ko":"인터넷","ro":"inteonet","en":"Internet"},{"ko":"와이파이","ro":"waipai","en":"Wi-Fi"},{"ko":"사이트","ro":"saiteu","en":"Website"},{"ko":"앱","ro":"aep","en":"App"},{"ko":"이메일","ro":"imeil","en":"Email"},{"ko":"메시지","ro":"mesiji","en":"Message"},{"ko":"동영상","ro":"dongyeongsang","en":"Video"},{"ko":"댓글","ro":"daetgeul","en":"Comment"},{"ko":"로그인","ro":"rogeuin","en":"Log-in"},{"ko":"비밀번호","ro":"bimilbeonho","en":"Password"}]},{"n":72,"ko":"전화","en":"Phone","cat":"comm","w":[{"ko":"전화","ro":"jeonhwa","en":"Phone call; Telephone"},{"ko":"전화번호","ro":"jeonhwabeonho","en":"Phone number"},{"ko":"통화","ro":"tonghwa","en":"Phone conversation"},{"ko":"문자","ro":"munja","en":"Text message"},{"ko":"영상 통화","ro":"yeongsang tonghwa","en":"Video call"},{"ko":"부재중 전화","ro":"bujaejung jeonhwa","en":"Missed call"},{"ko":"벨소리","ro":"belsori","en":"Ringtone"},{"ko":"배터리","ro":"baeteori","en":"Battery"},{"ko":"요금제","ro":"yogeumje","en":"Phone plan"},{"ko":"연락","ro":"yeollak","en":"Contact; Getting in touch"}]},{"n":73,"ko":"우체국","en":"Post Office","cat":"comm","w":[{"ko":"편지","ro":"pyeonji","en":"Letter"},{"ko":"엽서","ro":"yeopseo","en":"Postcard"},{"ko":"봉투","ro":"bongtu","en":"Envelope"},{"ko":"우표","ro":"upyo","en":"Stamp","note":"postage"},{"ko":"소포","ro":"sopo","en":"Parcel"},{"ko":"택배","ro":"taekbae","en":"Package delivery"},{"ko":"상자","ro":"sangja","en":"Box"},{"ko":"우편번호","ro":"upyeonbeonho","en":"Postal code"},{"ko":"우체통","ro":"uchetong","en":"Mailbox"},{"ko":"배송","ro":"baesong","en":"Shipping"}]},{"n":74,"ko":"은행","en":"Bank","cat":"comm","w":[{"ko":"돈","ro":"don","en":"Money"},{"ko":"동전","ro":"dongjeon","en":"Coin"},{"ko":"지폐","ro":"jipye","en":"Bill","note":"paper money"},{"ko":"통장","ro":"tongjang","en":"Bankbook"},{"ko":"계좌","ro":"gyejwa","en":"Bank account"},{"ko":"송금","ro":"songgeum","en":"Money transfer"},{"ko":"환전","ro":"hwanjeon","en":"Currency exchange"},{"ko":"이자","ro":"ija","en":"Interest"},{"ko":"수수료","ro":"susuryo","en":"Fee; Commission"},{"ko":"현금인출기","ro":"hyeongeuminchulgi","en":"ATM"}]},{"n":75,"ko":"미디어","en":"Media","cat":"comm","w":[{"ko":"뉴스","ro":"nyuseu","en":"News"},{"ko":"신문","ro":"sinmun","en":"Newspaper"},{"ko":"기사","ro":"gisa","en":"Article"},{"ko":"잡지","ro":"japji","en":"Magazine"},{"ko":"방송","ro":"bangsong","en":"Broadcast"},{"ko":"라디오","ro":"radio","en":"Radio"},{"ko":"채널","ro":"chaeneol","en":"Channel"},{"ko":"프로그램","ro":"peurogeuraem","en":"TV program"},{"ko":"광고","ro":"gwanggo","en":"Advertisement"},{"ko":"유튜브","ro":"yutyubeu","en":"YouTube"}]},{"n":76,"ko":"교통수단","en":"Transportation","cat":"travel","w":[{"ko":"버스","ro":"beoseu","en":"Bus"},{"ko":"지하철","ro":"jihacheol","en":"Subway"},{"ko":"택시","ro":"taeksi","en":"Taxi"},{"ko":"기차","ro":"gicha","en":"Train"},{"ko":"비행기","ro":"bihaenggi","en":"Airplane"},{"ko":"배","ro":"bae","en":"Ship; Boat","note":"homonym: 배 = belly (Unit 12)"},{"ko":"자동차","ro":"jadongcha","en":"Car"},{"ko":"트럭","ro":"teureok","en":"Truck"},{"ko":"오토바이","ro":"otobai","en":"Motorcycle"},{"ko":"자전거","ro":"jajeongeo","en":"Bicycle"}]},{"n":77,"ko":"대중교통","en":"Public Transit","cat":"travel","w":[{"ko":"역","ro":"yeok","en":"Station"},{"ko":"정류장","ro":"jeongnyujang","en":"Bus stop"},{"ko":"승강장","ro":"seunggangjang","en":"Platform"},{"ko":"노선도","ro":"noseondo","en":"Route map"},{"ko":"교통카드","ro":"gyotongkadeu","en":"Transit card"},{"ko":"요금","ro":"yogeum","en":"Fare; Charge"},{"ko":"환승","ro":"hwanseung","en":"Transfer"},{"ko":"좌석","ro":"jwaseok","en":"Seat"},{"ko":"첫차","ro":"cheotcha","en":"First bus/train"},{"ko":"막차","ro":"makcha","en":"Last bus/train"}]},{"n":78,"ko":"도로","en":"Roads & Traffic","cat":"travel","w":[{"ko":"도로","ro":"doro","en":"Road"},{"ko":"인도","ro":"indo","en":"Sidewalk"},{"ko":"횡단보도","ro":"hoengdanbodo","en":"Crosswalk"},{"ko":"신호등","ro":"sinhodeung","en":"Traffic light"},{"ko":"사거리","ro":"sageori","en":"Intersection"},{"ko":"육교","ro":"yukgyo","en":"Pedestrian overpass"},{"ko":"고속도로","ro":"gosokdoro","en":"Highway"},{"ko":"주차장","ro":"juchajang","en":"Parking lot"},{"ko":"교통체증","ro":"gyotongchejeung","en":"Traffic jam"},{"ko":"교통사고","ro":"gyotongsago","en":"Traffic accident"}]},{"n":79,"ko":"공항","en":"Airport","cat":"travel","w":[{"ko":"공항","ro":"gonghang","en":"Airport"},{"ko":"여권","ro":"yeogwon","en":"Passport"},{"ko":"항공권","ro":"hanggonggwon","en":"Plane ticket"},{"ko":"탑승권","ro":"tapseunggwon","en":"Boarding pass"},{"ko":"게이트","ro":"geiteu","en":"Gate"},{"ko":"짐","ro":"jim","en":"Luggage"},{"ko":"세관","ro":"segwan","en":"Customs"},{"ko":"면세점","ro":"myeonsejeom","en":"Duty-free shop"},{"ko":"출국","ro":"chulguk","en":"Departure","note":"from a country"},{"ko":"입국","ro":"ipguk","en":"Entry","note":"into a country"}]},{"n":80,"ko":"여행","en":"Travel","cat":"travel","w":[{"ko":"여행","ro":"yeohaeng","en":"Trip; Travel"},{"ko":"여행사","ro":"yeohaengsa","en":"Travel agency"},{"ko":"관광","ro":"gwangwang","en":"Sightseeing"},{"ko":"관광지","ro":"gwangwangji","en":"Tourist attraction"},{"ko":"가이드","ro":"gaideu","en":"Tour guide"},{"ko":"일정","ro":"iljeong","en":"Schedule; Itinerary"},{"ko":"경치","ro":"gyeongchi","en":"Scenery"},{"ko":"기념품","ro":"ginyeompum","en":"Souvenir"},{"ko":"배낭","ro":"baenang","en":"Backpack"},{"ko":"캐리어","ro":"kaerieo","en":"Suitcase"}]},{"n":81,"ko":"숙박","en":"Accommodation","cat":"travel","w":[{"ko":"숙박","ro":"sukbak","en":"Lodging"},{"ko":"호텔","ro":"hotel","en":"Hotel"},{"ko":"모텔","ro":"motel","en":"Motel"},{"ko":"게스트하우스","ro":"geseuteuhauseu","en":"Guesthouse"},{"ko":"민박","ro":"minbak","en":"Homestay; B&B"},{"ko":"객실","ro":"gaeksil","en":"Guest room"},{"ko":"프런트","ro":"peureonteu","en":"Front desk"},{"ko":"열쇠","ro":"yeolsoe","en":"Key"},{"ko":"체크인","ro":"chekeuin","en":"Check-in"},{"ko":"체크아웃","ro":"chekeuaut","en":"Check-out"}]},{"n":82,"ko":"안전과 긴급","en":"Safety & Emergencies","cat":"travel","w":[{"ko":"안전","ro":"anjeon","en":"Safety"},{"ko":"비상","ro":"bisang","en":"Emergency"},{"ko":"사고","ro":"sago","en":"Accident"},{"ko":"화재","ro":"hwajae","en":"Fire","note":"disaster"},{"ko":"지진","ro":"jijin","en":"Earthquake"},{"ko":"도둑","ro":"doduk","en":"Thief"},{"ko":"신고","ro":"singo","en":"Report","note":"to police, etc."},{"ko":"구급차","ro":"gugeupcha","en":"Ambulance"},{"ko":"소방차","ro":"sobangcha","en":"Fire truck"},{"ko":"도움","ro":"doum","en":"Help"}]},{"n":83,"ko":"자연","en":"Nature","cat":"nature","w":[{"ko":"산","ro":"san","en":"Mountain"},{"ko":"바다","ro":"bada","en":"Sea; Ocean"},{"ko":"강","ro":"gang","en":"River"},{"ko":"호수","ro":"hosu","en":"Lake"},{"ko":"섬","ro":"seom","en":"Island"},{"ko":"숲","ro":"sup","en":"Forest"},{"ko":"계곡","ro":"gyegok","en":"Valley; Stream"},{"ko":"폭포","ro":"pokpo","en":"Waterfall"},{"ko":"바위","ro":"bawi","en":"Rock"},{"ko":"해변","ro":"haebyeon","en":"Beach"}]},{"n":84,"ko":"하늘과 우주","en":"Sky & Space","cat":"nature","w":[{"ko":"하늘","ro":"haneul","en":"Sky"},{"ko":"해","ro":"hae","en":"Sun"},{"ko":"달","ro":"dal","en":"Moon"},{"ko":"별","ro":"byeol","en":"Star"},{"ko":"보름달","ro":"boreumdal","en":"Full moon"},{"ko":"무지개","ro":"mujigae","en":"Rainbow"},{"ko":"해돋이","ro":"haedoji","en":"Sunrise"},{"ko":"노을","ro":"noeul","en":"Sunset glow"},{"ko":"지구","ro":"jigu","en":"Earth"},{"ko":"우주","ro":"uju","en":"Space; Universe"}]},{"n":85,"ko":"동물","en":"Animals","cat":"nature","w":[{"ko":"강아지","ro":"gangaji","en":"Puppy; Dog"},{"ko":"고양이","ro":"goyangi","en":"Cat"},{"ko":"토끼","ro":"tokki","en":"Rabbit"},{"ko":"소","ro":"so","en":"Cow"},{"ko":"돼지","ro":"dwaeji","en":"Pig"},{"ko":"닭","ro":"dak","en":"Chicken; Hen"},{"ko":"말","ro":"mal","en":"Horse"},{"ko":"호랑이","ro":"horangi","en":"Tiger"},{"ko":"사자","ro":"saja","en":"Lion"},{"ko":"곰","ro":"gom","en":"Bear"}]},{"n":86,"ko":"새·곤충·물고기","en":"Birds, Insects & Fish","cat":"nature","w":[{"ko":"새","ro":"sae","en":"Bird"},{"ko":"오리","ro":"ori","en":"Duck"},{"ko":"비둘기","ro":"bidulgi","en":"Pigeon"},{"ko":"물고기","ro":"mulgogi","en":"Fish","note":"living"},{"ko":"거북이","ro":"geobugi","en":"Turtle"},{"ko":"나비","ro":"nabi","en":"Butterfly"},{"ko":"개미","ro":"gaemi","en":"Ant"},{"ko":"모기","ro":"mogi","en":"Mosquito"},{"ko":"파리","ro":"pari","en":"Fly"},{"ko":"거미","ro":"geomi","en":"Spider"}]},{"n":87,"ko":"식물과 꽃","en":"Plants & Flowers","cat":"nature","w":[{"ko":"꽃","ro":"kkot","en":"Flower"},{"ko":"나무","ro":"namu","en":"Tree"},{"ko":"잎","ro":"ip","en":"Leaf"},{"ko":"잔디","ro":"jandi","en":"Grass; Lawn"},{"ko":"씨앗","ro":"ssiat","en":"Seed"},{"ko":"장미","ro":"jangmi","en":"Rose"},{"ko":"해바라기","ro":"haebaragi","en":"Sunflower"},{"ko":"벚꽃","ro":"beotkkot","en":"Cherry blossom"},{"ko":"개나리","ro":"gaenari","en":"Forsythia"},{"ko":"무궁화","ro":"mugunghwa","en":"Rose of Sharon","note":"national flower of Korea"}]},{"n":88,"ko":"환경","en":"Environment","cat":"nature","w":[{"ko":"환경","ro":"hwangyeong","en":"Environment"},{"ko":"공기","ro":"gonggi","en":"Air"},{"ko":"오염","ro":"oyeom","en":"Pollution"},{"ko":"쓰레기","ro":"sseuregi","en":"Trash; Garbage"},{"ko":"재활용","ro":"jaehwaryong","en":"Recycling"},{"ko":"플라스틱","ro":"peullaseutik","en":"Plastic"},{"ko":"비닐봉지","ro":"binilbongji","en":"Plastic bag"},{"ko":"종이컵","ro":"jongikeop","en":"Paper cup"},{"ko":"전기","ro":"jeongi","en":"Electricity"},{"ko":"에너지","ro":"eneoji","en":"Energy"}]},{"n":89,"ko":"취미","en":"Hobbies","cat":"culture","w":[{"ko":"취미","ro":"chwimi","en":"Hobby"},{"ko":"독서","ro":"dokseo","en":"Reading"},{"ko":"등산","ro":"deungsan","en":"Hiking"},{"ko":"낚시","ro":"naksi","en":"Fishing"},{"ko":"캠핑","ro":"kaemping","en":"Camping"},{"ko":"사진","ro":"sajin","en":"Photo; Photography"},{"ko":"그림","ro":"geurim","en":"Drawing; Painting"},{"ko":"춤","ro":"chum","en":"Dance"},{"ko":"게임","ro":"geim","en":"Game"},{"ko":"쇼핑","ro":"syoping","en":"Shopping"}]},{"n":90,"ko":"스포츠","en":"Sports","cat":"culture","w":[{"ko":"축구","ro":"chukgu","en":"Soccer"},{"ko":"야구","ro":"yagu","en":"Baseball"},{"ko":"농구","ro":"nonggu","en":"Basketball"},{"ko":"배구","ro":"baegu","en":"Volleyball"},{"ko":"탁구","ro":"takgu","en":"Table tennis"},{"ko":"테니스","ro":"teniseu","en":"Tennis"},{"ko":"골프","ro":"golpeu","en":"Golf"},{"ko":"볼링","ro":"bolling","en":"Bowling"},{"ko":"수영","ro":"suyeong","en":"Swimming"},{"ko":"스키","ro":"seuki","en":"Skiing"}]},{"n":91,"ko":"음악","en":"Music","cat":"culture","w":[{"ko":"음악","ro":"eumak","en":"Music"},{"ko":"노래","ro":"norae","en":"Song"},{"ko":"가수","ro":"gasu","en":"Singer"},{"ko":"가사","ro":"gasa","en":"Lyrics"},{"ko":"악기","ro":"akgi","en":"Musical instrument"},{"ko":"피아노","ro":"piano","en":"Piano"},{"ko":"기타","ro":"gita","en":"Guitar"},{"ko":"바이올린","ro":"baiollin","en":"Violin"},{"ko":"드럼","ro":"deureom","en":"Drums"},{"ko":"콘서트","ro":"konseoteu","en":"Concert"}]},{"n":92,"ko":"영화와 공연","en":"Movies & Shows","cat":"culture","w":[{"ko":"영화","ro":"yeonghwa","en":"Movie"},{"ko":"드라마","ro":"deurama","en":"TV drama"},{"ko":"배우","ro":"baeu","en":"Actor"},{"ko":"주인공","ro":"juingong","en":"Main character"},{"ko":"팬","ro":"paen","en":"Fan"},{"ko":"공연","ro":"gongyeon","en":"Performance"},{"ko":"뮤지컬","ro":"myujikeol","en":"Musical"},{"ko":"연극","ro":"yeongeuk","en":"Play","note":"theater"},{"ko":"전시회","ro":"jeonsihoe","en":"Exhibition"},{"ko":"매표소","ro":"maepyoso","en":"Ticket office"}]},{"n":93,"ko":"책","en":"Books","cat":"culture","w":[{"ko":"책","ro":"chaek","en":"Book"},{"ko":"소설","ro":"soseol","en":"Novel"},{"ko":"시집","ro":"sijip","en":"Poetry book"},{"ko":"만화","ro":"manhwa","en":"Comics"},{"ko":"동화","ro":"donghwa","en":"Children's story"},{"ko":"사전","ro":"sajeon","en":"Dictionary"},{"ko":"이야기","ro":"iyagi","en":"Story"},{"ko":"작가","ro":"jakga","en":"Writer; Author"},{"ko":"제목","ro":"jemok","en":"Title"},{"ko":"쪽","ro":"jjok","en":"Page"}]},{"n":94,"ko":"한국 문화","en":"Korean Culture","cat":"culture","w":[{"ko":"한복","ro":"hanbok","en":"Hanbok","note":"traditional clothes"},{"ko":"한옥","ro":"hanok","en":"Hanok","note":"traditional house"},{"ko":"한글","ro":"hangeul","en":"Hangeul","note":"Korean alphabet"},{"ko":"온돌","ro":"ondol","en":"Ondol","note":"floor heating"},{"ko":"김장","ro":"gimjang","en":"Kimchi-making for winter"},{"ko":"궁","ro":"gung","en":"Palace"},{"ko":"태권도","ro":"taegwondo","en":"Taekwondo"},{"ko":"윷놀이","ro":"yunnori","en":"Yut","note":"traditional board game"},{"ko":"탈춤","ro":"talchum","en":"Mask dance"},{"ko":"부채","ro":"buchae","en":"Hand fan"}]},{"n":95,"ko":"명절과 기념일","en":"Holidays & Special Days","cat":"culture","w":[{"ko":"설날","ro":"seollal","en":"Lunar New Year"},{"ko":"추석","ro":"chuseok","en":"Chuseok","note":"Korean Thanksgiving"},{"ko":"떡국","ro":"tteokguk","en":"Rice cake soup","note":"New Year's dish"},{"ko":"송편","ro":"songpyeon","en":"Half-moon rice cake","note":"Chuseok dish"},{"ko":"새해","ro":"saehae","en":"New Year"},{"ko":"생일","ro":"saengil","en":"Birthday"},{"ko":"어린이날","ro":"eorininal","en":"Children's Day"},{"ko":"어버이날","ro":"eobeoinal","en":"Parents' Day"},{"ko":"한글날","ro":"hangeullal","en":"Hangeul Day"},{"ko":"크리스마스","ro":"keuriseumaseu","en":"Christmas"}]},{"n":96,"ko":"행사와 선물","en":"Events & Gifts","cat":"culture","w":[{"ko":"파티","ro":"pati","en":"Party"},{"ko":"축하","ro":"chukha","en":"Congratulations"},{"ko":"선물","ro":"seonmul","en":"Gift; Present"},{"ko":"초대장","ro":"chodaejang","en":"Invitation"},{"ko":"꽃다발","ro":"kkotdabal","en":"Bouquet"},{"ko":"풍선","ro":"pungseon","en":"Balloon"},{"ko":"결혼식","ro":"gyeolhonsik","en":"Wedding"},{"ko":"돌잔치","ro":"doljanchi","en":"First birthday party"},{"ko":"입학식","ro":"iphaksik","en":"Entrance ceremony"},{"ko":"졸업식","ro":"joreopsik","en":"Graduation ceremony"}]},{"n":97,"ko":"종교","en":"Religion","cat":"culture","w":[{"ko":"종교","ro":"jonggyo","en":"Religion"},{"ko":"기도","ro":"gido","en":"Prayer"},{"ko":"불교","ro":"bulgyo","en":"Buddhism"},{"ko":"기독교","ro":"gidokgyo","en":"Christianity","note":"Protestant"},{"ko":"천주교","ro":"cheonjugyo","en":"Catholicism"},{"ko":"교회","ro":"gyohoe","en":"Church"},{"ko":"성당","ro":"seongdang","en":"Catholic church"},{"ko":"절","ro":"jeol","en":"Buddhist temple"},{"ko":"스님","ro":"seunim","en":"Buddhist monk"},{"ko":"목사","ro":"moksa","en":"Pastor"}]},{"n":98,"ko":"생각과 계획","en":"Ideas & Plans","cat":"mind","w":[{"ko":"생각","ro":"saenggak","en":"Thought"},{"ko":"의견","ro":"uigyeon","en":"Opinion"},{"ko":"이유","ro":"iyu","en":"Reason"},{"ko":"질문","ro":"jilmun","en":"Question"},{"ko":"대답","ro":"daedap","en":"Answer"},{"ko":"문제","ro":"munje","en":"Problem; Question"},{"ko":"계획","ro":"gyehoek","en":"Plan"},{"ko":"목표","ro":"mokpyo","en":"Goal"},{"ko":"약속","ro":"yaksok","en":"Promise; Appointment"},{"ko":"꿈","ro":"kkum","en":"Dream"}]},{"n":99,"ko":"성격과 경험","en":"Personality & Experience","cat":"mind","w":[{"ko":"성격","ro":"seonggyeok","en":"Personality"},{"ko":"장점","ro":"jangjeom","en":"Strength; Merit"},{"ko":"단점","ro":"danjeom","en":"Weakness; Flaw"},{"ko":"습관","ro":"seupgwan","en":"Habit"},{"ko":"관심","ro":"gwansim","en":"Interest"},{"ko":"자신감","ro":"jasingam","en":"Confidence"},{"ko":"노력","ro":"noryeok","en":"Effort"},{"ko":"경험","ro":"gyeongheom","en":"Experience"},{"ko":"실수","ro":"silsu","en":"Mistake"},{"ko":"성공","ro":"seonggong","en":"Success"}]},{"n":100,"ko":"감각","en":"Senses","cat":"mind","w":[{"ko":"소리","ro":"sori","en":"Sound"},{"ko":"목소리","ro":"moksori","en":"Voice"},{"ko":"소음","ro":"soeum","en":"Noise"},{"ko":"냄새","ro":"naemsae","en":"Smell"},{"ko":"향기","ro":"hyanggi","en":"Fragrance"},{"ko":"맛","ro":"mat","en":"Taste"},{"ko":"느낌","ro":"neukkim","en":"Feeling; Sense"},{"ko":"촉감","ro":"chokgam","en":"Touch; Texture"},{"ko":"온도","ro":"ondo","en":"Temperature"},{"ko":"빛","ro":"bit","en":"Light"}]}];
+const COLORS = {people:'#E8590C',body:'#D6336C',food:'#F08C00',home:'#2B8A3E',clothes:'#AE3EC9',time:'#1971C2',places:'#0C8599',school:'#5F3DC4',comm:'#364FC7',travel:'#087F5B',nature:'#5C940D',culture:'#C2255C',mind:'#495057'};
+const catById = Object.fromEntries(CATS.map(c=>[c.id,c]));
+const pad = n => String(n).padStart(2,'0');
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = s => document.querySelector(s);
+const isDesktop = () => window.matchMedia('(min-width:1024px)').matches;
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const isHomonymNote = n => /^homonym/.test(n||'');
+const noteText = n => isHomonymNote(n) ? '동음이의어 · '+n.replace(/^homonym:\s*/,'') : n;
+const label = w => w.en + (w.note && !isHomonymNote(w.note) ? ' ('+w.note+')' : '');
+
+const IC = {
+  spk:'<svg class="i s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
+  spkL:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
+  left:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
+  right:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+  flip:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>',
+  shuf:'<svg class="i s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>',
+  play:'<svg class="i s" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>',
+  stop:'<svg class="i s" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>',
+  print:'<svg class="i s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>',
+  eye:'<svg class="i s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  back:'<svg class="i s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
+  restart:'<svg class="i s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>'
+};
+
+/* ================= Speech ================= */
+const speech = { rate:0.85, voices:[], names:[], idx:0 };
+function loadVoices(){
+  if(!('speechSynthesis' in window)) return;
+  const ko = speechSynthesis.getVoices().filter(v=>/ko/i.test(v.lang));
+  const list=[];
+  if(ko.length){
+    const mina = ko.find(v=>v.name.includes('한국의')) || ko[0];
+    const yuna = ko.find(v=>/Yuna|유나/.test(v.name)) || (ko.length>1 ? ko.find(v=>v!==mina) : null);
+    list.push({v:mina,n:'Mina'});
+    if(yuna && yuna!==mina) list.push({v:yuna,n:'Yuna'});
+    ko.forEach(v=>{ if(v!==mina && v!==yuna) list.push({v, n:v.name.replace(/Google|Microsoft|Online|\(Natural\)/g,'').replace(/-.*$/,'').trim()||v.name}); });
+  }
+  speech.voices=list.map(x=>x.v); speech.names=list.map(x=>x.n);
+  if(speech.idx>=list.length) speech.idx=0;
+  document.querySelectorAll('.voice-select').forEach(fillVoiceSelect);
+}
+function fillVoiceSelect(sel){
+  const names = speech.names.length ? speech.names : ['Default'];
+  sel.innerHTML = names.map((n,i)=>`<option value="${i}" ${i===speech.idx?'selected':''}>${esc(n)}</option>`).join('');
+}
+if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); }
+function speak(text, onend){
+  if(!('speechSynthesis' in window)){ onend && onend(); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='ko-KR'; u.rate=speech.rate;
+  if(speech.voices[speech.idx]) u.voice = speech.voices[speech.idx];
+  if(onend){ u.onend=onend; u.onerror=onend; }
+  speechSynthesis.speak(u);
+}
+
+/* ================= State ================= */
+const state = { hideRo:false, hideEn:false, playing:false, fc:null, qz:null, unit:null, tab:'list' };
+
+/* ================= Sidebar ================= */
+function renderNav(){
+  let h='';
+  CATS.forEach(c=>{
+    h+=`<div class="nav-cat"><h4><i class="dot" style="background:${COLORS[c.id]}"></i>${esc(c.ko)} · ${esc(c.en)}</h4>`;
+    UNITS.filter(u=>u.cat===c.id).forEach(u=>{
+      h+=`<a class="nav-u" href="#/unit/${u.n}" data-n="${u.n}"><span class="n">${pad(u.n)}</span><span class="t">${esc(u.ko)}<small>${esc(u.en)}</small></span></a>`;
+    });
+    h+='</div>';
+  });
+  $('#side-scroll').innerHTML = `<div id="side-results"></div><nav id="side-nav">${h}</nav>`;
+}
+function markNav(n){
+  document.querySelectorAll('.nav-u').forEach(a=>a.classList.toggle('active', +a.dataset.n===n));
+  const a = document.querySelector(`.nav-u[data-n="${n}"]`);
+  if(a && isDesktop()){
+    const box=$('#side-scroll'), r=a.getBoundingClientRect(), br=box.getBoundingClientRect();
+    if(r.top<br.top+40 || r.bottom>br.bottom-20) box.scrollTop += r.top - br.top - br.height/2 + r.height/2;
+  }
+}
+function openDrawer(o){ $('#sidebar').classList.toggle('open',o); $('#backdrop').classList.toggle('show',o); }
+$('#menu-btn').onclick=()=>{ openDrawer(true); setTimeout(()=>markNav(state.unit||0),0); };
+$('#backdrop').onclick=()=>openDrawer(false);
+$('#sidebar').addEventListener('click',e=>{ if(e.target.closest('a') && !isDesktop()) openDrawer(false); });
+
+/* ================= Search ================= */
+const INDEX = [];
+UNITS.forEach(u=>u.w.forEach((w,i)=>INDEX.push({u,i,w,
+  k:w.ko.replace(/\s/g,''), r:w.ro.replace(/\s/g,'').toLowerCase(), e:(w.en+' '+(w.note||'')).toLowerCase()})));
+function hl(text,q){
+  if(!q) return esc(text);
+  const i=text.toLowerCase().indexOf(q.toLowerCase());
+  if(i<0) return esc(text);
+  return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
+}
+function searchHTML(raw){
+  const q=raw.trim(); if(!q) return '';
+  const ql=q.toLowerCase(), qn=ql.replace(/\s/g,'');
+  const units=UNITS.filter(u=>u.ko.replace(/\s/g,'').includes(qn)||u.en.toLowerCase().includes(ql)).slice(0,6);
+  const hits=[];
+  INDEX.forEach(x=>{
+    let s=0;
+    if(x.k===qn) s=100; else if(x.k.startsWith(qn)) s=80; else if(x.k.includes(qn)) s=60;
+    else if(x.e.split(/[;,()\s/]+/).includes(ql)) s=55; else if(x.e.includes(ql)) s=40;
+    else if(x.r.startsWith(qn)) s=30; else if(x.r.includes(qn)) s=20;
+    if(s) hits.push([s,x]);
+  });
+  hits.sort((a,b)=>b[0]-a[0]||a[1].u.n-b[1].u.n);
+  let h='';
+  if(units.length){
+    h+='<div class="rh">유닛 Units</div>'+units.map(u=>`<a class="res" href="#/unit/${u.n}"><span class="u" style="font-family:var(--mono)">UNIT ${pad(u.n)}</span><span class="k">${hl(u.ko,q)}</span><span class="e">${hl(u.en,q)}</span></a>`).join('');
+  }
+  if(hits.length){
+    h+=`<div class="rh">단어 Words · ${hits.length}</div>`+hits.slice(0,60).map(([,x])=>
+      `<a class="res" href="#/unit/${x.u.n}/list/${x.i}"><div style="min-width:0"><div class="k">${hl(x.w.ko,q)}</div><div class="r">[${esc(x.w.ro)}]</div></div><div class="e">${hl(x.w.en,q)}<div class="u">Unit ${pad(x.u.n)} · ${esc(x.u.ko)}</div></div></a>`).join('');
+  }
+  if(!h) h=`<div class="empty">검색 결과가 없습니다<br><small>No results for “${esc(q)}”</small></div>`;
+  return '<div class="results">'+h+'</div>';
+}
+function bindSearch(input, target, onActive){
+  const box=input.closest('.search');
+  const run=()=>{ const v=input.value; box.classList.toggle('has',!!v); target().innerHTML=searchHTML(v); onActive && onActive(!!v.trim()); };
+  input.addEventListener('input',run);
+  box.querySelector('.clr').onclick=()=>{ input.value=''; run(); input.focus(); };
+  return run;
+}
+bindSearch($('#side-search'), ()=>$('#side-results'), on=>{ $('#side-nav').style.display = on?'none':''; });
+
+/* ================= Home ================= */
+function renderHome(){
+  state.unit=null; stopAll();
+  document.title='TOPIK I 필수 단어장 · Essential Vocabulary';
+  $('#top-title').textContent='TOPIK I 필수 단어장';
+  markNav(0);
+  let h=`<section class="home">
+    <div class="hero">
+      <div class="eyebrow">TOPIK I · Level 1–2</div>
+      <h1>TOPIK I 필수 단어장</h1>
+      <p>Essential Korean nouns for beginners · 초급 학습자를 위한 필수 명사</p>
+      <div class="stats"><span class="chip">100 유닛 Units</span><span class="chip">1,000 단어 Words</span><span class="chip">13 주제 Topics</span></div>
+    </div>
+    <div class="search" id="home-search-box">
+      <svg class="i s mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="home-search" type="text" enterkeyhint="search" placeholder="한국어·영어·로마자로 검색  Search in Korean, English or romanization" autocomplete="off" aria-label="Search words">
+      <button class="clr" aria-label="Clear">✕</button>
+    </div>
+    <div id="home-results"></div>
+    <div id="home-cats">`;
+  CATS.forEach(c=>{
+    const us=UNITS.filter(u=>u.cat===c.id), col=COLORS[c.id];
+    h+=`<section class="cat-sec"><h2><i class="dot" style="background:${col}"></i>${esc(c.ko)} <small>${esc(c.en)} · Unit ${us[0].n}–${us[us.length-1].n}</small></h2><div class="grid">`;
+    us.forEach(u=>{ h+=`<a class="ucard" href="#/unit/${u.n}"><span class="n" style="color:${col};background:${col}14">UNIT ${pad(u.n)}</span><b>${esc(u.ko)}</b><small>${esc(u.en)}</small></a>`; });
+    h+='</div></section>';
+  });
+  h+=`</div><div class="foot">🔊 음성은 기기에 설치된 한국어 음성을 사용합니다 · Audio uses your device's Korean voice</div></section>`;
+  $('#view').innerHTML=h;
+  const res=()=>$('#home-results');
+  bindSearch($('#home-search'), ()=>{ const r=res(); r.className=$('#home-search').value.trim()?'results-wrap':''; return r; },
+    on=>{ $('#home-cats').style.display=on?'none':''; });
+}
+
+/* ================= Unit ================= */
+function renderUnit(n, tab, focus){
+  const u=UNITS[n-1]; if(!u) return renderHome();
+  const changed = state.unit!==n;
+  stopAll();
+  state.unit=n; state.tab=tab;
+  if(changed){ state.fc=null; state.qz=null; }
+  const c=catById[u.cat], col=COLORS[u.cat];
+  const prev=UNITS[n-2], next=UNITS[n];
+  document.title=`Unit ${n}. ${u.ko} (${u.en}) · TOPIK I 필수 단어장`;
+  $('#top-title').textContent=`Unit ${n}. ${u.ko}`;
+  markNav(n);
+  const tabBtn=(id,ko,en)=>`<button class="tab" role="tab" aria-selected="${tab===id}" data-tab="${id}">${ko}<small>${en}</small></button>`;
+  $('#view').innerHTML=`
+  <section class="unit">
+    <a class="back" href="#/">${IC.back} 전체 유닛 All Units</a>
+    <div class="uhead">
+      <div>
+        <div class="crumb"><i class="dot" style="background:${col}"></i>${esc(c.ko)} · ${esc(c.en)}</div>
+        <div class="label">UNIT ${pad(n)} / 100</div>
+        <h1>${esc(u.ko)} <span>(${esc(u.en)})</span></h1>
+      </div>
+      <div class="pn">
+        ${prev?`<a href="#/unit/${n-1}/${tab}" aria-label="Previous unit" title="이전 Previous">${IC.left}</a>`:`<span>${IC.left}</span>`}
+        ${next?`<a href="#/unit/${n+1}/${tab}" aria-label="Next unit" title="다음 Next">${IC.right}</a>`:`<span>${IC.right}</span>`}
+      </div>
+    </div>
+    <div class="tabs" role="tablist">${tabBtn('list','단어 목록','Word List')}${tabBtn('cards','플래시카드','Flashcards')}${tabBtn('quiz','퀴즈','Quiz')}</div>
+    <div class="toolbar" id="toolbar"></div>
+    <div id="tabbody"></div>
+    <div class="bnav">
+      ${prev?`<a href="#/unit/${n-1}/${tab}"><span class="d">← 이전 Previous · Unit ${pad(n-1)}</span><span class="t">${esc(prev.ko)} (${esc(prev.en)})</span></a>`:'<span class="ph"></span>'}
+      ${next?`<a class="nx" href="#/unit/${n+1}/${tab}"><span class="d">다음 Next · Unit ${pad(n+1)} →</span><span class="t">${esc(next.ko)} (${esc(next.en)})</span></a>`:'<span class="ph"></span>'}
+    </div>
+    <div class="foot">🔊 음성은 기기에 설치된 한국어 음성을 사용합니다 · Audio uses your device's Korean voice</div>
+  </section>`;
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{ location.hash=`#/unit/${n}/${b.dataset.tab}`; });
+  renderToolbar(u);
+  if(tab==='cards') renderCards(u); else if(tab==='quiz') renderQuiz(u); else renderList(u, focus);
+  renderPrint(u);
+}
+
+function renderToolbar(u){
+  const rates=[[0.75,'0.75x 느리게 Slow'],[0.85,'0.85x 권장 Best'],[1,'1.0x 보통 Normal']];
+  let h=`<div class="pill sel"><label for="vsel">음성 Voice</label><select id="vsel" class="voice-select"></select></div>
+    <div class="pill sel"><label for="rsel">속도 Speed</label><select id="rsel">${rates.map(([v,t])=>`<option value="${v}" ${v===speech.rate?'selected':''}>${t}</option>`).join('')}</select></div>`;
+  if(state.tab==='list'){
+    h+=`<span class="grow"></span>
+      <button class="pill ${state.hideRo?'on':''}" id="t-ro" aria-pressed="${state.hideRo}">${IC.eye} <span class="l2">발음 가리기 <small>Hide Romanization</small></span></button>
+      <button class="pill ${state.hideEn?'on':''}" id="t-en" aria-pressed="${state.hideEn}">${IC.eye} <span class="l2">영어 가리기 <small>Hide English</small></span></button>
+      <button class="pill" id="t-play">${IC.play} <span class="l2">전체 듣기 <small>Play All</small></span></button>
+      <button class="pill primary" id="t-print">${IC.print} <span class="l2">인쇄 <small>Print / PDF</small></span></button>`;
+  }
+  $('#toolbar').innerHTML=h;
+  fillVoiceSelect($('#vsel'));
+  $('#vsel').onchange=e=>{ speech.idx=+e.target.value; };
+  $('#rsel').onchange=e=>{ speech.rate=parseFloat(e.target.value); };
+  if(state.tab==='list'){
+    $('#t-ro').onclick=()=>{ state.hideRo=!state.hideRo; applyMask(); };
+    $('#t-en').onclick=()=>{ state.hideEn=!state.hideEn; applyMask(); };
+    $('#t-play').onclick=()=>playAll(u);
+    $('#t-print').onclick=()=>{ renderPrint(u); window.print(); };
+  }
+}
+function applyMask(){
+  const s=$('#sheet'); if(!s) return;
+  s.classList.toggle('hide-ro',state.hideRo); s.classList.toggle('hide-en',state.hideEn);
+  s.querySelectorAll('.v.reveal').forEach(x=>x.classList.remove('reveal'));
+  const r=$('#t-ro'), e=$('#t-en');
+  r.classList.toggle('on',state.hideRo); r.setAttribute('aria-pressed',state.hideRo);
+  e.classList.toggle('on',state.hideEn); e.setAttribute('aria-pressed',state.hideEn);
+  const tip=$('#mask-tip'); if(tip) tip.style.display=(state.hideRo||state.hideEn)?'':'none';
+  if(state.unit) renderPrint(UNITS[state.unit-1]);
+}
+
+/* ---------- Word list ---------- */
+function renderList(u, focus){
+  let h=`<div class="sheet" id="sheet"><div class="thead"><span>#</span><span>한국어 Korean</span><span>발음 Pronunciation</span><span>영어 English</span></div>`;
+  u.w.forEach((w,i)=>{
+    h+=`<div class="wrow" id="w${i}">
+      <span class="c-num">${pad(i+1)}</span>
+      <div class="c-ko"><b>${esc(w.ko)}</b><button class="spk" data-say="${esc(w.ko)}" aria-label="Listen ${esc(w.ko)}" title="듣기 Listen">${IC.spk}</button></div>
+      <span class="c-ro"><span class="v">[${esc(w.ro)}]</span></span>
+      <span class="c-en"><span class="v">${esc(w.en)}${w.note?`<span class="note">(${esc(noteText(w.note))})</span>`:''}</span></span>
+    </div>`;
+  });
+  h+=`</div><p class="tip" id="mask-tip" style="display:none">가려진 부분을 눌러 확인하세요 · Tap a blurred item to reveal it</p>`;
+  $('#tabbody').innerHTML=h;
+  applyMask();
+  $('#sheet').addEventListener('click',e=>{
+    const b=e.target.closest('.spk'); if(b){ speak(b.dataset.say); return; }
+    const v=e.target.closest('.v'); if(v && (state.hideRo||state.hideEn)) v.classList.toggle('reveal');
+  });
+  if(focus!=null){
+    const row=$('#w'+focus);
+    if(row){ requestAnimationFrame(()=>{ row.scrollIntoView({block:'center',behavior:'smooth'}); row.classList.add('flash'); speak(u.w[focus].ko); }); }
+  }
+}
+function playAll(u){
+  if(state.playing){ stopAll(); return; }
+  state.playing=true;
+  const btn=$('#t-play'); btn.classList.add('on'); btn.innerHTML=IC.stop+' <span class="l2">멈추기 <small>Stop</small></span>';
+  let i=0;
+  const step=()=>{
+    document.querySelectorAll('.wrow.playing').forEach(r=>r.classList.remove('playing'));
+    if(!state.playing || i>=u.w.length){ stopAll(); return; }
+    const row=$('#w'+i); if(row){ row.classList.add('playing'); row.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+    const cur=i++;
+    speak(u.w[cur].ko, ()=>{ if(state.playing) setTimeout(step,700); });
+  };
+  step();
+}
+function stopAll(){
+  const was=state.playing; state.playing=false;
+  if('speechSynthesis' in window && was) speechSynthesis.cancel();
+  document.querySelectorAll('.wrow.playing').forEach(r=>r.classList.remove('playing'));
+  const btn=$('#t-play'); if(btn){ btn.classList.remove('on'); btn.innerHTML=IC.play+' <span class="l2">전체 듣기 <small>Play All</small></span>'; }
+}
+
+/* ---------- Print sheet ---------- */
+function renderPrint(u){
+  const blank='<span class="blank"></span>';
+  let h=`<div class="ps-head"><span>TOPIK I • Level 1 · ${esc(catById[u.cat].ko)} ${esc(catById[u.cat].en)}</span><h1>Unit ${u.n}. ${esc(u.ko)} <small>(${esc(u.en)})</small></h1></div>
+  <div class="ps-row h"><span>#</span><span>Korean (한국어)</span><span>Pronunciation</span><span style="text-align:right">English</span></div>`;
+  u.w.forEach((w,i)=>{
+    h+=`<div class="ps-row"><span class="n">${pad(i+1)}</span><span class="k">${esc(w.ko)}</span>
+      <span class="r">${state.hideRo?blank:'['+esc(w.ro)+']'}</span>
+      <span class="e">${state.hideEn?blank:esc(w.en)+(w.note?`<small>(${esc(noteText(w.note))})</small>`:'')}</span></div>`;
+  });
+  h+=`<div class="ps-foot"><span>TOPIK I Vocabulary Sheet</span><span>Unit ${pad(u.n)} / 100</span></div>`;
+  $('#print-sheet').innerHTML=h;
+}
+
+/* ---------- Flashcards ---------- */
+function renderCards(u){
+  if(!state.fc) state.fc={order:u.w.map((_,i)=>i), i:0, flipped:false, dir:'ko'};
+  const f=state.fc, w=u.w[f.order[f.i]], total=u.w.length;
+  const front = f.dir==='ko'
+    ? `<div class="side-tag">한국어 Korean</div><div class="big">${esc(w.ko)}</div><div class="hint">탭하여 뒤집기 · Tap to flip</div>`
+    : `<div class="side-tag">영어 English</div><div class="big en">${esc(w.en)}</div>${w.note&&!isHomonymNote(w.note)?`<div class="note">(${esc(w.note)})</div>`:''}<div class="hint">탭하여 뒤집기 · Tap to flip</div>`;
+  const back = `<div class="side-tag">정답 Answer</div>` + (f.dir==='ko'
+    ? `<div class="big en">${esc(w.en)}</div>${w.note?`<div class="note">(${esc(noteText(w.note))})</div>`:''}<div class="mid">${esc(w.ko)}</div><div class="ro">[${esc(w.ro)}]</div>`
+    : `<div class="big">${esc(w.ko)}</div><div class="ro">[${esc(w.ro)}]</div><div class="note" style="margin-top:12px">${esc(w.en)}${w.note?' ('+esc(noteText(w.note))+')':''}</div>`);
+  $('#tabbody').innerHTML=`
+  <div class="fc-wrap">
+    <div class="fc-count">${f.i+1} / ${total}</div>
+    <div class="fc-bar"><i style="width:${(f.i+1)/total*100}%"></i></div>
+    <div class="card3d ${f.flipped?'flipped':''}" id="card" role="button" tabindex="0" aria-label="Flashcard. Press to flip">
+      <div class="inner"><div class="face front">${front}</div><div class="face back">${back}</div></div>
+    </div>
+    <div class="fc-ctrl">
+      <button class="round" id="fc-prev" aria-label="Previous card" ${f.i===0?'disabled':''}>${IC.left}</button>
+      <button class="round" id="fc-say" aria-label="Listen">${IC.spkL}</button>
+      <button class="round main-btn" id="fc-flip" aria-label="Flip">${IC.flip}</button>
+      <button class="round" id="fc-next" aria-label="Next card" ${f.i===total-1?'disabled':''}>${IC.right}</button>
+    </div>
+    <div class="fc-opts">
+      <button class="pill" id="fc-dir">${f.dir==='ko'?'한국어 → 영어 · KO → EN':'영어 → 한국어 · EN → KO'}</button>
+      <button class="pill" id="fc-shuf">${IC.shuf} 섞기 Shuffle</button>
+      <button class="pill" id="fc-reset">${IC.restart} 처음부터 Restart</button>
+    </div>
+    <p class="tip">키보드: ← → 이동, Space 뒤집기 · Keyboard: ← → to move, Space to flip</p>
+  </div>`;
+  const card=$('#card');
+  const flip=()=>{ f.flipped=!f.flipped; card.classList.toggle('flipped',f.flipped); if(f.flipped && f.dir==='en') speak(w.ko); };
+  const go=d=>{ const ni=f.i+d; if(ni<0||ni>=total) return; f.i=ni; f.flipped=false; renderCards(u); if(f.dir==='ko') speak(u.w[f.order[f.i]].ko); };
+  card.onclick=flip; $('#fc-flip').onclick=flip;
+  $('#fc-prev').onclick=()=>go(-1); $('#fc-next').onclick=()=>go(1);
+  $('#fc-say').onclick=()=>speak(w.ko);
+  $('#fc-dir').onclick=()=>{ f.dir=f.dir==='ko'?'en':'ko'; f.flipped=false; renderCards(u); };
+  $('#fc-shuf').onclick=()=>{ f.order=shuffle(f.order); f.i=0; f.flipped=false; renderCards(u); };
+  $('#fc-reset').onclick=()=>{ f.order=u.w.map((_,i)=>i); f.i=0; f.flipped=false; renderCards(u); };
+  let sx=null;
+  card.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{passive:true});
+  card.addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; sx=null; if(Math.abs(dx)>50){ e.preventDefault(); go(dx<0?1:-1); } });
+  state.fcKeys={flip,go};
+}
+
+/* ---------- Quiz ---------- */
+const QTYPES={
+  ko2en:{ic:'가',ko:'한국어 → 영어',en:'Korean → English',d:'한국어 단어를 보고 영어 뜻을 고르세요 · Choose the English meaning'},
+  en2ko:{ic:'A',ko:'영어 → 한국어',en:'English → Korean',d:'영어 뜻을 보고 한국어를 고르세요 · Choose the Korean word'},
+  listen:{ic:'🔊',ko:'듣고 고르기',en:'Listen & Choose',d:'듣고 알맞은 한국어를 고르세요 · Listen and choose the word'}
+};
+function buildQuiz(u,type){
+  return shuffle(u.w).map(w=>{
+    const key = type==='ko2en' ? label : x=>x.ko;
+    const pool = shuffle(u.w.filter(x=>x!==w && key(x)!==key(w)));
+    const seen=new Set([key(w)]), opts=[w];
+    for(const x of pool){ if(opts.length>=4) break; if(!seen.has(key(x))){ seen.add(key(x)); opts.push(x); } }
+    return {w, opts:shuffle(opts), picked:null};
+  });
+}
+function renderQuiz(u){
+  const q=state.qz;
+  if(!q || !q.type){
+    $('#tabbody').innerHTML=`<p class="qz-intro">퀴즈 유형을 선택하세요 (10문제) · Choose a quiz type (10 questions)</p>
+      <div class="qz-start">${Object.entries(QTYPES).map(([k,t])=>`<button class="qtype" data-t="${k}"><span class="ic">${t.ic}</span><b>${t.ko}</b><small style="font-weight:600;color:var(--ink)">${t.en}</small><small>${t.d}</small></button>`).join('')}</div>`;
+    document.querySelectorAll('.qtype').forEach(b=>b.onclick=()=>{ state.qz={type:b.dataset.t, qs:buildQuiz(u,b.dataset.t), i:0, score:0}; renderQuiz(u); });
+    return;
+  }
+  if(q.i>=q.qs.length) return renderResult(u);
+  const cur=q.qs[q.i], w=cur.w, t=QTYPES[q.type], total=q.qs.length;
+  let prompt;
+  if(q.type==='ko2en') prompt=`<div class="ask">이 단어의 뜻은? · What does this mean?</div><div class="word">${esc(w.ko)}</div>`;
+  else if(q.type==='en2ko') prompt=`<div class="ask">한국어로 무엇일까요? · Which Korean word?</div><div class="word en">${esc(w.en)}</div>${w.note&&!isHomonymNote(w.note)?`<div class="sub">(${esc(w.note)})</div>`:''}`;
+  else prompt=`<div class="ask">듣고 고르세요 · Listen and choose</div><button class="listen-btn" id="q-listen" aria-label="Play word">${IC.spkL}</button><div class="sub" style="margin-top:12px">다시 듣기 · Tap to replay</div>`;
+  const optTxt = x => q.type==='ko2en' ? esc(x.en)+(x.note&&!isHomonymNote(x.note)?` <small style="font-weight:500;color:var(--ink2)">(${esc(x.note)})</small>`:'') : esc(x.ko);
+  const answered = cur.picked!=null;
+  const opts = cur.opts.map((x,i)=>{
+    let cls='opt'+(q.type!=='ko2en'?' ko':'');
+    if(answered){ if(x===w) cls+=' correct'; else if(i===cur.picked) cls+=' wrong'; else cls+=' dim'; }
+    return `<button class="${cls}" data-i="${i}" ${answered?'disabled':''}><span class="k">${i+1}</span><span>${optTxt(x)}</span></button>`;
+  }).join('');
+  let fb='';
+  if(answered){
+    const ok=cur.opts[cur.picked]===w;
+    fb=`<div class="feedback ${ok?'ok':'no'}"><strong>${ok?'정답! Correct':'오답 Incorrect'}</strong>
+      <div class="fx"><b>${esc(w.ko)}</b><span class="r">[${esc(w.ro)}]</span> ${esc(w.en)}</div>
+      <button class="spk" data-say="${esc(w.ko)}" aria-label="Listen">${IC.spk}</button></div>
+      <div class="qnext"><button class="btn" id="q-next">${q.i===total-1?'결과 보기 See Results':'다음 Next'} ${IC.right}</button></div>`;
+  }
+  $('#tabbody').innerHTML=`
+    <div class="qbox">
+      <div class="qtop"><span>${t.ko} · ${t.en}</span><span class="qt">${q.i+1} / ${total} · ✓ ${q.score}</span></div>
+      <div class="fc-bar" style="max-width:none;margin-top:10px"><i style="width:${(q.i+(answered?1:0))/total*100}%"></i></div>
+      <div class="qprompt">${prompt}</div>
+      <div class="opts">${opts}</div>
+      ${fb}
+    </div>
+    <div class="actions" style="justify-content:flex-start"><button class="pill" id="q-quit">${IC.restart} 유형 다시 선택 Change type</button></div>`;
+  if(q.type==='listen'){ $('#q-listen').onclick=()=>speak(w.ko); if(!answered && !cur.played){ cur.played=true; setTimeout(()=>speak(w.ko),250); } }
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(u,+b.dataset.i));
+  const sp=document.querySelector('.feedback .spk'); if(sp) sp.onclick=()=>speak(w.ko);
+  const nx=$('#q-next'); if(nx){ nx.onclick=()=>{ q.i++; renderQuiz(u); }; nx.focus({preventScroll:true}); }
+  $('#q-quit').onclick=()=>{ state.qz=null; renderQuiz(u); };
+}
+function answer(u,i){
+  const q=state.qz, cur=q.qs[q.i]; if(cur.picked!=null) return;
+  cur.picked=i;
+  if(cur.opts[i]===cur.w) q.score++;
+  if(q.type!=='listen') speak(cur.w.ko);
+  renderQuiz(u);
+}
+function renderResult(u){
+  const q=state.qz, total=q.qs.length, pct=q.score/total, C=2*Math.PI*54;
+  const wrong=q.qs.filter(x=>x.opts[x.picked]!==x.w).map(x=>x.w);
+  const msg = pct===1?['완벽해요! 🎉','Perfect score!'] : pct>=.8?['아주 잘했어요!','Great job!'] : pct>=.5?['좋아요, 조금만 더!','Good — keep practicing!'] : ['다시 한번 해 봐요','Try again — you can do it!'];
+  const next=UNITS[u.n];
+  $('#tabbody').innerHTML=`
+    <div class="qbox"><div class="result">
+      <div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="none" stroke="#E5E5EA" stroke-width="10"/>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="${pct>=.8?'#1E8E3E':pct>=.5?'#0071E3':'#D93025'}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg>
+        <div class="sc"><b>${q.score}/${total}</b><small>${Math.round(pct*100)}%</small></div></div>
+      <h3>${msg[0]}</h3><p>${msg[1]} · ${QTYPES[q.type].ko} ${QTYPES[q.type].en}</p>
+      ${wrong.length?`<div class="wronglist"><h4>틀린 단어 Words to review · ${wrong.length}</h4>${wrong.map(w=>`<div class="wl"><button class="spk" data-say="${esc(w.ko)}" aria-label="Listen">${IC.spk}</button><b>${esc(w.ko)}</b><span class="r">[${esc(w.ro)}]</span><span class="e">${esc(label(w))}</span></div>`).join('')}</div>`:''}
+      <div class="actions">
+        <button class="btn" id="r-retry">${IC.restart} 다시 풀기 Retry</button>
+        <button class="btn ghost" id="r-type">다른 유형 Other type</button>
+        ${next?`<a class="btn blue" href="#/unit/${u.n+1}/quiz">다음 유닛 Next unit ${IC.right}</a>`:''}
+      </div>
+    </div></div>`;
+  document.querySelectorAll('.wronglist .spk').forEach(b=>b.onclick=()=>speak(b.dataset.say));
+  $('#r-retry').onclick=()=>{ state.qz={type:q.type, qs:buildQuiz(u,q.type), i:0, score:0}; renderQuiz(u); };
+  $('#r-type').onclick=()=>{ state.qz=null; renderQuiz(u); };
+}
+
+/* ================= Keyboard ================= */
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,select,textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if(state.unit && state.tab==='cards' && state.fcKeys){
+    if(e.key==='ArrowRight'){ state.fcKeys.go(1); e.preventDefault(); }
+    else if(e.key==='ArrowLeft'){ state.fcKeys.go(-1); e.preventDefault(); }
+    else if(e.key===' '||e.key==='Enter'){ state.fcKeys.flip(); e.preventDefault(); }
+  } else if(state.unit && state.tab==='quiz' && state.qz && state.qz.type && state.qz.i<state.qz.qs.length){
+    const cur=state.qz.qs[state.qz.i];
+    if(cur.picked==null && /^[1-4]$/.test(e.key) && +e.key<=cur.opts.length){ answer(UNITS[state.unit-1], +e.key-1); e.preventDefault(); }
+  }
+});
+
+/* ================= Router ================= */
+function route(){
+  if(!isDesktop()) openDrawer(false);
+  const m=location.hash.match(/^#\/unit\/(\d+)(?:\/(list|cards|quiz))?(?:\/(\d+))?/);
+  const prevUnit=state.unit;
+  if(m){
+    const n=Math.min(100,Math.max(1,+m[1]));
+    renderUnit(n, m[2]||'list', m[3]!=null?+m[3]:null);
+    if(prevUnit!==n && m[3]==null) window.scrollTo(0,0);
+  } else if(!location.hash || location.hash==='#' ){
+    if(isDesktop()){ history.replaceState(null,'','#/unit/1'); renderUnit(1,'list'); }
+    else renderHome();
+  } else { renderHome(); window.scrollTo(0,0); }
+}
+renderNav();
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
