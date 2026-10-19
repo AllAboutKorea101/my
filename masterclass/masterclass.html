@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All About Korea — Masterclass</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter','Noto Sans KR','sans-serif'] } } }
+    }
+  </script>
+  <style>
+    :root {
+      --bg:#f8fafc; --surface:#ffffff; --border:#e2e8f0;
+      --text-primary:#0f172a; --text-secondary:#64748b;
+      --accent:#2563eb; --accent-light:#eff6ff;
+      color-scheme:light;
+    }
+    @media (prefers-color-scheme:dark){
+      :root:not([data-theme="light"]){
+        --bg:#0f172a; --surface:#1e293b; --border:#334155;
+        --text-primary:#f1f5f9; --text-secondary:#94a3b8;
+        --accent:#3b82f6; --accent-light:#1e3a5f;
+        color-scheme:dark;
+      }
+    }
+    :root[data-theme="dark"]{
+      --bg:#0f172a; --surface:#1e293b; --border:#334155;
+      --text-primary:#f1f5f9; --text-secondary:#94a3b8;
+      --accent:#3b82f6; --accent-light:#1e3a5f;
+      color-scheme:dark;
+    }
+    body{ font-family:'Inter','Noto Sans KR',sans-serif; background:var(--bg); color:var(--text-primary); margin:0; }
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+    .modal-backdrop{background:rgba(15,23,42,0.85);backdrop-filter:blur(6px)}
+    .hero-slide{display:none} .hero-slide.active{display:block}
+    #langDropdown{display:none} #langDropdown.open{display:block}
+    .hs-dark-navy   {background:#0f172a;color:white}
+    .hs-korea-red   {background:linear-gradient(135deg,#c0392b,#8b0000);color:white}
+    .hs-forest-green{background:linear-gradient(135deg,#1a4731,#2d6a4f);color:white}
+    .hs-royal-blue  {background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white}
+    .hs-warm-beige  {background:#faf8f5;color:#1a1a1a;border-bottom:1px solid #e5e0d8}
+    .hs-charcoal    {background:linear-gradient(135deg,#374151,#1f2937);color:white}
+    .hs-deep-purple {background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white}
+    .rank-tab{cursor:pointer;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;transition:all .2s;border:1px solid var(--border);color:var(--text-secondary);background:var(--surface)}
+    .rank-tab.active{background:#0f172a;color:white;border-color:#0f172a}
+    @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .rank-tab.active{background:#f1f5f9;color:#0f172a;border-color:#f1f5f9}}
+    :root[data-theme="dark"] .rank-tab.active{background:#f1f5f9;color:#0f172a;border-color:#f1f5f9}
+    .qperiod{cursor:pointer;padding:4px 12px;border-radius:16px;font-size:11px;font-weight:600;background:var(--accent-light);color:var(--accent);border:1px solid transparent;transition:all .2s}
+    .qperiod:hover{border-color:var(--accent)}
+    #learningModal{display:none} #learningModal.open{display:flex}
+    #playlistView{display:none} #playlistView.open{display:block}
+    #progressView{display:none}
+    /* Preview warning */
+    #previewWarning{display:none;animation:fadeIn .4s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    /* Account dropdown */
+    #accountDropdown{display:none} #accountDropdown.open{display:block}
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+<!-- ===== TOP NAV ===== -->
+<header style="background:var(--surface);border-bottom:1px solid var(--border);" class="sticky top-0 z-30 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center space-x-4 sm:space-x-6">
+      <button id="openSidebarBtn" style="color:var(--text-secondary);" class="hover:opacity-70 p-1.5 rounded-lg transition-colors">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+      <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold">
+        <button onclick="showStoreView()" style="color:var(--text-secondary);" class="hover:text-blue-600 transition-colors flex items-center space-x-2 py-1">
+          <i class="fa-solid fa-list-ul text-blue-600"></i><span data-i18n="nav_playlist">Playlist</span>
+        </button>
+        <button onclick="toggleFavoritesFilter()" id="navMyFavoritesBtn" style="color:var(--text-secondary);" class="hover:text-blue-600 transition-colors flex items-center space-x-2 py-1">
+          <i class="fa-solid fa-heart text-red-500"></i>
+          <span data-i18n="nav_favorites">My Favorites</span>
+          <span id="favBadge" class="bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full font-bold ml-1">0</span>
+        </button>
+        <button onclick="showProgressView()" id="navProgressBtn" style="color:var(--text-secondary);" class="hover:text-blue-600 transition-colors flex items-center space-x-2 py-1">
+          <i class="fa-solid fa-chart-line text-emerald-500"></i>
+          <span data-i18n="nav_progress">My Progress</span>
+        </button>
+        <button onclick="showAdminView()" id="navAdminBtn" style="display:none;color:var(--text-secondary);" class="hover:text-blue-600 transition-colors py-1 flex items-center space-x-1.5">
+          <i class="fa-solid fa-user-gear"></i><span data-i18n="nav_admin">Admin</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <!-- Language Switcher -->
+      <div class="relative">
+        <button id="langBtn" onclick="toggleLangDropdown()" style="background:var(--accent-light);color:var(--text-primary);" class="text-xs font-medium px-3 py-2 rounded-full flex items-center space-x-2 hover:opacity-80">
+          <span id="langFlag">🇬🇧</span><span id="langLabel">English</span>
+          <i class="fa-solid fa-chevron-down text-xs"></i>
+        </button>
+        <div id="langDropdown" style="background:var(--surface);border:1px solid var(--border);" class="absolute right-0 top-12 w-44 rounded-2xl shadow-xl z-50 py-2 overflow-hidden">
+          <button onclick="setLang('en')"  class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇬🇧</span><span style="color:var(--text-primary);" class="font-semibold">English</span></button>
+          <button onclick="setLang('es')"  class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇪🇸</span><span style="color:var(--text-primary);">Español</span></button>
+          <button onclick="setLang('zh')"  class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇨🇳</span><span style="color:var(--text-primary);">中文</span></button>
+          <button onclick="setLang('ja')"  class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇯🇵</span><span style="color:var(--text-primary);">日本語</span></button>
+          <button onclick="setLang('fr')"  class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇫🇷</span><span style="color:var(--text-primary);">Français</span></button>
+          <button onclick="setLang('de')"  class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇩🇪</span><span style="color:var(--text-primary);">Deutsch</span></button>
+          <button onclick="setLang('pl')"  class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇵🇱</span><span style="color:var(--text-primary);">Polski</span></button>
+        </div>
+      </div>
+      <!-- Auth/Account button -->
+      <div class="relative" id="authArea">
+        <!-- Signed out -->
+        <button id="signInBtn" onclick="handleSignIn()" style="background:var(--accent);color:white;" class="text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-sm hover:opacity-90 transition-all">
+          <span data-i18n="nav_signin">Sign In</span>
+        </button>
+        <!-- Signed in -->
+        <div id="accountWrap" class="hidden relative">
+          <button id="accountBtn" onclick="toggleAccountDropdown()" style="background:var(--accent);color:white;" class="text-xs sm:text-sm font-medium px-4 py-2 rounded-full flex items-center space-x-2 shadow-sm hover:opacity-90">
+            <i class="fa-solid fa-user-circle"></i>
+            <span id="accountEmail" class="max-w-[100px] truncate text-xs">user</span>
+            <i class="fa-solid fa-chevron-down text-xs"></i>
+          </button>
+          <div id="accountDropdown" style="background:var(--surface);border:1px solid var(--border);" class="absolute right-0 top-12 w-44 rounded-2xl shadow-xl z-50 py-2 overflow-hidden">
+            <button onclick="showProgressView();toggleAccountDropdown();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2" style="color:var(--text-primary);">
+              <i class="fa-solid fa-chart-line text-emerald-500 w-4"></i><span data-i18n="nav_progress">My Progress</span>
+            </button>
+            <div style="border-top:1px solid var(--border);" class="my-1"></div>
+            <button onclick="handleSignOut()" class="w-full text-left px-4 py-2.5 text-sm hover:bg-red-50 flex items-center space-x-2 text-red-600">
+              <i class="fa-solid fa-right-from-bracket w-4"></i><span data-i18n="nav_signout">Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Sidebar Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden"></div>
+<aside id="sidebar" style="background:var(--surface);" class="fixed top-0 left-0 h-full w-72 shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+  <div style="border-bottom:1px solid var(--border);" class="p-5 flex items-center justify-between">
+    <div class="text-lg font-bold" style="color:var(--text-primary);">All About <span class="text-blue-600">Korea</span></div>
+    <button id="closeSidebarBtn" style="color:var(--text-secondary);" class="hover:opacity-70 p-1.5 rounded-lg"><i class="fa-solid fa-xmark text-lg"></i></button>
+  </div>
+  <nav class="p-4 space-y-1 flex-1">
+    <a href="https://www.businesskorean.com/" style="color:var(--text-secondary);" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-sm font-medium"><i class="fa-solid fa-house w-5 text-center"></i><span data-i18n="sidebar_home">Home</span></a>
+    <a href="#" onclick="showStoreView();closeSidebar();return false;" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-blue-50 text-blue-600 font-semibold text-sm"><i class="fa-solid fa-paper-plane w-5 text-center text-blue-600"></i><span data-i18n="sidebar_contents">Korean Contents</span></a>
+    <a href="#" onclick="showProgressView();closeSidebar();return false;" style="color:var(--text-secondary);" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-sm font-medium"><i class="fa-solid fa-chart-line w-5 text-center text-emerald-500"></i><span data-i18n="nav_progress">My Progress</span></a>
+    <a href="https://www.businesskorean.com/Homestay/Homestay.html" style="color:var(--text-secondary);" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-sm font-medium"><i class="fa-solid fa-hotel w-5 text-center"></i><span data-i18n="sidebar_homestay">Homestay</span></a>
+    <a href="https://www.businesskorean.com/Guided%20Tour/Guided%20Tour.html" style="color:var(--text-secondary);" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-sm font-medium"><i class="fa-solid fa-compass w-5 text-center"></i><span data-i18n="sidebar_tour">Guided Tour</span></a>
+    <a href="#" id="sidebarAdminLink" onclick="showAdminView();closeSidebar();return false;" style="display:none;color:var(--text-secondary);" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-sm font-medium"><i class="fa-solid fa-user-gear w-5 text-center"></i><span data-i18n="sidebar_admin">Admin Portal</span></a>
+  </nav>
+  <div id="sidebarUserInfo" class="hidden p-4 border-t" style="border-color:var(--border);">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center"><i class="fa-solid fa-user text-blue-600 text-xs"></i></div>
+      <div class="min-w-0">
+        <div id="sidebarEmail" class="text-xs font-semibold truncate" style="color:var(--text-primary);"></div>
+        <div id="sidebarSubBadge" class="text-[10px] font-bold text-emerald-600 mt-0.5 hidden">✓ Active Subscriber</div>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid var(--border);color:var(--text-secondary);" class="p-4 text-xs text-center">© 2026 All About Korea Inc.</div>
+</aside>
+
+<!-- ===== STORE VIEW ===== -->
+<main id="userStoreView" class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
+
+  <!-- Hero Carousel -->
+  <div class="relative bg-slate-900 rounded-3xl overflow-hidden shadow-2xl mb-8 text-white" style="min-height:300px;">
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-slate-900/50 z-10 pointer-events-none"></div>
+    <button onclick="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-9 h-9 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center transition-all"><i class="fa-solid fa-chevron-left text-sm"></i></button>
+    <button onclick="nextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-9 h-9 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center transition-all"><i class="fa-solid fa-chevron-right text-sm"></i></button>
+    <div class="relative z-20 p-7 sm:p-12 max-w-3xl w-full">
+      <div id="heroSlide0" class="hero-slide active">
+        <span class="inline-block bg-blue-600/30 border border-blue-400/40 text-blue-300 text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-4" data-i18n="hero1_tag">KOREAN PLAYLIST</span>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 leading-tight" data-i18n="hero1_title">Master Korean, From Grammar to Business</h1>
+        <p class="text-slate-300 text-sm sm:text-base mb-6 leading-relaxed max-w-2xl" data-i18n="hero1_desc">Explore a complete Korean learning playlist—covering grammar, vocabulary, reading, TOPIK exam prep, and business fluency.</p>
+        <button onclick="scrollToCourses()" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-full shadow-lg transition-all inline-flex items-center space-x-2">
+          <span data-i18n="hero1_btn">Explore Playlist</span><i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+      <div id="heroSlide1" class="hero-slide">
+        <span class="inline-block bg-amber-500/30 border border-amber-400/40 text-amber-300 text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-4" data-i18n="hero2_tag">1-MIN FREE PREVIEW</span>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 leading-tight" data-i18n="hero2_title">Try the First 1 Minute of Every Lesson Free</h1>
+        <p class="text-slate-300 text-sm sm:text-base mb-6 leading-relaxed max-w-2xl" data-i18n="hero2_desc">Not sure where to start? Preview 1 minute of any Korean learning content for free.</p>
+        <button onclick="startFreePreview()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm px-6 py-3 rounded-full shadow-lg transition-all inline-flex items-center space-x-2">
+          <i class="fa-solid fa-play text-xs"></i><span data-i18n="hero2_btn">Watch Free Preview</span>
+        </button>
+      </div>
+      <div id="heroSlide2" class="hero-slide">
+        <span class="inline-block bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-4" data-i18n="hero3_tag">UNLIMITED SUBSCRIPTION</span>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 leading-tight" data-i18n="hero3_title">Subscribe for Unlimited Access to All Content</h1>
+        <p class="text-slate-300 text-sm sm:text-base mb-6 leading-relaxed max-w-2xl" data-i18n="hero3_desc">Unlock every playlist, lesson, and practice material with one simple subscription.</p>
+        <a href="https://www.businesskorean.com/payment.html" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm px-6 py-3 rounded-full shadow-lg transition-all inline-flex items-center space-x-2">
+          <span data-i18n="hero3_btn">Subscribe Now</span><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+        </a>
+      </div>
+    </div>
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center space-x-2">
+      <button onclick="goToSlide(0)" id="dot0" class="h-2.5 rounded-full bg-white transition-all" style="width:24px;"></button>
+      <button onclick="goToSlide(1)" id="dot1" class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all"></button>
+      <button onclick="goToSlide(2)" id="dot2" class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all"></button>
+    </div>
+  </div>
+
+  <!-- Filter & Search -->
+  <div id="courseSection" class="space-y-5 mb-8">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div class="relative flex-1 max-w-md">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2" style="color:var(--text-secondary);"></i>
+        <input type="text" id="searchInput" oninput="handleFilterChange()" placeholder="Search by title, topic, or keyword..." data-i18n-placeholder="search_placeholder"
+               style="background:var(--surface);border:1px solid var(--border);color:var(--text-primary);"
+               class="w-full pl-11 pr-4 py-3 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+      </div>
+      <div class="flex flex-wrap items-center gap-2" id="levelFilterContainer">
+        <button onclick="setLevelFilter('All')" class="level-btn active px-4 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-sm" data-i18n="level_all">All Levels</button>
+        <button onclick="setLevelFilter('Beginner')" class="level-btn px-4 py-2 rounded-full text-xs font-semibold border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="level_beginner">Beginner</button>
+        <button onclick="setLevelFilter('Intermediate')" class="level-btn px-4 py-2 rounded-full text-xs font-semibold border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="level_intermediate">Intermediate</button>
+        <button onclick="setLevelFilter('Advanced')" class="level-btn px-4 py-2 rounded-full text-xs font-semibold border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="level_advanced">Advanced</button>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 overflow-x-auto pb-2" id="categoryFilterContainer">
+      <button onclick="setCategoryFilter('All')" class="cat-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-900 text-white shadow-sm" data-i18n="cat_all">All Categories</button>
+      <button onclick="setCategoryFilter('Grammar')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="cat_grammar">Grammar</button>
+      <button onclick="setCategoryFilter('Vocabulary')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="cat_vocabulary">Vocabulary</button>
+      <button onclick="setCategoryFilter('Reading')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="cat_reading">Reading</button>
+      <button onclick="setCategoryFilter('Writing')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="cat_writing">Writing</button>
+      <button onclick="setCategoryFilter('Listening')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="cat_listening">Listening</button>
+      <button onclick="setCategoryFilter('Speaking')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="cat_speaking">Speaking</button>
+      <button onclick="setCategoryFilter('Business Korean')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="cat_business">Business Korean</button>
+      <button onclick="setCategoryFilter('TOPIK')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);">TOPIK</button>
+      <button onclick="setCategoryFilter('ETC')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border" style="background:var(--surface);color:var(--text-secondary);border-color:var(--border);" data-i18n="cat_etc">ETC</button>
+    </div>
+    <div class="flex items-center justify-between pt-1">
+      <div class="text-xs font-medium" style="color:var(--text-secondary);" id="resultCount">Showing all contents</div>
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-medium" style="color:var(--text-secondary);" data-i18n="sort_by">Sort by</span>
+        <select id="sortSelect" onchange="handleFilterChange()" style="background:var(--surface);border:1px solid var(--border);color:var(--text-primary);" class="text-xs font-medium rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="recommended" data-i18n="sort_recommended">Recommended</option>
+          <option value="popular" data-i18n="sort_popular">Most Popular</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div id="courseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"></div>
+  <div id="emptyState" class="hidden text-center py-20 rounded-3xl border border-dashed my-8" style="background:var(--surface);border-color:var(--border);">
+    <div class="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fa-solid fa-book-open-reader"></i></div>
+    <h3 class="text-lg font-bold mb-1" style="color:var(--text-primary);" data-i18n="empty_title">No contents found</h3>
+    <p class="text-sm mb-6" style="color:var(--text-secondary);" data-i18n="empty_desc">We couldn't find any contents matching your criteria.</p>
+    <button onclick="resetFilters()" class="bg-slate-900 text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:opacity-80" data-i18n="empty_reset">Reset Filters</button>
+  </div>
+  <!-- Loading skeleton -->
+  <div id="loadingState" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="rounded-3xl overflow-hidden border shadow-sm animate-pulse" style="border-color:var(--border);background:var(--surface);"><div class="h-48" style="background:var(--border);"></div><div class="p-5 space-y-3"><div class="h-4 rounded-full" style="background:var(--border);width:60%;"></div><div class="h-3 rounded-full" style="background:var(--border);width:80%;"></div><div class="h-3 rounded-full" style="background:var(--border);width:50%;"></div></div></div>
+    <div class="rounded-3xl overflow-hidden border shadow-sm animate-pulse hidden sm:block" style="border-color:var(--border);background:var(--surface);"><div class="h-48" style="background:var(--border);"></div><div class="p-5 space-y-3"><div class="h-4 rounded-full" style="background:var(--border);width:70%;"></div><div class="h-3 rounded-full" style="background:var(--border);width:90%;"></div><div class="h-3 rounded-full" style="background:var(--border);width:40%;"></div></div></div>
+    <div class="rounded-3xl overflow-hidden border shadow-sm animate-pulse hidden lg:block" style="border-color:var(--border);background:var(--surface);"><div class="h-48" style="background:var(--border);"></div><div class="p-5 space-y-3"><div class="h-4 rounded-full" style="background:var(--border);width:55%;"></div><div class="h-3 rounded-full" style="background:var(--border);width:75%;"></div><div class="h-3 rounded-full" style="background:var(--border);width:60%;"></div></div></div>
+  </div>
+</main>
+
+<!-- ===== PLAYLIST DETAIL VIEW ===== -->
+<div id="playlistView" class="fixed inset-0 z-40 overflow-y-auto" style="background:var(--bg);">
+  <div class="sticky top-0 z-10" style="background:var(--surface);border-bottom:1px solid var(--border);">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <button onclick="closePlaylistView()" style="color:var(--text-secondary);" class="flex items-center space-x-2 text-sm font-semibold hover:text-blue-600">
+        <i class="fa-solid fa-arrow-left"></i><span data-i18n="back_playlist">Back to Playlist</span>
+      </button>
+      <div class="relative">
+        <button onclick="toggleLangDropdown2()" style="background:var(--accent-light);color:var(--text-primary);" class="text-xs font-medium px-3 py-2 rounded-full flex items-center space-x-2 hover:opacity-80">
+          <span id="langFlag2">🇬🇧</span><span id="langLabel2">English</span><i class="fa-solid fa-chevron-down text-xs"></i>
+        </button>
+        <div id="langDropdown2" style="display:none;background:var(--surface);border:1px solid var(--border);" class="absolute right-0 top-12 w-44 rounded-2xl shadow-xl z-50 py-2 overflow-hidden">
+          <button onclick="setLang('en');closeLangDropdowns();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇬🇧</span><span style="color:var(--text-primary);" class="font-semibold">English</span></button>
+          <button onclick="setLang('es');closeLangDropdowns();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇪🇸</span><span style="color:var(--text-primary);">Español</span></button>
+          <button onclick="setLang('zh');closeLangDropdowns();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇨🇳</span><span style="color:var(--text-primary);">中文</span></button>
+          <button onclick="setLang('ja');closeLangDropdowns();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇯🇵</span><span style="color:var(--text-primary);">日本語</span></button>
+          <button onclick="setLang('fr');closeLangDropdowns();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇫🇷</span><span style="color:var(--text-primary);">Français</span></button>
+          <button onclick="setLang('de');closeLangDropdowns();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇩🇪</span><span style="color:var(--text-primary);">Deutsch</span></button>
+          <button onclick="setLang('pl');closeLangDropdowns();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center space-x-2"><span>🇵🇱</span><span style="color:var(--text-primary);">Polski</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+    <div id="playlistDetailCard" class="rounded-3xl overflow-hidden shadow-xl border" style="border-color:var(--border);"></div>
+    <div id="playlistActions" class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <button onclick="startLearningFromPlaylist()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-10 py-4 rounded-2xl text-sm shadow-lg transition-all flex items-center space-x-3">
+        <i class="fa-solid fa-circle-play text-lg"></i><span data-i18n="btn_start_learning">Start Learning</span>
+      </button>
+      <button id="playlistPreviewBtn" onclick="startFreePreviewFromPlaylist()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-8 py-3 rounded-2xl text-sm shadow transition-all flex items-center space-x-2">
+        <i class="fa-solid fa-play text-xs"></i><span data-i18n="btn_free_preview">Watch Free Preview</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LEARNING POPUP MODAL ===== -->
+<div id="learningModal" class="fixed inset-0 z-50 modal-backdrop items-center justify-center p-3 sm:p-6">
+  <div style="background:var(--surface);" class="rounded-3xl max-w-4xl w-full flex flex-col shadow-2xl overflow-hidden border" style="height:88vh;max-height:88vh;border-color:var(--border);">
+    <div class="px-5 py-4 border-b bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
+      <div class="flex items-center space-x-3 min-w-0">
+        <span class="bg-blue-500 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-full flex-shrink-0" id="modalLevel">BEGINNER</span>
+        <h3 class="text-sm sm:text-base font-bold truncate" id="modalTitle">Lesson Viewer</h3>
+      </div>
+      <div class="flex items-center space-x-2 flex-shrink-0">
+        <!-- Preview timer badge -->
+        <div id="previewTimerBadge" class="hidden items-center space-x-1.5 bg-amber-500 text-slate-950 font-black text-xs px-3 py-1.5 rounded-full">
+          <i class="fa-solid fa-clock"></i>
+          <span>Preview: <span id="previewTimerSeconds">60</span>s</span>
+        </div>
+        <button onclick="closeLearningModal()" class="text-slate-400 hover:text-white p-2 rounded-full hover:bg-slate-800 transition-colors">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- 10-second warning -->
+    <div id="previewWarning" class="bg-amber-50 border-b border-amber-200 px-5 py-3 flex items-center space-x-3 text-amber-800 text-xs font-semibold flex-shrink-0">
+      <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+      <span data-i18n="preview_warning">This preview will close in 10 seconds. Subscribe to continue learning.</span>
+      <a href="https://www.businesskorean.com/payment.html" class="ml-auto bg-amber-500 hover:bg-amber-600 text-white px-4 py-1.5 rounded-full text-[11px] font-bold transition-colors" data-i18n="btn_subscribe_now">Subscribe Now →</a>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5 sm:p-8" id="modalHtmlContainer" style="background:var(--bg);"></div>
+    <div class="px-5 py-3 border-t flex items-center justify-between text-xs flex-shrink-0" style="background:var(--surface);border-color:var(--border);color:var(--text-secondary);">
+      <div class="flex items-center space-x-2"><i class="fa-solid fa-circle-check text-emerald-500"></i><span data-i18n="modal_active">Interactive Learning Mode Active</span></div>
+      <button onclick="closeLearningModal()" style="background:var(--accent-light);color:var(--text-primary);" class="font-semibold px-4 py-2 rounded-xl hover:opacity-80" data-i18n="modal_close">Close Window</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MY PROGRESS VIEW ===== -->
+<main id="progressView" class="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-1">
+  <div class="mb-8">
+    <h1 class="text-3xl font-black tracking-tight mb-1" style="color:var(--text-primary);" data-i18n="progress_title">My Progress</h1>
+    <p class="text-sm" style="color:var(--text-secondary);" data-i18n="progress_subtitle">Track your learning journey and manage your subscription.</p>
+  </div>
+
+  <!-- Sign-in required -->
+  <div id="progressSignInRequired" class="hidden text-center py-20 rounded-3xl border" style="background:var(--surface);border-color:var(--border);">
+    <div class="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fa-solid fa-user-lock"></i></div>
+    <h3 class="text-lg font-bold mb-2" style="color:var(--text-primary);">Sign in to view your progress</h3>
+    <p class="text-sm mb-6" style="color:var(--text-secondary);">Your learning history and subscription are tied to your account.</p>
+    <button onclick="handleSignIn()" class="bg-blue-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:opacity-90">Sign In with Google</button>
+  </div>
+
+  <!-- Progress content (shown when signed in) -->
+  <div id="progressContent" class="hidden space-y-8">
+
+    <!-- Last Studied -->
+    <section>
+      <h2 class="text-xl font-black mb-4" style="color:var(--text-primary);">📚 Recently Studied</h2>
+      <div id="progressLastStudied" class="space-y-3">
+        <p class="text-sm" style="color:var(--text-secondary);">No study history yet. Start learning to track your progress!</p>
+      </div>
+    </section>
+
+    <!-- Subscription Status (bottom of progress page) -->
+    <section>
+      <h2 class="text-xl font-black mb-4" style="color:var(--text-primary);">💳 Subscription</h2>
+      <div id="subscriptionCard" style="background:var(--surface);border:1px solid var(--border);" class="rounded-3xl p-6 shadow-sm space-y-5">
+
+        <!-- Loading -->
+        <div id="subLoading" class="text-center py-8 text-sm" style="color:var(--text-secondary);">
+          <i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading subscription info…
+        </div>
+
+        <!-- Not subscribed -->
+        <div id="subNotActive" class="hidden text-center space-y-4 py-4">
+          <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto text-2xl"><i class="fa-solid fa-circle-xmark"></i></div>
+          <div>
+            <p class="font-bold text-base" style="color:var(--text-primary);">No Active Subscription</p>
+            <p class="text-sm mt-1" style="color:var(--text-secondary);">Subscribe to unlock all content and track your progress.</p>
+          </div>
+          <a href="https://www.businesskorean.com/payment.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-full text-sm shadow transition-all">Subscribe — $4.99/month</a>
+        </div>
+
+        <!-- Active subscription info -->
+        <div id="subActive" class="hidden space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+              <p class="font-black text-base text-emerald-600">Active Subscription</p>
+              <p class="text-xs" style="color:var(--text-secondary);">You have unlimited access to all content.</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-4 rounded-2xl" style="background:var(--bg);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--text-secondary);">Status</p>
+              <p class="font-bold text-emerald-600" id="subStatusLabel">Active</p>
+            </div>
+            <div class="p-4 rounded-2xl" style="background:var(--bg);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--text-secondary);">Access Until</p>
+              <p class="font-bold text-sm" style="color:var(--text-primary);" id="subAccessUntil">—</p>
+            </div>
+            <div class="p-4 rounded-2xl" style="background:var(--bg);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--text-secondary);">Subscribed Since</p>
+              <p class="font-bold text-sm" style="color:var(--text-primary);" id="subStartDate">—</p>
+            </div>
+          </div>
+          <!-- Cancellation notice if cancelled -->
+          <div id="subCancelledNotice" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-800 text-sm">
+            <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+            <span>Your subscription is cancelled. Access continues until <strong id="subCancelledUntil">—</strong>.</span>
+          </div>
+          <!-- Cancel button (only if not already cancelled) -->
+          <div id="subCancelBtnWrap">
+            <button onclick="handleCancelSubscription()" class="text-xs font-semibold text-red-500 hover:text-red-700 flex items-center space-x-1.5 border border-red-200 hover:border-red-400 px-4 py-2 rounded-full transition-colors">
+              <i class="fa-solid fa-circle-xmark"></i>
+              <span>Cancel Subscription (access continues until billing period ends)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ===== ADMIN VIEW ===== -->
+<main id="adminPortalView" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full hidden">
+  <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-8 flex items-center space-x-3 text-amber-900 text-xs sm:text-sm font-medium">
+    <i class="fa-solid fa-shield-halved text-amber-600 text-lg flex-shrink-0"></i>
+    <div><strong>Secure Admin Portal</strong> — visible only to authorized admin.</div>
+  </div>
+  <div class="mb-8">
+    <h1 class="text-3xl font-black tracking-tight mb-1" style="color:var(--text-primary);">Admin Contents Publisher</h1>
+    <p class="text-sm" style="color:var(--text-secondary);">Publish or edit Korean learning contents.</p>
+  </div>
+
+  <!-- Publish Form -->
+  <div style="background:var(--surface);border:1px solid var(--border);" class="rounded-3xl shadow-sm p-6 sm:p-8 mb-10">
+    <form id="adminForm" onsubmit="handleAdminSubmit(event)" class="space-y-6">
+      <input type="hidden" id="adminEditingId" value="">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-extrabold uppercase tracking-wider mb-2" style="color:var(--text-secondary);">CONTENTS TITLE (한국어)</label>
+          <textarea id="adminTitleKo" rows="2" required placeholder="예: 비즈니스 한국어&#10;단어장 (고급)"
+                    style="background:var(--bg);border:1px solid var(--border);color:var(--text-primary);"
+                    class="w-full px-4 py-3 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-extrabold uppercase tracking-wider mb-2" style="color:var(--text-secondary);">CONTENTS TITLE (English)</label>
+          <input type="text" id="adminTitleEn" required placeholder="e.g., 600 Essential Words for Advanced Business Korean"
+                 style="background:var(--bg);border:1px solid var(--border);color:var(--text-primary);"
+                 class="w-full px-4 py-3 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-extrabold uppercase tracking-wider mb-2" style="color:var(--text-secondary);">HEADER SUB TEXT (한국어)</label>
+        <input type="text" id="adminSubKo" placeholder="예: - 직장에서 바로 쓰는 고급 필수 단어 600 -"
+               style="background:var(--bg);border:1px solid var(--border);color:var(--text-primary);"
+               class="w-full px-4 py-3 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-xs font-extrabold uppercase tracking-wider mb-2" style="color:var(--text-secondary);">CATEGORY</label>
+          <select id="adminCategory" style="background:var(--bg);border:1px solid var(--border);color:var(--text-primary);" class="w-full px-4 py-3 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>Grammar</option><option>Vocabulary</option><option>Reading</option><option>Writing</option>
+            <option>Listening</option><option>Speaking</option><option>Business Korean</option><option>TOPIK</option><option>ETC</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-extrabold uppercase tracking-wider mb-2" style="color:var(--text-secondary);">LEVEL</label>
+          <select id="adminLevel" style="background:var(--bg);border:1px solid var(--border);color:var(--text-primary);" class="w-full px-4 py-3 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>Beginner</option><option>Intermediate</option><option>Advanced</option>
+          </select>
+        </div>
+      </div>
+      <!-- Header style picker -->
+      <div>
+        <label class="block text-xs font-extrabold uppercase tracking-wider mb-3" style="color:var(--text-secondary);">COVER HEADER STYLE</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="headerStylePicker">
+          <label class="cursor-pointer"><input type="radio" name="headerStyle" value="dark-navy" class="sr-only" checked>
+            <div class="header-style-opt rounded-2xl overflow-hidden border-2 border-blue-500 hover:scale-105 transition-all"><div class="h-14 hs-dark-navy flex items-center justify-center text-xs font-bold">Dark Navy</div></div></label>
+          <label class="cursor-pointer"><input type="radio" name="headerStyle" value="korea-red" class="sr-only">
+            <div class="header-style-opt rounded-2xl overflow-hidden border-2 border-transparent hover:scale-105 transition-all" style="border-color:var(--border);"><div class="h-14 hs-korea-red flex items-center justify-center text-xs font-bold">Korea Red</div></div></label>
+          <label class="cursor-pointer"><input type="radio" name="headerStyle" value="forest-green" class="sr-only">
+            <div class="header-style-opt rounded-2xl overflow-hidden border-2 border-transparent hover:scale-105 transition-all" style="border-color:var(--border);"><div class="h-14 hs-forest-green flex items-center justify-center text-xs font-bold">Forest Green</div></div></label>
+          <label class="cursor-pointer"><input type="radio" name="headerStyle" value="royal-blue" class="sr-only">
+            <div class="header-style-opt rounded-2xl overflow-hidden border-2 border-transparent hover:scale-105 transition-all" style="border-color:var(--border);"><div class="h-14 hs-royal-blue flex items-center justify-center text-xs font-bold">Royal Blue</div></div></label>
+          <label class="cursor-pointer"><input type="radio" name="headerStyle" value="warm-beige" class="sr-only">
+            <div class="header-style-opt rounded-2xl overflow-hidden border-2 border-transparent hover:scale-105 transition-all" style="border-color:var(--border);"><div class="h-14 hs-warm-beige flex items-center justify-center text-xs font-bold">Warm Beige</div></div></label>
+          <label class="cursor-pointer"><input type="radio" name="headerStyle" value="charcoal" class="sr-only">
+            <div class="header-style-opt rounded-2xl overflow-hidden border-2 border-transparent hover:scale-105 transition-all" style="border-color:var(--border);"><div class="h-14 hs-charcoal flex items-center justify-center text-xs font-bold">Charcoal</div></div></label>
+          <label class="cursor-pointer"><input type="radio" name="headerStyle" value="deep-purple" class="sr-only">
+            <div class="header-style-opt rounded-2xl overflow-hidden border-2 border-transparent hover:scale-105 transition-all" style="border-color:var(--border);"><div class="h-14 hs-deep-purple flex items-center justify-center text-xs font-bold">Deep Purple</div></div></label>
+        </div>
+      </div>
+      <div class="flex items-center space-x-6 pt-1">
+        <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="adminIsBest" class="w-4 h-4 text-blue-600 rounded"><span class="ml-2 text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">BEST CONTENTS</span></label>
+        <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="adminIsNew" class="w-4 h-4 text-blue-600 rounded"><span class="ml-2 text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">NEW ARRIVAL</span></label>
+      </div>
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label class="text-xs font-extrabold uppercase tracking-wider" style="color:var(--text-secondary);">DESCRIPTION (English)</label>
+          <span class="text-[11px]" style="color:var(--text-secondary);">Max 150 chars</span>
+        </div>
+        <textarea id="adminDesc" rows="3" required placeholder="Comprehensive guide with audio links and practice exercises..."
+                  style="background:var(--bg);border:1px solid var(--border);color:var(--text-primary);"
+                  class="w-full px-4 py-3 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+      </div>
+      <!-- HTML File Upload -->
+      <div style="border:1px solid #bfdbfe;background:#eff6ff;" class="rounded-2xl p-5 space-y-3">
+        <label class="text-xs font-extrabold text-blue-900 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-file-code text-blue-600"></i>HTML Learning File (Popup Content)
+        </label>
+        <p class="text-xs text-slate-500">Upload an HTML file — it will be saved to Firebase Storage and loaded when learners click "Start Learning".</p>
+        <input type="file" id="adminHtmlFile" accept=".html,.htm"
+               class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+        <div id="htmlUploadStatus" class="text-xs hidden"></div>
+        <p class="text-xs font-semibold" style="color:var(--text-secondary);">Or paste HTML directly:</p>
+        <textarea id="adminHtmlCode" rows="3" placeholder="Paste HTML content here (optional fallback)..."
+                  style="background:white;border:1px solid var(--border);color:#0f172a;"
+                  class="w-full px-4 py-3 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+      </div>
+      <div class="flex gap-3">
+        <button type="button" id="adminCancelEditBtn" onclick="resetAdminForm()" style="display:none;" class="flex-1 py-4 rounded-2xl text-sm font-bold border" style="border-color:var(--border);color:var(--text-secondary);">Cancel Edit</button>
+        <button type="submit" id="adminSubmitBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl text-sm shadow-md transition-all">
+          Publish Contents to Platform
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Manage Contents -->
+  <div class="mb-10">
+    <h2 class="text-2xl font-black mb-1" style="color:var(--text-primary);">Manage Contents</h2>
+    <p class="text-xs mb-5" style="color:var(--text-secondary);">Manage active platform contents.</p>
+    <div id="adminContentsList" class="space-y-3"></div>
+  </div>
+
+  <!-- Favorites & Popularity Ranking -->
+  <div class="mb-10">
+    <h2 class="text-2xl font-black mb-1" style="color:var(--text-primary);">Favorites & Popularity Ranking</h2>
+    <p class="text-xs mb-5" style="color:var(--text-secondary);">Real user data from Firestore.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);" class="rounded-3xl p-5 sm:p-6 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="setRankTab('favorites')" id="rankTabFav" class="rank-tab active">❤️ Favorites</button>
+          <button onclick="setRankTab('popularity')" id="rankTabPop" class="rank-tab">👁 Popularity</button>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="setQuickPeriod(3)" class="qperiod">Last 3 Months</button>
+          <button onclick="setQuickPeriod(6)" class="qperiod">Last 6 Months</button>
+          <button onclick="setQuickPeriod(9)" class="qperiod">Last 9 Months</button>
+          <button onclick="setQuickPeriod(12)" class="qperiod">Last 1 Year</button>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-5 p-4 rounded-2xl" style="background:var(--bg);">
+        <label class="text-xs font-semibold" style="color:var(--text-secondary);">기간 설정:</label>
+        <div class="flex items-center gap-2 flex-wrap">
+          <input type="date" id="rankDateFrom" onchange="renderFavoritesRanking()" style="background:var(--surface);border:1px solid var(--border);color:var(--text-primary);" class="text-xs px-3 py-2 rounded-xl">
+          <span class="text-xs" style="color:var(--text-secondary);">~</span>
+          <input type="date" id="rankDateTo" onchange="renderFavoritesRanking()" style="background:var(--surface);border:1px solid var(--border);color:var(--text-primary);" class="text-xs px-3 py-2 rounded-xl">
+          <span class="text-xs italic" style="color:var(--text-secondary);">(Firebase 실시간 반영)</span>
+        </div>
+      </div>
+      <div id="favoritesRankingList" class="divide-y" style="border-color:var(--border);"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer style="background:var(--surface);border-top:1px solid var(--border);" class="mt-auto py-6">
+  <div class="max-w-7xl mx-auto px-4 text-center text-xs" style="color:var(--text-secondary);">
+    <p>All About Korea — Global Korean Learning Contents Platform.</p>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-2xl text-xs font-medium shadow-2xl flex items-center space-x-3 transition-all duration-300 transform translate-y-20 opacity-0 z-[60]" style="max-width:calc(100vw - 48px);">
+  <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+  <span id="toastMsg">Action updated!</span>
+</div>
+
+<!-- ===== FIREBASE ===== -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, increment, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8",
+  authDomain: "all-about-korea-login.firebaseapp.com",
+  projectId: "all-about-korea-login",
+  storageBucket: "all-about-korea-login.firebasestorage.app",
+  messagingSenderId: "20771155142",
+  appId: "1:20771155142:web:bbfeb19541625e750cbbc7"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+window.ADMIN_EMAIL = "shchung0130@gmail.com";
+window.fb = { auth, db, storage, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+  collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, increment, writeBatch,
+  ref, uploadBytes, getDownloadURL };
+
+await setPersistence(auth, browserLocalPersistence).catch(()=>{});
+
+onAuthStateChanged(auth, user => {
+  window.currentUser = user;
+  window.dispatchEvent(new CustomEvent('authchange', { detail: { user } }));
+});
+</script>
+
+<!-- ===== APP LOGIC ===== -->
+<script>
+// ===== i18n =====
+const TRANSLATIONS = {
+  en:{ flag:'🇬🇧',label:'English',nav_playlist:'Playlist',nav_favorites:'My Favorites',nav_progress:'My Progress',nav_admin:'Admin',nav_account:'My Account',nav_signin:'Sign In',nav_signout:'Sign Out',sidebar_home:'Home',sidebar_contents:'Korean Contents',sidebar_homestay:'Homestay',sidebar_tour:'Guided Tour',sidebar_admin:'Admin Portal',hero1_tag:'KOREAN PLAYLIST',hero1_title:'Master Korean, From Grammar to Business',hero1_desc:'Explore a complete Korean learning playlist—covering grammar, vocabulary, reading, TOPIK exam prep, and business fluency.',hero1_btn:'Explore Playlist',hero2_tag:'1-MIN FREE PREVIEW',hero2_title:'Try the First 1 Minute of Every Lesson Free',hero2_desc:"Not sure where to start? Preview 1 minute of any Korean learning content for free.",hero2_btn:'Watch Free Preview',hero3_tag:'UNLIMITED SUBSCRIPTION',hero3_title:'Subscribe for Unlimited Access to All Content',hero3_desc:'Unlock every playlist, lesson, and practice material with one simple subscription.',hero3_btn:'Subscribe Now',search_placeholder:'Search by title, topic, or keyword...',level_all:'All Levels',level_beginner:'Beginner',level_intermediate:'Intermediate',level_advanced:'Advanced',cat_all:'All Categories',cat_grammar:'Grammar',cat_vocabulary:'Vocabulary',cat_reading:'Reading',cat_writing:'Writing',cat_listening:'Listening',cat_speaking:'Speaking',cat_business:'Business Korean',cat_etc:'ETC',sort_by:'Sort by',sort_recommended:'Recommended',sort_popular:'Most Popular',empty_title:'No contents found',empty_desc:"We couldn't find any contents matching your criteria.",empty_reset:'Reset Filters',btn_start_learning:'Start Learning',btn_free_preview:'Watch Free Preview',btn_subscribe_now:'Subscribe Now →',back_playlist:'Back to Playlist',modal_active:'Interactive Learning Mode Active',modal_close:'Close Window',preview_warning:'This preview will close in 10 seconds. Subscribe to continue learning.',progress_title:'My Progress',progress_subtitle:'Track your learning journey and manage your subscription.',card_best:'BEST CONTENTS',card_new:'NEW',card_views:'views' },
+  es:{ flag:'🇪🇸',label:'Español',nav_playlist:'Lista',nav_favorites:'Mis Favoritos',nav_progress:'Mi Progreso',nav_admin:'Admin',nav_account:'Mi Cuenta',nav_signin:'Iniciar Sesión',nav_signout:'Cerrar Sesión',sidebar_home:'Inicio',sidebar_contents:'Contenido Coreano',sidebar_homestay:'Homestay',sidebar_tour:'Tour Guiado',sidebar_admin:'Portal Admin',hero1_tag:'LISTA DE REPRODUCCIÓN',hero1_title:'Domina el Coreano, de Gramática a Negocios',hero1_desc:'Explora una lista completa de aprendizaje de coreano: gramática, vocabulario, lectura, preparación TOPIK y negocios.',hero1_btn:'Explorar Lista',hero2_tag:'VISTA PREVIA GRATIS 1 MIN',hero2_title:'Prueba el Primer Minuto de Cada Lección Gratis',hero2_desc:'¿No sabes por dónde empezar? Vista previa de 1 minuto de cualquier contenido.',hero2_btn:'Ver Vista Previa',hero3_tag:'SUSCRIPCIÓN ILIMITADA',hero3_title:'Suscríbete para Acceso Ilimitado',hero3_desc:'Desbloquea todas las listas, lecciones y materiales de práctica con una suscripción.',hero3_btn:'Suscribirse Ahora',search_placeholder:'Buscar por título, tema o palabra clave...',level_all:'Todos los Niveles',level_beginner:'Principiante',level_intermediate:'Intermedio',level_advanced:'Avanzado',cat_all:'Todas las Categorías',cat_grammar:'Gramática',cat_vocabulary:'Vocabulario',cat_reading:'Lectura',cat_writing:'Escritura',cat_listening:'Escucha',cat_speaking:'Habla',cat_business:'Coreano de Negocios',cat_etc:'Otros',sort_by:'Ordenar por',sort_recommended:'Recomendado',sort_popular:'Más Popular',empty_title:'Sin contenidos',empty_desc:'No encontramos contenidos con estos criterios.',empty_reset:'Restablecer Filtros',btn_start_learning:'Comenzar a Aprender',btn_free_preview:'Ver Vista Previa',btn_subscribe_now:'Suscribirse →',back_playlist:'Volver a la Lista',modal_active:'Modo de Aprendizaje Activo',modal_close:'Cerrar Ventana',preview_warning:'Esta vista previa se cerrará en 10 segundos. Suscríbete para continuar.',progress_title:'Mi Progreso',progress_subtitle:'Sigue tu viaje de aprendizaje y gestiona tu suscripción.',card_best:'MEJOR CONTENIDO',card_new:'NUEVO',card_views:'vistas' },
+  zh:{ flag:'🇨🇳',label:'中文',nav_playlist:'播放列表',nav_favorites:'我的收藏',nav_progress:'我的进度',nav_admin:'管理',nav_account:'我的账户',nav_signin:'登录',nav_signout:'退出登录',sidebar_home:'首页',sidebar_contents:'韩语内容',sidebar_homestay:'寄宿家庭',sidebar_tour:'导览旅游',sidebar_admin:'管理门户',hero1_tag:'韩语播放列表',hero1_title:'从语法到商务，全面掌握韩语',hero1_desc:'探索完整的韩语学习列表——涵盖语法、词汇、阅读、TOPIK考试备考和商务韩语。',hero1_btn:'浏览播放列表',hero2_tag:'1分钟免费预览',hero2_title:'免费试看每节课的前1分钟',hero2_desc:'不知道从哪里开始？免费预览任何韩语学习内容的1分钟。',hero2_btn:'观看免费预览',hero3_tag:'无限订阅',hero3_title:'订阅以无限访问所有内容',hero3_desc:'通过一次简单的订阅解锁所有播放列表、课程和练习材料。',hero3_btn:'立即订阅',search_placeholder:'按标题、主题或关键词搜索...',level_all:'所有级别',level_beginner:'初级',level_intermediate:'中级',level_advanced:'高级',cat_all:'所有类别',cat_grammar:'语法',cat_vocabulary:'词汇',cat_reading:'阅读',cat_writing:'写作',cat_listening:'听力',cat_speaking:'口语',cat_business:'商务韩语',cat_etc:'其他',sort_by:'排序方式',sort_recommended:'推荐',sort_popular:'最受欢迎',empty_title:'未找到内容',empty_desc:'我们找不到符合您条件的内容。',empty_reset:'重置筛选',btn_start_learning:'开始学习',btn_free_preview:'观看免费预览',btn_subscribe_now:'立即订阅 →',back_playlist:'返回播放列表',modal_active:'互动学习模式已激活',modal_close:'关闭窗口',preview_warning:'此预览将在10秒后关闭。订阅以继续学习。',progress_title:'我的进度',progress_subtitle:'跟踪您的学习旅程并管理您的订阅。',card_best:'精选内容',card_new:'新',card_views:'次浏览' },
+  ja:{ flag:'🇯🇵',label:'日本語',nav_playlist:'プレイリスト',nav_favorites:'お気に入り',nav_progress:'マイ進捗',nav_admin:'管理',nav_account:'マイアカウント',nav_signin:'サインイン',nav_signout:'サインアウト',sidebar_home:'ホーム',sidebar_contents:'韓国語コンテンツ',sidebar_homestay:'ホームステイ',sidebar_tour:'ガイドツアー',sidebar_admin:'管理ポータル',hero1_tag:'韓国語プレイリスト',hero1_title:'文法からビジネスまで、韓国語をマスター',hero1_desc:'文法、語彙、読解、TOPIK試験対策、ビジネス韓国語を網羅した完全な学習リスト。',hero1_btn:'プレイリストを探す',hero2_tag:'1分無料プレビュー',hero2_title:'すべてのレッスンの最初の1分を無料で試す',hero2_desc:'どこから始めるかわかりませんか？どの韓国語学習コンテンツでも1分間無料でプレビューできます。',hero2_btn:'無料プレビューを見る',hero3_tag:'無制限サブスクリプション',hero3_title:'すべてのコンテンツに無制限アクセス',hero3_desc:'1つのサブスクリプションですべてのプレイリスト、レッスン、練習教材をアンロック。',hero3_btn:'今すぐ登録',search_placeholder:'タイトル、トピック、キーワードで検索...',level_all:'全レベル',level_beginner:'初級',level_intermediate:'中級',level_advanced:'上級',cat_all:'全カテゴリ',cat_grammar:'文法',cat_vocabulary:'語彙',cat_reading:'読解',cat_writing:'ライティング',cat_listening:'リスニング',cat_speaking:'スピーキング',cat_business:'ビジネス韓国語',cat_etc:'その他',sort_by:'並び替え',sort_recommended:'おすすめ',sort_popular:'人気順',empty_title:'コンテンツが見つかりません',empty_desc:'条件に一致するコンテンツが見つかりませんでした。',empty_reset:'フィルターをリセット',btn_start_learning:'学習を始める',btn_free_preview:'無料プレビューを見る',btn_subscribe_now:'今すぐ登録 →',back_playlist:'プレイリストに戻る',modal_active:'インタラクティブ学習モード有効',modal_close:'ウィンドウを閉じる',preview_warning:'このプレビューは10秒後に閉じます。学習を続けるには登録してください。',progress_title:'マイ進捗',progress_subtitle:'学習の旅を追跡し、サブスクリプションを管理します。',card_best:'ベストコンテンツ',card_new:'新着',card_views:'回視聴' },
+  fr:{ flag:'🇫🇷',label:'Français',nav_playlist:'Liste de lecture',nav_favorites:'Mes Favoris',nav_progress:'Ma Progression',nav_admin:'Admin',nav_account:'Mon Compte',nav_signin:'Se Connecter',nav_signout:'Se Déconnecter',sidebar_home:'Accueil',sidebar_contents:'Contenu Coréen',sidebar_homestay:'Séjour en Famille',sidebar_tour:'Visite Guidée',sidebar_admin:'Portail Admin',hero1_tag:'LISTE DE LECTURE',hero1_title:'Maîtrisez le Coréen, de la Grammaire aux Affaires',hero1_desc:"Explorez une liste complète d'apprentissage du coréen.",hero1_btn:'Explorer la Liste',hero2_tag:'APERÇU GRATUIT 1 MIN',hero2_title:'Essayez la Première Minute Gratuitement',hero2_desc:"Aperçu gratuit d'1 minute de tout contenu.",hero2_btn:"Voir l'Aperçu Gratuit",hero3_tag:'ABONNEMENT ILLIMITÉ',hero3_title:'Abonnez-vous pour un Accès Illimité',hero3_desc:"Débloquez tout avec un simple abonnement.",hero3_btn:"S'abonner Maintenant",search_placeholder:'Rechercher par titre, sujet ou mot-clé...',level_all:'Tous les Niveaux',level_beginner:'Débutant',level_intermediate:'Intermédiaire',level_advanced:'Avancé',cat_all:'Toutes Catégories',cat_grammar:'Grammaire',cat_vocabulary:'Vocabulaire',cat_reading:'Lecture',cat_writing:'Écriture',cat_listening:'Écoute',cat_speaking:'Expression Orale',cat_business:'Coréen des Affaires',cat_etc:'Autres',sort_by:'Trier par',sort_recommended:'Recommandé',sort_popular:'Le Plus Populaire',empty_title:'Aucun contenu trouvé',empty_desc:'Aucun contenu ne correspond à vos critères.',empty_reset:'Réinitialiser',btn_start_learning:"Commencer l'apprentissage",btn_free_preview:"Voir l'Aperçu",btn_subscribe_now:"S'abonner →",back_playlist:'Retour à la Liste',modal_active:'Mode Apprentissage Interactif Actif',modal_close:'Fermer la Fenêtre',preview_warning:"Cet aperçu se fermera dans 10 secondes. Abonnez-vous pour continuer.",progress_title:'Ma Progression',progress_subtitle:'Suivez votre parcours et gérez votre abonnement.',card_best:'MEILLEUR CONTENU',card_new:'NOUVEAU',card_views:'vues' },
+  de:{ flag:'🇩🇪',label:'Deutsch',nav_playlist:'Wiedergabeliste',nav_favorites:'Meine Favoriten',nav_progress:'Mein Fortschritt',nav_admin:'Admin',nav_account:'Mein Konto',nav_signin:'Anmelden',nav_signout:'Abmelden',sidebar_home:'Startseite',sidebar_contents:'Koreanische Inhalte',sidebar_homestay:'Gastfamilie',sidebar_tour:'Geführte Tour',sidebar_admin:'Admin-Portal',hero1_tag:'KOREANISCHE PLAYLIST',hero1_title:'Koreanisch Meistern, von Grammatik bis Geschäft',hero1_desc:'Entdecken Sie eine vollständige Lernliste für Koreanisch.',hero1_btn:'Playlist Erkunden',hero2_tag:'1-MIN KOSTENLOSE VORSCHAU',hero2_title:'Testen Sie Die Ersten 1 Minute Kostenlos',hero2_desc:'Kostenlose 1-Minuten-Vorschau für alle Inhalte.',hero2_btn:'Kostenlose Vorschau Ansehen',hero3_tag:'UNBEGRENZTES ABO',hero3_title:'Abonnieren für Unbegrenzten Zugang',hero3_desc:'Alle Playlists und Materialien mit einem Abonnement freischalten.',hero3_btn:'Jetzt Abonnieren',search_placeholder:'Nach Titel, Thema oder Schlüsselwort suchen...',level_all:'Alle Stufen',level_beginner:'Anfänger',level_intermediate:'Mittelstufe',level_advanced:'Fortgeschritten',cat_all:'Alle Kategorien',cat_grammar:'Grammatik',cat_vocabulary:'Vokabular',cat_reading:'Lesen',cat_writing:'Schreiben',cat_listening:'Hören',cat_speaking:'Sprechen',cat_business:'Business Koreanisch',cat_etc:'Sonstiges',sort_by:'Sortieren nach',sort_recommended:'Empfohlen',sort_popular:'Am Beliebtesten',empty_title:'Keine Inhalte gefunden',empty_desc:'Keine Inhalte entsprechen Ihren Kriterien.',empty_reset:'Filter Zurücksetzen',btn_start_learning:'Lernen Beginnen',btn_free_preview:'Vorschau Ansehen',btn_subscribe_now:'Jetzt Abonnieren →',back_playlist:'Zurück zur Playlist',modal_active:'Interaktiver Lernmodus Aktiv',modal_close:'Fenster Schließen',preview_warning:'Diese Vorschau schließt in 10 Sekunden. Abonnieren Sie, um weiterzulernen.',progress_title:'Mein Fortschritt',progress_subtitle:'Verfolgen Sie Ihre Lernreise und verwalten Sie Ihr Abonnement.',card_best:'BESTER INHALT',card_new:'NEU',card_views:'Aufrufe' },
+  pl:{ flag:'🇵🇱',label:'Polski',nav_playlist:'Lista odtwarzania',nav_favorites:'Moje Ulubione',nav_progress:'Mój Postęp',nav_admin:'Admin',nav_account:'Moje Konto',nav_signin:'Zaloguj się',nav_signout:'Wyloguj się',sidebar_home:'Strona główna',sidebar_contents:'Treści Koreańskie',sidebar_homestay:'Rodzina Goszcząca',sidebar_tour:'Wycieczka z Przewodnikiem',sidebar_admin:'Portal Administratora',hero1_tag:'LISTA ODTWARZANIA',hero1_title:'Opanuj Koreański, od Gramatyki do Biznesu',hero1_desc:'Odkryj kompletną listę nauki koreańskiego.',hero1_btn:'Przeglądaj Listę',hero2_tag:'BEZPŁATNY PODGLĄD 1 MIN',hero2_title:'Wypróbuj Pierwszą Minutę Za Darmo',hero2_desc:'Bezpłatny podgląd 1 minuty dowolnych treści.',hero2_btn:'Obejrzyj Bezpłatny Podgląd',hero3_tag:'NIEOGRANICZONA SUBSKRYPCJA',hero3_title:'Subskrybuj dla Nieograniczonego Dostępu',hero3_desc:'Odblokuj wszystkie listy i materiały jedną subskrypcją.',hero3_btn:'Subskrybuj Teraz',search_placeholder:'Szukaj według tytułu, tematu lub słowa kluczowego...',level_all:'Wszystkie Poziomy',level_beginner:'Początkujący',level_intermediate:'Średniozaawansowany',level_advanced:'Zaawansowany',cat_all:'Wszystkie Kategorie',cat_grammar:'Gramatyka',cat_vocabulary:'Słownictwo',cat_reading:'Czytanie',cat_writing:'Pisanie',cat_listening:'Słuchanie',cat_speaking:'Mówienie',cat_business:'Biznesowy Koreański',cat_etc:'Inne',sort_by:'Sortuj według',sort_recommended:'Polecane',sort_popular:'Najpopularniejsze',empty_title:'Nie znaleziono treści',empty_desc:'Nie znaleźliśmy treści pasujących do Twoich kryteriów.',empty_reset:'Zresetuj Filtry',btn_start_learning:'Zacznij Uczyć się',btn_free_preview:'Obejrzyj Podgląd',btn_subscribe_now:'Subskrybuj →',back_playlist:'Powrót do Listy',modal_active:'Aktywny Tryb Interaktywnego Uczenia',modal_close:'Zamknij Okno',preview_warning:'Ten podgląd zamknie się za 10 sekund. Subskrybuj, aby kontynuować naukę.',progress_title:'Mój Postęp',progress_subtitle:'Śledź swoją naukę i zarządzaj subskrypcją.',card_best:'NAJLEPSZE TREŚCI',card_new:'NOWE',card_views:'wyświetleń' }
+};
+let currentLang = 'en';
+function t(key){ return (TRANSLATIONS[currentLang]||TRANSLATIONS.en)[key]||TRANSLATIONS.en[key]||key; }
+function applyTranslations(){
+  const lang=TRANSLATIONS[currentLang]||TRANSLATIONS.en;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(lang[k]) el.textContent=lang[k]; });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{ const k=el.getAttribute('data-i18n-placeholder'); if(lang[k]) el.placeholder=lang[k]; });
+  ['langFlag','langFlag2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=lang.flag; });
+  ['langLabel','langLabel2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=lang.label; });
+}
+function setLang(lang){ currentLang=lang; closeLangDropdowns(); applyTranslations(); renderCourses(); }
+function toggleLangDropdown(){ document.getElementById('langDropdown').classList.toggle('open'); }
+function toggleLangDropdown2(){ const d=document.getElementById('langDropdown2'); d.style.display=d.style.display==='block'?'none':'block'; }
+function closeLangDropdowns(){ document.getElementById('langDropdown').classList.remove('open'); const d=document.getElementById('langDropdown2'); if(d) d.style.display='none'; }
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#langBtn')&&!e.target.closest('#langDropdown')) document.getElementById('langDropdown').classList.remove('open');
+  if(!e.target.closest('[onclick*="toggleLangDropdown2"]')&&!e.target.closest('#langDropdown2')){ const d=document.getElementById('langDropdown2'); if(d) d.style.display='none'; }
+  if(!e.target.closest('#accountBtn')&&!e.target.closest('#accountDropdown')) document.getElementById('accountDropdown').classList.remove('open');
+});
+
+// ===== HEADER STYLE =====
+const headerStyleMap = {'dark-navy':'hs-dark-navy','korea-red':'hs-korea-red','forest-green':'hs-forest-green','royal-blue':'hs-royal-blue','warm-beige':'hs-warm-beige','charcoal':'hs-charcoal','deep-purple':'hs-deep-purple','dark':'hs-dark-navy','light':'hs-warm-beige'};
+function getHsClass(s){ return headerStyleMap[s]||'hs-dark-navy'; }
+function isLightStyle(s){ return s==='warm-beige'||s==='light'; }
+document.querySelectorAll('#headerStylePicker input[type=radio]').forEach(r=>{
+  r.addEventListener('change',()=>{
+    document.querySelectorAll('#headerStylePicker .header-style-opt').forEach(o=>{ o.style.borderColor='var(--border)'; });
+    r.closest('label').querySelector('.header-style-opt').style.borderColor='#3b82f6';
+  });
+});
+
+// ===== STATE =====
+let contentsData = [];
+let favorites = [];
+let selectedLevel='All', selectedCategory='All', onlyFavorites=false, currentView='store';
+let currentPlaylistItemId=null, previewTimerInterval=null;
+let currentSlide=0; const totalSlides=3;
+let currentRankTab='favorites';
+let isSubscribed=false;
+
+// ===== CAROUSEL =====
+function updateCarousel(){
+  for(let i=0;i<totalSlides;i++){
+    const slide=document.getElementById(`heroSlide${i}`);
+    const dot=document.getElementById(`dot${i}`);
+    if(!slide||!dot) continue;
+    if(i===currentSlide){ slide.classList.add('active'); dot.style.width='24px'; dot.className='h-2.5 rounded-full bg-white transition-all'; }
+    else{ slide.classList.remove('active'); dot.style.width='10px'; dot.className='w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all'; }
+  }
+}
+function nextSlide(){ currentSlide=(currentSlide+1)%totalSlides; updateCarousel(); }
+function prevSlide(){ currentSlide=(currentSlide-1+totalSlides)%totalSlides; updateCarousel(); }
+function goToSlide(i){ currentSlide=i; updateCarousel(); }
+setInterval(nextSlide,5000);
+
+// ===== FIREBASE LOAD CONTENTS =====
+async function loadContentsFromFirestore(){
+  document.getElementById('loadingState').style.display='grid';
+  document.getElementById('courseGrid').style.display='none';
+  try{
+    if(window.fb&&window.fb.db){
+      const { db, collection, getDocs, query, orderBy } = window.fb;
+      const snap = await getDocs(query(collection(db,'masterclass'), orderBy('createdAt','desc')));
+      const loaded=[];
+      snap.forEach(d=>loaded.push({...d.data(),id:d.id}));
+      contentsData=loaded;
+    }
+  } catch(e){ console.warn('Firestore load failed, using sample data:',e); }
+  document.getElementById('loadingState').style.display='none';
+  document.getElementById('courseGrid').style.display='grid';
+  renderCourses();
+  if(currentView==='admin'){ renderAdminList(); renderFavoritesRanking(); }
+}
+
+// ===== AUTH =====
+window.addEventListener('authchange', async e=>{
+  const user=e.detail.user;
+  const signInBtn=document.getElementById('signInBtn');
+  const accountWrap=document.getElementById('accountWrap');
+  const accountEmail=document.getElementById('accountEmail');
+  const adminBtn=document.getElementById('navAdminBtn');
+  const sidebarAdminLink=document.getElementById('sidebarAdminLink');
+  const sidebarUserInfo=document.getElementById('sidebarUserInfo');
+  const sidebarEmail=document.getElementById('sidebarEmail');
+  const sidebarSubBadge=document.getElementById('sidebarSubBadge');
+
+  if(user){
+    signInBtn.classList.add('hidden');
+    accountWrap.classList.remove('hidden');
+    accountEmail.textContent = user.email||'';
+    sidebarUserInfo.classList.remove('hidden');
+    sidebarEmail.textContent = user.email||'';
+
+    const isAdmin = user.email===window.ADMIN_EMAIL;
+    adminBtn.style.display = isAdmin?'flex':'none';
+    sidebarAdminLink.style.display = isAdmin?'flex':'none';
+
+    // Load favorites from Firestore
+    await loadUserFavorites(user.uid);
+    // Check subscription
+    await checkSubscription(user.uid);
+    if(isSubscribed){ sidebarSubBadge.classList.remove('hidden'); }
+    else{ sidebarSubBadge.classList.add('hidden'); }
+
+    // Update auth-dependent UI
+    renderCourses();
+    if(currentView==='progress') renderProgressView(user);
+  } else {
+    signInBtn.classList.remove('hidden');
+    accountWrap.classList.add('hidden');
+    adminBtn.style.display='none';
+    sidebarAdminLink.style.display='none';
+    sidebarUserInfo.classList.add('hidden');
+    isSubscribed=false;
+    if(currentView==='progress') renderProgressView(null);
+  }
+});
+
+async function handleSignIn(){
+  try{
+    if(!window.fb) return;
+    const { auth, GoogleAuthProvider, signInWithPopup } = window.fb;
+    const provider=new GoogleAuthProvider();
+    provider.setCustomParameters({prompt:'select_account'});
+    await signInWithPopup(auth,provider);
+    showToast('Signed in successfully!','success');
+  } catch(e){
+    if(e.code!=='auth/popup-closed-by-user'&&e.code!=='auth/cancelled-popup-request') showToast('Sign-in failed. Please try again.','info');
+  }
+}
+async function handleSignOut(){
+  try{ await window.fb.auth.signOut(); showToast('Signed out.','info'); showStoreView(); } catch(e){ console.error(e); }
+}
+function toggleAccountDropdown(){ document.getElementById('accountDropdown').classList.toggle('open'); }
+
+async function checkSubscription(uid){
+  try{
+    if(!window.fb||!window.fb.db) return;
+    const { db, doc, getDoc } = window.fb;
+    const snap = await getDoc(doc(db,'users',uid));
+    if(snap.exists()){
+      const data=snap.data();
+      isSubscribed = data.subscriptionStatus==='active';
+      window._subData = data;
+    } else { isSubscribed=false; window._subData=null; }
+  } catch(e){ console.warn('Subscription check failed:',e); isSubscribed=false; }
+}
+
+async function loadUserFavorites(uid){
+  try{
+    if(!window.fb||!window.fb.db) return;
+    const { db, doc, getDoc } = window.fb;
+    const snap=await getDoc(doc(db,'userFavorites',uid));
+    if(snap.exists()) favorites = snap.data().ids||[];
+    else favorites=[];
+    document.getElementById('favBadge').textContent=favorites.length;
+  } catch(e){ console.warn('Favorites load failed:',e); }
+}
+
+async function saveUserFavorites(){
+  if(!window.currentUser) return;
+  const uid=window.currentUser.uid;
+  try{
+    if(window.fb&&window.fb.db){
+      const { db, doc, setDoc } = window.fb;
+      await setDoc(doc(db,'userFavorites',uid),{ids:favorites,updatedAt:window.fb.serverTimestamp()});
+    }
+  } catch(e){ console.warn('Favorites save failed:',e); }
+}
+
+// ===== VIEWS =====
+function showStoreView(){
+  currentView='store';
+  document.getElementById('userStoreView').classList.remove('hidden');
+  document.getElementById('adminPortalView').classList.add('hidden');
+  document.getElementById('progressView').style.display='none';
+  closePlaylistView();
+  renderCourses();
+}
+function showAdminView(){
+  if(!window.currentUser||window.currentUser.email!==window.ADMIN_EMAIL){ showToast('Admins only','info'); return; }
+  currentView='admin';
+  document.getElementById('userStoreView').classList.add('hidden');
+  document.getElementById('adminPortalView').classList.remove('hidden');
+  document.getElementById('progressView').style.display='none';
+  closePlaylistView();
+  renderAdminList();
+  renderFavoritesRanking();
+}
+function showProgressView(){
+  currentView='progress';
+  document.getElementById('userStoreView').classList.add('hidden');
+  document.getElementById('adminPortalView').classList.add('hidden');
+  document.getElementById('progressView').style.display='block';
+  closePlaylistView();
+  renderProgressView(window.currentUser||null);
+}
+function openPlaylistView(id){
+  currentPlaylistItemId=id;
+  const item=contentsData.find(c=>c.id===id);
+  if(!item) return;
+  renderPlaylistDetail(item);
+  document.getElementById('playlistView').classList.add('open');
+  document.getElementById('playlistView').scrollTop=0;
+  // Show/hide Free Preview button based on subscription
+  const previewBtn=document.getElementById('playlistPreviewBtn');
+  if(previewBtn) previewBtn.style.display=isSubscribed?'none':'flex';
+}
+function closePlaylistView(){ document.getElementById('playlistView').classList.remove('open'); currentPlaylistItemId=null; }
+
+// ===== PLAYLIST DETAIL =====
+function renderPlaylistDetail(item){
+  const hsClass=getHsClass(item.headerStyle);
+  const light=isLightStyle(item.headerStyle);
+  document.getElementById('playlistDetailCard').innerHTML=`
+    <div class="${hsClass} p-7 sm:p-10 relative min-h-[280px] flex flex-col justify-between">
+      <div class="absolute top-4 right-4 flex items-center space-x-2 z-10">
+        ${item.isBest?`<span class="bg-amber-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">BEST</span>`:''}
+        ${item.isNew?`<span class="bg-blue-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">${t('card_new')}</span>`:''}
+        <span class="bg-white/90 text-slate-800 text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">${item.level}</span>
+      </div>
+      <div class="pt-8">
+        ${item.dots&&item.dots.length?`<div class="flex items-center space-x-1.5 mb-3">${item.dots.map(c=>`<span class="w-2.5 h-2.5 rounded-full" style="background:${c}"></span>`).join('')}</div>`:''}
+        <div class="text-[11px] uppercase tracking-widest font-extrabold mb-2 ${light?'text-blue-600':'opacity-60'}">${item.engHeader||''}</div>
+        <h2 class="text-3xl sm:text-4xl font-black leading-tight whitespace-pre-line tracking-tight">${item.titleKo}</h2>
+      </div>
+      <div class="${light?'text-slate-500':'opacity-60'} text-sm font-medium mt-4">${item.subKo||''}</div>
+    </div>
+    <div style="background:var(--surface);padding:28px 32px;">
+      <div class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">${item.category}</div>
+      <h3 class="text-xl font-black mb-3" style="color:var(--text-primary);">${item.titleEn}</h3>
+      <p class="text-sm leading-relaxed mb-5" style="color:var(--text-secondary);">${item.descEn}</p>
+      <div class="flex items-center space-x-4 text-xs" style="color:var(--text-secondary);">
+        <span class="flex items-center space-x-1"><i class="fa-solid fa-eye"></i><span>${item.views||0} ${t('card_views')}</span></span>
+        <span class="flex items-center space-x-1"><i class="fa-solid fa-heart text-red-400"></i><span>${item.favCount||0}</span></span>
+      </div>
+    </div>`;
+}
+
+// ===== FAVORITES =====
+async function toggleFavorite(id, e){
+  if(e) e.stopPropagation();
+  if(!window.currentUser){ showToast('Please sign in to save favorites.','info'); return; }
+  const idx=favorites.indexOf(id);
+  if(idx>-1){ favorites.splice(idx,1); showToast('Removed from My Favorites','info'); }
+  else{ favorites.push(id); showToast('Added to My Favorites!','success'); }
+  // Update favCount in Firestore
+  const item=contentsData.find(c=>c.id===id);
+  const delta = idx>-1 ? -1 : 1;
+  if(item) item.favCount=(item.favCount||0)+delta;
+  document.getElementById('favBadge').textContent=favorites.length;
+  await saveUserFavorites();
+  if(window.fb&&window.fb.db){
+    try{
+      const { db, doc, updateDoc, increment } = window.fb;
+      await updateDoc(doc(db,'masterclass',String(id)),{ favCount: increment(delta), favUpdatedAt: window.fb.serverTimestamp() });
+    } catch(e){ console.warn('favCount update failed:',e); }
+  }
+  renderCourses();
+  if(currentView==='admin') renderFavoritesRanking();
+}
+function toggleFavoritesFilter(){
+  if(currentView!=='store') showStoreView();
+  onlyFavorites=!onlyFavorites;
+  const btn=document.getElementById('navMyFavoritesBtn');
+  onlyFavorites?btn.classList.add('text-blue-600'):btn.classList.remove('text-blue-600');
+  renderCourses();
+}
+
+// ===== FILTERS =====
+function setLevelFilter(level){
+  selectedLevel=level;
+  document.querySelectorAll('#levelFilterContainer .level-btn').forEach(btn=>{
+    const matches=(level==='All'&&btn.textContent.includes('All'))||btn.textContent.trim()===level||btn.getAttribute('data-i18n')===`level_${level.toLowerCase()}`;
+    if(matches){ btn.className='level-btn active px-4 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-sm'; }
+    else{ btn.className='level-btn px-4 py-2 rounded-full text-xs font-semibold border'; btn.style.background='var(--surface)'; btn.style.color='var(--text-secondary)'; btn.style.borderColor='var(--border)'; }
+  });
+  renderCourses();
+}
+function setCategoryFilter(cat){
+  selectedCategory=cat;
+  document.querySelectorAll('#categoryFilterContainer .cat-btn').forEach(btn=>{
+    const isActive=(cat==='All'&&(btn.textContent.includes('All')||btn.getAttribute('data-i18n')==='cat_all'))||btn.onclick?.toString().includes(`'${cat}'`)||btn.textContent.trim()===cat;
+    if(isActive){ btn.className='cat-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-900 text-white shadow-sm'; btn.style.borderColor=''; }
+    else{ btn.className='cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border'; btn.style.background='var(--surface)'; btn.style.color='var(--text-secondary)'; btn.style.borderColor='var(--border)'; }
+  });
+  renderCourses();
+}
+function handleFilterChange(){ renderCourses(); }
+function resetFilters(){
+  selectedLevel='All'; selectedCategory='All'; onlyFavorites=false;
+  document.getElementById('searchInput').value='';
+  document.getElementById('navMyFavoritesBtn').classList.remove('text-blue-600');
+  setLevelFilter('All'); setCategoryFilter('All');
+}
+
+// ===== RENDER CARDS =====
+function renderCourses(){
+  const searchTerm=document.getElementById('searchInput').value.toLowerCase().trim();
+  const sortValue=document.getElementById('sortSelect').value;
+  let filtered=contentsData.filter(item=>{
+    if(selectedLevel!=='All'&&item.level!==selectedLevel) return false;
+    if(selectedCategory!=='All'&&item.category!==selectedCategory) return false;
+    if(onlyFavorites&&!favorites.includes(item.id)) return false;
+    if(searchTerm) return item.titleEn.toLowerCase().includes(searchTerm)||item.titleKo.toLowerCase().includes(searchTerm)||item.descEn.toLowerCase().includes(searchTerm)||item.category.toLowerCase().includes(searchTerm);
+    return true;
+  });
+  if(sortValue==='popular') filtered.sort((a,b)=>(b.views||0)-(a.views||0));
+
+  const grid=document.getElementById('courseGrid');
+  const empty=document.getElementById('emptyState');
+  document.getElementById('resultCount').textContent=`Showing ${filtered.length} of ${contentsData.length} contents${onlyFavorites?' (Favorites Only)':''}`;
+
+  if(filtered.length===0){ grid.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  grid.innerHTML=filtered.map(item=>{
+    const isFav=favorites.includes(item.id);
+    const hsClass=getHsClass(item.headerStyle);
+    const light=isLightStyle(item.headerStyle);
+    return `
+      <div class="rounded-3xl overflow-hidden border shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer relative" style="background:var(--surface);border-color:var(--border);" onclick="openPlaylistView('${item.id}')">
+        <div class="${hsClass} p-5 relative flex flex-col justify-between" style="min-height:200px;">
+          <button onclick="toggleFavorite('${item.id}',event)" class="absolute top-4 left-4 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-md flex items-center justify-center transition-transform active:scale-95">
+            <i class="${isFav?'fa-solid text-red-500':'fa-regular text-slate-400'} fa-heart text-base"></i>
+          </button>
+          <div class="absolute top-4 right-4 flex items-center space-x-2 z-10">
+            ${item.isBest?`<span class="bg-amber-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">${t('card_best')}</span>`:''}
+            ${item.isNew?`<span class="bg-blue-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">${t('card_new')}</span>`:''}
+            <span class="bg-white/90 text-slate-800 text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">${item.level}</span>
+          </div>
+          <div class="pt-8">
+            ${item.dots&&item.dots.length?`<div class="flex items-center space-x-1.5 mb-2">${item.dots.map(c=>`<span class="w-2 h-2 rounded-full" style="background:${c}"></span>`).join('')}</div>`:''}
+            <div class="text-[10px] uppercase tracking-wider font-extrabold mb-1 ${light?'text-blue-600':'opacity-60'}">${item.engHeader||''}</div>
+            <h3 class="text-xl sm:text-2xl font-black leading-tight whitespace-pre-line tracking-tight">${item.titleKo}</h3>
+          </div>
+          <div class="${light?'text-slate-500':'opacity-60'} text-xs font-medium mt-2">${item.subKo||''}</div>
+        </div>
+        <div class="p-5 flex-1 flex flex-col justify-between space-y-4" style="background:var(--surface);">
+          <div>
+            <div class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">${item.category}</div>
+            <h4 class="text-sm font-bold mb-1.5 leading-snug" style="color:var(--text-primary);">${item.titleEn}</h4>
+            <p class="text-xs leading-relaxed line-clamp-3" style="color:var(--text-secondary);">${item.descEn}</p>
+          </div>
+          <div class="pt-3 border-t" style="border-color:var(--border);">
+            <button onclick="event.stopPropagation();openPlaylistView('${item.id}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs py-3.5 px-4 rounded-2xl shadow-md transition-all flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-circle-play"></i><span>${t('btn_start_learning')}</span>
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ===== LEARNING MODAL =====
+async function startLearning(id, isPreview=false){
+  const item=contentsData.find(c=>c.id===id);
+  if(!item) return;
+
+  // Non-subscribers: redirect to payment
+  if(!isPreview && !isSubscribed){
+    window.location.href='https://www.businesskorean.com/payment.html';
+    return;
+  }
+
+  // Increment view count in Firestore
+  if(window.currentUser&&window.fb&&window.fb.db){
+    try{
+      const { db, doc, updateDoc, increment } = window.fb;
+      await updateDoc(doc(db,'masterclass',String(id)),{ views: increment(1), lastViewedAt: window.fb.serverTimestamp() });
+      item.views=(item.views||0)+1;
+    } catch(e){ console.warn('view increment failed:',e); }
+  }
+
+  // Save progress (last studied) to Firestore
+  if(window.currentUser&&window.fb&&window.fb.db){
+    try{
+      const { db, doc, setDoc, serverTimestamp } = window.fb;
+      const uid=window.currentUser.uid;
+      await setDoc(doc(db,'userProgress',uid+'_'+id),{
+        uid, contentId:String(id),
+        contentTitle:item.titleEn, contentTitleKo:item.titleKo,
+        category:item.category, level:item.level,
+        lastStudiedAt: serverTimestamp(),
+        headerStyle: item.headerStyle
+      });
+    } catch(e){ console.warn('Progress save failed:',e); }
+  }
+
+  // Load HTML content (from Storage URL or inline)
+  let htmlContent = item.htmlContent||'';
+  if(item.htmlStorageUrl){
+    try{
+      const resp=await fetch(item.htmlStorageUrl);
+      if(resp.ok) htmlContent=await resp.text();
+    } catch(e){ console.warn('HTML storage fetch failed, using inline:',e); }
+  }
+
+  document.getElementById('modalTitle').textContent=item.titleEn;
+  document.getElementById('modalLevel').textContent=item.level.toUpperCase();
+  document.getElementById('modalHtmlContainer').innerHTML=htmlContent||`<div class="p-8 text-center" style="color:var(--text-secondary);"><i class="fa-solid fa-file-code text-4xl mb-3 text-blue-500"></i><p>${item.descEn}</p></div>`;
+  document.getElementById('learningModal').classList.add('open');
+  document.getElementById('previewWarning').style.display='none';
+  if(isPreview) startPreviewTimer();
+}
+function closeLearningModal(){ document.getElementById('learningModal').classList.remove('open'); clearPreviewTimer(); }
+function startPreviewTimer(){
+  const badge=document.getElementById('previewTimerBadge');
+  const secs=document.getElementById('previewTimerSeconds');
+  badge.style.display='flex';
+  let remaining=60;
+  secs.textContent=remaining;
+  clearPreviewTimer();
+  previewTimerInterval=setInterval(()=>{
+    remaining--;
+    secs.textContent=remaining;
+    if(remaining===10){ document.getElementById('previewWarning').style.display='flex'; }
+    if(remaining<=0){ clearPreviewTimer(); closeLearningModal(); showToast('1-Minute Free Preview ended.','info'); }
+  },1000);
+}
+function clearPreviewTimer(){
+  if(previewTimerInterval){ clearInterval(previewTimerInterval); previewTimerInterval=null; }
+  const badge=document.getElementById('previewTimerBadge');
+  if(badge) badge.style.display='none';
+  document.getElementById('previewWarning').style.display='none';
+}
+function startFreePreview(){
+  if(contentsData.length===0) return;
+  startLearning(contentsData[Math.floor(Math.random()*contentsData.length)].id, true);
+}
+function startLearningFromPlaylist(){ if(currentPlaylistItemId) startLearning(currentPlaylistItemId, false); }
+function startFreePreviewFromPlaylist(){ if(currentPlaylistItemId) startLearning(currentPlaylistItemId, true); }
+
+// ===== MY PROGRESS VIEW =====
+async function renderProgressView(user){
+  const signInRequired=document.getElementById('progressSignInRequired');
+  const progressContent=document.getElementById('progressContent');
+  if(!user){ signInRequired.classList.remove('hidden'); progressContent.classList.add('hidden'); return; }
+  signInRequired.classList.add('hidden'); progressContent.classList.remove('hidden');
+
+  // Load recent studies
+  await loadRecentStudies(user.uid);
+  // Show subscription info
+  await renderSubscriptionInfo(user.uid);
+}
+
+async function loadRecentStudies(uid){
+  const container=document.getElementById('progressLastStudied');
+  container.innerHTML='<p class="text-sm" style="color:var(--text-secondary);">Loading…</p>';
+  try{
+    if(!window.fb||!window.fb.db) throw new Error('no db');
+    const { db, collection, getDocs, query, where, orderBy } = window.fb;
+    const snap=await getDocs(query(collection(db,'userProgress'), where('uid','==',uid), orderBy('lastStudiedAt','desc')));
+    const items=[];
+    snap.forEach(d=>items.push({id:d.id,...d.data()}));
+    if(items.length===0){ container.innerHTML='<p class="text-sm" style="color:var(--text-secondary);">No study history yet. Start learning to track your progress!</p>'; return; }
+    container.innerHTML=items.map(p=>{
+      const hsClass=getHsClass(p.headerStyle||'dark-navy');
+      const ts=p.lastStudiedAt?.toDate?.();
+      const dateStr=ts?ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+      return `<div style="background:var(--surface);border:1px solid var(--border);" class="rounded-2xl p-4 flex items-center space-x-4 hover:shadow-md transition-all cursor-pointer" onclick="openPlaylistView('${p.contentId}');showStoreView();">
+        <div class="${hsClass} w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center">
+          <i class="fa-solid fa-book-open text-white text-sm"></i>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h4 class="text-sm font-bold truncate" style="color:var(--text-primary);">${p.contentTitle||''}</h4>
+          <div class="flex items-center space-x-2 text-xs mt-0.5" style="color:var(--text-secondary);">
+            <span class="text-blue-600 font-semibold">${p.category||''}</span>
+            <span>•</span><span>${p.level||''}</span>
+          </div>
+          <p class="text-[11px] mt-1" style="color:var(--text-secondary);">Last studied: ${dateStr}</p>
+        </div>
+        <i class="fa-solid fa-chevron-right text-xs flex-shrink-0" style="color:var(--text-secondary);"></i>
+      </div>`;
+    }).join('');
+  } catch(e){
+    console.warn('Progress load failed:',e);
+    container.innerHTML='<p class="text-sm" style="color:var(--text-secondary);">Could not load progress. Please check your connection.</p>';
+  }
+}
+
+async function renderSubscriptionInfo(uid){
+  document.getElementById('subLoading').classList.remove('hidden');
+  document.getElementById('subNotActive').classList.add('hidden');
+  document.getElementById('subActive').classList.add('hidden');
+
+  await checkSubscription(uid);
+  document.getElementById('subLoading').classList.add('hidden');
+
+  const data = window._subData;
+  if(!isSubscribed && (!data || data.subscriptionStatus!=='cancelled')){
+    document.getElementById('subNotActive').classList.remove('hidden');
+    return;
+  }
+
+  // Show active (or cancelled but still in billing period) subscription info
+  document.getElementById('subActive').classList.remove('hidden');
+  const statusLabel=document.getElementById('subStatusLabel');
+  const accessUntil=document.getElementById('subAccessUntil');
+  const startDate=document.getElementById('subStartDate');
+  const cancelledNotice=document.getElementById('subCancelledNotice');
+  const cancelBtnWrap=document.getElementById('subCancelBtnWrap');
+  const cancelledUntil=document.getElementById('subCancelledUntil');
+
+  if(data){
+    const isCancelled = data.subscriptionStatus==='cancelled';
+    statusLabel.textContent = isCancelled ? 'Cancelled (active until end of period)' : 'Active';
+    statusLabel.className = isCancelled ? 'font-bold text-amber-500' : 'font-bold text-emerald-600';
+
+    if(data.subscriptionEndDate){
+      const d=data.subscriptionEndDate.toDate?data.subscriptionEndDate.toDate():new Date(data.subscriptionEndDate);
+      const fmt=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      accessUntil.textContent=fmt;
+      if(isCancelled){ cancelledUntil.textContent=fmt; cancelledNotice.classList.remove('hidden'); }
+      else cancelledNotice.classList.add('hidden');
+    } else {
+      accessUntil.textContent='Ongoing';
+      cancelledNotice.classList.add('hidden');
+    }
+
+    if(data.subscriptionStartDate){
+      const d=data.subscriptionStartDate.toDate?data.subscriptionStartDate.toDate():new Date(data.subscriptionStartDate);
+      startDate.textContent=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    } else startDate.textContent='—';
+
+    cancelBtnWrap.style.display = isCancelled?'none':'block';
+  }
+}
+
+async function handleCancelSubscription(){
+  if(!window.currentUser) return;
+  if(!confirm('Cancel your subscription? You will keep access until the end of the current billing period.')) return;
+  showToast('Opening PayPal to cancel subscription…','info');
+  // Direct to PayPal subscription management page
+  window.open('https://www.paypal.com/myaccount/autopay','_blank');
+  // Also update Firestore status to 'cancelled' after user confirms
+  // (In production, this would be done via a webhook or Cloud Function)
+  // For now, show instructions
+  setTimeout(()=>{
+    showToast('After cancelling on PayPal, your status will update automatically.','info');
+  },2000);
+}
+
+// ===== ADMIN =====
+document.querySelectorAll('#headerStylePicker input[type=radio]').forEach(r=>{
+  r.addEventListener('change',()=>{
+    document.querySelectorAll('#headerStylePicker .header-style-opt').forEach(o=>o.style.borderColor='var(--border)');
+    r.closest('label').querySelector('.header-style-opt').style.borderColor='#3b82f6';
+  });
+});
+
+let currentEditingId = null;
+
+async function handleAdminSubmit(e){
+  e.preventDefault();
+  if(!window.currentUser||window.currentUser.email!==window.ADMIN_EMAIL){ showToast('Admins only','info'); return; }
+  const btn=document.getElementById('adminSubmitBtn');
+  btn.disabled=true; btn.textContent='Publishing…';
+
+  const titleKo=document.getElementById('adminTitleKo').value.trim();
+  const titleEn=document.getElementById('adminTitleEn').value.trim();
+  const subKo=document.getElementById('adminSubKo').value.trim();
+  const category=document.getElementById('adminCategory').value;
+  const level=document.getElementById('adminLevel').value;
+  const desc=document.getElementById('adminDesc').value.trim().slice(0,150);
+  const isBest=document.getElementById('adminIsBest').checked;
+  const isNew=document.getElementById('adminIsNew').checked;
+  const headerStyle=document.querySelector('#headerStylePicker input[type=radio]:checked')?.value||'dark-navy';
+  const htmlCode=document.getElementById('adminHtmlCode').value;
+
+  const contentId = currentEditingId || ('mc_'+Date.now());
+
+  // Upload HTML file if provided
+  let htmlStorageUrl = currentEditingId ? (contentsData.find(c=>c.id===currentEditingId)?.htmlStorageUrl||null) : null;
+  const htmlFileInput=document.getElementById('adminHtmlFile');
+  const htmlFile=htmlFileInput.files[0];
+  if(htmlFile){
+    const statusEl=document.getElementById('htmlUploadStatus');
+    statusEl.textContent='Uploading HTML file…';
+    statusEl.className='text-xs text-amber-600';
+    statusEl.classList.remove('hidden');
+    try{
+      const { storage, ref, uploadBytes, getDownloadURL } = window.fb;
+      const sref=ref(storage,`masterclass-html/${contentId}/${htmlFile.name}`);
+      await uploadBytes(sref,htmlFile,{contentType:'text/html'});
+      htmlStorageUrl=await getDownloadURL(sref);
+      statusEl.textContent='✓ HTML file uploaded';
+      statusEl.className='text-xs text-emerald-600';
+    } catch(err){
+      console.error(err);
+      statusEl.textContent='Upload failed: '+err.message;
+      statusEl.className='text-xs text-red-600';
+      btn.disabled=false; btn.textContent=currentEditingId?'Save Changes':'Publish Contents to Platform';
+      return;
+    }
+  }
+
+  const docData = {
+    titleKo, titleEn,
+    subKo: subKo||`- ${category} Learning Material -`,
+    engHeader: `${category.toUpperCase()} · ${level.toUpperCase()}`,
+    descEn: desc, category, level, isBest, isNew, headerStyle,
+    htmlContent: htmlCode||'',
+    htmlStorageUrl: htmlStorageUrl||null,
+    dots:['#f97316','#06b6d4','#ec4899','#3b82f6'],
+    views: currentEditingId ? (contentsData.find(c=>c.id===currentEditingId)?.views||0) : 0,
+    favCount: currentEditingId ? (contentsData.find(c=>c.id===currentEditingId)?.favCount||0) : 0,
+    updatedAt: window.fb.serverTimestamp(),
+  };
+  if(!currentEditingId) docData.createdAt=window.fb.serverTimestamp();
+
+  try{
+    const { db, doc, setDoc } = window.fb;
+    await setDoc(doc(db,'masterclass',contentId),docData,{merge:true});
+    showToast(currentEditingId?'Contents updated!':'New Contents Published!','success');
+    const existIdx=contentsData.findIndex(c=>c.id===contentId);
+    if(existIdx>=0) contentsData[existIdx]={...contentsData[existIdx],...docData,id:contentId};
+    else contentsData.unshift({...docData,id:contentId});
+    resetAdminForm();
+    renderCourses();
+    renderAdminList();
+    renderFavoritesRanking();
+  } catch(err){
+    console.error(err);
+    showToast('Failed to publish: '+err.message,'info');
+  }
+  btn.disabled=false;
+}
+
+function resetAdminForm(){
+  document.getElementById('adminForm').reset();
+  document.getElementById('adminEditingId').value='';
+  document.getElementById('htmlUploadStatus').classList.add('hidden');
+  document.getElementById('adminCancelEditBtn').style.display='none';
+  document.getElementById('adminSubmitBtn').textContent='Publish Contents to Platform';
+  document.querySelectorAll('#headerStylePicker .header-style-opt').forEach((o,i)=>{ o.style.borderColor=i===0?'#3b82f6':'var(--border)'; });
+  document.querySelector('#headerStylePicker input[type=radio]').checked=true;
+  currentEditingId=null;
+}
+
+function editContent(id){
+  const item=contentsData.find(c=>c.id===id);
+  if(!item) return;
+  currentEditingId=id;
+  document.getElementById('adminEditingId').value=id;
+  document.getElementById('adminTitleKo').value=item.titleKo||'';
+  document.getElementById('adminTitleEn').value=item.titleEn||'';
+  document.getElementById('adminSubKo').value=item.subKo||'';
+  document.getElementById('adminCategory').value=item.category||'Grammar';
+  document.getElementById('adminLevel').value=item.level||'Beginner';
+  document.getElementById('adminDesc').value=item.descEn||'';
+  document.getElementById('adminIsBest').checked=!!item.isBest;
+  document.getElementById('adminIsNew').checked=!!item.isNew;
+  document.getElementById('adminHtmlCode').value=item.htmlContent||'';
+  // set header style picker
+  document.querySelectorAll('#headerStylePicker input[type=radio]').forEach(r=>{
+    if(r.value===item.headerStyle) r.checked=true;
+  });
+  document.querySelectorAll('#headerStylePicker .header-style-opt').forEach(o=>o.style.borderColor='var(--border)');
+  const checkedRadio=document.querySelector(`#headerStylePicker input[value="${item.headerStyle}"]`);
+  if(checkedRadio) checkedRadio.closest('label').querySelector('.header-style-opt').style.borderColor='#3b82f6';
+  document.getElementById('adminCancelEditBtn').style.display='block';
+  document.getElementById('adminSubmitBtn').textContent='Save Changes';
+  window.scrollTo({top:0,behavior:'smooth'});
+  showToast('Editing: '+item.titleEn,'info');
+}
+
+async function deleteContent(id){
+  if(!confirm('Delete this content permanently?')) return;
+  try{
+    if(window.fb&&window.fb.db){
+      const { db, doc, deleteDoc } = window.fb;
+      await deleteDoc(doc(db,'masterclass',id));
+    }
+    contentsData=contentsData.filter(c=>c.id!==id);
+    showToast('Content deleted','info');
+    renderCourses(); renderAdminList(); renderFavoritesRanking();
+  } catch(e){ showToast('Delete failed: '+e.message,'info'); }
+}
+
+function renderAdminList(){
+  const container=document.getElementById('adminContentsList');
+  if(!container) return;
+  if(contentsData.length===0){ container.innerHTML=`<div class="text-center py-8 text-sm" style="color:var(--text-secondary);">No contents yet. Publish some above!</div>`; return; }
+  container.innerHTML=contentsData.map(item=>`
+    <div style="background:var(--surface);border:1px solid var(--border);" class="rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow transition-all">
+      <div class="flex items-center space-x-3 min-w-0">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 ${item.isBest?'bg-amber-100 text-amber-700':'bg-slate-900 text-white'}">${(item.level||'BEG').substring(0,3).toUpperCase()}</div>
+        <div class="min-w-0">
+          <h4 class="text-sm font-bold truncate" style="color:var(--text-primary);">${item.titleEn}</h4>
+          <div class="flex items-center space-x-2 text-xs mt-0.5">
+            <span class="text-blue-600 font-semibold">${item.category}</span>
+            <span style="color:var(--text-secondary);">•</span>
+            <span class="text-emerald-600 font-medium">Active</span>
+            <span style="color:var(--text-secondary);">• 👁 ${item.views||0} ❤️ ${item.favCount||0}</span>
+            ${item.htmlStorageUrl?'<span class="text-blue-500 font-semibold">• HTML ✓</span>':''}
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2 flex-shrink-0">
+        <button onclick="startLearning('${item.id}',false)" style="background:var(--bg);color:var(--text-primary);border:1px solid var(--border);" class="px-3 py-1.5 rounded-xl text-xs font-semibold hover:opacity-80">Preview</button>
+        <button onclick="editContent('${item.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold">Edit</button>
+        <button onclick="deleteContent('${item.id}')" class="px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+// ===== RANKING =====
+function setRankTab(tab){
+  currentRankTab=tab;
+  document.getElementById('rankTabFav').classList.toggle('active',tab==='favorites');
+  document.getElementById('rankTabPop').classList.toggle('active',tab==='popularity');
+  renderFavoritesRanking();
+}
+function setQuickPeriod(months){
+  const to=new Date(), from=new Date();
+  from.setMonth(from.getMonth()-months);
+  document.getElementById('rankDateFrom').value=from.toISOString().split('T')[0];
+  document.getElementById('rankDateTo').value=to.toISOString().split('T')[0];
+  renderFavoritesRanking();
+  showToast(`Period set to last ${months} months`,'info');
+}
+function renderFavoritesRanking(){
+  const container=document.getElementById('favoritesRankingList');
+  if(!container) return;
+  const ranked=[...contentsData].sort((a,b)=>{
+    if(currentRankTab==='favorites') return (b.favCount||0)-(a.favCount||0)||(b.views||0)-(a.views||0);
+    return (b.views||0)-(a.views||0);
+  });
+  if(ranked.length===0){ container.innerHTML=`<p class="text-center py-6 text-sm" style="color:var(--text-secondary);">No data available yet.</p>`; return; }
+  container.innerHTML=ranked.map((item,i)=>{
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+    return `<div class="py-3.5 flex items-center justify-between" style="border-color:var(--border);">
+      <div class="flex items-center space-x-3 min-w-0">
+        <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs flex-shrink-0 ${i<3?'bg-amber-500 text-white':'bg-slate-100 text-slate-600'}">${medal||i+1}</span>
+        <span class="font-bold text-sm truncate max-w-[180px] sm:max-w-xs" style="color:var(--text-primary);">${item.titleEn}</span>
+      </div>
+      <div class="flex items-center space-x-3 flex-shrink-0 text-xs">
+        <span class="flex items-center space-x-1" style="color:var(--text-secondary);"><i class="fa-solid fa-eye"></i><span>${item.views||0}</span></span>
+        <span class="flex items-center space-x-1 text-red-400 font-bold"><i class="fa-solid fa-heart"></i><span>${item.favCount||0}</span></span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== SIDEBAR =====
+function closeSidebar(){ document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebarOverlay').classList.add('hidden'); }
+function setupSidebar(){
+  document.getElementById('openSidebarBtn').addEventListener('click',()=>{ document.getElementById('sidebar').classList.remove('-translate-x-full'); document.getElementById('sidebarOverlay').classList.remove('hidden'); });
+  document.getElementById('closeSidebarBtn').addEventListener('click',closeSidebar);
+  document.getElementById('sidebarOverlay').addEventListener('click',closeSidebar);
+}
+
+// ===== TOAST / SCROLL =====
+function scrollToCourses(){ document.getElementById('courseSection').scrollIntoView({behavior:'smooth'}); }
+function showToast(msg, type='success'){
+  const toast=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  document.getElementById('toastIcon').className=type==='success'?'fa-solid fa-circle-check text-emerald-400 text-base':'fa-solid fa-circle-info text-blue-400 text-base';
+  toast.classList.remove('translate-y-20','opacity-0');
+  toast.classList.add('translate-y-0','opacity-100');
+  setTimeout(()=>{ toast.classList.remove('translate-y-0','opacity-100'); toast.classList.add('translate-y-20','opacity-0'); },2800);
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded',()=>{
+  setupSidebar();
+  updateCarousel();
+  applyTranslations();
+  loadContentsFromFirestore();
+  document.getElementById('favBadge').textContent=favorites.length;
+  setQuickPeriod(3);
+});
+</script>
+</body>
+</html>
