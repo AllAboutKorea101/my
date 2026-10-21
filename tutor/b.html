@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Korean — 1:1 Tutoring</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    // EmailJS config — fill in your real IDs
+    const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+    const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+    const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+    const NOTIFY_EMAIL        = 'shchung0130@gmail.com'; // booking notification recipient only
+
+    window.sendBookingEmail = async function(params) {
+      try {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email:   NOTIFY_EMAIL,
+          student:    params.student,
+          package:    params.package,
+          date:       params.date,
+          time:       params.time,
+          message:    params.message || ''
+        });
+      } catch(e) { console.warn('EmailJS error', e); }
+    };
+  </script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js';
+    import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult,
+             GoogleAuthProvider, signOut, onAuthStateChanged,
+             browserLocalPersistence, setPersistence }
+      from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc, addDoc, collection,
+             getDocs, updateDoc, query, where, deleteDoc, orderBy }
+      from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8",
+      authDomain: "all-about-korea-login.firebaseapp.com",
+      projectId: "all-about-korea-login",
+      storageBucket: "all-about-korea-login.firebasestorage.app",
+      messagingSenderId: "20771155142",
+      appId: "1:20771155142:web:bbfeb19541625e750cbbc7"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // Role is ALWAYS resolved from Firestore — never hardcoded by email
+    async function resolveRole(user) {
+      const snap = await getDoc(doc(db, 'roles', user.email));
+      if (snap.exists()) return snap.data().role || 'student';
+      await setDoc(doc(db, 'roles', user.email), { role: 'student' }, { merge: true });
+      return 'student';
+    }
+
+    window.fbSignIn = async function() {
+      const provider = new GoogleAuthProvider();
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        await signInWithPopup(auth, provider);
+      } catch(e) {
+        if (['auth/popup-blocked','auth/popup-closed-by-user','auth/cancelled-popup-request'].includes(e.code)) {
+          await signInWithRedirect(auth, provider);
+        } else { window.showAuthError && window.showAuthError(e.message); }
+      }
+    };
+
+    window.fbSignOut = () => signOut(auth);
+
+    // Expose Firestore helpers
+    window.fbGetDoc    = (path, id)           => getDoc(doc(db, path, id));
+    window.fbSetDoc    = (path, id, data)      => setDoc(doc(db, path, id), data, { merge: true });
+    window.fbAddDoc    = (path, data)          => addDoc(collection(db, path), data);
+    window.fbGetDocs   = (path)               => getDocs(collection(db, path));
+    window.fbUpdateDoc = (path, id, data)      => updateDoc(doc(db, path, id), data);
+    window.fbDeleteDoc = (path, id)            => deleteDoc(doc(db, path, id));
+    window.fbQuery     = (path, field, op, val)=>
+      getDocs(query(collection(db, path), where(field, op, val)));
+    window.fbDb        = db;
+    window.doc_ref     = (path, id)           => doc(db, path, id);
+
+    setPersistence(auth, browserLocalPersistence);
+
+    // Handle redirect result first
+    getRedirectResult(auth).catch(()=>{});
+
+    onAuthStateChanged(auth, async user => {
+      if (user) {
+        const role = await resolveRole(user);
+        window.onFirebaseReady && window.onFirebaseReady(user, role);
+      } else {
+        window.onFirebaseSignedOut && window.onFirebaseSignedOut();
+      }
+    });
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4 { font-family: 'Poppins', sans-serif; }
+
+    /* Tabs */
+    .tab-btn { @apply px-4 py-2 text-sm font-medium rounded-lg transition-colors; }
+    .tab-btn.active { @apply bg-emerald-600 text-white shadow; }
+    .tab-btn:not(.active) { @apply text-slate-500 hover:text-slate-800 hover:bg-slate-100; }
+
+    /* Role pill */
+    .role-pill { @apply px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all; }
+    .role-pill.active  { background:#22c55e; color:#fff; }
+    .role-pill:not(.active) { @apply bg-slate-100 text-slate-500 hover:bg-slate-200; }
+
+    /* Package cards */
+    .pkg-card { @apply border-2 rounded-2xl p-5 cursor-pointer transition-all hover:shadow-lg; border-color:#e2e8f0; }
+    .pkg-card.selected { border-color:#22c55e; background:#f0fdf4; }
+
+    /* Slot buttons */
+    .slot-btn { @apply px-3 py-2 rounded-lg text-sm font-medium transition-colors; }
+    .avail-slot { @apply bg-emerald-50 border border-emerald-300 text-emerald-700 hover:bg-emerald-100; }
+    .slot-btn.selected { @apply bg-emerald-600 text-white; }
+    .unavail-slot { @apply bg-slate-100 text-slate-400 cursor-not-allowed; }
+
+    /* Availability grid */
+    .avail-cell { @apply w-8 h-8 rounded text-xs flex items-center justify-center cursor-pointer transition-colors font-medium; }
+    .avail-cell.free { @apply bg-emerald-100 text-emerald-700 hover:bg-emerald-200; }
+    .avail-cell.busy { @apply bg-slate-200 text-slate-500 hover:bg-slate-300; }
+
+    /* My Account dropdown */
+    #accountMenu { display:none; }
+    #accountMenu.open { display:block; }
+
+    /* Lang dropdown */
+    #langMenu { display:none; }
+    #langMenu.open { display:block; }
+
+    /* Topbar */
+    #topbar { background:linear-gradient(90deg,#1e293b 0%,#0f172a 100%); }
+
+    /* Calendar weekly view */
+    .cal-week-slot { @apply border-b border-slate-100 text-xs p-1 min-h-[32px] relative; }
+    .cal-event { @apply rounded px-1 py-0.5 text-xs text-white truncate; }
+
+    /* Stats cards */
+    .stat-card { @apply rounded-xl p-4 text-center; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:6px; height:6px; }
+    ::-webkit-scrollbar-track { background:#f1f5f9; }
+    ::-webkit-scrollbar-thumb { background:#94a3b8; border-radius:3px; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<!-- ===== HEADER ===== -->
+<header id="topbar" class="sticky top-0 z-50 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3 flex-wrap">
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2 mr-2">
+      <span class="text-2xl">🇰🇷</span>
+      <span class="text-white font-bold text-lg leading-tight">BusinessKorean</span>
+    </a>
+
+    <!-- Clocks -->
+    <div class="hidden md:flex items-center gap-4 text-xs text-slate-300 ml-2">
+      <span>KST <span id="clockKST" class="font-mono text-white">--:--</span></span>
+      <span>Local <span id="clockLocal" class="font-mono text-white">--:--</span></span>
+    </div>
+
+    <div class="flex-1"></div>
+
+    <!-- Role pills (shown when signed in) -->
+    <div id="roleSwitcher" class="hidden items-center gap-1 bg-slate-800 rounded-full px-2 py-1">
+      <button onclick="switchRole('student')" id="roleBtn-student" class="role-pill">
+        Student<span class="block text-[10px] opacity-70">학생</span>
+      </button>
+      <button onclick="switchRole('tutor')"   id="roleBtn-tutor"   class="role-pill">
+        Tutor<span class="block text-[10px] opacity-70">튜터</span>
+      </button>
+      <button onclick="switchRole('admin')"   id="roleBtn-admin"   class="role-pill">
+        Admin<span class="block text-[10px] opacity-70">관리자</span>
+      </button>
+    </div>
+
+    <!-- Language selector -->
+    <div class="relative">
+      <button onclick="toggleLangMenu()" class="flex items-center gap-1 text-slate-300 hover:text-white text-sm px-2 py-1 rounded">
+        🌐 <span id="langLabel">EN</span> ▾
+      </button>
+      <div id="langMenu" class="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50 min-w-[120px]">
+        <button onclick="setLang('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50">🇺🇸 English</button>
+        <button onclick="setLang('ja')" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50">🇯🇵 日本語</button>
+        <button onclick="setLang('zh')" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50">🇨🇳 中文</button>
+        <button onclick="setLang('es')" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50">🇪🇸 Español</button>
+        <button onclick="setLang('fr')" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50">🇫🇷 Français</button>
+        <button onclick="setLang('de')" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50">🇩🇪 Deutsch</button>
+        <button onclick="setLang('pl')" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50">🇵🇱 Polski</button>
+      </div>
+    </div>
+
+    <!-- My Account dropdown -->
+    <div class="relative">
+      <button onclick="toggleAccountMenu()" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white text-sm px-3 py-1.5 rounded-lg transition-colors">
+        <span id="accountAvatar" class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs font-bold hidden"></span>
+        <span id="accountBtnLabel">Sign In</span>
+        <span id="accountChevron">▾</span>
+      </button>
+      <div id="accountMenu" class="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50 min-w-[200px]">
+        <!-- Signed-in state -->
+        <div id="accountMenuSignedIn" class="hidden">
+          <div class="px-4 py-2 border-b border-slate-100">
+            <p class="text-xs text-slate-500">Signed in as</p>
+            <p id="accountMenuEmail" class="text-sm font-medium text-slate-800 truncate"></p>
+          </div>
+          <button onclick="window.fbSignOut()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+            <span>🚪</span> Sign Out
+          </button>
+        </div>
+        <!-- Signed-out state -->
+        <div id="accountMenuSignedOut">
+          <button onclick="window.fbSignIn()" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+            <span>🔑</span> Sign in with Google
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== STUDENT VIEW ===== -->
+<main id="view-student" class="hidden max-w-7xl mx-auto px-4 py-6">
+  <!-- Student tabs -->
+  <div class="flex gap-2 mb-6 flex-wrap">
+    <button class="tab-btn active" onclick="switchStudentTab('dash')" id="stab-dash">
+      My Dashboard<span class="block text-[10px] text-slate-400">내 대시보드</span>
+    </button>
+    <button class="tab-btn" onclick="switchStudentTab('plan')" id="stab-plan">
+      Plan Purchase<span class="block text-[10px] text-slate-400">플랜 구매</span>
+    </button>
+    <button class="tab-btn" onclick="switchStudentTab('book')" id="stab-book">
+      Schedule Booking<span class="block text-[10px] text-slate-400">수업 예약</span>
+    </button>
+    <button class="tab-btn" onclick="switchStudentTab('materials')" id="stab-materials">
+      Materials<span class="block text-[10px] text-slate-400">학습 자료</span>
+    </button>
+  </div>
+
+  <!-- DASHBOARD TAB -->
+  <div id="stab-content-dash">
+    <!-- 5 stat cards -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+      <div class="stat-card bg-amber-50 border border-amber-100">
+        <div class="text-2xl font-bold text-amber-600" id="statPending">0</div>
+        <div class="text-xs text-amber-700 mt-1">Pending Credits<br><span class="text-[10px] text-amber-400">대기 크레딧</span></div>
+      </div>
+      <div class="stat-card bg-emerald-50 border border-emerald-100">
+        <div class="text-2xl font-bold text-emerald-600" id="statConfirmed">0</div>
+        <div class="text-xs text-emerald-700 mt-1">Confirmed Credits<br><span class="text-[10px] text-emerald-400">확정 크레딧</span></div>
+      </div>
+      <div class="stat-card bg-blue-50 border border-blue-100">
+        <div class="text-2xl font-bold text-blue-600" id="statBooked">0</div>
+        <div class="text-xs text-blue-700 mt-1">Booked Lessons<br><span class="text-[10px] text-blue-400">예약 수업</span></div>
+      </div>
+      <div class="stat-card bg-violet-50 border border-violet-100">
+        <div class="text-2xl font-bold text-violet-600" id="statRemaining">0</div>
+        <div class="text-xs text-violet-700 mt-1">Remaining Credits<br><span class="text-[10px] text-violet-400">잔여 크레딧</span></div>
+      </div>
+      <div class="stat-card bg-slate-50 border border-slate-200">
+        <div class="text-2xl font-bold text-slate-700" id="statFinal">0</div>
+        <div class="text-xs text-slate-600 mt-1">Final Credits<br><span class="text-[10px] text-slate-400">최종 크레딧</span></div>
+      </div>
+    </div>
+
+    <!-- Upcoming Lessons -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-semibold text-slate-800">Upcoming Lessons <span class="text-xs text-slate-400">예정 수업</span></h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+            <tr>
+              <th class="px-4 py-3 text-left">Date & Time</th>
+              <th class="px-4 py-3 text-left">Tutor</th>
+              <th class="px-4 py-3 text-left">Package</th>
+              <th class="px-4 py-3 text-left">Status</th>
+              <th class="px-4 py-3 text-left">Meet</th>
+              <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="upcomingLessonsBody">
+            <tr><td colspan="6" class="px-4 py-8 text-center text-slate-400">No upcoming lessons</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Completed Lessons + Credit History -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-100">
+        <h3 class="font-semibold text-slate-800">Completed Lessons <span class="text-xs text-slate-400">완료 수업</span></h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+            <tr>
+              <th class="px-4 py-3 text-left">Date</th>
+              <th class="px-4 py-3 text-left">Tutor</th>
+              <th class="px-4 py-3 text-left">Credits Used</th>
+              <th class="px-4 py-3 text-left">Balance After</th>
+            </tr>
+          </thead>
+          <tbody id="completedLessonsBody">
+            <tr><td colspan="4" class="px-4 py-8 text-center text-slate-400">No completed lessons</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAN PURCHASE TAB -->
+  <div id="stab-content-plan" class="hidden">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-slate-800">Choose Your Plan <span class="text-base font-normal text-slate-400">플랜 선택</span></h2>
+        <p class="text-slate-500 mt-1">Credits are added after payment confirmation</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="packageGrid">
+        <!-- trial -->
+        <div class="pkg-card" onclick="selectPkg('trial')">
+          <div class="text-center">
+            <span class="inline-block bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full mb-2">Trial</span>
+            <h4 class="font-bold text-slate-800 text-lg">Trial Lesson</h4>
+            <p class="text-xs text-slate-500 mb-3">1 lesson</p>
+            <div class="text-3xl font-bold text-slate-800">$10</div>
+            <div class="text-xs text-slate-500 mt-1">$10 / lesson</div>
+          </div>
+        </div>
+        <!-- single -->
+        <div class="pkg-card" onclick="selectPkg('single')">
+          <div class="text-center">
+            <h4 class="font-bold text-slate-800 text-lg">Single</h4>
+            <p class="text-xs text-slate-500 mb-3">1 credit</p>
+            <div class="text-sm text-red-400 line-through">$35</div>
+            <div class="text-3xl font-bold text-slate-800">$33</div>
+            <div class="text-xs text-slate-500 mt-1">$33 / lesson</div>
+          </div>
+        </div>
+        <!-- pack5 -->
+        <div class="pkg-card" onclick="selectPkg('pack5')">
+          <div class="text-center">
+            <span class="inline-block bg-emerald-100 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full mb-2">Popular</span>
+            <h4 class="font-bold text-slate-800 text-lg">5-Pack</h4>
+            <p class="text-xs text-slate-500 mb-3">5 credits</p>
+            <div class="text-sm text-red-400 line-through">$175</div>
+            <div class="text-3xl font-bold text-slate-800">$160</div>
+            <div class="text-xs text-slate-500 mt-1">$32 / lesson</div>
+          </div>
+        </div>
+        <!-- pack10 -->
+        <div class="pkg-card" onclick="selectPkg('pack10')">
+          <div class="text-center">
+            <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full mb-2">Best Value</span>
+            <h4 class="font-bold text-slate-800 text-lg">10-Pack</h4>
+            <p class="text-xs text-slate-500 mb-3">10 credits</p>
+            <div class="text-sm text-red-400 line-through">$350</div>
+            <div class="text-3xl font-bold text-slate-800">$300</div>
+            <div class="text-xs text-slate-500 mt-1">$30 / lesson</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WISE payment notice -->
+      <div id="checkoutBox" class="hidden bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-md mx-auto">
+        <h4 class="font-semibold text-slate-800 mb-2" id="checkoutTitle">Selected Plan</h4>
+        <div class="text-2xl font-bold text-emerald-600 mb-1" id="checkoutPrice"></div>
+        <div class="text-sm text-slate-500 mb-4" id="checkoutCredits"></div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800 mb-4">
+          <p class="font-semibold mb-1">💳 WISE Payment</p>
+          <p id="wiseNotice">Pay securely via WISE (international transfer). Account details provided after booking confirmation.</p>
+        </div>
+        <button onclick="submitBooking()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-colors">
+          Request Booking
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE BOOKING TAB -->
+  <div id="stab-content-book" class="hidden">
+    <div class="max-w-2xl mx-auto">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-4">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-2xl">📅</span>
+          <div>
+            <h3 class="font-semibold text-slate-800">Schedule a Lesson <span class="text-xs text-slate-400">수업 예약</span></h3>
+            <p class="text-xs text-slate-500">Requires available credits</p>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-slate-700 mb-1">Select Date</label>
+          <input type="date" id="bookDate" onchange="loadSlots()" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full">
+        </div>
+        <div id="slotsContainer" class="hidden">
+          <label class="block text-sm font-medium text-slate-700 mb-2">Available Slots <span class="text-xs text-slate-400">가능 시간</span></label>
+          <div id="slotsGrid" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div id="selectedSlotBox" class="hidden mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm text-emerald-800">
+          Selected: <span id="selectedSlotLabel" class="font-semibold"></span>
+          <div class="text-xs text-emerald-600 mt-1" id="selectedSlotKST"></div>
+        </div>
+        <button id="confirmBookBtn" onclick="submitScheduledBooking()" class="hidden mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-colors">
+          Confirm Booking
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATERIALS TAB -->
+  <div id="stab-content-materials" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-100">
+        <h3 class="font-semibold text-slate-800">Learning Materials <span class="text-xs text-slate-400">학습 자료</span></h3>
+        <p class="text-xs text-slate-500 mt-0.5">Files expire 7 days after upload</p>
+      </div>
+      <div id="materialsList" class="divide-y divide-slate-50">
+        <div class="px-5 py-8 text-center text-slate-400 text-sm">No materials uploaded yet</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== TUTOR VIEW ===== -->
+<main id="view-tutor" class="hidden max-w-7xl mx-auto px-4 py-6">
+  <!-- Tutor hero -->
+  <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-6 mb-6 text-white flex items-center gap-4">
+    <img id="tutorHeroAvatar" src="" alt="" class="w-16 h-16 rounded-full object-cover bg-white/20 hidden">
+    <div>
+      <h2 class="text-xl font-bold" id="tutorHeroName">Tutor Dashboard</h2>
+      <p class="text-emerald-100 text-sm" id="tutorHeroBio">Welcome back!</p>
+    </div>
+  </div>
+
+  <!-- Tutor tabs -->
+  <div class="flex gap-2 mb-6 flex-wrap">
+    <button class="tab-btn active" onclick="switchTutorTab('schedule')" id="ttab-schedule">
+      Schedule<span class="block text-[10px] text-slate-400">일정</span>
+    </button>
+    <button class="tab-btn" onclick="switchTutorTab('avail')" id="ttab-avail">
+      Availability<span class="block text-[10px] text-slate-400">가능 시간</span>
+    </button>
+    <button class="tab-btn" onclick="switchTutorTab('pricing')" id="ttab-pricing">
+      Pricing<span class="block text-[10px] text-slate-400">가격</span>
+    </button>
+    <button class="tab-btn" onclick="switchTutorTab('profile')" id="ttab-profile">
+      Profile<span class="block text-[10px] text-slate-400">프로필</span>
+    </button>
+    <button class="tab-btn" onclick="switchTutorTab('earnings')" id="ttab-earnings">
+      Earnings<span class="block text-[10px] text-slate-400">수입</span>
+    </button>
+    <button class="tab-btn" onclick="switchTutorTab('feedback')" id="ttab-feedback">
+      Feedback<span class="block text-[10px] text-slate-400">피드백</span>
+    </button>
+  </div>
+
+  <!-- SCHEDULE TAB -->
+  <div id="ttab-content-schedule">
+    <!-- Calendar sync -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4">
+      <h4 class="font-semibold text-slate-800 mb-3">Google Calendar Sync <span class="text-xs text-slate-400">구글 캘린더 연동</span></h4>
+      <div id="calendarIdFields" class="space-y-2 mb-3">
+        <input type="text" class="calid-input border border-slate-200 rounded-lg px-3 py-2 text-sm w-full" placeholder="Calendar ID #1">
+        <input type="text" class="calid-input border border-slate-200 rounded-lg px-3 py-2 text-sm w-full" placeholder="Calendar ID #2">
+      </div>
+      <button onclick="addCalendarField()" class="text-sm text-emerald-600 hover:text-emerald-700 mb-3">+ Add More</button>
+      <button onclick="saveCalendars()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">Save Calendars</button>
+    </div>
+
+    <!-- View toggle: week / list -->
+    <div class="flex items-center justify-between mb-3">
+      <h4 class="font-semibold text-slate-800">Bookings <span class="text-xs text-slate-400">예약</span></h4>
+      <div class="flex gap-1 bg-slate-100 rounded-lg p-1">
+        <button onclick="setCalView('week')" id="calViewWeek" class="px-3 py-1 text-xs rounded-md bg-white shadow font-medium">Week</button>
+        <button onclick="setCalView('list')" id="calViewList" class="px-3 py-1 text-xs rounded-md font-medium text-slate-500">List</button>
+      </div>
+    </div>
+
+    <!-- Weekly calendar view -->
+    <div id="calWeekView" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-4">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+        <button onclick="prevWeek()" class="p-1 hover:bg-slate-100 rounded">◀</button>
+        <span id="weekLabel" class="font-semibold text-slate-700 text-sm"></span>
+        <button onclick="nextWeek()" class="p-1 hover:bg-slate-100 rounded">▶</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs" id="weekTable">
+          <thead id="weekHeader"></thead>
+          <tbody id="weekBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- List view (hidden by default) -->
+    <div id="calListView" class="hidden bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-4">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+          <tr>
+            <th class="px-4 py-3 text-left">Date & Time</th>
+            <th class="px-4 py-3 text-left">Student</th>
+            <th class="px-4 py-3 text-left">Package</th>
+            <th class="px-4 py-3 text-left">Status</th>
+            <th class="px-4 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tutorBookingsBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Google Meet link -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <h4 class="font-semibold text-slate-800 mb-3">Google Meet <span class="text-xs text-slate-400">구글 미트</span></h4>
+      <div class="flex gap-2 mb-2">
+        <select id="meetBookingSelect" class="border border-slate-200 rounded-lg px-3 py-2 text-sm flex-1">
+          <option value="">Select booking…</option>
+          <option value="__all__">★ Select All Bookings</option>
+        </select>
+        <input type="url" id="meetLinkInput" placeholder="https://meet.google.com/..." class="border border-slate-200 rounded-lg px-3 py-2 text-sm flex-1">
+        <button onclick="saveMeetLink()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg whitespace-nowrap">Save Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVAILABILITY TAB -->
+  <div id="ttab-content-avail" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4">
+      <h4 class="font-semibold text-slate-800 mb-3">Weekly Availability <span class="text-xs text-slate-400">주간 가능 시간</span></h4>
+      <div class="overflow-x-auto">
+        <table class="text-xs w-full" id="availGrid"></table>
+      </div>
+      <!-- Legend -->
+      <div class="mt-3 flex gap-4 text-xs text-slate-500">
+        <span><span class="inline-block w-3 h-3 rounded bg-emerald-200 mr-1"></span>Available</span>
+        <span><span class="inline-block w-3 h-3 rounded bg-slate-200 mr-1"></span>Unavailable</span>
+      </div>
+      <button onclick="saveAvailability()" class="mt-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">Save Availability</button>
+    </div>
+
+    <!-- Blocked dates (inside availability tab) -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <h4 class="font-semibold text-slate-800 mb-3">Blocked Dates <span class="text-xs text-slate-400">휴가/차단 날짜</span></h4>
+      <div class="flex gap-2 mb-3">
+        <input type="date" id="blockDateInput" class="border border-slate-200 rounded-lg px-3 py-2 text-sm">
+        <button onclick="addBlockedDate()" class="bg-slate-700 hover:bg-slate-800 text-white text-sm px-4 py-2 rounded-lg">Block Date</button>
+      </div>
+      <div id="blockedDatesList" class="flex flex-wrap gap-2"></div>
+    </div>
+  </div>
+
+  <!-- PRICING TAB -->
+  <div id="ttab-content-pricing" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4">
+      <h4 class="font-semibold text-slate-800 mb-4">Lesson Pricing <span class="text-xs text-slate-400">수업 가격</span></h4>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Trial Rate (USD)</label>
+          <input type="number" id="priceTrial" placeholder="10" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Single Lesson Rate (USD)</label>
+          <input type="number" id="priceSingle" placeholder="33" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">5-Pack Rate (USD)</label>
+          <input type="number" id="pricePack5" placeholder="160" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">10-Pack Rate (USD)</label>
+          <input type="number" id="pricePack10" placeholder="300" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full">
+        </div>
+      </div>
+      <button onclick="savePricing()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">Save Pricing</button>
+    </div>
+
+    <!-- Per-student overrides (moved from admin) -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <h4 class="font-semibold text-slate-800 mb-3">Student Fee Overrides <span class="text-xs text-slate-400">개별 학생 요금</span></h4>
+      <div class="flex gap-2 mb-3">
+        <input type="email" id="overrideEmail" placeholder="student@email.com" class="border border-slate-200 rounded-lg px-3 py-2 text-sm flex-1">
+        <input type="number" id="overrideRate" placeholder="Rate ($)" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-28">
+        <button onclick="applyCustomRate()" class="bg-slate-700 hover:bg-slate-800 text-white text-sm px-4 py-2 rounded-lg">Apply</button>
+      </div>
+      <div id="customRatesList" class="text-sm text-slate-600"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div id="ttab-content-profile" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <h4 class="font-semibold text-slate-800 mb-4">Tutor Profile <span class="text-xs text-slate-400">프로필</span></h4>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Display Name</label>
+          <input type="text" id="tutorName" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Bio</label>
+          <textarea id="tutorBio" rows="3" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full resize-none" placeholder="Tell students about yourself…"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Education</label>
+          <input type="text" id="tutorEducation" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full" placeholder="University, Degree, Year">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Work Experience</label>
+          <textarea id="tutorWorkExp" rows="2" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Certifications</label>
+          <input type="text" id="tutorCerts" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full" placeholder="TOPIK, TESOL, etc.">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">Specializations</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="spec-cb" value="Korean Conversation"> Korean Conversation</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="spec-cb" value="Advanced Korean"> Advanced Korean</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="spec-cb" value="Business Korean"> Business Korean</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="spec-cb" value="TOPIK Prep"> TOPIK Prep</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="spec-cb" value="K-Culture"> K-Culture</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="spec-cb" value="Grammar Focus"> Grammar Focus</label>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Intro Video URL</label>
+          <input type="url" id="tutorVideo" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full" placeholder="https://youtube.com/...">
+        </div>
+        <button onclick="saveTutorProfile()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EARNINGS TAB -->
+  <div id="ttab-content-earnings" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h4 class="font-semibold text-slate-800">Earnings <span class="text-xs text-slate-400">수입</span></h4>
+        <div class="flex gap-1 bg-slate-100 rounded-lg p-1">
+          <button onclick="setEarningsPeriod('week')"  id="ep-week"  class="px-3 py-1 text-xs rounded-md bg-white shadow font-medium">This Week</button>
+          <button onclick="setEarningsPeriod('month')" id="ep-month" class="px-3 py-1 text-xs rounded-md font-medium text-slate-500">This Month</button>
+          <button onclick="setEarningsPeriod('all')"   id="ep-all"   class="px-3 py-1 text-xs rounded-md font-medium text-slate-500">All Time</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="stat-card bg-emerald-50 border border-emerald-100">
+          <div class="text-2xl font-bold text-emerald-600" id="earnConfirmed">$0</div>
+          <div class="text-xs text-emerald-700 mt-1">Confirmed</div>
+        </div>
+        <div class="stat-card bg-amber-50 border border-amber-100">
+          <div class="text-2xl font-bold text-amber-600" id="earnPending">$0</div>
+          <div class="text-xs text-amber-700 mt-1">Pending</div>
+        </div>
+      </div>
+      <!-- Per-student breakdown -->
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+          <tr>
+            <th class="px-3 py-2 text-left">Student</th>
+            <th class="px-3 py-2 text-left">Lessons</th>
+            <th class="px-3 py-2 text-left">Confirmed</th>
+            <th class="px-3 py-2 text-left">Pending</th>
+          </tr>
+        </thead>
+        <tbody id="earningsBreakdown">
+          <tr><td colspan="4" class="px-3 py-6 text-center text-slate-400">No data</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FEEDBACK TAB -->
+  <div id="ttab-content-feedback" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <h4 class="font-semibold text-slate-800 mb-3">Send Feedback <span class="text-xs text-slate-400">피드백 전송</span></h4>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Student Email</label>
+          <input type="email" id="feedbackStudent" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Feedback</label>
+          <textarea id="feedbackText" rows="5" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Attach Material</label>
+          <p class="text-xs text-slate-400 mb-1">Max 10MB · Accepted: PDF, MP3, MP4, HTML · Files expire 7 days after upload</p>
+          <input type="file" id="materialFile" accept=".pdf,.mp3,.mp4,.html" class="text-sm">
+        </div>
+        <button onclick="sendFeedback()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">Send Feedback</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== ADMIN VIEW ===== -->
+<main id="view-admin" class="hidden max-w-7xl mx-auto px-4 py-6">
+  <div class="flex gap-2 mb-6 flex-wrap">
+    <button class="tab-btn active" onclick="switchAdminTab('users')"   id="atab-users">Users<span class="block text-[10px] text-slate-400">사용자</span></button>
+    <button class="tab-btn" onclick="switchAdminTab('tutors')"  id="atab-tutors">Tutors<span class="block text-[10px] text-slate-400">튜터</span></button>
+    <button class="tab-btn" onclick="switchAdminTab('profile')" id="atab-profile">My Profile<span class="block text-[10px] text-slate-400">내 프로필</span></button>
+    <button class="tab-btn" onclick="switchAdminTab('revenue')" id="atab-revenue">Revenue<span class="block text-[10px] text-slate-400">매출</span></button>
+  </div>
+
+  <!-- USERS TAB -->
+  <div id="atab-content-users">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-semibold text-slate-800">All Users <span class="text-xs text-slate-400">전체 사용자</span></h3>
+        <button onclick="renderAdminUsers()" class="text-xs text-emerald-600 hover:underline">↺ Refresh</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+            <tr>
+              <th class="px-4 py-3 text-left">Email</th>
+              <th class="px-4 py-3 text-left">Role</th>
+              <th class="px-4 py-3 text-left">Credits</th>
+              <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminUsersBody">
+            <tr><td colspan="4" class="px-4 py-8 text-center text-slate-400">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUTORS TAB -->
+  <div id="atab-content-tutors" class="hidden">
+    <!-- Add tutor form -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4">
+      <h4 class="font-semibold text-slate-800 mb-3">Add Tutor <span class="text-xs text-slate-400">튜터 추가</span></h4>
+      <div class="flex flex-wrap gap-2 items-end">
+        <div>
+          <label class="block text-xs text-slate-500 mb-1">Tutor Email</label>
+          <input type="email" id="newTutorEmail" placeholder="tutor@email.com" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-52">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-500 mb-1">Commission (%)</label>
+          <input type="number" id="newTutorCommission" placeholder="20" min="0" max="100" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-24">
+        </div>
+        <button onclick="addTutor()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">Add Tutor</button>
+      </div>
+    </div>
+
+    <!-- Tutor approvals -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-100">
+        <h3 class="font-semibold text-slate-800">Tutor Approvals <span class="text-xs text-slate-400">튜터 승인</span></h3>
+      </div>
+      <div id="tutorApprovalsList" class="divide-y divide-slate-50">
+        <div class="px-5 py-6 text-center text-slate-400 text-sm">No pending approvals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div id="atab-content-profile" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <h4 class="font-semibold text-slate-800 mb-4">Admin Profile <span class="text-xs text-slate-400">관리자 프로필</span></h4>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Display Name</label>
+          <input type="text" id="adminName" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Profile Photo</label>
+          <div class="flex items-center gap-3">
+            <img id="adminPhotoPreview" src="" alt="" class="w-16 h-16 rounded-full object-cover bg-slate-100 hidden">
+            <input type="file" id="adminPhotoFile" accept="image/*" onchange="previewAdminPhoto(this)" class="text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Short Bio</label>
+          <textarea id="adminBio" rows="3" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full resize-none" placeholder="Brief description…"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Intro Video URL</label>
+          <input type="url" id="adminVideo" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-full" placeholder="https://youtube.com/...">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Rating</label>
+          <input type="number" id="adminRating" min="0" max="5" step="0.1" class="border border-slate-200 rounded-lg px-3 py-2 text-sm w-32">
+        </div>
+        <button onclick="saveAdminProfile()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVENUE TAB -->
+  <div id="atab-content-revenue" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h4 class="font-semibold text-slate-800">Revenue <span class="text-xs text-slate-400">매출</span></h4>
+        <div class="flex gap-1 bg-slate-100 rounded-lg p-1">
+          <button onclick="setRevenueView('student')" id="rv-student" class="px-3 py-1 text-xs rounded-md bg-white shadow font-medium">By Student</button>
+          <button onclick="setRevenueView('tutor')"   id="rv-tutor"   class="px-3 py-1 text-xs rounded-md font-medium text-slate-500">By Tutor</button>
+          <button onclick="setRevenueView('combined')" id="rv-combined" class="px-3 py-1 text-xs rounded-md font-medium text-slate-500">Combined</button>
+        </div>
+      </div>
+      <div id="revenueContent">
+        <p class="text-slate-400 text-sm text-center py-6">Select a view above</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== LOGIN PROMPT ===== -->
+<main id="view-login" class="max-w-md mx-auto px-4 py-16 text-center">
+  <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
+    <div class="text-5xl mb-4">🇰🇷</div>
+    <h2 class="text-2xl font-bold text-slate-800 mb-2">Business Korean</h2>
+    <p class="text-slate-500 mb-6 text-sm">1:1 Korean tutoring for professionals</p>
+    <button onclick="window.fbSignIn()" class="w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 hover:border-emerald-400 text-slate-700 font-semibold py-3 px-6 rounded-xl transition-all shadow-sm hover:shadow-md">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.7 30.2 0 24 0 14.7 0 6.7 5.5 2.9 13.5l7.8 6C12.3 13.2 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.7 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.8c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.2-10.1 7.2-17z"/><path fill="#FBBC05" d="M10.7 28.5c-.5-1.5-.8-3-.8-4.5s.3-3 .8-4.5l-7.8-6C1.1 17 0 20.4 0 24s1.1 7 2.9 10.5l7.8-6z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2 1.4-4.6 2.2-7.7 2.2-6.3 0-11.7-3.7-13.3-9l-7.8 6C6.7 42.5 14.7 48 24 48z"/></svg>
+      Sign in with Google
+    </button>
+    <div id="authError" class="hidden mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm"></div>
+  </div>
+</main>
+
+<!-- ===== VIDEO MODAL ===== -->
+<div id="videoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+  <div class="bg-white rounded-2xl shadow-2xl p-4 max-w-2xl w-full mx-4">
+    <div class="flex justify-between items-center mb-3">
+      <h4 class="font-semibold text-slate-800">Intro Video</h4>
+      <button onclick="closeVideoModal()" class="text-slate-400 hover:text-slate-600 text-xl">✕</button>
+    </div>
+    <div id="videoContainer" class="aspect-video bg-slate-100 rounded-xl overflow-hidden"></div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="mt-16 py-6 border-t border-slate-200 text-center text-xs text-slate-400">
+  <p>© 2025 BusinessKorean.com · 1:1 Korean Tutoring</p>
+</footer>
+
+<script>
+// ================================================================
+// STATE
+// ================================================================
+const S = {
+  user: null, role: null, lang: 'en',
+  selectedPkg: null, selectedSlot: null,
+  availState: {},
+  calView: 'week', calWeekOffset: 0,
+  earningsPeriod: 'month', revenueView: 'combined'
+};
+
+// ================================================================
+// I18N
+// ================================================================
+const I18N = {
+  en: {
+    myDash:'My Dashboard', planPurchase:'Plan Purchase', scheduleBook:'Schedule Booking',
+    materials:'Materials', heroTitle:'Welcome to BusinessKorean',
+    heroDesc:'Professional 1:1 Korean tutoring',
+    book:'Book a Lesson', signIn:'Sign In', signOut:'Sign Out',
+    wiseNotice:'Pay securely via WISE (international transfer). Account details provided after booking confirmation.',
+    filesExpire:'Files expire 7 days after upload',
+  },
+  ja: {
+    myDash:'マイダッシュボード', planPurchase:'プラン購入', scheduleBook:'授業予約',
+    materials:'教材', heroTitle:'ビジネス韓国語へようこそ',
+    heroDesc:'プロフェッショナル 1:1 韓国語レッスン',
+    book:'授業を予約', signIn:'ログイン', signOut:'ログアウト',
+    wiseNotice:'WISEで安全にお支払いください（国際送金）。口座情報は予約確認後にお知らせします。',
+    filesExpire:'ファイルはアップロードから7日後に期限切れになります',
+  },
+  zh: {
+    myDash:'我的仪表板', planPurchase:'购买套餐', scheduleBook:'预约课程',
+    materials:'学习资料', heroTitle:'欢迎来到商务韩语',
+    heroDesc:'专业1对1韩语辅导',
+    book:'预约课程', signIn:'登录', signOut:'退出',
+    wiseNotice:'通过WISE安全付款（国际转账）。预订确认后提供账户详情。',
+    filesExpire:'文件上传后7天过期',
+  },
+  es: {
+    myDash:'Mi Panel', planPurchase:'Comprar Plan', scheduleBook:'Reservar Clase',
+    materials:'Materiales', heroTitle:'Bienvenido a BusinessKorean',
+    heroDesc:'Clases privadas de coreano profesional',
+    book:'Reservar', signIn:'Iniciar Sesión', signOut:'Cerrar Sesión',
+    wiseNotice:'Paga de forma segura mediante WISE (transferencia internacional). Los detalles de la cuenta se proporcionan tras confirmar la reserva.',
+    filesExpire:'Los archivos caducan 7 días después de su carga',
+  },
+  fr: {
+    myDash:'Mon Tableau de Bord', planPurchase:'Acheter un Plan', scheduleBook:'Réserver',
+    materials:'Matériaux', heroTitle:'Bienvenue sur BusinessKorean',
+    heroDesc:'Cours particuliers de coréen professionnel',
+    book:'Réserver', signIn:'Se Connecter', signOut:'Se Déconnecter',
+    wiseNotice:'Payez en toute sécurité via WISE (virement international). Les coordonnées bancaires sont fournies après confirmation de la réservation.',
+    filesExpire:'Les fichiers expirent 7 jours après le téléchargement',
+  },
+  de: {
+    myDash:'Mein Dashboard', planPurchase:'Plan Kaufen', scheduleBook:'Stunde Buchen',
+    materials:'Materialien', heroTitle:'Willkommen bei BusinessKorean',
+    heroDesc:'Professioneller 1:1 Koreanischunterricht',
+    book:'Buchen', signIn:'Anmelden', signOut:'Abmelden',
+    wiseNotice:'Zahlen Sie sicher per WISE (internationale Überweisung). Kontodaten werden nach Buchungsbestätigung mitgeteilt.',
+    filesExpire:'Dateien verfallen 7 Tage nach dem Hochladen',
+  },
+  pl: {
+    myDash:'Mój Panel', planPurchase:'Kup Plan', scheduleBook:'Zarezerwuj Lekcję',
+    materials:'Materiały', heroTitle:'Witaj w BusinessKorean',
+    heroDesc:'Profesjonalne prywatne lekcje koreańskiego',
+    book:'Zarezerwuj', signIn:'Zaloguj się', signOut:'Wyloguj się',
+    wiseNotice:'Płać bezpiecznie przez WISE (przelew międzynarodowy). Dane konta podane po potwierdzeniu rezerwacji.',
+    filesExpire:'Pliki wygasają 7 dni po przesłaniu',
+  },
+};
+
+function t(key) { return (I18N[S.lang] || I18N.en)[key] || I18N.en[key] || key; }
+
+function setLang(lang) {
+  S.lang = lang;
+  document.getElementById('langLabel').textContent = lang.toUpperCase();
+  document.getElementById('langMenu').classList.remove('open');
+  applyI18N();
+}
+
+function applyI18N() {
+  const el = id => document.getElementById(id);
+  if (el('wiseNotice')) el('wiseNotice').textContent = t('wiseNotice');
+}
+
+// ================================================================
+// DROPDOWN TOGGLES
+// ================================================================
+function toggleLangMenu() {
+  document.getElementById('langMenu').classList.toggle('open');
+  document.getElementById('accountMenu').classList.remove('open');
+}
+
+function toggleAccountMenu() {
+  document.getElementById('accountMenu').classList.toggle('open');
+  document.getElementById('langMenu').classList.remove('open');
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#accountMenu') && !e.target.closest('[onclick="toggleAccountMenu()"]'))
+    document.getElementById('accountMenu').classList.remove('open');
+  if (!e.target.closest('#langMenu') && !e.target.closest('[onclick="toggleLangMenu()"]'))
+    document.getElementById('langMenu').classList.remove('open');
+});
+
+// ================================================================
+// AUTH STATE
+// ================================================================
+window.onFirebaseReady = function(user, role) {
+  S.user = user; S.role = role;
+  // Update My Account dropdown
+  document.getElementById('accountBtnLabel').textContent = 'My Account';
+  const av = document.getElementById('accountAvatar');
+  av.classList.remove('hidden');
+  av.textContent = (user.displayName || user.email)[0].toUpperCase();
+  document.getElementById('accountMenuEmail').textContent = user.email;
+  document.getElementById('accountMenuSignedIn').classList.remove('hidden');
+  document.getElementById('accountMenuSignedOut').classList.add('hidden');
+  // Role pills
+  const rs = document.getElementById('roleSwitcher');
+  rs.classList.remove('hidden'); rs.classList.add('flex');
+  // Show correct role pills
+  ['student','tutor','admin'].forEach(r => {
+    document.getElementById('roleBtn-'+r).style.display =
+      (r === 'student' || r === role) ? '' : 'none';
+  });
+  switchRole(role);
+};
+
+window.onFirebaseSignedOut = function() {
+  S.user = null; S.role = null;
+  document.getElementById('accountBtnLabel').textContent = 'Sign In';
+  document.getElementById('accountAvatar').classList.add('hidden');
+  document.getElementById('accountMenuSignedIn').classList.add('hidden');
+  document.getElementById('accountMenuSignedOut').classList.remove('hidden');
+  document.getElementById('roleSwitcher').classList.add('hidden');
+  document.getElementById('roleSwitcher').classList.remove('flex');
+  showAllViews('login');
+};
+
+// ================================================================
+// VIEW ROUTING
+// ================================================================
+function showAllViews(which) {
+  ['student','tutor','admin','login'].forEach(v => {
+    document.getElementById('view-'+v).classList.toggle('hidden', v !== which);
+  });
+}
+
+function switchRole(role) {
+  S.role = role;
+  ['student','tutor','admin'].forEach(r => {
+    const btn = document.getElementById('roleBtn-'+r);
+    if (btn) btn.classList.toggle('active', r === role);
+  });
+  if      (role === 'student') { showAllViews('student'); loadStudentDashboard(); }
+  else if (role === 'tutor')   { showAllViews('tutor');   loadTutorDashboard(); }
+  else if (role === 'admin')   { showAllViews('admin');   loadAdminDashboard(); }
+}
+
+// ================================================================
+// STUDENT TABS
+// ================================================================
+function switchStudentTab(tab) {
+  ['dash','plan','book','materials'].forEach(t => {
+    document.getElementById('stab-'+t).classList.toggle('active', t === tab);
+    const c = document.getElementById('stab-content-'+t);
+    if (c) c.classList.toggle('hidden', t !== tab);
+  });
+}
+
+function switchTutorTab(tab) {
+  ['schedule','avail','pricing','profile','earnings','feedback'].forEach(t => {
+    document.getElementById('ttab-'+t).classList.toggle('active', t === tab);
+    const c = document.getElementById('ttab-content-'+t);
+    if (c) c.classList.toggle('hidden', t !== tab);
+  });
+  if (tab === 'schedule') renderWeekCalendar();
+  if (tab === 'avail')    renderAvailGrid();
+  if (tab === 'pricing')  loadPricingFromFirestore();
+  if (tab === 'profile')  loadTutorProfile();
+  if (tab === 'earnings') loadEarnings();
+}
+
+function switchAdminTab(tab) {
+  ['users','tutors','profile','revenue'].forEach(t => {
+    document.getElementById('atab-'+t).classList.toggle('active', t === tab);
+    const c = document.getElementById('atab-content-'+t);
+    if (c) c.classList.toggle('hidden', t !== tab);
+  });
+  if (tab === 'users')  renderAdminUsers();
+  if (tab === 'revenue') renderRevenue();
+}
+
+// ================================================================
+// CLOCKS (DST-aware; KST never has DST)
+// ================================================================
+function updateClocks() {
+  const now = new Date();
+  const kst = new Intl.DateTimeFormat('en-GB',{ timeZone:'Asia/Seoul', hour:'2-digit', minute:'2-digit', hour12:false }).format(now);
+  const local = new Intl.DateTimeFormat('en-GB',{ hour:'2-digit', minute:'2-digit', hour12:false }).format(now);
+  document.getElementById('clockKST').textContent   = kst;
+  document.getElementById('clockLocal').textContent = local;
+}
+setInterval(updateClocks, 1000); updateClocks();
+
+// ================================================================
+// STUDENT DASHBOARD
+// ================================================================
+async function loadStudentDashboard() {
+  if (!S.user) return;
+  try {
+    const bookSnap = await window.fbQuery('bookings','studentEmail','==',S.user.email);
+    const bookings = bookSnap.docs.map(d=>({id:d.id,...d.data()}));
+    const upcoming  = bookings.filter(b=>b.status!=='completed');
+    const completed = bookings.filter(b=>b.status==='completed');
+
+    // Credit stats
+    const userSnap = await window.fbGetDoc('users', S.user.email);
+    const userData = userSnap.exists() ? userSnap.data() : {};
+    const pendingCr   = userData.pendingCredits   || 0;
+    const confirmedCr = userData.confirmedCredits || 0;
+    const bookedLess  = upcoming.length;
+    const remaining   = confirmedCr - bookedLess;
+    const final       = remaining;
+
+    document.getElementById('statPending').textContent   = pendingCr;
+    document.getElementById('statConfirmed').textContent = confirmedCr;
+    document.getElementById('statBooked').textContent    = bookedLess;
+    document.getElementById('statRemaining').textContent = Math.max(0,remaining);
+    document.getElementById('statFinal').textContent     = Math.max(0,final);
+
+    renderUpcomingLessons(upcoming);
+    renderCompletedLessons(completed);
+  } catch(e) { console.error(e); }
+}
+
+function renderUpcomingLessons(bookings) {
+  const tbody = document.getElementById('upcomingLessonsBody');
+  if (!bookings.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-slate-400">No upcoming lessons</td></tr>';
+    return;
+  }
+  tbody.innerHTML = bookings.map(b => `
+    <tr class="hover:bg-slate-50 border-b border-slate-50">
+      <td class="px-4 py-3">${b.date||''} ${b.time||''}</td>
+      <td class="px-4 py-3">${b.tutorEmail||'TBD'}</td>
+      <td class="px-4 py-3">${b.package||''}</td>
+      <td class="px-4 py-3">
+        <span class="px-2 py-0.5 rounded-full text-xs font-medium ${statusClass(b.status)}">${b.status||'pending'}</span>
+      </td>
+      <td class="px-4 py-3">${b.meetLink ? `<a href="${b.meetLink}" target="_blank" class="text-blue-600 hover:underline text-xs">Join</a>` : '—'}</td>
+      <td class="px-4 py-3 flex gap-1">
+        <button onclick="editBooking('${b.id}')" class="text-xs px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded">Edit</button>
+        <button onclick="cancelBooking('${b.id}')" class="text-xs px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded">Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderCompletedLessons(bookings) {
+  const tbody = document.getElementById('completedLessonsBody');
+  if (!bookings.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-8 text-center text-slate-400">No completed lessons</td></tr>';
+    return;
+  }
+  tbody.innerHTML = bookings.map(b => `
+    <tr class="hover:bg-slate-50 border-b border-slate-50">
+      <td class="px-4 py-3">${b.date||''}</td>
+      <td class="px-4 py-3">${b.tutorEmail||'TBD'}</td>
+      <td class="px-4 py-3 text-center">1</td>
+      <td class="px-4 py-3">${b.creditsAfter ?? '—'}</td>
+    </tr>`).join('');
+}
+
+function statusClass(s) {
+  if (s==='confirmed') return 'bg-emerald-100 text-emerald-700';
+  if (s==='completed') return 'bg-blue-100 text-blue-700';
+  return 'bg-amber-100 text-amber-700';
+}
+
+async function editBooking(id) {
+  const note = prompt('Edit note / time request:');
+  if (note === null) return;
+  await window.fbUpdateDoc('bookings', id, { editNote: note, editedAt: new Date().toISOString() });
+  loadStudentDashboard();
+}
+
+async function cancelBooking(id) {
+  if (!confirm('Cancel this booking?')) return;
+  await window.fbDeleteDoc('bookings', id);
+  loadStudentDashboard();
+}
+
+// ================================================================
+// PACKAGE SELECTION
+// ================================================================
+const PKG_DATA = {
+  trial:  { name:'Trial Lesson', credits:1, price:10, orig:10 },
+  single: { name:'Single',       credits:1, price:33, orig:35 },
+  pack5:  { name:'5-Pack',       credits:5, price:160, orig:175 },
+  pack10: { name:'10-Pack',      credits:10,price:300, orig:350 },
+};
+
+function selectPkg(pkg) {
+  S.selectedPkg = pkg;
+  document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  const d = PKG_DATA[pkg];
+  document.getElementById('checkoutTitle').textContent  = d.name;
+  document.getElementById('checkoutPrice').textContent  = `$${d.price}`;
+  document.getElementById('checkoutCredits').textContent= `${d.credits} credit${d.credits>1?'s':''}`;
+  document.getElementById('checkoutBox').classList.remove('hidden');
+}
+
+async function submitBooking() {
+  if (!S.user || !S.selectedPkg) return;
+  const d = PKG_DATA[S.selectedPkg];
+  try {
+    await window.fbAddDoc('bookings', {
+      studentEmail: S.user.email,
+      package: d.name, credits: d.credits, price: d.price,
+      status: 'pending', createdAt: new Date().toISOString(),
+    });
+    await window.sendBookingEmail({
+      student: S.user.email, package: d.name,
+      date: 'TBD', time: 'TBD',
+    });
+    alert('Booking request sent! We'll confirm shortly.');
+    loadStudentDashboard();
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+// ================================================================
+// SLOT BOOKING
+// ================================================================
+async function loadSlots() {
+  const date = document.getElementById('bookDate').value;
+  if (!date) return;
+  const dayName = new Date(date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long'});
+  const availSnap = await window.fbGetDoc('availability','default');
+  const avail = availSnap.exists() ? availSnap.data() : {};
+  const hours = avail[dayName] || [];
+  const container = document.getElementById('slotsContainer');
+  const grid = document.getElementById('slotsGrid');
+  if (!hours.length) { grid.innerHTML='<p class="text-slate-400 text-sm">No slots available</p>'; }
+  else {
+    grid.innerHTML = hours.map(h => `
+      <button class="slot-btn avail-slot" onclick="selectSlot('${date}','${h}',this)">${h}</button>
+    `).join('');
+  }
+  container.classList.remove('hidden');
+  document.getElementById('selectedSlotBox').classList.add('hidden');
+  document.getElementById('confirmBookBtn').classList.add('hidden');
+}
+
+function selectSlot(date, time, btn) {
+  S.selectedSlot = { date, time };
+  document.querySelectorAll('.slot-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const kst = new Date(`${date}T${time}:00`).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('selectedSlotLabel').textContent = `${date} ${time}`;
+  document.getElementById('selectedSlotKST').textContent   = `KST: ${kst}`;
+  document.getElementById('selectedSlotBox').classList.remove('hidden');
+  document.getElementById('confirmBookBtn').classList.remove('hidden');
+}
+
+async function submitScheduledBooking() {
+  if (!S.user || !S.selectedSlot) return;
+  const userSnap = await window.fbGetDoc('users', S.user.email);
+  const credits = userSnap.exists() ? (userSnap.data().confirmedCredits||0) : 0;
+  if (credits < 1) { alert('You need at least 1 confirmed credit to book.'); return; }
+  try {
+    await window.fbAddDoc('bookings', {
+      studentEmail: S.user.email,
+      date: S.selectedSlot.date, time: S.selectedSlot.time,
+      status: 'pending', createdAt: new Date().toISOString(),
+    });
+    await window.sendBookingEmail({ student:S.user.email, date:S.selectedSlot.date, time:S.selectedSlot.time });
+    alert('Booking submitted!');
+    switchStudentTab('dash');
+    loadStudentDashboard();
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+// ================================================================
+// WEEKLY CALENDAR (TUTOR)
+// ================================================================
+function setCalView(v) {
+  S.calView = v;
+  document.getElementById('calWeekView').classList.toggle('hidden', v !== 'week');
+  document.getElementById('calListView').classList.toggle('hidden',  v !== 'list');
+  document.getElementById('calViewWeek').className = v==='week' ? 'px-3 py-1 text-xs rounded-md bg-white shadow font-medium' : 'px-3 py-1 text-xs rounded-md font-medium text-slate-500';
+  document.getElementById('calViewList').className = v==='list' ? 'px-3 py-1 text-xs rounded-md bg-white shadow font-medium' : 'px-3 py-1 text-xs rounded-md font-medium text-slate-500';
+  if (v === 'week') renderWeekCalendar();
+  else renderTutorBookings();
+}
+
+function getWeekDates(offset) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const dow = now.getDay();
+  const mon = new Date(now); mon.setDate(now.getDate() - dow + 1 + offset*7);
+  return Array.from({length:7}, (_,i) => { const d=new Date(mon); d.setDate(mon.getDate()+i); return d; });
+}
+
+function prevWeek() { S.calWeekOffset--; renderWeekCalendar(); }
+function nextWeek() { S.calWeekOffset++; renderWeekCalendar(); }
+
+async function renderWeekCalendar() {
+  const days = getWeekDates(S.calWeekOffset);
+  const fmt = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  document.getElementById('weekLabel').textContent =
+    `${fmt(days[0])} – ${fmt(days[6])}`;
+
+  // Build hour rows 08–20
+  const hours = Array.from({length:13},(_,i)=>i+8);
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  const thead = document.getElementById('weekHeader');
+  thead.innerHTML = '<tr class="bg-slate-50">'
+    + '<th class="px-2 py-2 w-14 text-slate-400 font-normal text-xs">Time</th>'
+    + days.map((d,i) => `<th class="px-2 py-2 text-xs font-medium text-slate-600">${DAYS[i]}<br><span class="font-normal text-slate-400">${fmt(d)}</span></th>`).join('')
+    + '</tr>';
+
+  // Load bookings for this week
+  let bookings = [];
+  if (S.user) {
+    try {
+      const snap = await window.fbQuery('bookings','tutorEmail','==',S.user.email);
+      bookings = snap.docs.map(d=>({id:d.id,...d.data()}));
+    } catch(e){}
+  }
+
+  const tbody = document.getElementById('weekBody');
+  tbody.innerHTML = hours.map(h => {
+    const hStr = String(h).padStart(2,'0')+':00';
+    return '<tr>'
+      + `<td class="px-2 py-1 text-xs text-slate-400 border-b border-slate-100 text-right">${hStr}</td>`
+      + days.map(d => {
+          const ds = d.toISOString().split('T')[0];
+          const ev = bookings.find(b=>b.date===ds && b.time && b.time.startsWith(String(h).padStart(2,'0')));
+          return `<td class="cal-week-slot border-l border-slate-100">${ev ? `<div class="cal-event bg-emerald-500">${ev.studentEmail||'Student'}</div>` : ''}</td>`;
+        }).join('')
+      + '</tr>';
+  }).join('');
+}
+
+// ================================================================
+// TUTOR BOOKINGS LIST VIEW
+// ================================================================
+async function renderTutorBookings() {
+  if (!S.user) return;
+  const tbody = document.getElementById('tutorBookingsBody');
+  tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center text-slate-400">Loading…</td></tr>';
+  try {
+    const snap = await window.fbQuery('bookings','tutorEmail','==',S.user.email);
+    const bookings = snap.docs.map(d=>({id:d.id,...d.data()}));
+    if (!bookings.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center text-slate-400">No bookings yet</td></tr>'; return;
+    }
+    tbody.innerHTML = bookings.map(b=>`
+      <tr class="border-b border-slate-50 hover:bg-slate-50">
+        <td class="px-4 py-3">${b.date||''} ${b.time||''}</td>
+        <td class="px-4 py-3">${b.studentEmail||''}</td>
+        <td class="px-4 py-3">${b.package||''}</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs ${statusClass(b.status)}">${b.status||'pending'}</span></td>
+        <td class="px-4 py-3 flex gap-1">
+          ${b.status!=='confirmed'?`<button onclick="confirmTutorBooking('${b.id}')" class="text-xs px-2 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded">Confirm</button>`:''}
+          ${b.status!=='completed'?`<button onclick="completeTutorBooking('${b.id}')" class="text-xs px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded">Complete</button>`:''}
+        </td>
+      </tr>`).join('');
+  } catch(e) { tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-6 text-center text-red-400">Error: ${e.message}</td></tr>`; }
+}
+
+async function confirmTutorBooking(id) {
+  await window.fbUpdateDoc('bookings', id, { status:'confirmed', confirmedAt: new Date().toISOString() });
+  renderTutorBookings();
+}
+
+async function completeTutorBooking(id) {
+  const snap = await window.fbGetDoc('bookings', id);
+  const b = snap.data();
+  await window.fbUpdateDoc('bookings', id, { status:'completed', completedAt: new Date().toISOString() });
+  // Deduct 1 credit
+  if (b.studentEmail) {
+    const uSnap = await window.fbGetDoc('users', b.studentEmail);
+    const cr = uSnap.exists() ? (uSnap.data().confirmedCredits||0) : 0;
+    await window.fbSetDoc('users', b.studentEmail, { confirmedCredits: Math.max(0,cr-1) });
+  }
+  renderTutorBookings();
+}
+
+async function populateMeetBookingSelect() {
+  const sel = document.getElementById('meetBookingSelect');
+  while (sel.options.length > 2) sel.remove(2); // keep first 2 options
+  if (!S.user) return;
+  const snap = await window.fbQuery('bookings','tutorEmail','==',S.user.email);
+  snap.docs.forEach(d => {
+    const b = d.data();
+    const opt = new Option(`${b.date||'?'} ${b.time||''} — ${b.studentEmail||''}`, d.id);
+    sel.add(opt);
+  });
+}
+
+async function saveMeetLink() {
+  const sel = document.getElementById('meetBookingSelect');
+  const link = document.getElementById('meetLinkInput').value.trim();
+  if (!sel.value || !link) { alert('Select a booking and enter a Meet link.'); return; }
+  if (sel.value === '__all__') {
+    const snap = await window.fbQuery('bookings','tutorEmail','==',S.user.email);
+    await Promise.all(snap.docs.map(d=>window.fbUpdateDoc('bookings',d.id,{meetLink:link})));
+    alert('Meet link saved to all bookings!');
+  } else {
+    await window.fbUpdateDoc('bookings', sel.value, { meetLink: link });
+    alert('Meet link saved!');
+  }
+}
+
+// ================================================================
+// AVAILABILITY GRID
+// ================================================================
+function renderAvailGrid() {
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const HOURS = Array.from({length:14},(_,i)=>i+8);
+  const table = document.getElementById('availGrid');
+  table.innerHTML = '<thead><tr><th class="p-1 text-slate-400 text-xs w-10"></th>'
+    + DAYS.map(d=>`<th class="p-1 text-xs text-slate-600 w-8">${d}</th>`).join('')
+    + '</tr></thead><tbody>'
+    + HOURS.map(h => '<tr><td class="p-1 text-xs text-slate-400 text-right">' + String(h).padStart(2,'0')+'h</td>'
+        + DAYS.map(d => {
+            const key=`${d}_${h}`;
+            const on = S.availState[key];
+            return `<td class="p-0.5"><div class="avail-cell ${on?'free':'busy'}" onclick="toggleAvail('${key}',this)"></div></td>`;
+          }).join('')
+        + '</tr>').join('')
+    + '</tbody>';
+}
+
+function toggleAvail(key, el) {
+  S.availState[key] = !S.availState[key];
+  el.className = `avail-cell ${S.availState[key]?'free':'busy'}`;
+}
+
+async function saveAvailability() {
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const HOURS = Array.from({length:14},(_,i)=>i+8);
+  const out = {};
+  DAYS.forEach(d => {
+    out[d] = HOURS.filter(h=>S.availState[`${d}_${h}`]).map(h=>String(h).padStart(2,'0')+':00');
+  });
+  await window.fbSetDoc('availability','default',out);
+  alert('Availability saved!');
+}
+
+// ================================================================
+// BLOCKED DATES
+// ================================================================
+async function addBlockedDate() {
+  const d = document.getElementById('blockDateInput').value;
+  if (!d) return;
+  await window.fbSetDoc('blockedDates', d, { blocked: true, addedBy: S.user?.email });
+  renderBlockedDates();
+}
+
+async function removeBlockedDate(d) {
+  await window.fbDeleteDoc('blockedDates', d);
+  renderBlockedDates();
+}
+
+async function renderBlockedDates() {
+  const snap = await window.fbGetDocs('blockedDates');
+  const list = document.getElementById('blockedDatesList');
+  list.innerHTML = snap.docs.map(d=>`
+    <span class="flex items-center gap-1 bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full">
+      ${d.id}
+      <button onclick="removeBlockedDate('${d.id}')" class="hover:text-red-900">✕</button>
+    </span>`).join('');
+}
+
+// ================================================================
+// CALENDAR IDs
+// ================================================================
+function addCalendarField() {
+  const container = document.getElementById('calendarIdFields');
+  const n = container.children.length + 1;
+  const inp = document.createElement('input');
+  inp.type='text'; inp.className='calid-input border border-slate-200 rounded-lg px-3 py-2 text-sm w-full';
+  inp.placeholder=`Calendar ID #${n}`;
+  container.appendChild(inp);
+}
+
+async function saveCalendars() {
+  const ids = Array.from(document.querySelectorAll('.calid-input')).map(i=>i.value.trim()).filter(Boolean);
+  await window.fbSetDoc('tutorSettings', S.user?.email||'default', { calendarIds: ids });
+  alert('Calendars saved!');
+}
+
+// ================================================================
+// PRICING
+// ================================================================
+async function savePricing() {
+  const data = {
+    trial:  parseFloat(document.getElementById('priceTrial').value)||10,
+    single: parseFloat(document.getElementById('priceSingle').value)||33,
+    pack5:  parseFloat(document.getElementById('pricePack5').value)||160,
+    pack10: parseFloat(document.getElementById('pricePack10').value)||300,
+  };
+  await window.fbSetDoc('pricing', S.user?.email||'default', data);
+  alert('Pricing saved!');
+}
+
+async function loadPricingFromFirestore() {
+  if (!S.user) return;
+  const snap = await window.fbGetDoc('pricing', S.user.email);
+  if (!snap.exists()) return;
+  const d = snap.data();
+  document.getElementById('priceTrial').value  = d.trial||10;
+  document.getElementById('priceSingle').value = d.single||33;
+  document.getElementById('pricePack5').value  = d.pack5||160;
+  document.getElementById('pricePack10').value = d.pack10||300;
+}
+
+async function applyCustomRate() {
+  const email = document.getElementById('overrideEmail').value.trim();
+  const rate  = parseFloat(document.getElementById('overrideRate').value)||0;
+  if (!email) return;
+  await window.fbSetDoc('customRates', email, { rate, setBy: S.user?.email });
+  renderCustomRates();
+}
+
+async function renderCustomRates() {
+  const snap = await window.fbGetDocs('customRates');
+  document.getElementById('customRatesList').innerHTML =
+    snap.docs.map(d=>`<div class="flex justify-between py-1 border-b border-slate-100"><span>${d.id}</span><span class="font-medium">$${d.data().rate}</span></div>`).join('')
+    || '<p class="text-slate-400">No overrides</p>';
+}
+
+// ================================================================
+// TUTOR PROFILE
+// ================================================================
+async function loadTutorProfile() {
+  if (!S.user) return;
+  const snap = await window.fbGetDoc('tutorProfiles', S.user.email);
+  if (!snap.exists()) return;
+  const d = snap.data();
+  ['tutorName','tutorBio','tutorEducation','tutorWorkExp','tutorCerts','tutorVideo'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.value = d[id.replace('tutor','').toLowerCase()] || d[id] || '';
+  });
+  document.getElementById('tutorName').value    = d.name    ||'';
+  document.getElementById('tutorBio').value     = d.bio     ||'';
+  document.getElementById('tutorEducation').value=d.education||'';
+  document.getElementById('tutorWorkExp').value = d.workExp ||'';
+  document.getElementById('tutorCerts').value   = d.certs   ||'';
+  document.getElementById('tutorVideo').value   = d.video   ||'';
+  const specs = d.specializations || [];
+  document.querySelectorAll('.spec-cb').forEach(cb=>{ cb.checked = specs.includes(cb.value); });
+  // Hero
+  if (d.name) document.getElementById('tutorHeroName').textContent = d.name;
+  if (d.bio)  document.getElementById('tutorHeroBio').textContent  = d.bio;
+}
+
+async function saveTutorProfile() {
+  if (!S.user) return;
+  const specs = Array.from(document.querySelectorAll('.spec-cb:checked')).map(c=>c.value);
+  const data = {
+    name:       document.getElementById('tutorName').value,
+    bio:        document.getElementById('tutorBio').value,
+    education:  document.getElementById('tutorEducation').value,
+    workExp:    document.getElementById('tutorWorkExp').value,
+    certs:      document.getElementById('tutorCerts').value,
+    video:      document.getElementById('tutorVideo').value,
+    specializations: specs,
+    updatedAt:  new Date().toISOString(),
+  };
+  await window.fbSetDoc('tutorProfiles', S.user.email, data);
+  document.getElementById('tutorHeroName').textContent = data.name || 'Tutor Dashboard';
+  document.getElementById('tutorHeroBio').textContent  = data.bio  || 'Welcome back!';
+  alert('Profile saved!');
+}
+
+// ================================================================
+// EARNINGS
+// ================================================================
+function setEarningsPeriod(p) {
+  S.earningsPeriod = p;
+  ['week','month','all'].forEach(x=>{
+    document.getElementById('ep-'+x).className = x===p
+      ? 'px-3 py-1 text-xs rounded-md bg-white shadow font-medium'
+      : 'px-3 py-1 text-xs rounded-md font-medium text-slate-500';
+  });
+  loadEarnings();
+}
+
+async function loadEarnings() {
+  if (!S.user) return;
+  const snap = await window.fbQuery('bookings','tutorEmail','==',S.user.email);
+  const all = snap.docs.map(d=>d.data());
+  const now = new Date();
+  const filter = b => {
+    if (!b.date) return S.earningsPeriod === 'all';
+    const d = new Date(b.date);
+    if (S.earningsPeriod === 'week') { const wAgo = new Date(now); wAgo.setDate(now.getDate()-7); return d>=wAgo; }
+    if (S.earningsPeriod === 'month') { return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); }
+    return true;
+  };
+  const filtered = all.filter(filter);
+  const confirmed = filtered.filter(b=>b.status==='confirmed'||b.status==='completed');
+  const pending   = filtered.filter(b=>b.status==='pending');
+  const sumPrice  = arr => arr.reduce((a,b)=>a+(b.price||0),0);
+  document.getElementById('earnConfirmed').textContent = '$'+sumPrice(confirmed);
+  document.getElementById('earnPending').textContent   = '$'+sumPrice(pending);
+
+  // Per-student breakdown
+  const byStudent = {};
+  filtered.forEach(b=>{ const e=b.studentEmail||'?'; if(!byStudent[e]) byStudent[e]={lessons:0,conf:0,pend:0}; byStudent[e].lessons++; if(b.status==='confirmed'||b.status==='completed') byStudent[e].conf+=b.price||0; else byStudent[e].pend+=b.price||0; });
+  document.getElementById('earningsBreakdown').innerHTML =
+    Object.entries(byStudent).map(([e,v])=>`<tr class="border-b border-slate-50"><td class="px-3 py-2">${e}</td><td class="px-3 py-2">${v.lessons}</td><td class="px-3 py-2 text-emerald-600">$${v.conf}</td><td class="px-3 py-2 text-amber-600">$${v.pend}</td></tr>`).join('')
+    || '<tr><td colspan="4" class="px-3 py-6 text-center text-slate-400">No data</td></tr>';
+}
+
+// ================================================================
+// TUTOR DASHBOARD INIT
+// ================================================================
+async function loadTutorDashboard() {
+  if (!S.user) return;
+  await loadTutorProfile();
+  await populateMeetBookingSelect();
+  // Load availability state
+  const snap = await window.fbGetDoc('availability','default');
+  if (snap.exists()) {
+    const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const data = snap.data();
+    S.availState = {};
+    DAYS.forEach(d=>{ (data[d]||[]).forEach(h=>{ const hh=parseInt(h); S.availState[`${d}_${hh}`]=true; }); });
+  }
+}
+
+// ================================================================
+// SEND FEEDBACK
+// ================================================================
+async function sendFeedback() {
+  const student = document.getElementById('feedbackStudent').value.trim();
+  const text    = document.getElementById('feedbackText').value.trim();
+  const file    = document.getElementById('materialFile').files[0];
+  if (!student || !text) { alert('Fill in student email and feedback.'); return; }
+  if (file) {
+    if (file.size > 10*1024*1024) { alert('File too large (max 10MB)'); return; }
+    const allowed = ['.pdf','.mp3','.mp4','.html'];
+    const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+    if (!allowed.includes(ext)) { alert('Unsupported file type'); return; }
+  }
+  await window.fbAddDoc('feedback', {
+    from: S.user?.email, to: student, text,
+    fileName: file?.name||null,
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now()+7*24*3600*1000).toISOString(),
+  });
+  alert('Feedback sent!');
+  document.getElementById('feedbackText').value = '';
+}
+
+// ================================================================
+// ADMIN DASHBOARD
+// ================================================================
+async function loadAdminDashboard() {
+  renderAdminUsers();
+  loadAdminProfile();
+}
+
+async function renderAdminUsers() {
+  const tbody = document.getElementById('adminUsersBody');
+  tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-6 text-center text-slate-400">Loading…</td></tr>';
+  try {
+    const snap = await window.fbGetDocs('roles');
+    const rows = snap.docs.map(d=>({email:d.id,...d.data()}));
+    tbody.innerHTML = rows.map(r=>`
+      <tr class="border-b border-slate-50 hover:bg-slate-50">
+        <td class="px-4 py-3">${r.email}</td>
+        <td class="px-4 py-3">
+          <select onchange="setUserRole('${r.email}',this.value)" class="border border-slate-200 rounded px-2 py-1 text-xs">
+            ${['student','tutor','admin'].map(ro=>`<option value="${ro}" ${ro===r.role?'selected':''}>${ro}</option>`).join('')}
+          </select>
+        </td>
+        <td class="px-4 py-3 text-center">—</td>
+        <td class="px-4 py-3">
+          <button onclick="grantCredits('${r.email}')" class="text-xs px-2 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded">Grant Credits</button>
+        </td>
+      </tr>`).join('');
+  } catch(e) { tbody.innerHTML=`<tr><td colspan="4" class="px-4 py-6 text-center text-red-400">Error: ${e.message}</td></tr>`; }
+}
+
+async function setUserRole(email, role) {
+  await window.fbSetDoc('roles', email, { role });
+}
+
+async function grantCredits(email) {
+  const n = prompt(`Grant how many credits to ${email}?`);
+  if (!n || isNaN(n)) return;
+  const snap = await window.fbGetDoc('users', email);
+  const cur = snap.exists() ? (snap.data().confirmedCredits||0) : 0;
+  await window.fbSetDoc('users', email, { confirmedCredits: cur + parseInt(n) });
+  alert(`Granted ${n} credits to ${email}`);
+}
+
+// ================================================================
+// ADD TUTOR (ADMIN)
+// ================================================================
+async function addTutor() {
+  const email = document.getElementById('newTutorEmail').value.trim();
+  const comm  = parseFloat(document.getElementById('newTutorCommission').value)||0;
+  if (!email) { alert('Enter tutor email'); return; }
+  await window.fbSetDoc('roles', email, { role:'tutor' });
+  await window.fbSetDoc('tutorProfiles', email, { commission: comm, email });
+  alert(`${email} set as tutor with ${comm}% commission`);
+  document.getElementById('newTutorEmail').value = '';
+  document.getElementById('newTutorCommission').value = '';
+}
+
+// ================================================================
+// ADMIN PROFILE
+// ================================================================
+function previewAdminPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('adminPhotoPreview');
+    img.src = e.target.result;
+    img.classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+}
+
+async function loadAdminProfile() {
+  const snap = await window.fbGetDoc('adminProfile','main');
+  if (!snap.exists()) return;
+  const d = snap.data();
+  document.getElementById('adminName').value  = d.name||'';
+  document.getElementById('adminBio').value   = d.bio||'';
+  document.getElementById('adminVideo').value = d.video||'';
+  document.getElementById('adminRating').value= d.rating||'';
+  if (d.photoUrl) {
+    const img = document.getElementById('adminPhotoPreview');
+    img.src = d.photoUrl; img.classList.remove('hidden');
+  }
+}
+
+async function saveAdminProfile() {
+  const data = {
+    name:   document.getElementById('adminName').value,
+    bio:    document.getElementById('adminBio').value,
+    video:  document.getElementById('adminVideo').value,
+    rating: parseFloat(document.getElementById('adminRating').value)||0,
+    updatedAt: new Date().toISOString(),
+  };
+  // Handle photo upload (store as data URL for simplicity; swap for Storage in production)
+  const file = document.getElementById('adminPhotoFile').files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      data.photoUrl = e.target.result;
+      await window.fbSetDoc('adminProfile','main',data);
+      alert('Profile saved!');
+    };
+    reader.readAsDataURL(file);
+  } else {
+    await window.fbSetDoc('adminProfile','main',data);
+    alert('Profile saved!');
+  }
+}
+
+// ================================================================
+// REVENUE (ADMIN)
+// ================================================================
+function setRevenueView(v) {
+  S.revenueView = v;
+  ['student','tutor','combined'].forEach(x=>{
+    document.getElementById('rv-'+x).className = x===v
+      ? 'px-3 py-1 text-xs rounded-md bg-white shadow font-medium'
+      : 'px-3 py-1 text-xs rounded-md font-medium text-slate-500';
+  });
+  renderRevenue();
+}
+
+async function renderRevenue() {
+  const snap = await window.fbGetDocs('bookings');
+  const all  = snap.docs.map(d=>d.data());
+  const el   = document.getElementById('revenueContent');
+
+  if (S.revenueView === 'combined') {
+    const total = all.reduce((a,b)=>a+(b.price||0),0);
+    const conf  = all.filter(b=>b.status==='confirmed'||b.status==='completed').reduce((a,b)=>a+(b.price||0),0);
+    el.innerHTML = `<div class="grid grid-cols-2 gap-3"><div class="stat-card bg-emerald-50 border border-emerald-100"><div class="text-2xl font-bold text-emerald-600">$${conf}</div><div class="text-xs text-emerald-700 mt-1">Confirmed Revenue</div></div><div class="stat-card bg-amber-50 border border-amber-100"><div class="text-2xl font-bold text-amber-600">$${total-conf}</div><div class="text-xs text-amber-700 mt-1">Pending Revenue</div></div></div>`;
+  } else if (S.revenueView === 'student') {
+    const by = {};
+    all.forEach(b=>{const e=b.studentEmail||'?';if(!by[e])by[e]=0;by[e]+=b.price||0;});
+    el.innerHTML = '<table class="w-full text-sm"><thead class="bg-slate-50 text-slate-500 text-xs uppercase"><tr><th class="px-3 py-2 text-left">Student</th><th class="px-3 py-2 text-left">Total</th></tr></thead><tbody>'
+      + Object.entries(by).map(([e,v])=>`<tr class="border-b border-slate-50"><td class="px-3 py-2">${e}</td><td class="px-3 py-2 font-medium">$${v}</td></tr>`).join('')
+      + '</tbody></table>';
+  } else {
+    const by = {};
+    all.forEach(b=>{const e=b.tutorEmail||'?';if(!by[e])by[e]=0;by[e]+=b.price||0;});
+    el.innerHTML = '<table class="w-full text-sm"><thead class="bg-slate-50 text-slate-500 text-xs uppercase"><tr><th class="px-3 py-2 text-left">Tutor</th><th class="px-3 py-2 text-left">Total</th></tr></thead><tbody>'
+      + Object.entries(by).map(([e,v])=>`<tr class="border-b border-slate-50"><td class="px-3 py-2">${e}</td><td class="px-3 py-2 font-medium">$${v}</td></tr>`).join('')
+      + '</tbody></table>';
+  }
+}
+
+// ================================================================
+// VIDEO MODAL
+// ================================================================
+function openVideoModal(url) {
+  const c = document.getElementById('videoContainer');
+  if (url.includes('youtube') || url.includes('youtu.be')) {
+    const vid = url.match(/(?:v=|youtu\.be\/)([^&?]+)/)?.[1];
+    c.innerHTML = `<iframe src="https://www.youtube.com/embed/${vid}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>`;
+  } else {
+    c.innerHTML = `<video src="${url}" controls class="w-full h-full"></video>`;
+  }
+  document.getElementById('videoModal').classList.remove('hidden');
+}
+function closeVideoModal() {
+  document.getElementById('videoModal').classList.add('hidden');
+  document.getElementById('videoContainer').innerHTML = '';
+}
+
+// ================================================================
+// AUTH ERROR
+// ================================================================
+window.showAuthError = function(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+};
+
+// ================================================================
+// INIT
+// ================================================================
+function init() {
+  showAllViews('login');
+  applyI18N();
+}
+
+init();
+</script>
+</body>
+</html>
