@@ -1,0 +1,9 @@
+{
+  "indexes": [
+    { "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [ { "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "endAt", "order": "ASCENDING" } ] },
+    { "collectionGroup": "orders", "queryScope": "COLLECTION",
+      "fields": [ { "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "expiresAt", "order": "ASCENDING" } ] }
+  ],
+  "fieldOverrides": []
+}
