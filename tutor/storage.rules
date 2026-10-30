@@ -1,0 +1,30 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() { return request.auth != null && request.auth.token.email != null; }
+    function isOwner()  { return signedIn() && request.auth.token.email == "shchung0130@gmail.com"; }
+    function roleDoc()  { return firestore.get(/databases/(default)/documents/roles/$(request.auth.token.email)); }
+    function hasRole()  { return signedIn() && firestore.exists(/databases/(default)/documents/roles/$(request.auth.token.email)); }
+    function isTutorOf(tid) {
+      return isOwner() || (hasRole() && (roleDoc().data.role == "admin"
+        || (roleDoc().data.role == "tutor" && roleDoc().data.get("tutorId", "") == tid)));
+    }
+
+    // 학습 자료: 10MB 이하 (HTML 포함 모든 형식), 로그인 사용자 다운로드
+    match /materials/{tutorId}/{fileName} {
+      allow read: if signedIn();
+      allow create: if isTutorOf(tutorId) && request.resource.size <= 10 * 1024 * 1024;
+      allow delete: if isTutorOf(tutorId);
+    }
+
+    // 튜터 프로필 사진: 5MB 이하 이미지, 공개 읽기
+    match /tutorPhotos/{tutorId}/{fileName} {
+      allow read: if true;
+      allow create: if isTutorOf(tutorId)
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if isTutorOf(tutorId);
+    }
+  }
+}

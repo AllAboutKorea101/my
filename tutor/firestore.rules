@@ -1,0 +1,167 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ═════════ 공통 함수 ═════════
+    function signedIn()   { return request.auth != null && request.auth.token.email != null; }
+    function myEmail()    { return request.auth.token.email; }
+    // 사이트 소유자 (기존 isAdmin과 동일 — 북스토어 규칙에서 그대로 사용)
+    function isOwner()    { return signedIn() && myEmail() == "shchung0130@gmail.com"; }
+    function hasRoleDoc() { return signedIn() && exists(/databases/$(database)/documents/roles/$(myEmail())); }
+    function myRole()     { return get(/databases/$(database)/documents/roles/$(myEmail())).data; }
+    // 튜터링 관리자 = 소유자 또는 roles.role == "admin"
+    function isAdmin()    { return isOwner() || (hasRoleDoc() && myRole().role == "admin"); }
+    // 해당 튜터 본인 또는 관리자
+    function isTutorOf(tid) {
+      return isAdmin() || (hasRoleDoc() && myRole().role == "tutor" && myRole().get("tutorId", "") == tid);
+    }
+    // 해당 튜터 본인만 (학생 맞춤요금 쓰기 — 관리자는 조회만)
+    function isSelfTutor(tid) {
+      return hasRoleDoc() && myRole().role in ["tutor", "admin"] && myRole().get("tutorId", "") == tid;
+    }
+
+    // ═════════ 기존 북스토어 규칙 (동작 동일, 리뷰만 보안 강화) ═════════
+    match /books/{bookId} {
+      allow read: if true;
+      allow write: if isOwner();
+
+      // 리뷰: 누구나 읽기, 로그인 사용자 작성, 수정·삭제는 작성자 본인 또는 소유자
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow create: if signedIn();
+        allow update, delete: if signedIn() && (
+          isOwner()
+          || resource.data.get("uid", "") == request.auth.uid
+          || resource.data.get("email", "") == myEmail()
+          || reviewId == request.auth.uid
+        );
+      }
+    }
+
+    match /purchases/{purchaseId} {
+      allow read, write: if request.auth != null &&
+        (resource == null || resource.data.uid == request.auth.uid ||
+          request.resource.data.uid == request.auth.uid || isOwner());
+    }
+
+    match /masterclass/{docId} {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+
+    match /users/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isOwner());
+      allow write: if isOwner();
+    }
+
+    match /userFavorites/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    match /userProgress/{docId} {
+      allow read: if request.auth != null && (resource.data.uid == request.auth.uid || isOwner());
+      allow write: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // ═════════ 튜터링 플랫폼 ═════════
+
+    // 역할: 본인/관리자 읽기, 첫 로그인 시 본인 student 문서만 자동 생성, 변경은 관리자
+    match /roles/{email} {
+      allow read: if signedIn() && (myEmail() == email || isAdmin());
+      allow create: if isAdmin() || (
+        signedIn() && myEmail() == email
+        && request.resource.data.role == "student"
+        && request.resource.data.keys().hasOnly(["role", "email", "createdAt"])
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // 튜터 공개 프로필 + 가격 + 가능시간 + 휴일
+    match /tutors/{tutorId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      // 튜터 본인은 수정 가능하되 수수료·활성·평점·이메일·ID는 관리자만
+      allow update: if isAdmin() || (
+        isTutorOf(tutorId)
+        && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(["commission", "active", "rating", "reviewCount", "email", "tutorId"])
+      );
+
+      // 튜터 리뷰: 공개 읽기, 쓰기는 서버(submitReview)만
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+
+    // 튜터 비공개 설정 (구글 캘린더 ID, 동기화 상태)
+    match /tutorPrivate/{tutorId} {
+      allow read, write: if isTutorOf(tutorId);
+    }
+
+    // 튜터 Google 캘린더의 바쁜 시간대 (일정 제목 없음): 공개 읽기, 쓰기는 서버만
+    match /calBusy/{tutorId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 학생 맞춤 요금: 튜터 본인이 관리, 관리자는 조회만, 학생은 본인 요금만 조회
+    match /customRates/{id} {
+      allow get: if signedIn() && (resource == null || resource.data.email == myEmail() || isTutorOf(resource.data.tutorId));
+      allow list: if signedIn() && (resource.data.email == myEmail() || isTutorOf(resource.data.tutorId));
+      allow create, update: if isSelfTutor(request.resource.data.tutorId)
+        && id == request.resource.data.tutorId + "__" + request.resource.data.email.lower();
+      allow delete: if isSelfTutor(resource.data.tutorId);
+    }
+
+    // 결제(수강권 구매): 본인/담당 튜터/관리자 읽기, 쓰기는 서버만
+    match /orders/{id} {
+      allow read: if signedIn() && (resource.data.studentEmail == myEmail() || isTutorOf(resource.data.tutorId));
+      allow write: if false;
+    }
+
+    // 수업 예약: 생성·취소·차감은 서버만, 튜터는 Meet 링크/메모만 수정
+    match /bookings/{id} {
+      allow read: if signedIn() && (resource.data.studentEmail == myEmail() || isTutorOf(resource.data.tutorId));
+      allow update: if isTutorOf(resource.data.tutorId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["meetLink", "tutorNote"]);
+      allow create, delete: if false;
+    }
+
+    // 크레딧 변동 이력: 읽기만, 쓰기는 서버만
+    match /creditLogs/{id} {
+      allow read: if signedIn() && (resource.data.studentEmail == myEmail() || isTutorOf(resource.data.tutorId));
+      allow write: if false;
+    }
+
+    // 예약된 시간대 (개인정보 없음): 공개 읽기, 쓰기는 서버만
+    match /busySlots/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 학습 자료·피드백: 대상 학생 / 전체 공개("all") / 담당 튜터
+    match /materials/{id} {
+      allow read: if signedIn() && (
+        resource.data.studentEmail == myEmail()
+        || resource.data.studentEmail == "all"
+        || isTutorOf(resource.data.tutorId)
+      );
+      allow create: if isTutorOf(request.resource.data.tutorId)
+        && request.resource.data.get("size", 0) <= 10485760;
+      allow delete: if isTutorOf(resource.data.tutorId);
+      allow update: if false;
+    }
+
+    // 플랫폼 공통 설정
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
