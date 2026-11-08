@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOPIK II 듣기 스마트 학습 센터</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR & Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .active-sentence {
+            background-color: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            transform: translateX(4px);
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brand-600 text-white p-2.5 rounded-xl shadow-md">
+                    <i class="fa-solid font-bold fa-headphones-simple text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">TOPIK II 스마트 듣기 학습</h1>
+                    <p class="text-xs text-slate-400">한국어능력시험 II (60회 듣기 9번 수록)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    AI 성우 엔진 탑재
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 py-8 w-full flex-grow space-y-8">
+
+        <!-- Question Header Card -->
+        <section class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-4 pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <span class="bg-brand-100 text-brand-700 text-sm font-bold px-3 py-1 rounded-lg">문항 9번</span>
+                    <span class="text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">유형: 이어서 할 행동 고르기</span>
+                </div>
+                <div class="text-xs text-slate-400">
+                    <i class="fa-regular fa-file-lines mr-1"></i> 출처: TOPIK II 제60회 듣기
+                </div>
+            </div>
+            <h2 class="text-lg md:text-xl font-bold text-slate-900 leading-snug">
+                [9] 다음 대화를 듣고 여자가 이어서 할 행동으로 가장 알맞은 것을 고르십시오.
+            </h2>
+        </section>
+
+        <!-- Voice & Audio Control Panel -->
+        <section class="glass-card rounded-2xl p-6 shadow-md border border-brand-100 bg-gradient-to-br from-white to-brand-50/30">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-brand-600"></i>
+                    성우 설정 및 음성 컨트롤러
+                </h3>
+                <span id="ttsStatusBadge" class="text-xs px-2.5 py-1 rounded-md bg-slate-100 text-slate-600">
+                    준비됨
+                </span>
+            </div>
+
+            <!-- Grid Controls -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+                <!-- Male Voice Selector -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-slate-300 transition-all">
+                    <label class="block text-xs font-bold text-slate-600 mb-2 flex items-center justify-between">
+                        <span><i class="fa-solid fa-mars text-blue-500 mr-1.5"></i>남자 성우 (10명 선택)</span>
+                        <span class="text-[10px] text-blue-600 font-semibold bg-blue-50 px-1.5 py-0.5 rounded">AI 성우 선택</span>
+                    </label>
+                    <select id="maleVoiceSelect" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none">
+                        <option value="Fenrir" selected>민수 (활기차고 명확한 톤)</option>
+                        <option value="Orus">철수 (단정하고 신중한 표준 톤)</option>
+                        <option value="Puck">민우 (밝고 경쾌한 톤)</option>
+                        <option value="Charon">준호 (지적이고 전달력 높은 톤)</option>
+                        <option value="Algenib">현우 (중저음의 무게감 있는 톤)</option>
+                        <option value="Iapetus">성민 (선명하고 또렷한 톤)</option>
+                        <option value="Gacrux">도현 (성숙하고 부드러운 톤)</option>
+                        <option value="Rasalgethi">상우 (정보 전달 및 뉴스 스타일)</option>
+                        <option value="Zubenelgenubi">지원 (편안하고 캐주얼한 톤)</option>
+                        <option value="Sadaltager">승현 (지적이면서 차분한 톤)</option>
+                    </select>
+                </div>
+
+                <!-- Female Voice Selector -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-slate-300 transition-all">
+                    <label class="block text-xs font-bold text-slate-600 mb-2 flex items-center justify-between">
+                        <span><i class="fa-solid fa-venus text-pink-500 mr-1.5"></i>여자 성우 (10명 선택)</span>
+                        <span class="text-[10px] text-pink-600 font-semibold bg-pink-50 px-1.5 py-0.5 rounded">AI 성우 선택</span>
+                    </label>
+                    <select id="femaleVoiceSelect" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none">
+                        <option value="Kore" selected>영희 (또박또박하고 명확한 톤)</option>
+                        <option value="Aoede">지은 (온화하고 부드러운 톤)</option>
+                        <option value="Zephyr">수진 (밝고 활기찬 톤)</option>
+                        <option value="Leda">유나 (생기있고 친근한 톤)</option>
+                        <option value="Callirrhoe">하은 (편안하고 여유있는 톤)</option>
+                        <option value="Despina">서연 (부드럽고 매끄러운 톤)</option>
+                        <option value="Erinome">지민 (깔끔하고 명확한 톤)</option>
+                        <option value="Achernar">소율 (차분하고 감성적인 톤)</option>
+                        <option value="Vindemiatrix">다은 (다정하고 온화한 톤)</option>
+                        <option value="Sulafat">혜진 (따뜻하고 정감있는 톤)</option>
+                    </select>
+                </div>
+
+                <!-- Speech Rate (Speed) Controller -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-slate-300 transition-all">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-bold text-slate-600 flex items-center">
+                            <i class="fa-solid fa-gauge-high text-amber-500 mr-1.5"></i>말하기 속도
+                        </label>
+                        <span id="rateValue" class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">1.0x (보통)</span>
+                    </div>
+                    <input type="range" id="speechRate" min="0.6" max="1.4" step="0.1" value="1.0" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600">
+                    <div class="flex justify-between text-[10px] text-slate-400 mt-2">
+                        <button type="button" onclick="setSpeed(0.75)" class="hover:text-brand-600">0.75x (천천히)</button>
+                        <button type="button" onclick="setSpeed(1.0)" class="hover:text-brand-600 font-bold">1.0x (표준)</button>
+                        <button type="button" onclick="setSpeed(1.25)" class="hover:text-brand-600">1.25x (빠르게)</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <button id="playFullBtn" onclick="playFullDialogue()" class="flex-1 min-w-[200px] max-w-xs bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <i class="fa-solid fa-play"></i>
+                    <span>전체 대화 듣기</span>
+                </button>
+                <button id="stopBtn" onclick="stopAudio()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-stop"></i>
+                    <span>정지</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Two Column Layout: Script & Options -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Left: Script Player Area (7 cols) -->
+            <div class="lg:col-span-7 space-y-4">
+                <div class="flex items-center justify-between px-1">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-comment-dots text-brand-600"></i>
+                        대화지문 (Script)
+                    </h3>
+                    <button onclick="toggleScriptVisibility()" id="toggleScriptBtn" class="text-xs text-brand-600 font-semibold hover:underline flex items-center gap-1">
+                        <i class="fa-regular fa-eye-slash"></i>
+                        <span>지문 숨기기</span>
+                    </button>
+                </div>
+
+                <div id="scriptContainer" class="glass-card rounded-2xl p-5 shadow-sm space-y-3 transition-all">
+                    
+                    <!-- Line 1 -->
+                    <div id="line-0" class="sentence-card p-3.5 rounded-xl border border-slate-100 hover:bg-slate-50 transition-all flex items-start gap-3">
+                        <span class="inline-flex items-center justify-center bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md shrink-0 mt-0.5">
+                            남자
+                        </span>
+                        <div class="flex-grow">
+                            <p class="text-slate-800 text-sm md:text-base leading-relaxed font-medium">
+                                전시되어 있는 그릇들이 참 특이하고 멋지네요.
+                            </p>
+                        </div>
+                        <button onclick="playSingleLine(0)" class="text-slate-400 hover:text-brand-600 p-2 rounded-lg hover:bg-slate-100 transition-all shrink-0" title="이 문장만 듣기">
+                            <i class="fa-solid fa-volume-high text-sm"></i>
+                        </button>
+                    </div>
+
+                    <!-- Line 2 -->
+                    <div id="line-1" class="sentence-card p-3.5 rounded-xl border border-slate-100 hover:bg-slate-50 transition-all flex items-start gap-3">
+                        <span class="inline-flex items-center justify-center bg-pink-100 text-pink-700 text-xs font-bold px-2.5 py-1 rounded-md shrink-0 mt-0.5">
+                            여자
+                        </span>
+                        <div class="flex-grow">
+                            <p class="text-slate-800 text-sm md:text-base leading-relaxed font-medium">
+                                그렇죠? 판매도 한다니까 우리 하나 사 가요.
+                            </p>
+                        </div>
+                        <button onclick="playSingleLine(1)" class="text-slate-400 hover:text-brand-600 p-2 rounded-lg hover:bg-slate-100 transition-all shrink-0" title="이 문장만 듣기">
+                            <i class="fa-solid fa-volume-high text-sm"></i>
+                        </button>
+                    </div>
+
+                    <!-- Line 3 -->
+                    <div id="line-2" class="sentence-card p-3.5 rounded-xl border border-slate-100 hover:bg-slate-50 transition-all flex items-start gap-3">
+                        <span class="inline-flex items-center justify-center bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md shrink-0 mt-0.5">
+                            남자
+                        </span>
+                        <div class="flex-grow">
+                            <p class="text-slate-800 text-sm md:text-base leading-relaxed font-medium">
+                                그럼, 저 파란색 그릇은 어때요?
+                            </p>
+                        </div>
+                        <button onclick="playSingleLine(2)" class="text-slate-400 hover:text-brand-600 p-2 rounded-lg hover:bg-slate-100 transition-all shrink-0" title="이 문장만 듣기">
+                            <i class="fa-solid fa-volume-high text-sm"></i>
+                        </button>
+                    </div>
+
+                    <!-- Line 4 (Key Highlighted Line) -->
+                    <div id="line-3" class="sentence-card p-3.5 rounded-xl border border-pink-200 bg-pink-50/40 hover:bg-pink-50 transition-all flex items-start gap-3 relative overflow-hidden">
+                        <span class="absolute top-0 right-0 bg-pink-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg">
+                            4번째 여자 대화 (핵심 단서)
+                        </span>
+                        <span class="inline-flex items-center justify-center bg-pink-100 text-pink-700 text-xs font-bold px-2.5 py-1 rounded-md shrink-0 mt-0.5">
+                            여자
+                        </span>
+                        <div class="flex-grow pr-12">
+                            <p class="text-slate-900 text-sm md:text-base leading-relaxed font-bold">
+                                괜찮네요. <span class="text-pink-600 underline underline-offset-4 decoration-pink-400">제가 가서 얼마인지 알아볼게요.</span>
+                            </p>
+                        </div>
+                        <button onclick="playSingleLine(3)" class="text-pink-500 hover:text-pink-700 p-2 rounded-lg hover:bg-pink-100 transition-all shrink-0" title="이 문장만 듣기">
+                            <i class="fa-solid fa-volume-high text-sm"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Right: Quiz Options & Explanation Area (5 cols) -->
+            <div class="lg:col-span-5 space-y-4">
+                <h3 class="font-bold text-slate-800 text-base px-1 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-brand-600"></i>
+                    선택지 및 정답 제출
+                </h3>
+
+                <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                    <form id="quizForm" class="space-y-3">
+                        
+                        <!-- Option 1 -->
+                        <label class="option-item flex items-center p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                            <input type="radio" name="option" value="1" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
+                            <span class="ml-3 text-sm font-medium text-slate-800">① 그릇 색깔을 고른다.</span>
+                        </label>
+
+                        <!-- Option 2 (Correct) -->
+                        <label class="option-item flex items-center p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                            <input type="radio" name="option" value="2" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
+                            <span class="ml-3 text-sm font-medium text-slate-800">② 그릇 가격을 물어본다.</span>
+                        </label>
+
+                        <!-- Option 3 -->
+                        <label class="option-item flex items-center p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                            <input type="radio" name="option" value="3" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
+                            <span class="ml-3 text-sm font-medium text-slate-800">③ 전시할 그릇을 바꾼다.</span>
+                        </label>
+
+                        <!-- Option 4 -->
+                        <label class="option-item flex items-center p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                            <input type="radio" name="option" value="4" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
+                            <span class="ml-3 text-sm font-medium text-slate-800">④ 남자에게 그릇을 준다.</span>
+                        </label>
+
+                    </form>
+
+                    <button onclick="checkAnswer()" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-check"></i>
+                        <span>정답 확인하기</span>
+                    </button>
+                </div>
+
+                <!-- Explanation Result Box -->
+                <div id="resultBox" class="hidden glass-card rounded-2xl p-5 border-l-4 transition-all">
+                    <!-- Dynamic injection -->
+                </div>
+
+                <!-- Vocabulary List -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-200">
+                    <h4 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                        <i class="fa-solid fa-book-bookmark text-brand-600"></i> 주요 어휘 및 표현
+                    </h4>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-slate-100 p-2 rounded-lg"><span class="font-bold text-slate-700">전시되다</span>: Displayed</div>
+                        <div class="bg-slate-100 p-2 rounded-lg"><span class="font-bold text-slate-700">특이하다</span>: Unique / Unusual</div>
+                        <div class="bg-slate-100 p-2 rounded-lg"><span class="font-bold text-slate-700">판매하다</span>: Sell</div>
+                        <div class="bg-slate-100 p-2 rounded-lg"><span class="font-bold text-slate-700">얼마인지 알아보다</span>: Check the price</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800">
+        <p class="max-w-5xl mx-auto px-4">
+            TOPIK II 스마트 학습 플랫폼 | 한국어 듣기 능력 향상을 위한 맞춤형 음성 제어 학습 시스템
+        </p>
+    </footer>
+
+    <script>
+        // Dialogue Script Data
+        const dialogueData = [
+            { speaker: "남자", role: "male", text: "전시되어 있는 그릇들이 참 특이하고 멋지네요." },
+            { speaker: "여자", role: "female", text: "그렇죠? 판매도 한다니까 우리 하나 사 가요." },
+            { speaker: "남자", role: "male", text: "그럼, 저 파란색 그릇은 어때요?" },
+            { speaker: "여자", role: "female", text: "괜찮네요. 제가 가서 얼마인지 알아볼게요." }
+        ];
+
+        let currentAudio = null;
+        let isPlaying = false;
+        let isScriptVisible = true;
+
+        // Rate element references
+        const speechRateInput = document.getElementById('speechRate');
+        const rateValueDisplay = document.getElementById('rateValue');
+        const maleVoiceSelect = document.getElementById('maleVoiceSelect');
+        const femaleVoiceSelect = document.getElementById('femaleVoiceSelect');
+        const ttsStatusBadge = document.getElementById('ttsStatusBadge');
+
+        // Speed slider change event
+        speechRateInput.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value).toFixed(1);
+            rateValueDisplay.innerText = `${val}x (${val == 1.0 ? '보통' : val < 1.0 ? '천천히' : '빠르게'})`;
+            if (currentAudio) {
+                currentAudio.playbackRate = val;
+            }
+        });
+
+        function setSpeed(rate) {
+            speechRateInput.value = rate;
+            speechRateInput.dispatchEvent(new Event('input'));
+        }
+
+        function toggleScriptVisibility() {
+            const scriptContainer = document.getElementById('scriptContainer');
+            const toggleBtn = document.getElementById('toggleScriptBtn');
+            
+            isScriptVisible = !isScriptVisible;
+            if (isScriptVisible) {
+                scriptContainer.classList.remove('blur-sm', 'select-none', 'pointer-events-none');
+                toggleBtn.innerHTML = `<i class="fa-regular fa-eye-slash"></i> <span>지문 숨기기</span>`;
+            } else {
+                scriptContainer.classList.add('blur-sm', 'select-none', 'pointer-events-none');
+                toggleBtn.innerHTML = `<i class="fa-regular fa-eye"></i> <span>지문 보기</span>`;
+            }
+        }
+
+        // Highlight Active Sentence UI
+        function highlightSentence(index) {
+            for (let i = 0; i < 4; i++) {
+                const el = document.getElementById(`line-${i}`);
+                if (el) {
+                    if (i === index) {
+                        el.classList.add('active-sentence');
+                    } else {
+                        el.classList.remove('active-sentence');
+                    }
+                }
+            }
+        }
+
+        function clearHighlights() {
+            for (let i = 0; i < 4; i++) {
+                const el = document.getElementById(`line-${i}`);
+                if (el) el.classList.remove('active-sentence');
+            }
+        }
+
+        function stopAudio() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+            isPlaying = false;
+            clearHighlights();
+            updateStatus('정지됨', 'bg-slate-100', 'text-slate-600');
+        }
+
+        function updateStatus(text, bgColor, textColor) {
+            ttsStatusBadge.innerText = text;
+            ttsStatusBadge.className = `text-xs px-2.5 py-1 rounded-md font-semibold ${bgColor} ${textColor}`;
+        }
+
+        // Convert base64 PCM to WAV Blob
+        function pcmToWavBlob(base64Data, sampleRate = 24000) {
+            const binaryString = window.atob(base64Data);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            const pcm16 = new Int16Array(bytes.buffer);
+
+            const numChannels = 1;
+            const byteRate = sampleRate * numChannels * 2;
+            const blockAlign = numChannels * 2;
+            const buffer = new ArrayBuffer(44 + pcm16.length * 2);
+            const view = new DataView(buffer);
+
+            const writeString = (view, offset, string) => {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + pcm16.length * 2, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true); // PCM
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, byteRate, true);
+            view.setUint16(32, blockAlign, true);
+            view.setUint16(34, 16, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, pcm16.length * 2, true);
+
+            let offset = 44;
+            for (let i = 0; i < pcm16.length; i++, offset += 2) {
+                view.setInt16(offset, pcm16[i], true);
+            }
+
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        async function fetchGeminiTTS(textPrompt, isMultiSpeaker = false) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+            const selectedMale = maleVoiceSelect.value;
+            const selectedFemale = femaleVoiceSelect.value;
+
+            let payload;
+            if (isMultiSpeaker) {
+                payload = {
+                    contents: [{
+                        parts: [{
+                            text: `다음은 남성과 여성의 대화입니다. 각 문장의 화자에 맞게 자연스러운 한국어로 읽어주세요:\n` +
+                                  `남자: 전시되어 있는 그릇들이 참 특이하고 멋지네요.\n` +
+                                  `여자: 그렇죠? 판매도 한다니까 우리 하나 사 가요.\n` +
+                                  `남자: 그럼, 저 파란색 그릇은 어때요?\n` +
+                                  `여자: 괜찮네요. 제가 가서 얼마인지 알아볼게요.`
+                        }]
+                    }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            multiSpeakerVoiceConfig: {
+                                speakerVoiceConfigs: [
+                                    { speaker: "남자", voiceConfig: { prebuiltVoiceConfig: { voiceName: selectedMale } } },
+                                    { speaker: "여자", voiceConfig: { prebuiltVoiceConfig: { voiceName: selectedFemale } } }
+                                ]
+                            }
+                        }
+                    }
+                };
+            } else {
+                // Single line voice choice
+                const isFemale = textPrompt.includes("여자") || textPrompt.includes("괜찮네요") || textPrompt.includes("그렇죠");
+                const voice = isFemale ? selectedFemale : selectedMale;
+                payload = {
+                    contents: [{
+                        parts: [{ text: `자연스러운 한국어로 읽어주세요: ${textPrompt}` }]
+                    }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            voiceConfig: {
+                                prebuiltVoiceConfig: { voiceName: voice }
+                            }
+                        }
+                    }
+                };
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType || "audio/L16;rate=24000";
+
+                if (audioData) {
+                    const match = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = match ? parseInt(match[1], 10) : 24000;
+                    const wavBlob = pcmToWavBlob(audioData, sampleRate);
+                    return URL.createObjectURL(wavBlob);
+                }
+            } catch (err) {
+                console.warn("Gemini API TTS 호출 실패, Web Speech API로 대체합니다.", err);
+            }
+            return null;
+        }
+
+        async function playFullDialogue() {
+            stopAudio();
+            updateStatus('AI 음성 생성 중...', 'bg-amber-100', 'text-amber-700');
+
+            // Try Gemini API Multi-Speaker
+            const audioUrl = await fetchGeminiTTS("", true);
+
+            if (audioUrl) {
+                currentAudio = new Audio(audioUrl);
+                currentAudio.playbackRate = parseFloat(speechRateInput.value);
+
+                // Highlight animation
+                const durationEstimate = 12000 / currentAudio.playbackRate; // approx duration
+                const lineTime = durationEstimate / 4;
+
+                let currentLine = 0;
+                highlightSentence(0);
+                const timer = setInterval(() => {
+                    currentLine++;
+                    if (currentLine < 4) {
+                        highlightSentence(currentLine);
+                    } else {
+                        clearInterval(timer);
+                    }
+                }, lineTime);
+
+                currentAudio.onplay = () => {
+                    updateStatus('재생 중 (Gemini AI 성우)', 'bg-emerald-100', 'text-emerald-700');
+                };
+
+                currentAudio.onended = () => {
+                    clearInterval(timer);
+                    clearHighlights();
+                    updateStatus('재생 완료', 'bg-slate-100', 'text-slate-600');
+                };
+
+                currentAudio.play();
+            } else {
+                // Web Speech API Fallback
+                playFullWebSpeech();
+            }
+        }
+
+        async function playSingleLine(index) {
+            stopAudio();
+            highlightSentence(index);
+            updateStatus(`문장 ${index + 1} 읽는 중...`, 'bg-blue-100', 'text-blue-700');
+
+            const item = dialogueData[index];
+            const textToRead = `${item.speaker}: ${item.text}`;
+
+            const audioUrl = await fetchGeminiTTS(item.text, false);
+
+            if (audioUrl) {
+                currentAudio = new Audio(audioUrl);
+                currentAudio.playbackRate = parseFloat(speechRateInput.value);
+                currentAudio.onended = () => {
+                    clearHighlights();
+                    updateStatus('재생 완료', 'bg-slate-100', 'text-slate-600');
+                };
+                currentAudio.play();
+            } else {
+                // Web Speech Fallback for single line
+                playSingleWebSpeech(item, index);
+            }
+        }
+
+        // Web Speech Fallback Implementation
+        function playFullWebSpeech() {
+            if (!('speechSynthesis' in window)) {
+                alert('음성 합성을 지원하지 않는 브라우저입니다.');
+                return;
+            }
+
+            let index = 0;
+            const rate = parseFloat(speechRateInput.value);
+
+            function speakNext() {
+                if (index >= dialogueData.length) {
+                    clearHighlights();
+                    updateStatus('재생 완료', 'bg-slate-100', 'text-slate-600');
+                    return;
+                }
+
+                highlightSentence(index);
+                const item = dialogueData[index];
+                const utterance = new SpeechSynthesisUtterance(item.text);
+                utterance.lang = 'ko-KR';
+                utterance.rate = rate;
+
+                // Alter pitch slightly for gender distinction
+                if (item.role === 'female') {
+                    utterance.pitch = femaleVoiceSelect.value === 'Kore' ? 1.2 : 1.3;
+                } else {
+                    utterance.pitch = maleVoiceSelect.value === 'Fenrir' ? 0.9 : 0.8;
+                }
+
+                utterance.onend = () => {
+                    index++;
+                    speakNext();
+                };
+
+                updateStatus(`재생 중 (웹 음성 엔진 - ${item.speaker})`, 'bg-emerald-100', 'text-emerald-700');
+                window.speechSynthesis.speak(utterance);
+            }
+
+            speakNext();
+        }
+
+        function playSingleWebSpeech(item, index) {
+            if (!('speechSynthesis' in window)) return;
+
+            const utterance = new SpeechSynthesisUtterance(item.text);
+            utterance.lang = 'ko-KR';
+            utterance.rate = parseFloat(speechRateInput.value);
+
+            if (item.role === 'female') {
+                utterance.pitch = femaleVoiceSelect.value === 'Kore' ? 1.2 : 1.3;
+            } else {
+                utterance.pitch = maleVoiceSelect.value === 'Fenrir' ? 0.9 : 0.8;
+            }
+
+            utterance.onend = () => {
+                clearHighlights();
+                updateStatus('재생 완료', 'bg-slate-100', 'text-slate-600');
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function checkAnswer() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            const resultBox = document.getElementById('resultBox');
+
+            if (!selectedOption) {
+                alert('정답 선택지를 고른 후 [정답 확인하기] 버튼을 눌러주세요.');
+                return;
+            }
+
+            const val = selectedOption.value;
+            resultBox.classList.remove('hidden', 'bg-emerald-50', 'bg-rose-50', 'border-emerald-500', 'border-rose-500');
+
+            if (val === "2") {
+                resultBox.classList.add('bg-emerald-50', 'border-emerald-500');
+                resultBox.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="bg-emerald-500 text-white rounded-full p-1.5 shrink-0 mt-0.5">
+                            <i class="fa-solid fa-circle-check text-base"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-emerald-900 text-base mb-1">정답입니다! (②번)</h4>
+                            <p class="text-sm text-emerald-800 leading-relaxed mb-2">
+                                4번째 여자의 대화에서 <span class="font-bold underline">"괜찮네요. 제가 가서 얼마인지 알아볼게요."</span>라고 말했습니다.
+                            </p>
+                            <p class="text-xs text-emerald-700 bg-white/70 p-2.5 rounded-lg border border-emerald-200">
+                                💡 <strong>핵심 해설:</strong> '얼마인지 알아본다'는 것은 그릇의 <strong>가격(얼마)을 물어보러 간다</strong>는 행동을 의미하므로, 여자가 이어서 할 행동으로 가장 알맞은 것은 <strong>②번</strong>입니다.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultBox.classList.add('bg-rose-50', 'border-rose-500');
+                resultBox.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="bg-rose-500 text-white rounded-full p-1.5 shrink-0 mt-0.5">
+                            <i class="fa-solid fa-circle-xmark text-base"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-rose-900 text-base mb-1">오답입니다. (선택: ${val}번)</h4>
+                            <p class="text-sm text-rose-800 leading-relaxed mb-2">
+                                정답은 <strong>② 그릇 가격을 물어본다.</strong> 입니다.
+                            </p>
+                            <p class="text-xs text-rose-700 bg-white/70 p-2.5 rounded-lg border border-rose-200">
+                                💡 <strong>힌트:</strong> 대화의 마지막 문장에서 여자가 <em>"제가 가서 얼마인지 알아볼게요"</em>라고 한 말에 주목하세요.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
