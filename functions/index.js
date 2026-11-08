@@ -13,8 +13,7 @@ const { initializeApp } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 
 // 보안 관련 기능 불러오기
-require('./aak-security');
-
+Object.assign(exports, require('./aak-security'));
 
 initializeApp();
 const db = getFirestore();
