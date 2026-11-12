@@ -1075,6 +1075,9 @@ const T = {
   planAdd: ['Add one more date', '日程を1つ追加', '再加一个日期', 'Añadir otra fecha', 'Ajouter une date', 'Einen Termin hinzufügen', 'Dodaj kolejny termin', '날짜 하나 더 추가'],
   planCredit: ['Credits that expire soonest are used first.', '有効期限が近いクレジットから使います。', '优先使用即将到期的课时。', 'Se usan primero los créditos que vencen antes.', 'Les crédits qui expirent le plus tôt sont utilisés en premier.', 'Bald ablaufende Credits werden zuerst verwendet.', 'Najpierw wykorzystujemy kredyty, które wygasają najwcześniej.', '유효기간이 가장 가까운 크레딧부터 사용합니다.'],
   planNotIncl: ['{n} date(s) still need a change and will not be booked.', '{n}件は変更が必要なため予約されません。', '{n}个日期需要修改，不会被预约。', '{n} fecha(s) necesitan un cambio y no se reservarán.', '{n} date(s) à modifier ne seront pas réservées.', '{n} Termin(e) müssen geändert werden und werden nicht gebucht.', '{n} termin(y) wymaga zmiany i nie zostanie zarezerwowany.', '{n}개 날짜는 수정이 필요해 예약되지 않습니다.'],
+  planUseBy: ['{n} until {d}', '{d}まで{n}回', '{n}节，有效期至{d}', '{n} hasta el {d}', '{n} jusqu’au {d}', '{n} bis {d}', '{n} do {d}', '{n}회 · {d}까지'],
+  planExpSoon: ['{n} credit(s) expire on {d} — too soon to book (24-hour rule).', '{n}回分は{d}に期限切れのため予約できません（24時間ルール）。', '{n}个课时将于{d}到期，已来不及预约（需提前24小时）。', '{n} crédito(s) vencen el {d}: demasiado pronto para reservar (regla de 24 h).', '{n} crédit(s) expirent le {d} : trop tôt pour réserver (règle des 24 h).', '{n} Credit(s) laufen am {d} ab – zu knapp zum Buchen (24-Stunden-Regel).', '{n} kredyt(y) wygasa {d} — za późno na rezerwację (zasada 24 h).', '{n}회는 {d}에 만료되어 예약할 수 없습니다 (24시간 전 예약 규칙).'],
+  r_creditExp: ['After your credits expire ({d})', 'クレジット期限（{d}）の後', '在课时到期（{d}）之后', 'Después de que venzan tus créditos ({d})', 'Après l’expiration de vos crédits ({d})', 'Nach Ablauf deiner Credits ({d})', 'Po wygaśnięciu kredytów ({d})', '크레딧 만료({d}) 이후'],
   r_dup: ['Same time as another date above', '上の日程と重複', '与上方日期重复', 'Coincide con otra fecha', 'Même horaire qu’une autre date', 'Gleiche Zeit wie ein anderer Termin', 'Ten sam termin co inny', '위 날짜와 겹침'],
   step3single: ['3. Or Book a Single Lesson', '3. または1回だけ予約', '3. 或预约单节课', '3. O reserva una sola clase', '3. Ou réservez un seul cours', '3. Oder eine einzelne Stunde buchen', '3. Lub zarezerwuj jedną lekcję', '3. 또는 수업 1회 예약'],
   chatEdit: ['Edit', '編集', '编辑', 'Editar', 'Modifier', 'Bearbeiten', 'Edytuj', '수정'],
@@ -1488,6 +1491,12 @@ const curOf = o => o.currency || 'USD';
 const moneyO = o => fmtCur(payOf(o), curOf(o)) + (curOf(o) === 'USD' ? '' : ' ' + curOf(o));
 async function loadFx() {
   try { S.fx = await FB.get('settings', 'fx'); } catch (e) { S.fx = null; }
+  // 서버가 아직 환율을 저장하지 않았으면 같은 출처(ECB)에서 직접 받아 표시합니다 (결제 금액은 서버가 다시 계산).
+  if (!S.fx || !S.fx.rates) {
+    for (const u of ['https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR,CHF,AUD,JPY,KRW', 'https://api.frankfurter.app/latest?from=USD&to=EUR,CHF,AUD,JPY,KRW']) {
+      try { const j = await (await fetch(u)).json(); if (j && j.rates && j.rates.EUR) { S.fx = { rates: { USD: 1, ...j.rates }, date: j.date || '' }; break; } } catch (e) {}
+    }
+  }
   renderCurSel();
   if (S.view === 'student') { renderPackages(); renderOrderBox(); }
 }
@@ -2242,7 +2251,22 @@ function localAt(ymd, hm) {   // 학생 현지 날짜·시각 → 실제 시각(
   }
   return ms;
 }
-function planAvail(tu) { return tu && S.email ? creditSummary(S.orders.filter(o => o.tutorId === tu.id)).avReg : 0; }
+// 50분 수업 크레딧: 24시간 뒤에도 유효한 것만 '예약 가능'으로 셉니다 (곧 만료되는 것은 따로 안내)
+function planPools(tu) {
+  const cut = Date.now() + LEAD_MS, out = { usable: [], soon: [] };
+  if (!tu || !S.email) return out;
+  S.orders.filter(o => o.tutorId === tu.id && o.status === 'paid' && o.creditType !== 'trial' && toDate(o.expiresAt)).forEach(o => {
+    const left = Math.max(0, o.credits - (o.used || 0) - (o.reserved || 0)), exp = toDate(o.expiresAt).getTime();
+    if (left) (exp > cut ? out.usable : out.soon).push({ left, exp });
+  });
+  const byDay = list => { const m = new Map(); list.forEach(x => { const k = lYMD(new Date(x.exp)); const g = m.get(k) || { left: 0, exp: x.exp }; g.left += x.left; g.exp = Math.max(g.exp, x.exp); m.set(k, g); }); return [...m.values()].sort((a, b) => a.exp - b.exp); };
+  out.usable = byDay(out.usable); out.soon = byDay(out.soon);   // 같은 날 만료되는 것은 합쳐서 안내
+  out.total = out.usable.reduce((n, x) => n + x.left, 0);
+  out.lastExp = out.usable.length ? out.usable[out.usable.length - 1].exp : 0;
+  return out;
+}
+function planAvail(tu) { return planPools(tu).total; }
+const expDate = ms => new Intl.DateTimeFormat(loc(), { dateStyle: 'medium', timeZone: userTZ }).format(new Date(ms));
 function planTimes(tu, wd) {   // 이 요일(학생 현지)에 튜터가 여는 시간 (시작일부터 4주 기준)
   let ymd = S.plan.start;
   while (wdOfL(ymd) !== wd) ymd = addD(ymd, 1);
@@ -2268,18 +2292,23 @@ function planRows(tu) {
     r.reason = slotReason(tu, r.ms) || (rows.some(x => x.i < r.i && x.ms && Math.abs(x.ms - r.ms) < 50 * 60000) ? 'r_dup' : null);
   });
   const credit = creditPlan(tu, rows.filter(r => r.ms && !r.reason).map(r => r.ms));
-  rows.forEach(r => { if (r.ms && !r.reason && !credit.has(r.ms)) r.reason = 'r_credit'; });
+  const lastExp = planPools(tu).lastExp;
+  rows.forEach(r => {
+    if (r.ms && !r.reason && !credit.has(r.ms)) { r.reason = 'r_credit'; if (r.ms >= lastExp) r.afterExp = true; }
+  });
   return rows;
 }
 const planDate = ms => new Intl.DateTimeFormat(loc(), { weekday: 'short', month: 'short', day: 'numeric', timeZone: userTZ }).format(new Date(ms));
 function renderPlan() {
   const box = $('planCard'); if (!box) return;
-  const tu = curTutor(), have = S.selType === 'regular' ? Math.min(planAvail(tu), CUSTOM_MAX) : 0, on = have >= 2;   // 한 번에 최대 30회
+  const tu = curTutor(), pools = planPools(tu), have = S.selType === 'regular' ? Math.min(pools.total, CUSTOM_MAX) : 0, on = have >= 2;   // 한 번에 최대 30회
+  const maxStart = pools.lastExp ? lYMD(new Date(pools.lastExp - 50 * 60000)) : addD(todayL(), 120);
   $('step2Title').textContent = t(on ? 'step3single' : 'step2');
   if (!on) { box.className = 'hidden'; box.innerHTML = ''; return; }
   const p = S.plan = S.plan || { days: {}, alt: {}, extra: 0 };
   const minStart = lYMD(new Date(Date.now() + LEAD_MS));
   if (!p.start || p.start < minStart) p.start = minStart;
+  if (p.start > maxStart) p.start = maxStart < minStart ? minStart : maxStart;
   p.n = Math.max(1, Math.min(p.n || Math.min(have, 4), have));
   const wds = wdNames('short');
   const chips = wds.map((w, wd) => {
@@ -2299,18 +2328,25 @@ function renderPlan() {
     let pick = '';
     if (r.reason || p.alt[r.i]) {
       const taken = new Set(rows.filter(x => x.i !== r.i && x.ms && !x.reason).map(x => x.ms));
+      // 크레딧 만료 후인 회차는 만료 전 날짜에서, 그 밖에는 앞뒤 3일에서 비어 있는 시간을 찾습니다 (가까운 순 30개).
+      let from = addD(r.ymd, -3), to = addD(r.ymd, 3);
+      if (r.afterExp) { from = p.start; to = maxStart; }
+      if (from < minStart) from = minStart;
       const alts = [];
-      for (let k = 0; k < 4 && alts.length < 40; k++) {
-        slotsFor(tu, addD(r.ymd, k), 50).forEach(d => { const ms = d.getTime(); if (!slotReason(tu, ms) && !taken.has(ms)) alts.push(ms); });
+      for (let ymd = from, k = 0; ymd <= to && k < 130; ymd = addD(ymd, 1), k++) {
+        slotsFor(tu, ymd, 50).forEach(d => { const ms = d.getTime(); if (!slotReason(tu, ms) && !taken.has(ms)) alts.push(ms); });
       }
-      const okAlts = alts.filter(ms => creditPlan(tu, [...good.filter(x => x.i !== r.i).map(x => x.ms), ms]).has(ms));
+      const others = good.filter(x => x.i !== r.i).map(x => x.ms);
+      const okAlts = alts.filter(ms => creditPlan(tu, [...others, ms]).has(ms))
+        .sort((a, b) => ((lHM(new Date(a)) !== lHM(new Date(r.base))) - (lHM(new Date(b)) !== lHM(new Date(r.base)))) || Math.abs(a - r.base) - Math.abs(b - r.base))
+        .slice(0, 30).sort((a, b) => a - b);   // 같은 시각의 다른 날을 먼저
       pick = `<select class="plan-sel" onchange="planAlt(${r.i}, this.value)">
         <option value="">${esc(okAlts.length ? t('planAlt') : t('recurNoAlt'))}</option>
         ${okAlts.map(ms => `<option value="${ms}" ${r.ms === ms ? 'selected' : ''}>${esc(planDate(ms))} ${lHM(new Date(ms))} (${kHM(new Date(ms))} KST)</option>`).join('')}
         <option value="skip" ${r.skip ? 'selected' : ''}>${esc(t('planSkip'))}</option></select>`;
     }
     const badge = st === 'ok' ? `<span class="badge b-green"><i class="fa fa-check mr-1"></i>${esc(t('recurOk'))}</span>`
-      : st === 'skip' ? `<span class="badge b-gray">${esc(t('recurSkipped'))}</span>` : `<span class="badge b-red"><i class="fa fa-xmark mr-1"></i>${esc(t(r.reason))}</span>`;
+      : st === 'skip' ? `<span class="badge b-gray">${esc(t('recurSkipped'))}</span>` : `<span class="badge b-red"><i class="fa fa-xmark mr-1"></i>${esc(r.afterExp ? t('r_creditExp', { d: expDate(pools.lastExp) }) : t(r.reason))}</span>`;
     return `<div class="plan-row ${st}"><span class="w-6 text-xs font-bold text-slate-400">${r.i + 1}</span>
       <span class="min-w-0"><span class="block text-sm font-bold ${st === 'ok' ? 'text-slate-900' : 'text-slate-500'}">${esc(planDate(shown))} · ${lHM(new Date(shown))}</span>
       <span class="block text-[10px] text-slate-400">${kYMD(new Date(shown))} ${kHM(new Date(shown))} KST</span></span>
@@ -2325,19 +2361,21 @@ function renderPlan() {
             <button type="button" onclick="planN(-1)" ${p.n <= 1 ? 'disabled' : ''} aria-label="-1">−</button>
             <input type="number" min="1" max="${have}" value="${p.n}" onchange="planN(0, this.value)" aria-label="${esc(t('planCount'))}">
             <button type="button" onclick="planN(1)" ${p.n >= have ? 'disabled' : ''} aria-label="+1">+</button></div>
-          <p class="text-[11px] text-slate-500 mt-1">${tk('planCountHint', { n: have })}</p></div>
+          <p class="text-[11px] text-slate-500 mt-1">${tk('planCountHint', { n: have })}</p>
+          <p class="text-[11px] text-slate-700 font-semibold mt-1"><i class="fa fa-calendar-xmark text-slate-400 mr-1"></i>${pools.usable.map(x => tk('planUseBy', { n: x.left, d: expDate(x.exp) })).join(' · ')}</p>
+          ${pools.soon.length ? `<p class="text-[11px] text-amber-700 mt-1">${pools.soon.map(x => tk('planExpSoon', { n: x.left, d: expDate(x.exp) })).join('<br>')}</p>` : ''}</div>
       </div>
       <div><p class="lbl">② ${tk('planDays')}</p>
         <div class="flex flex-wrap gap-1.5">${chips}</div>
         <div class="space-y-2 mt-3">${timeRows}</div></div>
     </div>
     <div class="sm:w-[260px]"><p class="lbl">③ ${tk('planStart')}</p>
-      <input type="date" class="inp" min="${minStart}" max="${addD(todayL(), 120)}" value="${p.start}" onchange="planStart(this.value)"></div>
+      <input type="date" class="inp" min="${minStart}" max="${maxStart}" value="${p.start}" onchange="planStart(this.value)"></div>
     ${rows.length ? `<div class="space-y-2">
         <div class="flex flex-wrap items-center justify-between gap-2 text-xs"><b class="text-slate-700">${tk('planSummary', { ok: good.length, bad: bad.length })}</b>
           <span class="text-slate-400"><i class="fa fa-hourglass-half mr-1"></i>${tk('planCredit')}</span></div>
         <div class="space-y-1.5">${list}</div>
-        ${good.length < p.n && good.length < have ? `<button class="btn btn-ghost btn-sm" onclick="S.plan.extra++;renderPlan()"><i class="fa fa-plus"></i>${tk('planAdd')}</button>` : ''}
+        ${good.length < p.n && good.length < have && !rows.some(r => r.afterExp) ? `<button class="btn btn-ghost btn-sm" onclick="S.plan.extra++;renderPlan()"><i class="fa fa-plus"></i>${tk('planAdd')}</button>` : ''}
       </div>
       ${bad.length ? `<p class="text-[11px] text-amber-700"><i class="fa fa-triangle-exclamation mr-1"></i>${tk('planNotIncl', { n: bad.length })}</p>` : ''}
       <button id="planBtn" onclick="confirmPlan()" ${good.length ? '' : 'disabled'} class="w-full px-6 py-3 bg-green-600 hover:bg-green-500 disabled:opacity-40 text-white rounded-xl text-sm font-bold flex items-center gap-2 justify-center">
@@ -2353,7 +2391,7 @@ function planDay(wd) {
   planReset(); renderPlan();
 }
 function planTime(wd, hm) { S.plan.days[wd] = hm; S.plan.lastTime = hm; planReset(); renderPlan(); }
-function planStart(v) { if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { S.plan.start = v; planReset(); renderPlan(); } }
+function planStart(v) { if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { S.plan.start = v; planReset(); renderPlan(); } }   // 범위 밖이면 renderPlan 이 시작일을 가능한 범위로 맞춥니다
 function planAlt(i, v) { if (v) S.plan.alt[i] = v; else delete S.plan.alt[i]; renderPlan(); }
 async function confirmPlan() {
   const tu = curTutor(); if (!tu) return;
