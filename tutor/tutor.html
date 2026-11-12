@@ -468,6 +468,14 @@
   .chat-other .chat-file{background:#f1f5f9}
   .chat-pt{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:9px 11px;border-radius:12px;border:1px solid #e2e8f0;background:#fff}
   .chat-pt.sel{border-color:#16a34a;background:#f0fdf4}
+  .plan-chip{min-width:52px;padding:7px 12px;border-radius:999px;border:1.5px solid #e2e8f0;background:#fff;font-size:13px;font-weight:700;color:#475569}
+  .plan-chip.on{background:#16a34a;border-color:#16a34a;color:#fff}
+  .plan-chip:disabled{opacity:.35;cursor:not-allowed}
+  .plan-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:9px 12px;border-radius:12px;border:1px solid #e2e8f0;border-left-width:5px;background:#fff}
+  .plan-row.ok{border-left-color:#16a34a}
+  .plan-row.bad{border-left-color:#ef4444;background:#fef2f2}
+  .plan-row.skip{border-left-color:#94a3b8;background:#f8fafc}
+  .plan-sel{font-size:12px;border:1px solid #cbd5e1;border-radius:8px;padding:4px 6px;background:#fff;max-width:100%}
   .chat-acts{display:flex;gap:2px;opacity:0;transition:opacity .15s}
   .chat-row:hover .chat-acts,.chat-acts:focus-within{opacity:1}
   @media (hover:none){.chat-acts{opacity:1}}
@@ -483,7 +491,7 @@
   .recur-row select{color:#0f172a;border-radius:8px;padding:3px 6px;font-size:12px}
   </style>
 <!-- Tailwind CSS (미리 만든 버전 · 이 페이지에서 쓰는 디자인만 포함) -->
-<style id="tw-prebuilt">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-bottom-1{bottom:-.25rem}.-bottom-12{bottom:-3rem}.-right-1{right:-.25rem}.-right-6{right:-1.5rem}.-top-2\.5{top:-.625rem}.right-3{right:.75rem}.top-0{top:0}.z-10{z-index:10}.col-span-full{grid-column:1/-1}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:.25rem;margin-bottom:.25rem}.-mt-2{margin-top:-.5rem}.mb-0{margin-bottom:0}.mb-1{margin-bottom:.25rem}.mb-1\.5{margin-bottom:.375rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-5{margin-bottom:1.25rem}.ml-1{margin-left:.25rem}.mr-1{margin-right:.25rem}.mr-1\.5{margin-right:.375rem}.mr-2{margin-right:.5rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-1\.5{margin-top:.375rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-auto{margin-top:auto}.block{display:block}.inline{display:inline}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.hidden{display:none}.aspect-video{aspect-ratio:16/9}.h-1\.5{height:.375rem}.h-11{height:2.75rem}.h-14{height:3.5rem}.h-20{height:5rem}.h-28{height:7rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-8{height:2rem}.h-full{height:100%}.max-h-72{max-height:18rem}.min-h-screen{min-height:100vh}.w-11{width:2.75rem}.w-14{width:3.5rem}.w-20{width:5rem}.w-28{width:7rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-8{width:2rem}.w-full{width:100%}.min-w-0{min-width:0}.min-w-\[600px\]{min-width:600px}.min-w-\[620px\]{min-width:620px}.min-w-\[640px\]{min-width:640px}.min-w-\[680px\]{min-width:680px}.min-w-\[700px\]{min-width:700px}.min-w-\[720px\]{min-width:720px}.min-w-\[760px\]{min-width:760px}.min-w-\[820px\]{min-width:820px}.min-w-\[860px\]{min-width:860px}.max-w-6xl{max-width:72rem}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.flex-shrink{flex-shrink:1}.flex-shrink-0{flex-shrink:0}.shrink{flex-shrink:1}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.resize-none{resize:none}.resize{resize:both}.list-decimal{list-style-type:decimal}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-\[90px_1fr\]{grid-template-columns:90px 1fr}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-y-1\.5{row-gap:.375rem}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem*var(--tw-space-y-reverse))}.self-center{align-self:center}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis}.truncate,.whitespace-nowrap{white-space:nowrap}.whitespace-pre-line{white-space:pre-line}.break-all{word-break:break-all}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-green-300{--tw-border-opacity:1;border-color:rgb(134 239 172/var(--tw-border-opacity,1))}.border-green-500\/30{border-color:rgba(34,197,94,.3)}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225/var(--tw-border-opacity,1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-slate-900{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231/var(--tw-bg-opacity,1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244/var(--tw-bg-opacity,1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.bg-green-500\/20{background-color:rgba(34,197,94,.2)}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74/var(--tw-bg-opacity,1))}.bg-green-700{--tw-bg-opacity:1;background-color:rgb(21 128 61/var(--tw-bg-opacity,1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255/var(--tw-bg-opacity,1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229/var(--tw-bg-opacity,1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242/var(--tw-bg-opacity,1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-slate-800\/70{background-color:rgba(30,41,59,.7)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-gradient-to-tr{background-image:linear-gradient(to top right,var(--tw-gradient-stops))}.from-green-700{--tw-gradient-from:#15803d var(--tw-gradient-from-position);--tw-gradient-to:rgba(21,128,61,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.to-teal-500{--tw-gradient-to:#14b8a6 var(--tw-gradient-to-position)}.object-cover{-o-object-fit:cover;object-fit:cover}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-1{padding-bottom:.25rem}.pb-2{padding-bottom:.5rem}.pl-4{padding-left:1rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-8xl{font-size:6rem;line-height:1}.text-\[10\.5px\]{font-size:10.5px}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.capitalize{text-transform:capitalize}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-wider{letter-spacing:.05em}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14/var(--tw-text-opacity,1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-green-100{--tw-text-opacity:1;color:rgb(220 252 231/var(--tw-text-opacity,1))}.text-green-300{--tw-text-opacity:1;color:rgb(134 239 172/var(--tw-text-opacity,1))}.text-green-400{--tw-text-opacity:1;color:rgb(74 222 128/var(--tw-text-opacity,1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74/var(--tw-text-opacity,1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61/var(--tw-text-opacity,1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52/var(--tw-text-opacity,1))}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241/var(--tw-text-opacity,1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229/var(--tw-text-opacity,1))}.text-indigo-700{--tw-text-opacity:1;color:rgb(67 56 202/var(--tw-text-opacity,1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113/var(--tw-text-opacity,1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72/var(--tw-text-opacity,1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248/var(--tw-text-opacity,1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.text-teal-500{--tw-text-opacity:1;color:rgb(20 184 166/var(--tw-text-opacity,1))}.text-teal-600{--tw-text-opacity:1;color:rgb(13 148 136/var(--tw-text-opacity,1))}.text-teal-700{--tw-text-opacity:1;color:rgb(15 118 110/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.line-through{text-decoration-line:line-through}.accent-green-600{accent-color:#16a34a}.opacity-70{opacity:.7}.opacity-80{opacity:.8}.opacity-\[\.06\]{opacity:.06}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-lg{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.outline{outline-style:solid}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-green-400{--tw-ring-opacity:1;--tw-ring-color:rgb(74 222 128/var(--tw-ring-opacity,1))}.ring-green-500{--tw-ring-opacity:1;--tw-ring-color:rgb(34 197 94/var(--tw-ring-opacity,1))}.blur{--tw-blur:blur(8px)}.blur,.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-filter{-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.hover\:border-green-500:hover{--tw-border-opacity:1;border-color:rgb(34 197 94/var(--tw-border-opacity,1))}.hover\:bg-green-500:hover{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.disabled\:opacity-40:disabled{opacity:.4}@media (min-width:640px){.sm\:col-span-2{grid-column:span 2/span 2}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}.sm\:items-center{align-items:center}.sm\:gap-4{gap:1rem}.sm\:p-4{padding:1rem}.sm\:p-5{padding:1.25rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-9xl{font-size:8rem;line-height:1}}@media (min-width:768px){.md\:inline{display:inline}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-\[1fr_320px\]{grid-template-columns:1fr 320px}.md\:grid-cols-\[240px_1fr\]{grid-template-columns:240px 1fr}.md\:grid-cols-\[320px_1fr\]{grid-template-columns:320px 1fr}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.lg\:grid-cols-\[250px_1fr\]{grid-template-columns:250px 1fr}}</style>
+<style id="tw-prebuilt">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-bottom-1{bottom:-.25rem}.-bottom-12{bottom:-3rem}.-right-1{right:-.25rem}.-right-6{right:-1.5rem}.-top-2\.5{top:-.625rem}.right-3{right:.75rem}.top-0{top:0}.z-10{z-index:10}.col-span-full{grid-column:1/-1}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:.25rem;margin-bottom:.25rem}.-mt-2{margin-top:-.5rem}.mb-0{margin-bottom:0}.mb-1{margin-bottom:.25rem}.mb-1\.5{margin-bottom:.375rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-5{margin-bottom:1.25rem}.ml-1{margin-left:.25rem}.mr-1{margin-right:.25rem}.mr-1\.5{margin-right:.375rem}.mr-2{margin-right:.5rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-1\.5{margin-top:.375rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-auto{margin-top:auto}.block{display:block}.inline{display:inline}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.hidden{display:none}.aspect-video{aspect-ratio:16/9}.h-1\.5{height:.375rem}.h-11{height:2.75rem}.h-14{height:3.5rem}.h-20{height:5rem}.h-28{height:7rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-8{height:2rem}.h-full{height:100%}.max-h-72{max-height:18rem}.min-h-screen{min-height:100vh}.\!w-auto{width:auto!important}.w-11{width:2.75rem}.w-12{width:3rem}.w-14{width:3.5rem}.w-20{width:5rem}.w-28{width:7rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-8{width:2rem}.w-full{width:100%}.min-w-0{min-width:0}.min-w-\[600px\]{min-width:600px}.min-w-\[620px\]{min-width:620px}.min-w-\[640px\]{min-width:640px}.min-w-\[680px\]{min-width:680px}.min-w-\[700px\]{min-width:700px}.min-w-\[720px\]{min-width:720px}.min-w-\[760px\]{min-width:760px}.min-w-\[820px\]{min-width:820px}.min-w-\[860px\]{min-width:860px}.max-w-6xl{max-width:72rem}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.flex-shrink{flex-shrink:1}.flex-shrink-0{flex-shrink:0}.shrink{flex-shrink:1}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.resize-none{resize:none}.resize{resize:both}.list-decimal{list-style-type:decimal}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-\[90px_1fr\]{grid-template-columns:90px 1fr}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-y-1\.5{row-gap:.375rem}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem*var(--tw-space-y-reverse))}.self-center{align-self:center}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis}.truncate,.whitespace-nowrap{white-space:nowrap}.whitespace-pre-line{white-space:pre-line}.break-all{word-break:break-all}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-green-300{--tw-border-opacity:1;border-color:rgb(134 239 172/var(--tw-border-opacity,1))}.border-green-500\/30{border-color:rgba(34,197,94,.3)}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225/var(--tw-border-opacity,1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-slate-900{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231/var(--tw-bg-opacity,1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244/var(--tw-bg-opacity,1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.bg-green-500\/20{background-color:rgba(34,197,94,.2)}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74/var(--tw-bg-opacity,1))}.bg-green-700{--tw-bg-opacity:1;background-color:rgb(21 128 61/var(--tw-bg-opacity,1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255/var(--tw-bg-opacity,1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229/var(--tw-bg-opacity,1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242/var(--tw-bg-opacity,1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-slate-800\/70{background-color:rgba(30,41,59,.7)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-gradient-to-tr{background-image:linear-gradient(to top right,var(--tw-gradient-stops))}.from-green-700{--tw-gradient-from:#15803d var(--tw-gradient-from-position);--tw-gradient-to:rgba(21,128,61,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.to-teal-500{--tw-gradient-to:#14b8a6 var(--tw-gradient-to-position)}.object-cover{-o-object-fit:cover;object-fit:cover}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.\!py-1\.5{padding-top:.375rem!important;padding-bottom:.375rem!important}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-1{padding-bottom:.25rem}.pb-2{padding-bottom:.5rem}.pl-3{padding-left:.75rem}.pl-4{padding-left:1rem}.pr-2{padding-right:.5rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-8xl{font-size:6rem;line-height:1}.text-\[10\.5px\]{font-size:10.5px}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.capitalize{text-transform:capitalize}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-wider{letter-spacing:.05em}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14/var(--tw-text-opacity,1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-green-100{--tw-text-opacity:1;color:rgb(220 252 231/var(--tw-text-opacity,1))}.text-green-300{--tw-text-opacity:1;color:rgb(134 239 172/var(--tw-text-opacity,1))}.text-green-400{--tw-text-opacity:1;color:rgb(74 222 128/var(--tw-text-opacity,1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74/var(--tw-text-opacity,1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61/var(--tw-text-opacity,1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52/var(--tw-text-opacity,1))}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241/var(--tw-text-opacity,1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229/var(--tw-text-opacity,1))}.text-indigo-700{--tw-text-opacity:1;color:rgb(67 56 202/var(--tw-text-opacity,1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113/var(--tw-text-opacity,1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72/var(--tw-text-opacity,1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248/var(--tw-text-opacity,1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.text-teal-500{--tw-text-opacity:1;color:rgb(20 184 166/var(--tw-text-opacity,1))}.text-teal-600{--tw-text-opacity:1;color:rgb(13 148 136/var(--tw-text-opacity,1))}.text-teal-700{--tw-text-opacity:1;color:rgb(15 118 110/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.accent-green-600{accent-color:#16a34a}.opacity-70{opacity:.7}.opacity-80{opacity:.8}.opacity-\[\.06\]{opacity:.06}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-lg{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.outline{outline-style:solid}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-green-400{--tw-ring-opacity:1;--tw-ring-color:rgb(74 222 128/var(--tw-ring-opacity,1))}.ring-green-500{--tw-ring-opacity:1;--tw-ring-color:rgb(34 197 94/var(--tw-ring-opacity,1))}.blur{--tw-blur:blur(8px)}.blur,.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-filter{-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.hover\:border-green-500:hover{--tw-border-opacity:1;border-color:rgb(34 197 94/var(--tw-border-opacity,1))}.hover\:bg-green-500:hover{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.disabled\:opacity-40:disabled{opacity:.4}@media (min-width:640px){.sm\:col-span-2{grid-column:span 2/span 2}.sm\:ml-auto{margin-left:auto}.sm\:w-\[260px\]{width:260px}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}.sm\:items-center{align-items:center}.sm\:gap-4{gap:1rem}.sm\:p-4{padding:1rem}.sm\:p-5{padding:1.25rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-9xl{font-size:8rem;line-height:1}}@media (min-width:768px){.md\:inline{display:inline}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-\[1fr_320px\]{grid-template-columns:1fr 320px}.md\:grid-cols-\[220px_1fr\]{grid-template-columns:220px 1fr}.md\:grid-cols-\[240px_1fr\]{grid-template-columns:240px 1fr}.md\:grid-cols-\[320px_1fr\]{grid-template-columns:320px 1fr}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.lg\:grid-cols-\[250px_1fr\]{grid-template-columns:250px 1fr}}</style>
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -601,11 +609,14 @@
         <p id="planTutorLine" class="text-xs text-slate-500 mt-0.5"></p>
       </div>
       <div class="flex flex-wrap items-center gap-2 text-xs">
+        <label class="bg-white border border-slate-200 pl-3 pr-2 py-1 rounded-lg flex items-center gap-1.5 cursor-pointer"><i class="fa fa-coins text-amber-500"></i><span data-i18n="curLabel"></span>
+          <select id="curSel" onchange="setCur(this.value)" class="bg-transparent font-bold text-slate-900 outline-none cursor-pointer"><option>USD $</option></select></label>
         <div class="bg-white border border-slate-200 px-3 py-1.5 rounded-lg"><i class="fa fa-earth-asia text-indigo-500 mr-1"></i><span data-i18n="tzTutor"></span>: <strong id="clockKST">—</strong></div>
         <div class="bg-white border border-slate-200 px-3 py-1.5 rounded-lg"><i class="fa fa-user-clock text-teal-500 mr-1"></i><span data-i18n="tzYou"></span>: <strong id="clockLocal">—</strong> (<span id="localTZ">—</span>)</div>
       </div>
     </div>
     <div id="pkgGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+    <p id="fxNote" class="text-[11px] text-slate-500 mt-3 hidden"></p>
     <div id="orderBox" class="hidden"></div>
   </div>
 
@@ -620,8 +631,9 @@
           <div id="creditBal" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
         </div>
       </div>
+      <div id="planCard" class="hidden"></div>
       <div class="card space-y-4">
-        <h2 class="text-base font-bold text-slate-900" data-i18n="step2"></h2>
+        <h2 id="step2Title" class="text-base font-bold text-slate-900"></h2>
         <p id="slotsNote" class="text-xs text-slate-500 -mt-2"></p>
         <div class="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-5">
           <div>
@@ -1021,15 +1033,11 @@ const T = {
   lessonsLbl: ['Lessons', 'レッスン数', '课程节数', 'Clases', 'Cours', 'Stunden', 'Lekcje', '수업 횟수'],
   countRange: ['{min}–{max} lessons', '{min}〜{max}回', '{min}–{max}节', '{min}–{max} clases', '{min} à {max} cours', '{min}–{max} Stunden', '{min}–{max} lekcji', '{min}~{max}회'],
   intensive: ['4-Week Intensive Course', '4週間集中コース', '4周强化课程', 'Curso intensivo de 4 semanas', 'Cours intensif de 4 semaines', '4-wöchiger Intensivkurs', '4-tygodniowy kurs intensywny', '4주 집중 과정'],
-  repeatWeekly: ['Repeat weekly at this time', '毎週この時間に繰り返し予約', '每周同一时间重复预约', 'Repetir cada semana a esta hora', 'Répéter chaque semaine à cette heure', 'Jede Woche zur gleichen Zeit buchen', 'Powtarzaj co tydzień o tej godzinie', '매주 같은 시간에 반복 예약'],
-  weeksLbl: ['Number of weeks', '週数', '周数', 'Número de semanas', 'Nombre de semaines', 'Anzahl der Wochen', 'Liczba tygodni', '반복 주 수'],
   recurOk: ['Available', '予約可能', '可预约', 'Disponible', 'Disponible', 'Verfügbar', 'Dostępne', '예약 가능'],
-  recurPickAlt: ['Choose another time this day', 'この日の別の時間を選ぶ', '选择当天其他时间', 'Elige otra hora ese día', 'Choisir une autre heure ce jour-là', 'Andere Uhrzeit an diesem Tag', 'Wybierz inną godzinę tego dnia', '이 날 다른 시간 선택'],
   recurSkip: ['Skip this week', 'この週はスキップ', '跳过这一周', 'Omitir esta semana', 'Passer cette semaine', 'Diese Woche überspringen', 'Pomiń ten tydzień', '이번 주 건너뛰기'],
   recurSkipped: ['Skipped', 'スキップ', '已跳过', 'Omitida', 'Ignorée', 'Übersprungen', 'Pominięto', '건너뜀'],
   recurNoAlt: ['No other time this day', 'この日は他に空きなし', '当天没有其他时间', 'No hay otra hora ese día', 'Aucune autre heure ce jour-là', 'Keine andere Uhrzeit', 'Brak innych godzin', '이 날은 다른 시간 없음'],
   recurBook: ['Book {n} lessons (uses {n} credits)', '{n}回予約（{n}クレジット使用）', '预约{n}节课（使用{n}个课时）', 'Reservar {n} clases (usa {n} créditos)', 'Réserver {n} cours ({n} crédits)', '{n} Stunden buchen ({n} Credits)', 'Zarezerwuj {n} lekcji ({n} kredytów)', '{n}회 예약 (크레딧 {n}개 사용)'],
-  recurHint: ['Unavailable weeks are marked in red — pick another time that day or skip them. Nothing is booked twice.', '予約できない週は赤で表示されます。その日の別の時間を選ぶかスキップしてください。二重予約はされません。', '无法预约的周以红色显示，可选择当天其他时间或跳过。不会重复预约。', 'Las semanas no disponibles aparecen en rojo: elige otra hora ese día u omítelas. Nunca se reserva dos veces.', 'Les semaines indisponibles sont en rouge : choisissez une autre heure ce jour-là ou passez-les. Aucune double réservation.', 'Nicht verfügbare Wochen sind rot markiert – wählen Sie eine andere Uhrzeit oder überspringen Sie sie. Es wird nichts doppelt gebucht.', 'Niedostępne tygodnie są oznaczone na czerwono — wybierz inną godzinę lub pomiń. Nic nie zostanie zarezerwowane podwójnie.', '예약할 수 없는 주는 빨간색으로 표시됩니다. 그 날 다른 시간을 고르거나 건너뛰세요. 중복 예약은 되지 않습니다.'],
   recurDone: ['{ok} lessons booked.', '{ok}回のレッスンを予約しました。', '已预约{ok}节课。', 'Se reservaron {ok} clases.', '{ok} cours réservés.', '{ok} Stunden gebucht.', 'Zarezerwowano {ok} lekcji.', '{ok}회 예약되었습니다.'],
   recurFail: ['These could not be booked:', '次の時間は予約できませんでした：', '以下时间未能预约：', 'No se pudieron reservar:', "Ces créneaux n'ont pas pu être réservés :", 'Diese konnten nicht gebucht werden:', 'Nie udało się zarezerwować:', '다음 시간은 예약되지 않았습니다:'],
   r_lead: ['Less than 24 h ahead', '24時間前を過ぎています', '距开始不足24小时', 'Menos de 24 h de antelación', "Moins de 24 h à l'avance", 'Weniger als 24 Std. vorher', 'Mniej niż 24 godz. wcześniej', '24시간 이내'],
@@ -1049,6 +1057,26 @@ const T = {
   chatSend: ['Send', '送信', '发送', 'Enviar', 'Envoyer', 'Senden', 'Wyślij', '보내기'],
   chatFail: ['Could not send. Please try again.', '送信できませんでした。もう一度お試しください。', '发送失败，请重试。', 'No se pudo enviar. Inténtalo de nuevo.', "Échec de l'envoi. Réessayez.", 'Senden fehlgeschlagen. Bitte erneut versuchen.', 'Nie udało się wysłać. Spróbuj ponownie.', '전송하지 못했습니다. 다시 시도해 주세요.'],
   chatDel30: ['Auto-deletes in {n} days', 'あと{n}日で自動削除', '{n}天后自动删除', 'Se elimina en {n} días', 'Supprimé dans {n} jours', 'Wird in {n} Tagen gelöscht', 'Usunięcie za {n} dni', '{n}일 후 자동 삭제'],
+  curLabel: ['Currency', '通貨', '货币', 'Moneda', 'Devise', 'Währung', 'Waluta', '통화'],
+  fxNote: ['You will pay in {cur}. 1 USD = {r} {cur} (European Central Bank rate, {d} · updated daily).', 'お支払いは{cur}です。1 USD = {r} {cur}（欧州中央銀行レート、{d}・毎日更新）。', '将以{cur}支付。1 USD = {r} {cur}（欧洲央行汇率，{d}，每日更新）。', 'Pagarás en {cur}. 1 USD = {r} {cur} (tipo del Banco Central Europeo, {d} · se actualiza a diario).', 'Vous payerez en {cur}. 1 USD = {r} {cur} (taux de la Banque centrale européenne, {d} · mis à jour chaque jour).', 'Du zahlst in {cur}. 1 USD = {r} {cur} (Kurs der Europäischen Zentralbank, {d} · täglich aktualisiert).', 'Zapłacisz w {cur}. 1 USD = {r} {cur} (kurs Europejskiego Banku Centralnego, {d} · aktualizowany codziennie).', '{cur}(으)로 결제합니다. 1 USD = {r} {cur} (유럽중앙은행 환율, {d} · 매일 갱신).'],
+  fxNA: ['Exchange rates are being updated — prices are shown in USD for now.', '為替レートを更新中です。現在はUSDで表示しています。', '汇率更新中，目前以美元显示价格。', 'Actualizando tipos de cambio: por ahora los precios se muestran en USD.', 'Mise à jour des taux en cours : prix affichés en USD pour le moment.', 'Wechselkurse werden aktualisiert – Preise vorerst in USD.', 'Aktualizujemy kursy walut — na razie ceny w USD.', '환율을 갱신 중입니다. 지금은 USD로 표시됩니다.'],
+  payAmount: ['Amount to pay', 'お支払い金額', '应付金额', 'Importe a pagar', 'Montant à payer', 'Zu zahlender Betrag', 'Kwota do zapłaty', '결제 금액'],
+  planTitle: ['2. Book Several Lessons at Once', '2. まとめて予約', '2. 一次预约多节课', '2. Reserva varias clases a la vez', '2. Réservez plusieurs cours d’un coup', '2. Mehrere Stunden auf einmal buchen', '2. Zarezerwuj kilka lekcji naraz', '2. 여러 수업 한 번에 예약'],
+  planSub: ['Choose how many lessons, which days and times, and a start date — every date is checked instantly.', 'レッスン数・曜日と時間・開始日を選ぶと、すべての日付をすぐに確認します。', '选择课程数、星期和时间以及开始日期，系统会立即检查每个日期。', 'Elige cuántas clases, qué días y horas y la fecha de inicio: revisamos cada fecha al instante.', 'Choisissez le nombre de cours, les jours et heures et la date de début : chaque date est vérifiée aussitôt.', 'Wähle Anzahl, Wochentage mit Uhrzeit und Startdatum – jedes Datum wird sofort geprüft.', 'Wybierz liczbę lekcji, dni i godziny oraz datę startu — od razu sprawdzimy każdy termin.', '수업 횟수, 요일·시간, 시작일을 고르면 모든 날짜를 바로 확인해 드립니다.'],
+  planCount: ['Number of lessons', 'レッスン数', '课程数', 'Número de clases', 'Nombre de cours', 'Anzahl der Stunden', 'Liczba lekcji', '수업 횟수'],
+  planCountHint: ['Up to {n} (your available credits)', '最大{n}回（利用可能なクレジット）', '最多{n}节（可用课时）', 'Hasta {n} (tus créditos disponibles)', 'Jusqu’à {n} (vos crédits disponibles)', 'Bis zu {n} (deine verfügbaren Credits)', 'Do {n} (dostępne kredyty)', '최대 {n}회 (사용 가능한 크레딧)'],
+  planDays: ['Days & times (every week)', '曜日と時間（毎週）', '星期和时间（每周）', 'Días y horas (cada semana)', 'Jours et heures (chaque semaine)', 'Tage & Uhrzeiten (jede Woche)', 'Dni i godziny (co tydzień)', '요일과 시간 (매주)'],
+  planPickDays: ['Pick one or more days to see your dates.', '曜日を1つ以上選ぶと日程が表示されます。', '选择一个或多个星期即可查看日期。', 'Elige uno o más días para ver tus fechas.', 'Choisissez un ou plusieurs jours pour voir vos dates.', 'Wähle einen oder mehrere Tage, um deine Termine zu sehen.', 'Wybierz jeden lub więcej dni, aby zobaczyć terminy.', '요일을 하나 이상 고르면 날짜가 표시됩니다.'],
+  planNoTimes: ['No open times', '空き時間なし', '无可约时间', 'Sin horarios', 'Aucun créneau', 'Keine freien Zeiten', 'Brak wolnych godzin', '가능한 시간 없음'],
+  planStart: ['Start date', '開始日', '开始日期', 'Fecha de inicio', 'Date de début', 'Startdatum', 'Data rozpoczęcia', '시작일'],
+  planSummary: ['{ok} available · {bad} need a change', '予約可能 {ok} · 変更が必要 {bad}', '可预约 {ok} · 需修改 {bad}', '{ok} disponibles · {bad} por cambiar', '{ok} disponibles · {bad} à modifier', '{ok} verfügbar · {bad} ändern', '{ok} dostępne · {bad} do zmiany', '예약 가능 {ok} · 수정 필요 {bad}'],
+  planAlt: ['Choose another date or time', '別の日時を選ぶ', '选择其他日期或时间', 'Elige otra fecha u hora', 'Choisir une autre date ou heure', 'Anderen Termin wählen', 'Wybierz inny termin', '다른 날짜·시간 선택'],
+  planSkip: ['Leave this one out', 'この回は予約しない', '不预约这一次', 'No reservar esta', 'Ne pas réserver celui-ci', 'Diesen auslassen', 'Pomiń ten termin', '이 회차는 빼기'],
+  planAdd: ['Add one more date', '日程を1つ追加', '再加一个日期', 'Añadir otra fecha', 'Ajouter une date', 'Einen Termin hinzufügen', 'Dodaj kolejny termin', '날짜 하나 더 추가'],
+  planCredit: ['Credits that expire soonest are used first.', '有効期限が近いクレジットから使います。', '优先使用即将到期的课时。', 'Se usan primero los créditos que vencen antes.', 'Les crédits qui expirent le plus tôt sont utilisés en premier.', 'Bald ablaufende Credits werden zuerst verwendet.', 'Najpierw wykorzystujemy kredyty, które wygasają najwcześniej.', '유효기간이 가장 가까운 크레딧부터 사용합니다.'],
+  planNotIncl: ['{n} date(s) still need a change and will not be booked.', '{n}件は変更が必要なため予約されません。', '{n}个日期需要修改，不会被预约。', '{n} fecha(s) necesitan un cambio y no se reservarán.', '{n} date(s) à modifier ne seront pas réservées.', '{n} Termin(e) müssen geändert werden und werden nicht gebucht.', '{n} termin(y) wymaga zmiany i nie zostanie zarezerwowany.', '{n}개 날짜는 수정이 필요해 예약되지 않습니다.'],
+  r_dup: ['Same time as another date above', '上の日程と重複', '与上方日期重复', 'Coincide con otra fecha', 'Même horaire qu’une autre date', 'Gleiche Zeit wie ein anderer Termin', 'Ten sam termin co inny', '위 날짜와 겹침'],
+  step3single: ['3. Or Book a Single Lesson', '3. または1回だけ予約', '3. 或预约单节课', '3. O reserva una sola clase', '3. Ou réservez un seul cours', '3. Oder eine einzelne Stunde buchen', '3. Lub zarezerwuj jedną lekcję', '3. 또는 수업 1회 예약'],
   chatEdit: ['Edit', '編集', '编辑', 'Editar', 'Modifier', 'Bearbeiten', 'Edytuj', '수정'],
   chatDelete: ['Delete', '削除', '删除', 'Eliminar', 'Supprimer', 'Löschen', 'Usuń', '삭제'],
   chatDeleted: ['This message was deleted', 'このメッセージは削除されました', '此消息已删除', 'Este mensaje fue eliminado', 'Ce message a été supprimé', 'Diese Nachricht wurde gelöscht', 'Ta wiadomość została usunięta', '삭제된 메시지입니다'],
@@ -1439,6 +1467,39 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const jsq = s => esc(JSON.stringify(String(s)));
 const num = (v, d) => { const n = Number(v); return (v === '' || v == null || !Number.isFinite(n)) ? d : n; };
 const r2 = x => Math.round(x * 100) / 100;
+/* 결제 통화: 튜터 가격(USD)을 학생이 고른 통화로 환산해 그 통화로 결제합니다 (환율: settings/fx, ECB 하루 1번). */
+const CURS = ['USD', 'EUR', 'CHF', 'AUD', 'JPY', 'KRW'];
+const CUR_SYM = { USD: '$', EUR: '€', CHF: 'CHF', AUD: 'A$', JPY: '¥', KRW: '₩' };
+const zeroDec = c => c === 'JPY' || c === 'KRW';
+const roundCur = (n, c) => c === 'KRW' ? Math.round(n / 100) * 100 : c === 'JPY' ? Math.round(n) : r2(n);
+function fmtCur(n, c) {
+  c = c || 'USD';
+  const z = zeroDec(c), v = z ? Math.round(Number(n || 0)) : r2(Number(n || 0));
+  try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, minimumFractionDigits: z ? 0 : (v % 1 ? 2 : 0), maximumFractionDigits: z ? 0 : 2 }).format(v); }
+  catch (e) { return c + ' ' + v; }
+}
+const fxRate = c => c === 'USD' ? 1 : (Number(S.fx && S.fx.rates && S.fx.rates[c]) || 0);
+const curNow = () => fxRate(S.cur) ? S.cur : 'USD';
+const conv = (usd, c) => { c = c || curNow(); const r = fxRate(c); return c === 'USD' || !r ? usd : roundCur(usd * r, c); };
+const cm = usd => fmtCur(conv(usd), curNow());
+const payOf = o => o.payAmount != null ? o.payAmount : o.price;
+const payListOf = o => o.payList != null ? o.payList : o.listPrice;
+const curOf = o => o.currency || 'USD';
+const moneyO = o => fmtCur(payOf(o), curOf(o)) + (curOf(o) === 'USD' ? '' : ' ' + curOf(o));
+async function loadFx() {
+  try { S.fx = await FB.get('settings', 'fx'); } catch (e) { S.fx = null; }
+  renderCurSel();
+  if (S.view === 'student') { renderPackages(); renderOrderBox(); }
+}
+function renderCurSel() {
+  const el = $('curSel'); if (!el) return;
+  el.innerHTML = CURS.map(c => `<option value="${c}" ${c === S.cur ? 'selected' : ''} ${fxRate(c) ? '' : 'disabled'}>${c} ${CUR_SYM[c]}</option>`).join('');
+}
+function setCur(c) {
+  if (!CURS.includes(c)) return;
+  S.cur = c; try { localStorage.setItem('aak_cur', c); } catch (e) {}
+  renderPackages(); renderOrderBox();
+}
 const money = n => { const v = r2(Number(n || 0)); return '$' + v.toLocaleString('en-US', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
 const toDate = v => !v ? null : (typeof v.toDate === 'function' ? v.toDate() : (v.seconds != null ? new Date(v.seconds * 1000) : new Date(v)));
 const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
@@ -1628,6 +1689,7 @@ const S = {
   allTutors: [], tutors: [], tutorMap: {}, selTutorId: null,
   customRate: null, busy: new Set(), gBusy: [], gBusyT: [],
   orders: [], bookings: [], logs: [],
+  cur: (() => { try { const c = localStorage.getItem('aak_cur'); return ['USD', 'EUR', 'CHF', 'AUD', 'JPY', 'KRW'].includes(c) ? c : 'USD'; } catch (e) { return 'USD'; } })(), fx: null,
   selPkg: 'pack5', selType: 'regular', selSlot: null, selDate: null, dpMonth: null,
   studentTab: 'plans', dashTab: 'upcoming',
   // tutor console
@@ -1715,6 +1777,7 @@ function switchView(v) {
 ════════════════════════════════════════════════════════════════ */
 async function loadTutors() {
   if (!window.FB) return;
+  if (!S.fx) loadFx();   // 환율 (기다리지 않고 따로 불러옵니다)
   try {
     const list = await FB.list('tutors');
     list.sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id));
@@ -1932,11 +1995,11 @@ function renderPackages() {
     if (k === 'single') badge = `<span class="absolute -top-2.5 right-3 bg-slate-100 text-slate-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-slate-300">${esc(t('singleBadge'))}</span>`;
     if (isPack && p.disc > 0) badge = `<span class="absolute -top-2.5 right-3 ${k === 'pack5' ? 'bg-green-600' : 'bg-indigo-600'} text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">${esc(t('save'))} ${p.disc}%</span>`;
     const price = isPack && p.list !== p.price
-      ? `<div class="mt-3"><span class="strike text-sm font-semibold">${money(p.list)}</span>
-           <div class="flex items-baseline gap-1"><span class="text-2xl font-extrabold text-slate-900">${money(p.price)}</span><span class="text-xs text-slate-400">USD</span></div>
-           <div class="text-[11px] text-green-700 font-semibold">${money(p.per)} ${esc(t('perLesson'))}</div></div>`
-      : `<div class="mt-3 flex items-baseline gap-1"><span class="text-2xl font-extrabold text-slate-900">${money(p.price)}</span><span class="text-xs text-slate-400">USD</span></div>
-         ${isPack ? `<div class="text-[11px] text-green-700 font-semibold">${money(p.per)} ${esc(t('perLesson'))}</div>` : ''}`;
+      ? `<div class="mt-3"><span class="strike text-sm font-semibold">${cm(p.list)}</span>
+           <div class="flex items-baseline gap-1"><span class="text-2xl font-extrabold text-slate-900">${cm(p.price)}</span><span class="text-xs text-slate-400">${curNow()}</span></div>
+           <div class="text-[11px] text-green-700 font-semibold">${cm(p.per)} ${esc(t('perLesson'))}</div></div>`
+      : `<div class="mt-3 flex items-baseline gap-1"><span class="text-2xl font-extrabold text-slate-900">${cm(p.price)}</span><span class="text-xs text-slate-400">${curNow()}</span></div>
+         ${isPack ? `<div class="text-[11px] text-green-700 font-semibold">${cm(p.per)} ${esc(t('perLesson'))}</div>` : ''}`;
     return `<div class="pkg-card ${sel ? 'selected' : ''} bg-white p-4 sm:p-5 rounded-2xl border-2 border-slate-200 relative" onclick="selectPkg('${k}')">
       ${badge}<h3 class="font-bold text-slate-800 text-sm">${esc(k === 'pack5' ? t('customPack') : pkgName(k, tb[k].credits))}</h3>
       ${k === 'pack10' ? `<p class="text-xs font-bold text-indigo-600 mt-1">${esc(t('intensive'))}</p>` : ''}
@@ -1950,6 +2013,14 @@ function renderPackages() {
   $('pkgGrid').className = `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${keys.length >= 4 ? 4 : 3} gap-3 sm:gap-4`;
   $('pkgGrid').innerHTML = keys.map(card).join('') +
     (S.customRate ? `<div class="col-span-full text-xs text-indigo-700 font-semibold"><i class="fa fa-user-tag mr-1"></i>${esc(t('specialRate'))}</div>` : '');
+  renderCurSel();
+  const fn = $('fxNote'), c = curNow();
+  if (fn) {
+    const want = S.cur !== 'USD';
+    fn.classList.toggle('hidden', !want);
+    fn.innerHTML = !want ? '' : c === 'USD' ? `<i class="fa fa-circle-info mr-1"></i>${tk('fxNA')}`
+      : `<i class="fa fa-circle-info mr-1"></i>${tk('fxNote', { cur: c, r: (+fxRate(c).toPrecision(6)).toLocaleString('en-US', { maximumFractionDigits: 4 }), d: (S.fx && S.fx.date) || '' })}`;
+  }
 }
 function selectPkg(k) { S.selPkg = k; renderPackages(); renderOrderBox(); }
 function renderOrderBox() {
@@ -1961,18 +2032,20 @@ function renderOrderBox() {
       <div class="flex items-center gap-2 text-sky-400 font-bold"><i class="fa fa-paper-plane"></i><span>${tk('payTitle')}</span></div>
       <p class="text-slate-300 leading-relaxed">${esc(t('payNotice'))}</p>
     </div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="text-sm"><span class="text-slate-400">${tk('payAmount')}:</span> <b class="text-lg">${cm(calcPrices(tu, S.customRate)[S.selPkg].price)}</b> <span class="text-xs text-slate-400">${curNow()}</span></div>
     <div class="flex flex-col sm:flex-row justify-end gap-2">
       <button onclick="S.selPkg=null;renderPackages();renderOrderBox()" class="px-4 py-2.5 border border-slate-700 text-xs text-slate-300 hover:bg-slate-800 rounded-xl">${tk('cancel')}</button>
       <button id="orderBtn" onclick="submitOrder()" class="px-6 py-2.5 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded-xl flex items-center gap-2 justify-center shadow">
         <i class="fa fa-lock"></i><span>${tk(S.email ? 'submitOrder' : 'signIn')}</span></button>
-    </div>`;
+    </div></div>`;
 }
 async function submitOrder() {
   if (!S.email) return handleSignIn();
   const tu = curTutor(); if (!tu) return;
   const btn = $('orderBtn'); busyBtn(btn, true);
   try {
-    const r = await callFn('createOrder', { tutorId: tu.id, pkg: S.selPkg, ...(S.selPkg === 'pack5' ? { count: S.customCount } : {}) });
+    const r = await callFn('createOrder', { tutorId: tu.id, pkg: S.selPkg, currency: curNow(), ...(S.selPkg === 'pack5' ? { count: S.customCount } : {}) });
     toast(t('orderDone'));
     S.dashTab = 'payments';
     switchStudentTab('dash');
@@ -2026,6 +2099,7 @@ function renderReserve() {
       </div></div>`;
   $('creditBal').innerHTML = opt('trial', s.avTrial, 'fa-seedling') + opt('regular', s.avReg, 'fa-ticket');
   $('slotsNote').textContent = t('slotsNote', { tz: tzLabel() });
+  renderPlan();
   if (!S.selDate || S.selDate < todayL()) S.selDate = firstOpenDate(tu) || lYMD(new Date(Date.now() + 86400000));
   renderDatePicker();
   renderSlots();
@@ -2119,8 +2193,6 @@ function renderSlots() {
   box.removeAttribute('style');
   if (!S.selSlot) { box.className = 'hidden'; box.innerHTML = ''; return; }
   const end = new Date(S.selSlot.getTime() + (S.selType === 'trial' ? 25 : 50) * 60000);
-  const canRecur = S.selType === 'regular' && have >= 2;
-  if (!canRecur) S.recur = false;
   box.className = 'bg-slate-900 text-white p-5 rounded-2xl space-y-4';
   box.innerHTML = `<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"><div>
       <div class="text-xs text-green-400 font-semibold uppercase">${esc(t('selected'))}</div>
@@ -2128,8 +2200,7 @@ function renderSlots() {
       <div class="text-sm text-slate-200 mt-0.5">${lYMD(S.selSlot)} ${lHM(S.selSlot)}–${lHM(end)} <span class="text-slate-400">(${esc(tzLabel())})</span></div>
       <div class="text-xs text-slate-400">${kYMD(S.selSlot)} ${kHM(S.selSlot)} KST</div>
     </div>
-    ${S.recur ? '' : `<button id="bookBtn" onclick="confirmLesson()" class="px-6 py-3 bg-green-600 hover:bg-green-500 rounded-xl text-xs font-bold flex items-center gap-2 justify-center"><i class="fa fa-calendar-check"></i><span>${tk('confirmBooking')}</span></button>`}</div>
-    ${canRecur ? recurPanel(tu, have) : ''}`;
+    <button id="bookBtn" onclick="confirmLesson()" class="px-6 py-3 bg-green-600 hover:bg-green-500 rounded-xl text-xs font-bold flex items-center gap-2 justify-center"><i class="fa fa-calendar-check"></i><span>${tk('confirmBooking')}</span></button></div>`;
 }
 
 /* ── 매주 같은 시간 반복 예약 ──
@@ -2154,68 +2225,153 @@ function creditPlan(tu, list) {
   [...list].sort((a, b) => a - b).forEach(ms => { const o = pool.find(x => x.left > 0 && x.exp > ms); if (o) { o.left--; ok.add(ms); } });
   return ok;
 }
-function recurRows(tu, have) {
-  const n = Math.min(S.recurN || Math.min(have, 4), have, CUSTOM_MAX);
-  const rows = [];
-  for (let i = 0; i < n; i++) {
-    const base = S.selSlot.getTime() + i * WEEK_MS;
-    const alt = (S.recurAlt || {})[i];
-    const ms = alt === 'skip' ? null : (alt ? Number(alt) : base);
-    rows.push({ i, base, ms, skip: alt === 'skip', reason: ms ? slotReason(tu, ms) : null });
+/* ── 여러 수업 한 번에 예약 ──
+ * ① 횟수(사용 가능한 크레딧 이내) ② 요일마다 시간 ③ 시작일 → 날짜별로 바로 확인해 보여 주고,
+ * 안 되는 날은 학생이 다른 날짜·시간을 고르거나 빼고, ④ 확정합니다. 크레딧은 만료가 가까운 것부터 씁니다.
+ * 모든 시간은 학생 현지 시간 기준이며 서버(bookLessons)가 다시 한 번 검사합니다. */
+const wdOfL = ymd => new Date(ymd + 'T00:00:00Z').getUTCDay();
+function localAt(ymd, hm) {   // 학생 현지 날짜·시각 → 실제 시각(ms)
+  const [y, m, d] = ymd.split('-').map(Number), [H, M] = hm.split(':').map(Number);
+  const want = Date.UTC(y, m - 1, d, H, M);
+  let ms = want;
+  for (let k = 0; k < 3; k++) {
+    const dt = new Date(ms), [a, b, c] = lYMD(dt).split('-').map(Number), [e, f] = lHM(dt).split(':').map(Number);
+    const diff = Date.UTC(a, b - 1, c, e, f) - want;
+    if (!diff) break;
+    ms -= diff;
   }
+  return ms;
+}
+function planAvail(tu) { return tu && S.email ? creditSummary(S.orders.filter(o => o.tutorId === tu.id)).avReg : 0; }
+function planTimes(tu, wd) {   // 이 요일(학생 현지)에 튜터가 여는 시간 (시작일부터 4주 기준)
+  let ymd = S.plan.start;
+  while (wdOfL(ymd) !== wd) ymd = addD(ymd, 1);
+  const set = new Set();
+  for (let k = 0; k < 4; k++) slotsFor(tu, addD(ymd, 7 * k), 50).forEach(d => set.add(lHM(d)));
+  return [...set].sort();
+}
+function planRows(tu) {
+  const p = S.plan, wds = Object.keys(p.days).map(Number).filter(w => p.days[w]);
+  const rows = [];
+  if (!wds.length) return rows;
+  let ymd = p.start, guard = 0;
+  while (rows.length < p.n + p.extra && guard++ < 500) {
+    const wd = wdOfL(ymd);
+    if (wds.includes(wd)) {
+      const i = rows.length, alt = p.alt[i], base = localAt(ymd, p.days[wd]);
+      rows.push({ i, ymd, base, ms: alt === 'skip' ? null : (alt ? Number(alt) : base), skip: alt === 'skip' });
+    }
+    ymd = addD(ymd, 1);
+  }
+  rows.forEach(r => {
+    if (!r.ms) return;
+    r.reason = slotReason(tu, r.ms) || (rows.some(x => x.i < r.i && x.ms && Math.abs(x.ms - r.ms) < 50 * 60000) ? 'r_dup' : null);
+  });
   const credit = creditPlan(tu, rows.filter(r => r.ms && !r.reason).map(r => r.ms));
   rows.forEach(r => { if (r.ms && !r.reason && !credit.has(r.ms)) r.reason = 'r_credit'; });
-  return { n, rows };
+  return rows;
 }
-function recurPanel(tu, have) {
-  const maxN = Math.min(have, CUSTOM_MAX);
-  if (!S.recurN) S.recurN = Math.min(have, 4);
-  const head = `<label class="flex items-center gap-2 text-sm font-semibold cursor-pointer border-t border-slate-700 pt-4">
-      <input type="checkbox" ${S.recur ? 'checked' : ''} onchange="S.recur=this.checked;S.recurAlt={};renderSlots()"> <i class="fa fa-repeat text-green-400"></i>${tk('repeatWeekly')}</label>`;
-  if (!S.recur) return head;
-  const { rows } = recurRows(tu, have);
-  const fmt = ms => { const d = new Date(ms); return `${lYMD(d)} ${lHM(d)}`; };
-  const opts = Array.from({ length: maxN - 1 }, (_, k) => k + 2).map(v => `<option value="${v}" ${v === S.recurN ? 'selected' : ''}>${v}</option>`).join('');
-  const list = rows.map(r => {
-    const day = lYMD(new Date(r.base));
-    const alts = slotsFor(tu, day, 50).map(d => d.getTime()).filter(ms => ms !== r.base && !slotReason(tu, ms));
-    const pick = (r.reason || (S.recurAlt || {})[r.i]) ? `<select onchange="recurAlt(${r.i}, this.value)">
-        <option value="">${esc(alts.length ? t('recurPickAlt') : t('recurNoAlt'))}</option>
-        ${alts.map(ms => `<option value="${ms}" ${r.ms === ms ? 'selected' : ''}>${lHM(new Date(ms))} (${kHM(new Date(ms))} KST)</option>`).join('')}
-        <option value="skip" ${r.skip ? 'selected' : ''}>${esc(t('recurSkip'))}</option></select>` : '';
-    const status = r.skip ? `<span class="badge b-gray">${esc(t('recurSkipped'))}</span>`
-      : r.reason ? `<span class="badge b-red">${esc(t(r.reason))}</span>` : `<span class="badge b-green">${esc(t('recurOk'))}</span>`;
-    return `<div class="recur-row"><span class="text-xs font-bold w-6 text-slate-400">${r.i + 1}</span>
-      <span class="text-sm font-semibold ${r.skip || r.reason ? 'text-slate-400 line-through' : ''}">${r.ms ? fmt(r.ms) : fmt(r.base)}</span>
-      <span class="text-[10px] text-slate-400">${r.ms ? kYMD(new Date(r.ms)) + ' ' + kHM(new Date(r.ms)) + ' KST' : ''}</span>${status}${pick}</div>`;
+const planDate = ms => new Intl.DateTimeFormat(loc(), { weekday: 'short', month: 'short', day: 'numeric', timeZone: userTZ }).format(new Date(ms));
+function renderPlan() {
+  const box = $('planCard'); if (!box) return;
+  const tu = curTutor(), have = S.selType === 'regular' ? Math.min(planAvail(tu), CUSTOM_MAX) : 0, on = have >= 2;   // 한 번에 최대 30회
+  $('step2Title').textContent = t(on ? 'step3single' : 'step2');
+  if (!on) { box.className = 'hidden'; box.innerHTML = ''; return; }
+  const p = S.plan = S.plan || { days: {}, alt: {}, extra: 0 };
+  const minStart = lYMD(new Date(Date.now() + LEAD_MS));
+  if (!p.start || p.start < minStart) p.start = minStart;
+  p.n = Math.max(1, Math.min(p.n || Math.min(have, 4), have));
+  const wds = wdNames('short');
+  const chips = wds.map((w, wd) => {
+    const times = planTimes(tu, wd), on = !!p.days[wd];
+    return `<button type="button" class="plan-chip ${on ? 'on' : ''}" ${times.length ? '' : 'disabled'} onclick="planDay(${wd})" title="${times.length ? '' : esc(t('planNoTimes'))}">${esc(w)}</button>`;
   }).join('');
-  const good = rows.filter(r => r.ms && !r.reason);
-  return head + `<div class="space-y-2">
-      <div class="flex items-center gap-2 text-xs"><span>${tk('weeksLbl')}</span><select class="text-slate-900 rounded-lg px-2 py-1" onchange="S.recurN=+this.value;S.recurAlt={};renderSlots()">${opts}</select></div>
-      <p class="text-[11px] text-slate-400">${tk('recurHint')}</p>
-      <div class="space-y-1.5">${list}</div>
-      <button id="recurBtn" onclick="confirmRecurring()" ${good.length ? '' : 'disabled'} class="w-full px-6 py-3 bg-green-600 hover:bg-green-500 disabled:opacity-40 rounded-xl text-xs font-bold flex items-center gap-2 justify-center">
-        <i class="fa fa-calendar-check"></i><span>${tk('recurBook', { n: good.length })}</span></button></div>`;
+  const timeRows = Object.keys(p.days).map(Number).filter(wd => p.days[wd]).sort((a, b) => a - b).map(wd => {
+    const times = planTimes(tu, wd);
+    let first = p.start; while (wdOfL(first) !== wd) first = addD(first, 1);
+    return `<div class="flex items-center gap-2"><span class="w-12 text-sm font-bold">${esc(wds[wd])}</span>
+      <select class="inp !w-auto !py-1.5" onchange="planTime(${wd}, this.value)">${times.map(hm => `<option value="${hm}" ${hm === p.days[wd] ? 'selected' : ''}>${hm} (${kHM(new Date(localAt(first, hm)))} KST)</option>`).join('')}</select></div>`;
+  }).join('');
+  const rows = planRows(tu);
+  const good = rows.filter(r => r.ms && !r.reason), bad = rows.filter(r => !r.skip && r.reason);
+  const list = rows.map(r => {
+    const shown = r.ms || r.base, st = r.skip ? 'skip' : r.reason ? 'bad' : 'ok';
+    let pick = '';
+    if (r.reason || p.alt[r.i]) {
+      const taken = new Set(rows.filter(x => x.i !== r.i && x.ms && !x.reason).map(x => x.ms));
+      const alts = [];
+      for (let k = 0; k < 4 && alts.length < 40; k++) {
+        slotsFor(tu, addD(r.ymd, k), 50).forEach(d => { const ms = d.getTime(); if (!slotReason(tu, ms) && !taken.has(ms)) alts.push(ms); });
+      }
+      const okAlts = alts.filter(ms => creditPlan(tu, [...good.filter(x => x.i !== r.i).map(x => x.ms), ms]).has(ms));
+      pick = `<select class="plan-sel" onchange="planAlt(${r.i}, this.value)">
+        <option value="">${esc(okAlts.length ? t('planAlt') : t('recurNoAlt'))}</option>
+        ${okAlts.map(ms => `<option value="${ms}" ${r.ms === ms ? 'selected' : ''}>${esc(planDate(ms))} ${lHM(new Date(ms))} (${kHM(new Date(ms))} KST)</option>`).join('')}
+        <option value="skip" ${r.skip ? 'selected' : ''}>${esc(t('planSkip'))}</option></select>`;
+    }
+    const badge = st === 'ok' ? `<span class="badge b-green"><i class="fa fa-check mr-1"></i>${esc(t('recurOk'))}</span>`
+      : st === 'skip' ? `<span class="badge b-gray">${esc(t('recurSkipped'))}</span>` : `<span class="badge b-red"><i class="fa fa-xmark mr-1"></i>${esc(t(r.reason))}</span>`;
+    return `<div class="plan-row ${st}"><span class="w-6 text-xs font-bold text-slate-400">${r.i + 1}</span>
+      <span class="min-w-0"><span class="block text-sm font-bold ${st === 'ok' ? 'text-slate-900' : 'text-slate-500'}">${esc(planDate(shown))} · ${lHM(new Date(shown))}</span>
+      <span class="block text-[10px] text-slate-400">${kYMD(new Date(shown))} ${kHM(new Date(shown))} KST</span></span>
+      <span class="flex flex-wrap items-center gap-2 sm:ml-auto">${badge}${pick}</span></div>`;
+  }).join('');
+  box.className = 'card space-y-4';
+  box.innerHTML = `<div><h2 class="text-base font-bold text-slate-900">${tk('planTitle')}</h2><p class="text-xs text-slate-500 mt-1">${tk('planSub')}</p></div>
+    <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-5">
+      <div class="space-y-4">
+        <div><p class="lbl">① ${tk('planCount')}</p>
+          <div class="stepper flex items-center gap-1.5">
+            <button type="button" onclick="planN(-1)" ${p.n <= 1 ? 'disabled' : ''} aria-label="-1">−</button>
+            <input type="number" min="1" max="${have}" value="${p.n}" onchange="planN(0, this.value)" aria-label="${esc(t('planCount'))}">
+            <button type="button" onclick="planN(1)" ${p.n >= have ? 'disabled' : ''} aria-label="+1">+</button></div>
+          <p class="text-[11px] text-slate-500 mt-1">${tk('planCountHint', { n: have })}</p></div>
+      </div>
+      <div><p class="lbl">② ${tk('planDays')}</p>
+        <div class="flex flex-wrap gap-1.5">${chips}</div>
+        <div class="space-y-2 mt-3">${timeRows}</div></div>
+    </div>
+    <div class="sm:w-[260px]"><p class="lbl">③ ${tk('planStart')}</p>
+      <input type="date" class="inp" min="${minStart}" max="${addD(todayL(), 120)}" value="${p.start}" onchange="planStart(this.value)"></div>
+    ${rows.length ? `<div class="space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs"><b class="text-slate-700">${tk('planSummary', { ok: good.length, bad: bad.length })}</b>
+          <span class="text-slate-400"><i class="fa fa-hourglass-half mr-1"></i>${tk('planCredit')}</span></div>
+        <div class="space-y-1.5">${list}</div>
+        ${good.length < p.n && good.length < have ? `<button class="btn btn-ghost btn-sm" onclick="S.plan.extra++;renderPlan()"><i class="fa fa-plus"></i>${tk('planAdd')}</button>` : ''}
+      </div>
+      ${bad.length ? `<p class="text-[11px] text-amber-700"><i class="fa fa-triangle-exclamation mr-1"></i>${tk('planNotIncl', { n: bad.length })}</p>` : ''}
+      <button id="planBtn" onclick="confirmPlan()" ${good.length ? '' : 'disabled'} class="w-full px-6 py-3 bg-green-600 hover:bg-green-500 disabled:opacity-40 text-white rounded-xl text-sm font-bold flex items-center gap-2 justify-center">
+        <i class="fa fa-calendar-check"></i>④ <span>${tk('recurBook', { n: good.length })}</span></button>`
+      : `<p class="text-xs text-slate-400"><i class="fa fa-hand-pointer mr-1"></i>${tk('planPickDays')}</p>`}`;
 }
-function recurAlt(i, v) { S.recurAlt = S.recurAlt || {}; if (v) S.recurAlt[i] = v; else delete S.recurAlt[i]; renderSlots(); }
-async function confirmRecurring() {
-  const tu = curTutor(); if (!tu || !S.selSlot) return;
-  const have = creditSummary(S.orders.filter(o => o.tutorId === tu.id)).avReg;
-  const good = recurRows(tu, have).rows.filter(r => r.ms && !r.reason).map(r => new Date(r.ms).toISOString());
+const planReset = () => { S.plan.alt = {}; S.plan.extra = 0; };
+function planN(d, v) { const have = Math.min(planAvail(curTutor()), CUSTOM_MAX); S.plan.n = Math.max(1, Math.min(have, d ? S.plan.n + d : Math.round(Number(v) || 1))); planReset(); renderPlan(); }
+function planDay(wd) {
+  const p = S.plan;
+  if (p.days[wd]) delete p.days[wd];
+  else { const times = planTimes(curTutor(), wd); if (!times.length) return; p.days[wd] = p.lastTime && times.includes(p.lastTime) ? p.lastTime : times[0]; }
+  planReset(); renderPlan();
+}
+function planTime(wd, hm) { S.plan.days[wd] = hm; S.plan.lastTime = hm; planReset(); renderPlan(); }
+function planStart(v) { if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { S.plan.start = v; planReset(); renderPlan(); } }
+function planAlt(i, v) { if (v) S.plan.alt[i] = v; else delete S.plan.alt[i]; renderPlan(); }
+async function confirmPlan() {
+  const tu = curTutor(); if (!tu) return;
+  const good = planRows(tu).filter(r => r.ms && !r.reason).map(r => new Date(r.ms).toISOString());
   if (!good.length) return;
-  const btn = $('recurBtn'); busyBtn(btn, true);
+  const btn = $('planBtn'); busyBtn(btn, true);
   try {
     const r = await callFn('bookLessons', { tutorId: tu.id, creditType: 'regular', startISOs: good, studentTZ: userTZ });
     const fails = (r.results || []).filter(x => !x.ok);
     toast(t('recurDone', { ok: r.booked || 0 }));
     if (fails.length) openModal(t('recurFail'), `<ul class="text-sm space-y-2">${fails.map(f => `<li><b>${lYMD(new Date(f.startISO))} ${lHM(new Date(f.startISO))}</b><br><span class="text-xs text-red-600">${esc(f.error)}</span></li>`).join('')}</ul>`);
-    S.selSlot = null; S.recur = false; S.recurAlt = {};
+    planReset();
     await loadTutorExtras();
     S.dashTab = 'upcoming'; switchStudentTab('dash');
-  } catch (e) { await loadTutorExtras(); renderSlots(); }
+  } catch (e) { await loadTutorExtras(); renderPlan(); }
   finally { busyBtn(btn, false); }
 }
-function pickSlot(ms) { S.selSlot = new Date(ms); S.recurAlt = {}; renderSlots(); }
+function pickSlot(ms) { S.selSlot = new Date(ms); renderSlots(); }
 async function confirmLesson() {
   const tu = curTutor(); if (!tu || !S.selSlot) return;
   const btn = $('bookBtn'); busyBtn(btn, true);
@@ -2361,29 +2517,34 @@ function renderPayments() {
       const c = toDate(o.createdAt), e = toDate(o.expiresAt);
       return `<tr><td>${c ? lYMD(c) : '—'}</td><td>${esc(o.tutorName || o.tutorId)}</td><td class="font-bold">${esc(pkgName(o.package, o.credits))}</td>
         <td>${o.credits}${o.status !== 'pending' ? ` <span class="text-[10px] text-slate-400">(✓${o.used || 0} · ⏳${o.reserved || 0})</span>` : ''}</td>
-        <td>${o.listPrice && o.listPrice !== o.price ? `<span class="strike text-[11px] mr-1">${money(o.listPrice)}</span>` : ''}<b>${money(o.price)}</b></td>
+        <td class="whitespace-nowrap">${payListOf(o) && payListOf(o) !== payOf(o) ? `<span class="strike text-[11px] mr-1">${fmtCur(payListOf(o), curOf(o))}</span>` : ''}<b>${moneyO(o)}</b></td>
         <td>${statusBadge(o.status)}</td><td>${e ? lYMD(e) : '—'}</td>
         <td class="r whitespace-nowrap">${o.status === 'pending' ? `<button class="btn btn-ghost btn-sm" onclick="studentEditOrder(${jsq(o.id)})"><i class="fa fa-pen"></i>${esc(t('edit'))}</button>
           <button class="btn btn-red btn-sm" onclick="studentDeleteOrder(${jsq(o.id)}, this)"><i class="fa fa-trash"></i>${esc(t('del'))}</button>` : '<span class="text-slate-300">—</span>'}</td></tr>`;
     }).join('') : `<tr><td colspan="8" class="empty-row">${esc(t('noPayments'))}</td></tr>`}
     </tbody></table></div>`;
 }
-function studentEditOrder(id) {
+function studentEditOrder(id, cur) {
   const o = S.orders.find(x => x.id === id); if (!o) return;
   const tu = S.tutorMap[o.tutorId];
   const cr = o.tutorId === S.selTutorId ? S.customRate : null;
   const pr = calcPrices(tu, cr), tb = pkgTable(tu, cr);
+  const c = cur || curOf(o), sel = document.querySelector('input[name=epkg]:checked'), pk = (sel && sel.value) || o.package;
+  const f = usd => fmtCur(conv(usd, c), c);
   openModal(t('editPayment'), `<div class="space-y-3">
+    <label class="flex items-center gap-2 text-sm"><i class="fa fa-coins text-amber-500"></i><span>${tk('curLabel')}</span>
+      <select id="eoCur" class="inp !w-auto" onchange="studentEditOrder(${jsq(id)}, this.value)">${CURS.map(x => `<option value="${x}" ${x === c ? 'selected' : ''} ${fxRate(x) || x === curOf(o) ? '' : 'disabled'}>${x} ${CUR_SYM[x]}</option>`).join('')}</select></label>
     ${(cr ? PKG_KEYS.filter(k => k !== 'trial') : PKG_KEYS).map(k => `<label class="flex items-center justify-between gap-3 border rounded-xl p-3 cursor-pointer hover:border-green-500">
-      <span class="flex items-center gap-2"><input type="radio" name="epkg" value="${k}" ${o.package === k ? 'checked' : ''}> <b class="text-sm">${esc(pkgName(k, tb[k].credits))}</b></span>
-      <span class="text-sm">${pr[k].list !== pr[k].price ? `<span class="strike text-xs mr-1">${money(pr[k].list)}</span>` : ''}<b>${money(pr[k].price)}</b></span></label>`).join('')}
+      <span class="flex items-center gap-2"><input type="radio" name="epkg" value="${k}" ${pk === k ? 'checked' : ''}> <b class="text-sm">${esc(pkgName(k, tb[k].credits))}</b></span>
+      <span class="text-sm">${pr[k].list !== pr[k].price ? `<span class="strike text-xs mr-1">${f(pr[k].list)}</span>` : ''}<b>${f(pr[k].price)}</b> <span class="text-[10px] text-slate-400">${c}</span></span></label>`).join('')}
     <p class="text-[11px] text-slate-500">${esc(t('payNotice'))}</p>
     <button class="btn btn-green w-full" onclick="saveStudentOrder(${jsq(id)}, this)"><span>${tk('saveBtn')}</span></button></div>`);
 }
 async function saveStudentOrder(id, btn) {
   const pkg = document.querySelector('input[name=epkg]:checked')?.value; if (!pkg) return;
   busyBtn(btn, true);
-  try { await callFn('updateOrder', { orderId: id, pkg, ...(pkg === 'pack5' ? { count: S.customCount } : {}) }); toast(t('saved')); closeModal(); }
+  const cur = $('eoCur') ? $('eoCur').value : undefined;
+  try { await callFn('updateOrder', { orderId: id, pkg, currency: cur, ...(pkg === 'pack5' ? { count: S.customCount } : {}) }); toast(t('saved')); closeModal(); }
   catch (e) {} finally { busyBtn(btn, false); }
 }
 async function studentDeleteOrder(id, btn) {
@@ -3107,7 +3268,7 @@ function renderTutorOrders() {
     return `<tr><td>${c ? kYMD(c) : '—'}</td><td class="font-bold">${esc(stuLabel(o))}<div class="text-[10px] text-slate-400 font-normal">${esc(o.studentEmail)}</div></td>
       <td>${pkgKo(o.package, o.credits)}${o.customRate ? ' <span class="badge b-blue">맞춤</span>' : ''}</td>
       <td>${o.credits} <span class="text-[10px] text-slate-400">(${o.used || 0}/${o.reserved || 0})</span></td>
-      <td>${o.listPrice && o.listPrice !== o.price ? `<span class="strike text-[11px] mr-1">${money(o.listPrice)}</span>` : ''}<b>${money(o.price)}</b>${o.note ? `<div class="text-[10px] text-slate-400">${esc(o.note)}</div>` : ''}</td>
+      <td class="whitespace-nowrap">${payListOf(o) && payListOf(o) !== payOf(o) ? `<span class="strike text-[11px] mr-1">${fmtCur(payListOf(o), curOf(o))}</span>` : ''}<b>${moneyO(o)}</b>${curOf(o) !== 'USD' ? `<div class="text-[10px] text-slate-400">≈ ${money(o.price)}${o.status === 'pending' ? ' (견적)' : ''}</div>` : ''}${o.note ? `<div class="text-[10px] text-slate-400">${esc(o.note)}</div>` : ''}</td>
       <td>${statusBadgeKo(o.status)}</td><td>${e ? kYMD(e) : '—'}</td>
       <td class="r whitespace-nowrap">
         ${o.status === 'pending' ? `<button class="btn btn-green btn-sm" onclick="tutorConfirmPay(${jsq(o.id)}, this)"><i class="fa fa-check"></i>결제 확인</button>` : ''}
@@ -3117,7 +3278,7 @@ function renderTutorOrders() {
 }
 async function tutorConfirmPay(id, btn) {
   const o = S.tOrders.find(x => x.id === id);
-  if (!confirm(`${stuLabel(o)} (${o.studentEmail})\n${pkgKo(o.package, o.credits)} · ${money(o.price)}\nWISE 입금을 확인했나요? 확인하면 크레딧 ${o.credits}개가 지급됩니다.`)) return;
+  if (!confirm(`${stuLabel(o)} (${o.studentEmail})\n${pkgKo(o.package, o.credits)} · ${moneyO(o)}\nWISE 입금을 확인했나요? 확인하면 크레딧 ${o.credits}개가 지급됩니다.${curOf(o) !== 'USD' ? '\n(튜터 수익은 오늘 환율로 USD 환산해 저장됩니다.)' : ''}`)) return;
   busyBtn(btn, true);
   try { await callFn('confirmPayment', { orderId: id }); toast('결제 확인 완료 — 학생에게 크레딧이 지급되었습니다.'); await loadTutorData(); renderTutorOrders(); }
   catch (e) {} finally { busyBtn(btn, false); }
@@ -3130,7 +3291,8 @@ function tutorEditOrder(id) {
     ${pending ? `<div><label class="lbl">플랜</label><select id="eoPkg" class="inp">${PKG_KEYS.map(k => `<option value="${k}" ${k === o.package ? 'selected' : ''}>${pkgKo(k, pkgTable(tutorOf())[k].credits)}</option>`).join('')}</select>
       <p class="text-[11px] text-slate-400 mt-1">플랜을 바꾸면 가격이 자동으로 다시 계산됩니다. 아래 금액을 입력하면 그 금액이 우선 적용됩니다.</p></div>`
       : '<p class="text-[11px] text-amber-700 bg-amber-50 rounded-lg p-2">결제 완료된 건은 크레딧 수량을 바꿀 수 없고 금액·메모만 수정됩니다.</p>'}
-    <div><label class="lbl">결제 금액 ($) — 비워두면 자동 계산</label><input id="eoPrice" type="number" step="0.01" class="inp" placeholder="${o.price}"></div>
+    <div><label class="lbl">결제 금액 (${curOf(o)}) — 비워두면 자동 계산</label><input id="eoPrice" type="number" step="${zeroDec(curOf(o)) ? 1 : 0.01}" class="inp" placeholder="${payOf(o)}">
+      ${curOf(o) !== 'USD' ? `<p class="text-[11px] text-slate-400 mt-1">학생 결제 통화: ${curOf(o)} · 튜터 수익은 USD로 환산되어 저장됩니다 (현재 ≈ ${money(o.price)}).</p>` : ''}</div>
     <div><label class="lbl">메모</label><input id="eoNote" class="inp" value="${esc(o.note || '')}"></div>
     <button class="btn btn-green w-full" onclick="saveTutorOrder(${jsq(id)}, this)">저장</button></div>`);
 }
