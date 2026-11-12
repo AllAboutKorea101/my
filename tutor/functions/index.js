@@ -629,7 +629,11 @@ exports.bookLessons = call(async (req) => {
     }
   }
   const docs = [];
-  for (const id of booked) { await upsertLessonEvent(id); const b = await getBooking(id); if (b) docs.push(b); }
+  // 캘린더 일정·Meet 링크를 5건씩 동시에 만들어 여러 수업 예약을 빠르게 처리합니다
+  for (let i = 0; i < booked.length; i += 5) {
+    const part = await Promise.all(booked.slice(i, i + 5).map(async (id) => { await upsertLessonEvent(id); return getBooking(id); }));
+    part.forEach((b) => { if (b) docs.push(b); });
+  }
   await mailBookings("booked", docs);
   return { results, booked: booked.length };
 }, { secrets: [...MAIL_SECRETS, ...OAUTH_SECRETS], timeoutSeconds: 300 });
@@ -914,7 +918,7 @@ async function sendMail({ to, replyTo, subject, html }) {
   if (!to) return;
   if (!pass || pass === "none") { logger.info("mail skipped (GMAIL_APP_PASSWORD not set)", subject, to); return; }
   try {
-    if (!mailer) mailer = nodemailer.createTransport({ service: "gmail", auth: { user: MAIL_FROM, pass } });
+    if (!mailer) mailer = nodemailer.createTransport({ service: "gmail", pool: true, maxConnections: 3, auth: { user: MAIL_FROM, pass } });   // 연결 재사용 → 더 빠르게
     await mailer.sendMail({
       from: `"All About Korea" <${MAIL_FROM}>`, to, replyTo: replyTo || undefined, subject, html,
       text: html.replace(/<br\s*\/?>/gi, "\n").replace(/<\/(p|div|tr|h2|h3|li)>/gi, "\n").replace(/<[^>]+>/g, "")
@@ -976,7 +980,7 @@ async function mailOrderCreated(o, tutor) {
   const usdEn = cur !== "USD" ? `<br><span style="color:#64748b;font-size:12px;font-weight:400">≈ ${usd(o.price)} · 1 USD = ${o.fxRate} ${cur} (ECB ${h(o.fxDate || "")})</span>` : "";
 
   // 튜터에게: 누가 어떤 패키지를 얼마에 신청했는지
-  await sendMail({
+  const toTutor = sendMail({
     to: tEmail, replyTo: o.studentEmail,
     subject: `[All About Korea] 새 수강 신청 / New plan request — ${sName} · ${ko}`,
     html: wrap(
@@ -996,7 +1000,7 @@ async function mailOrderCreated(o, tutor) {
   });
 
   // 학생에게: 친절한 접수 안내 + WISE 결제 링크 안내 + 튜터 이메일
-  await sendMail({
+  const toStudent = sendMail({
     to: o.studentEmail, replyTo: tEmail,
     subject: `[All About Korea] Your plan request was received / 수강 신청이 접수되었습니다 — ${en}`,
     html: wrap(
@@ -1019,6 +1023,7 @@ async function mailOrderCreated(o, tutor) {
        <p>결제와 관련해 궁금한 점이 있으시면 선생님 이메일 <a href="mailto:${h(tEmail)}">${h(tEmail)}</a>로 언제든 편하게 문의해 주세요 (이 메일에 답장하셔도 됩니다).</p>
        <p>곧 수업에서 만나요! 🇰🇷</p>`),
   });
+  await Promise.all([toTutor, toStudent]);   // 두 통을 동시에 보내 응답을 빠르게
 }
 
 /* ── 예약 / 변경 / 취소 ── */
@@ -1090,8 +1095,10 @@ async function mailBookings(kind, list, extra = {}) {
     tutEn = `<h2 style="margin:0 0 6px;font-size:18px">Lesson cancelled</h2><p>The lesson with <b>${h(sLabel)}</b> (${h(b.studentEmail)}) was cancelled.</p>${rows("en", "Asia/Seoul")}`;
   } else return;
 
-  await sendMail({ to: b0.studentEmail, replyTo: tEmail, subject: `[All About Korea] ${sub[0]}`, html: wrap(stuEn, stuKo) });
-  await sendMail({ to: tEmail, replyTo: b0.studentEmail, subject: `[All About Korea] ${sub[1]} — ${sLabel}`, html: wrap(tutKo, tutEn) });
+  await Promise.all([   // 학생·튜터 메일 동시 발송
+    sendMail({ to: b0.studentEmail, replyTo: tEmail, subject: `[All About Korea] ${sub[0]}`, html: wrap(stuEn, stuKo) }),
+    sendMail({ to: tEmail, replyTo: b0.studentEmail, subject: `[All About Korea] ${sub[1]} — ${sLabel}`, html: wrap(tutKo, tutEn) }),
+  ]);
 }
 
 /* ── 읽지 않은 채팅 알림 ── */
@@ -1416,12 +1423,13 @@ async function mailLessonReminder(b) {
   const tutRows = (lang) => tbl([
     [lang === "ko" ? "학생" : "Student", `${h(sLabel)} (${h(b.studentEmail)})`],
     [lang === "ko" ? "시작" : "Starts at", h(fmtAt(at, "Asia/Seoul", lang))], [lang === "ko" ? "수업" : "Lesson", h(lang === "ko" ? type[0] : type[1])], meetRow]);
-  await sendMail({ to: b.studentEmail, replyTo: tEmail, subject: "[All About Korea] Your lesson starts in 15 minutes / 수업 15분 전 알림",
+  const toStudent = sendMail({ to: b.studentEmail, replyTo: tEmail, subject: "[All About Korea] Your lesson starts in 15 minutes / 수업 15분 전 알림",
     html: wrap(`<h2 style="margin:0 0 6px;font-size:18px">Your lesson starts in 15 minutes ⏰</h2><p>Hi ${h(sName)}, get ready — your Korean lesson with <b>${h(tName)}</b> is about to begin.</p>${stuRows("en")}${b.meetLink ? link : `<p style="font-size:13px;color:#475569">The Google Meet link will appear on your dashboard.</p>${link}`}`,
                `<h2 style="margin:0 0 6px;font-size:18px">수업 15분 전입니다 ⏰</h2><p>${h(sName)}님, <b>${h(tName)}</b> 선생님과의 수업이 곧 시작됩니다.</p>${stuRows("ko")}`) });
-  await sendMail({ to: tEmail, replyTo: b.studentEmail, subject: `[All About Korea] 수업 15분 전 알림 / Lesson in 15 minutes — ${sLabel}`,
+  const toTutor = sendMail({ to: tEmail, replyTo: b.studentEmail, subject: `[All About Korea] 수업 15분 전 알림 / Lesson in 15 minutes — ${sLabel}`,
     html: wrap(`<h2 style="margin:0 0 6px;font-size:18px">수업 15분 전입니다 ⏰</h2><p><b>${h(sLabel)}</b> 학생과의 수업이 곧 시작됩니다.</p>${tutRows("ko")}${b.meetLink ? linkKo : `<p style="font-size:13px;color:#b45309">아직 Meet 링크가 없습니다. 튜터 화면에서 링크를 넣어 주세요.</p>${linkKo}`}`,
                `<h2 style="margin:0 0 6px;font-size:18px">Your lesson starts in 15 minutes ⏰</h2><p>Your lesson with <b>${h(sLabel)}</b> is about to begin.</p>${tutRows("en")}`) });
+  await Promise.all([toStudent, toTutor]);
 }
 async function mailExpirySoon(o, remain, tz) {
   const [ko, en] = pkgLabels(o);
