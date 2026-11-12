@@ -13,7 +13,7 @@
  *   - cancelLesson    : 수업 취소 → 보류 크레딧 복원 (학생=24시간 전까지)
  *   - submitReview    : 리뷰 작성 (수업 완료한 학생만) → 튜터 평점 재계산
  *   - syncCalendar    : 튜터 Google 캘린더 free/busy 즉시 동기화 (튜터/관리자)
- *   - rescheduleLesson: 수업 시간 변경 (학생=12시간 전까지, 새 시간도 12시간 이후)
+ *   - rescheduleLesson: 수업 시간 변경 (학생=24시간 전까지, 새 시간도 24시간 이후)
  *   - setMemberId     : 회원 표시 ID 지정 (관리자) → 기존 결제·예약에도 반영
  *   - bookLessons     : 매주 같은 시간 반복 예약 (여러 건을 한 번에, 각 건마다 중복 검사)  [추가]
  *   - openChat        : 튜터-학생 채팅방 열기 (현재 수강 관계일 때만)                     [추가]
@@ -138,7 +138,7 @@ const isManager = (c, tid) => c.role === "admin" || (c.role === "tutor" && c.tut
  * (이전 1시간 단위 데이터는 "HH:00" → HH:00·HH:30 두 칸으로 해석)
  * 수업은 시작 칸부터 수업 길이만큼의 칸이 모두 열려 있어야 예약 가능 (체험 1칸, 정규 2칸)
  */
-const LEAD = 12 * HOUR;               // 예약·변경은 최소 12시간 전까지
+const LEAD = 24 * HOUR;               // 새 예약·시간 변경·취소 모두 최소 24시간 전까지
 function availCells(tutor, wd) {
   const a = ((tutor.availability || {})[wd] || []).map(String);
   if (tutor.availStep === 30) return new Set(a);
@@ -528,7 +528,7 @@ async function bookOne(c, tutorId, creditType, start, studentTZ) {
   const dur = DURATION[creditType];
   if (!tutorId || !dur || isNaN(start.getTime())) throw new HttpsError("invalid-argument", "Invalid booking request.");
   if (start.getTime() < Date.now() + LEAD) {
-    throw new HttpsError("failed-precondition", "Lessons must be booked at least 12 hours in advance.");
+    throw new HttpsError("failed-precondition", "Lessons must be booked at least 24 hours in advance.");
   }
   const end = new Date(start.getTime() + dur * 60000);
   const busyRef = db.doc(`busySlots/${tutorId}_${start.getTime()}`);
@@ -631,7 +631,7 @@ exports.rescheduleLesson = call(async (req) => {
   const start = new Date(startISO);
   if (!bookingId || isNaN(start.getTime())) throw new HttpsError("invalid-argument", "Invalid request.");
   if (start.getTime() < Date.now() + LEAD) {
-    throw new HttpsError("failed-precondition", "The new time must be at least 12 hours from now.");
+    throw new HttpsError("failed-precondition", "The new time must be at least 24 hours from now.");
   }
   const bRef = db.doc(`bookings/${bookingId}`);
   const pre = await bRef.get();
@@ -650,7 +650,7 @@ exports.rescheduleLesson = call(async (req) => {
     if (!mgr && b.studentEmail !== c.email) throw new HttpsError("permission-denied", "Not allowed.");
     if (b.status !== "reserved") throw new HttpsError("failed-precondition", "Only booked lessons can be changed.");
     if (!mgr && b.startAt.toMillis() - Date.now() < LEAD) {
-      throw new HttpsError("failed-precondition", "Lessons can be changed up to 12 hours before start.");
+      throw new HttpsError("failed-precondition", "Lessons can be changed up to 24 hours before start.");
     }
     if (b.startAt.toMillis() === start.getTime()) throw new HttpsError("invalid-argument", "Please choose a different time.");
     const oldSlot = `${b.tutorId}_${b.startAt.toMillis()}`;
@@ -836,17 +836,23 @@ exports.processCredits = onSchedule({ schedule: "every 10 minutes", timeZone: "A
     } catch (e) { logger.error("expire failed", d.id, e); }
   }
 
-  // ③ 7일 지난 자료 삭제
-  const mats = await db.collection("materials").where("expiresAt", "<=", now).limit(200).get();
+  // ③ 예전 '학습 자료'(채팅으로 대체됨): 남아 있는 문서와 파일을 모두 삭제 (다 지워지면 할 일 없음)
   const bucket = getStorage().bucket();
-  for (const d of mats.docs) {
-    try {
-      const m = d.data();
-      if (m.storagePath) await bucket.file(m.storagePath).delete({ ignoreNotFound: true });
-      await d.ref.delete();
-      removed++;
-    } catch (e) { logger.error("material delete failed", d.id, e); }
-  }
+  try {
+    const mats = await db.collection("materials").limit(200).get();
+    for (const d of mats.docs) {
+      try {
+        const m = d.data();
+        if (m.storagePath) await bucket.file(m.storagePath).delete({ ignoreNotFound: true });
+        await d.ref.delete();
+        removed++;
+      } catch (e) { logger.error("material delete failed", d.id, e); }
+    }
+    if (mats.empty) {
+      const [files] = await bucket.getFiles({ prefix: "materials/", maxResults: 200 });
+      for (const f of files) { try { await f.delete({ ignoreNotFound: true }); removed++; } catch (e) { logger.error("material file delete failed", f.name, e); } }
+    }
+  } catch (e) { logger.error("materials cleanup failed", e); }
 
   // ④ 지난 예약 슬롯 정리 (1일 경과)
   const old = await db.collection("busySlots").where("endAt", "<=", Timestamp.fromMillis(Date.now() - DAY)).limit(400).get();
@@ -1013,8 +1019,8 @@ async function mailBookings(kind, list, extra = {}) {
   const lineStu = (b, lang) => `<li style="margin:4px 0"><b>${h(fmtAt(toD(b.startAt), tz, lang))}</b><br><span style="color:#64748b;font-size:12px">${h(fmtAt(toD(b.startAt), "Asia/Seoul", lang))} · ${h(lang === "ko" ? typeKo(b) : typeEn(b))}</span>${b.meetLink ? `<br><span style="font-size:12px">Google Meet: ${meet(b)}</span>` : ""}</li>`;
   const lineTut = (b, lang) => `<li style="margin:4px 0"><b>${h(fmtAt(toD(b.startAt), "Asia/Seoul", lang))}</b> · ${h(lang === "ko" ? typeKo(b) : typeEn(b))}<br><span style="color:#64748b;font-size:12px">${lang === "ko" ? "학생 현지" : "Student local"}: ${h(fmtAt(toD(b.startAt), tz, lang))}</span>${b.meetLink ? `<br><span style="font-size:12px">Meet: ${meet(b)}</span>` : ""}</li>`;
   const ul = (fn, lang) => `<ul style="padding-left:18px;margin:8px 0">${sorted.map((b) => fn(b, lang)).join("")}</ul>`;
-  const policyEn = "You can cancel up to 24 hours and reschedule up to 12 hours before each lesson.";
-  const policyKo = "수업 시작 24시간 전까지 취소, 12시간 전까지 시간 변경이 가능합니다.";
+  const policyEn = "New bookings, time changes and cancellations are possible up to 24 hours before each lesson.";
+  const policyKo = "새 예약·시간 변경·취소는 모두 수업 시작 24시간 전까지 가능합니다.";
   let sub, stuEn, stuKo, tutKo, tutEn;
 
   if (kind === "booked") {
@@ -1297,4 +1303,168 @@ exports.chatUnreadDigest = onSchedule({ schedule: "every 60 minutes", timeZone: 
     sent++;
   }
   logger.info(`chatUnreadDigest: groups=${groups.size} sent=${sent}`);
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+ *  채팅 메시지 수정·삭제 — 자기가 보낸 메시지만, 보관 기간(30일) 동안 언제든 가능
+ *  · 수정: 글자만 바꿀 수 있고 '수정됨'이 표시됩니다. 상대방에게 알림은 가지 않습니다.
+ *  · 삭제: '삭제된 메시지입니다' 흔적만 남고, 첨부 파일은 Storage에서 함께 삭제됩니다.
+ * ═══════════════════════════════════════════════════════════════════ */
+const CHAT_DEL = "__deleted__";
+async function ownMessage(req) {
+  const c = await caller(req);
+  const id = String((req.data || {}).id || "").trim();
+  if (!id || id.includes("/")) throw new HttpsError("invalid-argument", "Message id required.");
+  const ref = db.doc(`chatMessages/${id}`);
+  const snap = await ref.get();
+  if (!snap.exists) throw new HttpsError("not-found", "Message not found.");
+  const m = snap.data();
+  if (String(m.senderEmail || "").toLowerCase() !== c.email) throw new HttpsError("permission-denied", "You can only change your own messages.");
+  if (m.deleted) throw new HttpsError("failed-precondition", "This message was already deleted.");
+  if (m.expireAt && m.expireAt.toMillis() <= Date.now()) throw new HttpsError("failed-precondition", "This message has expired.");
+  return { c, ref, m };
+}
+// 채팅 목록 미리보기(마지막 메시지)와 '읽지 않음' 표시를 실제 남은 메시지에 맞춥니다.
+async function refreshChatMeta(chatId) {
+  const chRef = db.doc(`chats/${chatId}`);
+  const [chSnap, ms] = await Promise.all([chRef.get(), db.collection("chatMessages").where("chatId", "==", chatId).get()]);
+  if (!chSnap.exists) return;
+  const ch = chSnap.data();
+  const list = ms.docs.map((d) => d.data()).filter((x) => x.createdAt).sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+  const last = list[list.length - 1];
+  const upd = { lastText: !last ? "" : (last.deleted ? CHAT_DEL : String(last.text || (last.file ? "📎 " + last.file.name : "")).slice(0, 120)) };
+  for (const [side, from] of [["Tutor", "student"], ["Student", "tutor"]]) {
+    if (!ch[`firstUnreadFor${side}At`]) continue;
+    const readAt = ch[`${side.toLowerCase()}ReadAt`];
+    const left = list.find((x) => x.from === from && !x.deleted && (!readAt || x.createdAt.toMillis() > readAt.toMillis()));
+    upd[`firstUnreadFor${side}At`] = left ? left.createdAt : null;   // 삭제로 읽지 않은 메시지가 없어지면 표시도 지웁니다
+  }
+  await chRef.update(upd);
+}
+
+exports.editChatMessage = call(async (req) => {
+  const { ref, m } = await ownMessage(req);
+  const text = String((req.data || {}).text || "").trim().slice(0, 4000);
+  if (!text && !m.file) throw new HttpsError("invalid-argument", "Message text is empty.");
+  if (text === String(m.text || "")) return { ok: true, unchanged: true };
+  await ref.update({ text, editedAt: FieldValue.serverTimestamp() });
+  try { await refreshChatMeta(m.chatId); } catch (e) { logger.warn("chat meta refresh", e.message); }
+  return { ok: true };
+});
+
+exports.deleteChatMessage = call(async (req) => {
+  const { ref, m } = await ownMessage(req);
+  if (m.file && m.file.path) {
+    try { await getStorage().bucket().file(m.file.path).delete({ ignoreNotFound: true }); }
+    catch (e) { logger.error("chat file delete failed", m.file.path, e.message); throw new HttpsError("internal", "Could not delete the attached file. Please try again."); }
+  }
+  await ref.update({ deleted: true, deletedAt: FieldValue.serverTimestamp(), text: "", file: FieldValue.delete() });
+  try { await refreshChatMeta(m.chatId); } catch (e) { logger.warn("chat meta refresh", e.message); }
+  return { ok: true };
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+ *  알림 메일 (5분마다)
+ *  ① 수업 15분 전 알림 — 학생·튜터 모두, 수업마다 한 번만 (시간을 바꾸면 새 시간 기준으로 다시 한 번)
+ *  ② 수강권 만료 7일 전 알림 — 남은 수업이 있을 때 학생에게 한 번만
+ * ═══════════════════════════════════════════════════════════════════ */
+const REMIND_MIN = 15;
+async function claimOnce(ref, field, value) {
+  return db.runTransaction(async (tx) => {
+    const s = await tx.get(ref);
+    if (!s.exists || s.data()[field] === value) return null;
+    tx.update(ref, { [field]: value });
+    return s.data();
+  });
+}
+async function mailLessonReminder(b) {
+  const tutor = await tutorDoc(b.tutorId);
+  const tName = tutor.name || b.tutorName || b.tutorId;
+  const tEmail = tutorMail(tutor);
+  const sName = b.studentName || String(b.studentEmail).split("@")[0];
+  const sLabel = b.studentId || sName;
+  const tz = b.studentTZ || "UTC";
+  const at = toD(b.startAt);
+  const type = b.creditType === "trial" ? ["체험 25분", "25-min trial"] : ["정규 50분", "50-min lesson"];
+  const link = b.meetLink ? btn(b.meetLink, "Join Google Meet") : btn(TUTOR_PAGE, "Open My Dashboard");
+  const linkKo = b.meetLink ? btn(b.meetLink, "Google Meet 입장") : btn(TUTOR_PAGE, "튜터 화면 열기");
+  const meetRow = b.meetLink ? ["Google Meet", `<a href="${h(b.meetLink)}">${h(b.meetLink)}</a>`] : null;
+  const stuRows = (lang) => tbl([
+    [lang === "ko" ? "시작" : "Starts at", `${h(fmtAt(at, tz, lang))}<br><span style="color:#64748b;font-size:12px;font-weight:400">${h(fmtAt(at, "Asia/Seoul", lang))}</span>`],
+    [lang === "ko" ? "선생님" : "Tutor", h(tName)], [lang === "ko" ? "수업" : "Lesson", h(lang === "ko" ? type[0] : type[1])], meetRow]);
+  const tutRows = (lang) => tbl([
+    [lang === "ko" ? "학생" : "Student", `${h(sLabel)} (${h(b.studentEmail)})`],
+    [lang === "ko" ? "시작" : "Starts at", h(fmtAt(at, "Asia/Seoul", lang))], [lang === "ko" ? "수업" : "Lesson", h(lang === "ko" ? type[0] : type[1])], meetRow]);
+  await sendMail({ to: b.studentEmail, replyTo: tEmail, subject: "[All About Korea] Your lesson starts in 15 minutes / 수업 15분 전 알림",
+    html: wrap(`<h2 style="margin:0 0 6px;font-size:18px">Your lesson starts in 15 minutes ⏰</h2><p>Hi ${h(sName)}, get ready — your Korean lesson with <b>${h(tName)}</b> is about to begin.</p>${stuRows("en")}${b.meetLink ? link : `<p style="font-size:13px;color:#475569">The Google Meet link will appear on your dashboard.</p>${link}`}`,
+               `<h2 style="margin:0 0 6px;font-size:18px">수업 15분 전입니다 ⏰</h2><p>${h(sName)}님, <b>${h(tName)}</b> 선생님과의 수업이 곧 시작됩니다.</p>${stuRows("ko")}`) });
+  await sendMail({ to: tEmail, replyTo: b.studentEmail, subject: `[All About Korea] 수업 15분 전 알림 / Lesson in 15 minutes — ${sLabel}`,
+    html: wrap(`<h2 style="margin:0 0 6px;font-size:18px">수업 15분 전입니다 ⏰</h2><p><b>${h(sLabel)}</b> 학생과의 수업이 곧 시작됩니다.</p>${tutRows("ko")}${b.meetLink ? linkKo : `<p style="font-size:13px;color:#b45309">아직 Meet 링크가 없습니다. 튜터 화면에서 링크를 넣어 주세요.</p>${linkKo}`}`,
+               `<h2 style="margin:0 0 6px;font-size:18px">Your lesson starts in 15 minutes ⏰</h2><p>Your lesson with <b>${h(sLabel)}</b> is about to begin.</p>${tutRows("en")}`) });
+}
+async function mailExpirySoon(o, remain, tz) {
+  const [ko, en] = pkgLabels(o);
+  const exp = toD(o.expiresAt);
+  const days = Math.max(1, Math.ceil((exp.getTime() - Date.now()) / DAY));
+  const tName = o.tutorName || (await tutorDoc(o.tutorId)).name || o.tutorId;
+  const sName = o.studentName || String(o.studentEmail).split("@")[0];
+  const rows = (lang) => tbl([
+    [lang === "ko" ? "수강권" : "Plan", h(lang === "ko" ? ko : en)], [lang === "ko" ? "선생님" : "Tutor", h(tName)],
+    [lang === "ko" ? "남은 수업" : "Lessons left", lang === "ko" ? `${remain}회` : `${remain} lesson${remain > 1 ? "s" : ""}`],
+    [lang === "ko" ? "사용 기한" : "Use by", h(fmtAt(exp, tz, lang))]]);
+  await sendMail({ to: o.studentEmail, replyTo: tutorMail(await tutorDoc(o.tutorId)),
+    subject: `[All About Korea] ${remain} lesson${remain > 1 ? "s" : ""} left — use ${remain > 1 ? "them" : "it"} within ${days} day${days > 1 ? "s" : ""} 🌱 / 남은 수업 ${remain}회 안내`,
+    html: wrap(`<h2 style="margin:0 0 6px;font-size:18px">You still have ${remain} lesson${remain > 1 ? "s" : ""} waiting for you 🌱</h2>
+      <p>Hi ${h(sName)}! Just a friendly reminder — your plan with <b>${h(tName)}</b> expires in <b>${days} day${days > 1 ? "s" : ""}</b>.
+      Book your remaining lesson${remain > 1 ? "s" : ""} now so none of them go to waste.</p>${rows("en")}${btn(TUTOR_PAGE, "Book my lessons")}
+      <p style="font-size:13px;color:#475569">Enjoying your progress? When you finish this plan, you can pick up a new one anytime and keep the momentum going. We'd love to keep learning Korean with you! 💚</p>`,
+    `<h2 style="margin:0 0 6px;font-size:18px">아직 수업 ${remain}회가 남아 있어요 🌱</h2>
+      <p>${h(sName)}님, <b>${h(tName)}</b> 선생님 수강권의 사용 기한이 <b>${days}일</b> 남았습니다.
+      남은 수업을 놓치지 않도록 지금 예약해 보세요.</p>${rows("ko")}
+      <p style="font-size:13px;color:#475569">수업을 모두 마치신 뒤에도 언제든 새 수강권으로 이어서 공부하실 수 있어요. 앞으로도 즐겁게 함께 한국어 공부해요! 💚</p>`) });
+}
+
+exports.lessonReminders = onSchedule({ schedule: "*/5 * * * *", timeZone: "Asia/Seoul", secrets: MAIL_SECRETS }, async () => {
+  const nowMs = Date.now();
+  let lessons = 0, expiry = 0;
+
+  // ① 수업 15분 전 (5분마다 확인 → 정각·30분 수업은 정확히 15분 전에 발송)
+  const soon = await db.collection("bookings")
+    .where("startAt", ">", Timestamp.fromMillis(nowMs))
+    .where("startAt", "<=", Timestamp.fromMillis(nowMs + (REMIND_MIN + 2.5) * 60000)).get();
+  for (const d of soon.docs) {
+    const b0 = d.data();
+    if (b0.status !== "reserved") continue;
+    const key = b0.startAt.toMillis();
+    if (b0.remindedFor === key) continue;
+    const created = b0.rescheduledAt || b0.createdAt;
+    if (created && key - created.toMillis() < (REMIND_MIN + 5) * 60000) continue;   // 방금 예약·변경한 수업은 확인 메일로 충분
+    try {
+      const b = await claimOnce(d.ref, "remindedFor", key);
+      if (!b) continue;
+      await mailLessonReminder({ id: d.id, ...b });
+      lessons++;
+    } catch (e) { logger.error("lesson reminder failed", d.id, e.message); }
+  }
+
+  // ② 수강권 만료 7일 전 (남은 수업이 있을 때만, 한 번만)
+  const exp = await db.collection("orders")
+    .where("expiresAt", ">", Timestamp.fromMillis(nowMs + DAY))
+    .where("expiresAt", "<=", Timestamp.fromMillis(nowMs + 7 * DAY)).get();
+  for (const d of exp.docs) {
+    const o0 = d.data();
+    const remain0 = Math.max(0, (o0.credits || 0) - (o0.used || 0) - (o0.reserved || 0));
+    if (o0.status !== "paid" || !remain0 || o0.expiryReminded || Number(o0.validDays || 0) <= 7) continue;
+    try {
+      const o = await claimOnce(d.ref, "expiryReminded", true);
+      if (!o) continue;
+      const remain = Math.max(0, (o.credits || 0) - (o.used || 0) - (o.reserved || 0));
+      if (!remain) continue;
+      const bs = await db.collection("bookings").where("studentEmail", "==", o.studentEmail).limit(20).get();
+      const tz = (bs.docs.map((x) => x.data().studentTZ).find(Boolean)) || "UTC";
+      await mailExpirySoon(o, remain, tz);
+      expiry++;
+    } catch (e) { logger.error("expiry reminder failed", d.id, e.message); }
+  }
+  if (lessons || expiry) logger.info(`lessonReminders: lessons=${lessons} expiry=${expiry}`);
 });
