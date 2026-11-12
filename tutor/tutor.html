@@ -386,6 +386,9 @@
     #toasts { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 80; display: flex; flex-direction: column; gap: 8px; align-items: center; width: calc(100% - 32px); max-width: 480px; }
     .toast { background: #0f172a; color: #fff; padding: .7rem 1.1rem; border-radius: .8rem; font-size: .82rem; box-shadow: 0 8px 24px rgba(0,0,0,.25); animation: tin .2s ease; }
     .toast-err { background: #b91c1c; }
+    .toast-ok { background: #15803d; font-weight: 600; }
+    .wait-box { position: fixed; inset: 0; z-index: 9000; background: rgba(15,23,42,.35); display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .wait-card { background: #fff; border-radius: 18px; padding: 26px 24px; width: 100%; max-width: 340px; text-align: center; box-shadow: 0 24px 60px -16px rgba(0,0,0,.4); }
     @keyframes tin { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
     .stars i { color: #f59e0b; }
     .star-pick i { font-size: 1.5rem; color: #d1d5db; cursor: pointer; }
@@ -1057,6 +1060,8 @@ const T = {
   chatSend: ['Send', '送信', '发送', 'Enviar', 'Envoyer', 'Senden', 'Wyślij', '보내기'],
   chatFail: ['Could not send. Please try again.', '送信できませんでした。もう一度お試しください。', '发送失败，请重试。', 'No se pudo enviar. Inténtalo de nuevo.', "Échec de l'envoi. Réessayez.", 'Senden fehlgeschlagen. Bitte erneut versuchen.', 'Nie udało się wysłać. Spróbuj ponownie.', '전송하지 못했습니다. 다시 시도해 주세요.'],
   chatDel30: ['Auto-deletes in {n} days', 'あと{n}日で自動削除', '{n}天后自动删除', 'Se elimina en {n} días', 'Supprimé dans {n} jours', 'Wird in {n} Tagen gelöscht', 'Usunięcie za {n} dni', '{n}일 후 자동 삭제'],
+  waitTitle: ['Working on it…', '処理しています…', '正在处理…', 'Procesando…', 'Traitement en cours…', 'Wird bearbeitet…', 'Przetwarzamy…', '처리 중이에요…'],
+  waitSub: ['This takes about 5–10 seconds. Please keep this page open.', '5〜10秒ほどかかります。このページを開いたままお待ちください。', '大约需要5–10秒，请不要关闭此页面。', 'Tarda unos 5–10 segundos. No cierres esta página.', 'Cela prend environ 5 à 10 secondes. Gardez cette page ouverte.', 'Das dauert etwa 5–10 Sekunden. Bitte lass diese Seite geöffnet.', 'To potrwa ok. 5–10 sekund. Nie zamykaj tej strony.', '5~10초 정도 걸려요. 이 페이지를 닫지 말고 잠시만 기다려 주세요.'],
   curLabel: ['Currency', '通貨', '货币', 'Moneda', 'Devise', 'Währung', 'Waluta', '통화'],
   fxNote: ['You will pay in {cur}. 1 USD = {r} {cur} (European Central Bank rate, {d} · updated daily).', 'お支払いは{cur}です。1 USD = {r} {cur}（欧州中央銀行レート、{d}・毎日更新）。', '将以{cur}支付。1 USD = {r} {cur}（欧洲央行汇率，{d}，每日更新）。', 'Pagarás en {cur}. 1 USD = {r} {cur} (tipo del Banco Central Europeo, {d} · se actualiza a diario).', 'Vous payerez en {cur}. 1 USD = {r} {cur} (taux de la Banque centrale européenne, {d} · mis à jour chaque jour).', 'Du zahlst in {cur}. 1 USD = {r} {cur} (Kurs der Europäischen Zentralbank, {d} · täglich aktualisiert).', 'Zapłacisz w {cur}. 1 USD = {r} {cur} (kurs Europejskiego Banku Centralnego, {d} · aktualizowany codziennie).', '{cur}(으)로 결제합니다. 1 USD = {r} {cur} (유럽중앙은행 환율, {d} · 매일 갱신).'],
   fxNA: ['Exchange rates are being updated — prices are shown in USD for now.', '為替レートを更新中です。現在はUSDで表示しています。', '汇率更新中，目前以美元显示价格。', 'Actualizando tipos de cambio: por ahora los precios se muestran en USD.', 'Mise à jour des taux en cours : prix affichés en USD pour le moment.', 'Wechselkurse werden aktualisiert – Preise vorerst in USD.', 'Aktualizujemy kursy walut — na razie ceny w USD.', '환율을 갱신 중입니다. 지금은 USD로 표시됩니다.'],
@@ -1648,11 +1653,20 @@ function openAddCal(bookingId) {
 
 function toast(msg, type) {
   const el = document.createElement('div');
-  el.className = 'toast' + (type === 'err' ? ' toast-err' : '');
-  el.textContent = msg;
+  el.className = 'toast' + (type === 'err' ? ' toast-err' : type === 'ok' ? ' toast-ok' : '');
+  if (type === 'ok') el.innerHTML = `<i class="fa fa-circle-check mr-1.5"></i>${esc(msg)}`; else el.textContent = msg;
   $('toasts').appendChild(el);
-  setTimeout(() => el.remove(), 4500);
+  setTimeout(() => el.remove(), type === 'ok' ? 6000 : 4500);
 }
+// 서버 처리 중 안내 창 (수강 신청·수업 예약)
+function waitBox(on) {
+  let el = $('waitBox');
+  if (!on) { if (el) el.remove(); return; }
+  if (!el) { el = document.createElement('div'); el.id = 'waitBox'; el.className = 'wait-box'; document.body.appendChild(el); }
+  el.innerHTML = `<div class="wait-card" role="status" aria-live="polite"><i class="fa fa-spinner fa-spin text-green-600 text-3xl"></i>
+    <p class="font-bold text-slate-900 mt-3">${tk('waitTitle')}</p><p class="text-sm text-slate-500 mt-1 leading-relaxed">${tk('waitSub')}</p></div>`;
+}
+function goDash(tab) { S.dashTab = tab; switchStudentTab('dash'); try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {} }
 function openModal(title, body, wide) {
   $('mTitle').textContent = title; $('modalBody').innerHTML = body;
   $('modalBox').style.maxWidth = wide ? '760px' : '520px';
@@ -2052,13 +2066,13 @@ function renderOrderBox() {
 async function submitOrder() {
   if (!S.email) return handleSignIn();
   const tu = curTutor(); if (!tu) return;
-  const btn = $('orderBtn'); busyBtn(btn, true);
+  const btn = $('orderBtn'); busyBtn(btn, true); waitBox(true);
   try {
-    const r = await callFn('createOrder', { tutorId: tu.id, pkg: S.selPkg, currency: curNow(), ...(S.selPkg === 'pack5' ? { count: S.customCount } : {}) });
-    toast(t('orderDone'));
-    S.dashTab = 'payments';
-    switchStudentTab('dash');
-  } catch (e) { /* toast shown */ } finally { busyBtn(btn, false); }
+    await callFn('createOrder', { tutorId: tu.id, pkg: S.selPkg, currency: curNow(), ...(S.selPkg === 'pack5' ? { count: S.customCount } : {}) });
+    waitBox(false);
+    toast(t('orderDone'), 'ok');   // 완료 안내 → 바로 대시보드(결제 내역)로
+    goDash('payments');
+  } catch (e) { /* toast shown */ } finally { waitBox(false); busyBtn(btn, false); }
 }
 
 /* ── Credits ──
@@ -2397,31 +2411,33 @@ async function confirmPlan() {
   const tu = curTutor(); if (!tu) return;
   const good = planRows(tu).filter(r => r.ms && !r.reason).map(r => new Date(r.ms).toISOString());
   if (!good.length) return;
-  const btn = $('planBtn'); busyBtn(btn, true);
+  const btn = $('planBtn'); busyBtn(btn, true); waitBox(true);
   try {
     const r = await callFn('bookLessons', { tutorId: tu.id, creditType: 'regular', startISOs: good, studentTZ: userTZ });
+    waitBox(false);
     const fails = (r.results || []).filter(x => !x.ok);
-    toast(t('recurDone', { ok: r.booked || 0 }));
+    toast(t('recurDone', { ok: r.booked || 0 }), 'ok');
     if (fails.length) openModal(t('recurFail'), `<ul class="text-sm space-y-2">${fails.map(f => `<li><b>${lYMD(new Date(f.startISO))} ${lHM(new Date(f.startISO))}</b><br><span class="text-xs text-red-600">${esc(f.error)}</span></li>`).join('')}</ul>`);
     planReset();
-    await loadTutorExtras();
-    S.dashTab = 'upcoming'; switchStudentTab('dash');
-  } catch (e) { await loadTutorExtras(); renderPlan(); }
-  finally { busyBtn(btn, false); }
+    goDash('upcoming');                       // 바로 대시보드로 (예약 목록은 실시간으로 반영)
+    loadTutorExtras().catch(() => {});        // 예약 가능 시간은 뒤에서 새로고침
+  } catch (e) { waitBox(false); await loadTutorExtras(); renderPlan(); }
+  finally { waitBox(false); busyBtn(btn, false); }
 }
 function pickSlot(ms) { S.selSlot = new Date(ms); renderSlots(); }
 async function confirmLesson() {
   const tu = curTutor(); if (!tu || !S.selSlot) return;
-  const btn = $('bookBtn'); busyBtn(btn, true);
+  const btn = $('bookBtn'); busyBtn(btn, true); waitBox(true);
   try {
     await callFn('bookLesson', { tutorId: tu.id, creditType: S.selType, startISO: S.selSlot.toISOString(), studentTZ: userTZ });
-    toast(t('bookingDone'));
+    waitBox(false);
+    toast(t('bookingDone'), 'ok');
     S.selSlot = null;
-    await loadTutorExtras();
-    S.dashTab = 'upcoming'; switchStudentTab('dash');
+    goDash('upcoming');
+    loadTutorExtras().catch(() => {});
   } catch (e) {
-    await loadTutorExtras(); renderSlots();
-  } finally { busyBtn(btn, false); }
+    waitBox(false); await loadTutorExtras(); renderSlots();
+  } finally { waitBox(false); busyBtn(btn, false); }
 }
 
 /* ── Dashboard ── */
