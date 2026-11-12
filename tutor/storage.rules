@@ -1,0 +1,72 @@
+rules_version = '2';
+// ─────────────────────────────────────────────────────────────
+// All About Korea — Storage 보안 규칙 (2026-11-08)
+// 기존 규칙(materials, tutorPhotos)은 그대로, 북스토어 경로를 추가했습니다.
+// ─────────────────────────────────────────────────────────────
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() { return request.auth != null && request.auth.token.email != null
+                                 && request.auth.token.email_verified == true; }
+    function isOwner()  { return signedIn() && request.auth.token.email == "shchung0130@gmail.com"; }
+    function isSiteAdmin() {
+      return isOwner() || (request.auth != null
+        && firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.role == "admin");
+    }
+    function roleDoc()  { return firestore.get(/databases/(default)/documents/roles/$(request.auth.token.email)); }
+    function hasRole()  { return signedIn() && firestore.exists(/databases/(default)/documents/roles/$(request.auth.token.email)); }
+    function isTutorOf(tid) {
+      return isOwner() || (hasRole() && (roleDoc().data.role == "admin"
+        || (roleDoc().data.role == "tutor" && roleDoc().data.get("tutorId", "") == tid)));
+    }
+
+    // 학습 자료: 10MB 이하, 로그인 사용자 다운로드 (기존과 동일)
+    match /materials/{tutorId}/{fileName} {
+      allow read: if signedIn();
+      allow create: if false;   // [변경] 학습 자료 탭은 채팅으로 대체되었습니다
+      allow delete: if isTutorOf(tutorId);
+    }
+
+    // 튜터 프로필 사진: 5MB 이하 이미지, 공개 읽기 (기존과 동일)
+    match /tutorPhotos/{tutorId}/{fileName} {
+      allow read: if true;
+      allow create: if isTutorOf(tutorId)
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if isTutorOf(tutorId);
+    }
+
+    // [신규] 튜터 ↔ 학생 채팅 첨부 파일: 형식 무관, 1개당 5MB 이하, 채팅 참여자만 읽기·올리기 (30일 후 서버가 삭제)
+    match /chat-files/{chatId}/{fileName} {
+      function chatDoc() { return firestore.get(/databases/(default)/documents/chats/$(chatId)).data; }
+      function member() {
+        return signedIn() && (chatDoc().studentEmail == request.auth.token.email.lower() || isTutorOf(chatDoc().tutorId));
+      }
+      allow read: if member();
+      allow create: if member() && request.resource.size <= 5 * 1024 * 1024;
+      allow update, delete: if false;
+    }
+
+    // [신규] eBook 표지: 공개 읽기, 관리자만 업로드 (이미지 10MB 이하)
+    match /book-covers/{allPaths=**} {
+      allow read: if true;
+      allow write: if isSiteAdmin()
+        && request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if isSiteAdmin();
+    }
+
+    // [신규] eBook 파일: 아무도 직접 읽을 수 없음 — 구매자는 서버가 발급한 10분짜리 링크로만 다운로드
+    match /book-files/{allPaths=**} {
+      allow read: if false;
+      allow write: if isSiteAdmin() && request.resource.size <= 500 * 1024 * 1024;
+      allow delete: if isSiteAdmin();
+    }
+
+    // 그 밖의 경로는 모두 차단 (기본값과 같지만 명시)
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
