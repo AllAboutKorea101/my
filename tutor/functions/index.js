@@ -391,7 +391,7 @@ exports.syncCalendar = call(async (req) => {
 /* ═════════════ createOrder ═════════════ */
 exports.createOrder = call(async (req) => {
   const c = await caller(req);
-  const { tutorId, pkg, count } = req.data || {};
+  const { tutorId, pkg, count, currency } = req.data || {};
   if (!tutorId || !PKG_KEYS.includes(pkg)) throw new HttpsError("invalid-argument", "Invalid plan.");
   if (pkg === "pack5" && count != null) {
     const n = Number(count);
@@ -408,12 +408,14 @@ exports.createOrder = call(async (req) => {
   }
 
   const pr = await computePrice(tutorId, c.email, pkg, count);
+  const q = await quote(pr, currency);   // 학생이 고른 통화로 환산 (튜터 수익 price는 USD)
   const ref = db.collection("orders").doc();
   const order = {
     studentEmail: c.email, studentUid: c.uid, studentName: c.name, studentId: c.displayId || null,
     tutorId, tutorName: pr.tutor.name || tutorId,
     package: pkg, creditType: pr.creditType, credits: pr.credits, validDays: pr.validDays,
-    listPrice: pr.list, price: pr.price, currency: "USD", customRate: pr.customRate,
+    listPrice: pr.list, price: pr.price, customRate: pr.customRate,
+    currency: q.currency, payAmount: q.payAmount, payList: q.payList, fxRate: q.fxRate, fxDate: q.fxDate,
     commission: num(pr.tutor.commission, 0),
     status: "pending", used: 0, reserved: 0, expiredCredits: 0,
     createdAt: FieldValue.serverTimestamp(),
@@ -422,18 +424,18 @@ exports.createOrder = call(async (req) => {
   batch.set(ref, order);
   batch.set(logRef(), logData({
     studentEmail: c.email, tutorId, orderId: ref.id, type: "order_created", delta: 0,
-    creditType: order.creditType, note: `${pkg} · $${pr.price}`,
+    creditType: order.creditType, note: `${pkg} · ${fmtCur(q.payAmount, q.currency)}`,
   }));
   await batch.commit();
   await mailOrderCreated({ ...order, id: ref.id }, pr.tutor);   // 튜터·학생에게 안내 메일 (실패해도 신청은 유지)
-  return { orderId: ref.id, price: pr.price, listPrice: pr.list, credits: order.credits,
+  return { orderId: ref.id, price: pr.price, listPrice: pr.list, credits: order.credits, currency: q.currency, payAmount: q.payAmount,
     tutorEmail: pr.tutor.email || null, tutorName: order.tutorName };
 }, { secrets: MAIL_SECRETS });
 
 /* ═════════════ updateOrder ═════════════ */
 exports.updateOrder = call(async (req) => {
   const c = await caller(req);
-  const { orderId, pkg, price, note, count } = req.data || {};
+  const { orderId, pkg, price, note, count, currency } = req.data || {};
   if (!orderId) throw new HttpsError("invalid-argument", "orderId required.");
   const ref = db.doc(`orders/${orderId}`);
   const snap = await ref.get();
@@ -446,14 +448,18 @@ exports.updateOrder = call(async (req) => {
   const upd = { updatedAt: FieldValue.serverTimestamp(), updatedBy: c.email };
   if (o.status !== "pending") {
     if (!mgr) throw new HttpsError("failed-precondition", "Only pending payments can be edited.");
-    // 결제 완료 후에는 금액/메모만 수정 (크레딧 수량은 변경 불가)
-    if (price != null) upd.price = r2(num(price, o.price));
+    // 결제 완료 후에는 금액/메모만 수정 (크레딧 수량은 변경 불가) — 금액은 결제 통화 기준, USD 수익은 결제일 환율로 다시 계산
+    if (price != null) {
+      upd.payAmount = roundCur(num(price, payOf(o)), curOf(o));
+      upd.price = r2(upd.payAmount / num(o.fxRatePaid, num(o.fxRate, 1)));
+    }
     if (note != null) upd.note = String(note).slice(0, 500);
     await ref.update(upd);
     return { ok: true };
   }
   const countChanged = (pkg || o.package) === "pack5" && count != null && Number(count) !== o.credits;
-  if ((pkg && pkg !== o.package) || countChanged) {
+  const curChanged = currency && PAY_CURRENCIES.includes(currency) && currency !== curOf(o);
+  if ((pkg && pkg !== o.package) || countChanged || curChanged) {
     if (pkg && !PKG_KEYS.includes(pkg)) throw new HttpsError("invalid-argument", "Invalid plan.");
     if (count != null && (!Number.isInteger(Number(count)) || Number(count) < CUSTOM_MIN || Number(count) > CUSTOM_MAX)) {
       throw new HttpsError("invalid-argument", `Custom Pack must be ${CUSTOM_MIN}–${CUSTOM_MAX} lessons.`);
@@ -464,11 +470,17 @@ exports.updateOrder = call(async (req) => {
         .where("tutorId", "==", o.tutorId).where("package", "==", "trial").get();
       if (prev.docs.some((d) => d.id !== orderId)) throw new HttpsError("already-exists", "Trial already purchased.");
     }
-    const pr = await computePrice(o.tutorId, o.studentEmail, newPkg, count);
+    const pr = await computePrice(o.tutorId, o.studentEmail, newPkg, newPkg === "pack5" ? (count != null ? count : o.credits) : count);
+    const q = await quote(pr, curChanged ? currency : curOf(o));   // 지금 환율로 다시 견적
     Object.assign(upd, { package: newPkg, creditType: pr.creditType, credits: pr.credits,
-      validDays: pr.validDays, listPrice: pr.list, price: pr.price });
+      validDays: pr.validDays, listPrice: pr.list, price: pr.price,
+      currency: q.currency, payAmount: q.payAmount, payList: q.payList, fxRate: q.fxRate, fxDate: q.fxDate });
   }
-  if (mgr && price != null) upd.price = r2(num(price, o.price));
+  if (mgr && price != null) {   // 튜터가 직접 입력한 금액 (결제 통화 기준)
+    const cur = upd.currency || curOf(o), rate = num(upd.fxRate, num(o.fxRate, 1));
+    upd.payAmount = roundCur(num(price, payOf(o)), cur);
+    upd.price = r2(upd.payAmount / rate);
+  }
   if (mgr && note != null) upd.note = String(note).slice(0, 500);
   await ref.update(upd);
   return { ok: true };
@@ -503,6 +515,8 @@ exports.confirmPayment = call(async (req) => {
   const c = await caller(req);
   const { orderId } = req.data || {};
   const ref = db.doc(`orders/${orderId || "_"}`);
+  const pre = await ref.get();
+  const fx = pre.exists && curOf(pre.data()) !== "USD" ? await getFx().catch(() => null) : null;
   return db.runTransaction(async (tx) => {
     const snap = await tx.get(ref);
     if (!snap.exists) throw new HttpsError("not-found", "Payment not found.");
@@ -515,9 +529,10 @@ exports.confirmPayment = call(async (req) => {
       paidAt: Timestamp.fromMillis(now),
       expiresAt: Timestamp.fromMillis(now + num(o.validDays, 60) * DAY),
       confirmedBy: c.email,
+      ...fxPaid(o, fx),
     });
     tx.set(logRef(), logData({ studentEmail: o.studentEmail, tutorId: o.tutorId, orderId, type: "paid",
-      delta: o.credits, creditType: o.creditType, note: `${o.package} · $${o.price}` }));
+      delta: o.credits, creditType: o.creditType, note: `${o.package} · ${fmtCur(payOf(o), curOf(o))}` }));
     return { ok: true };
   });
 });
@@ -875,6 +890,9 @@ exports.processCredits = onSchedule({ schedule: "every 10 minutes", timeZone: "A
     }
   } catch (e) { logger.error("chat cleanup failed", e); }
 
+  // ⑦ 결제 통화 환율 갱신 (6시간이 지났을 때만)
+  try { await getFx(); } catch (e) { logger.warn("fx refresh failed", e.message); }
+
   // ⑤ Google 캘린더 동기화 (캘린더 ID를 등록한 튜터만)
   let synced = 0;
   const privs = await db.collection("tutorPrivate").get();
@@ -952,7 +970,10 @@ async function mailOrderCreated(o, tutor) {
   const tEmail = tutorMail(tutor);
   const sName = o.studentName || o.studentEmail.split("@")[0];
   const sLabel = `${h(sName)} &lt;${h(o.studentEmail)}&gt;${o.studentId ? ` · ID ${h(o.studentId)}` : ""}`;
-  const priceKo = o.listPrice !== o.price ? `${usd(o.price)} <span style="color:#94a3b8;text-decoration:line-through;font-weight:400">${usd(o.listPrice)}</span>` : usd(o.price);
+  const cur = curOf(o), amt = fmtCur(payOf(o), cur), lst = payListOf(o);
+  const priceKo = lst != null && lst !== payOf(o) ? `${amt} <span style="color:#94a3b8;text-decoration:line-through;font-weight:400">${fmtCur(lst, cur)}</span>` : amt;
+  const usdKo = cur !== "USD" ? `<br><span style="color:#64748b;font-size:12px;font-weight:400">≈ ${usd(o.price)} · 1 USD = ${o.fxRate} ${cur} (ECB ${h(o.fxDate || "")})</span>` : "";
+  const usdEn = cur !== "USD" ? `<br><span style="color:#64748b;font-size:12px;font-weight:400">≈ ${usd(o.price)} · 1 USD = ${o.fxRate} ${cur} (ECB ${h(o.fxDate || "")})</span>` : "";
 
   // 튜터에게: 누가 어떤 패키지를 얼마에 신청했는지
   await sendMail({
@@ -960,16 +981,16 @@ async function mailOrderCreated(o, tutor) {
     subject: `[All About Korea] 새 수강 신청 / New plan request — ${sName} · ${ko}`,
     html: wrap(
       `<h2 style="margin:0 0 6px;font-size:18px">새 수강 신청이 들어왔습니다 📩</h2>
-       ${tbl([["학생", sLabel], ["수강권", h(ko)], ["수업 횟수", `${o.credits}회`], ["결제 금액", priceKo],
+       ${tbl([["학생", sLabel], ["수강권", h(ko)], ["수업 횟수", `${o.credits}회`], ["결제 금액", priceKo + usdKo],
               ["유효기간", `결제 확인 후 ${o.validDays}일`], ["신청 번호", h(o.id)]])}
-       <p><b>24시간 이내</b>에 학생에게 <b>WISE 결제 링크</b>를 이메일로 보내 주세요.
+       <p><b>24시간 이내</b>에 학생에게 <b>${amt}</b> 금액의 <b>WISE 결제 링크</b>를 이메일로 보내 주세요 (결제 통화: <b>${cur}</b>).
        입금이 확인되면 튜터 화면 → <b>결제 요청</b>에서 <b>결제 확인</b>을 눌러 주세요. 그때 학생에게 수업권이 지급됩니다.</p>
        <p style="color:#64748b;font-size:12px">이 메일에 답장하면 학생에게 바로 전달됩니다.</p>
        ${btn(TUTOR_PAGE, "튜터 화면 열기")}`,
       `<h2 style="margin:0 0 6px;font-size:18px">New plan request 📩</h2>
-       ${tbl([["Student", sLabel], ["Plan", h(en)], ["Lessons", String(o.credits)], ["Amount", priceKo],
+       ${tbl([["Student", sLabel], ["Plan", h(en)], ["Lessons", String(o.credits)], ["Amount", priceKo + usdEn],
               ["Validity", `${o.validDays} days after payment`], ["Request ID", h(o.id)]])}
-       <p>Please send the student a <b>WISE payment link</b> by email <b>within 24 hours</b>.
+       <p>Please send the student a <b>WISE payment link for ${amt}</b> (currency: <b>${cur}</b>) by email <b>within 24 hours</b>.
        Once the payment arrives, click <b>Confirm payment</b> in your tutor console → <b>Payments</b> to release the credits.</p>
        <p style="color:#64748b;font-size:12px">Reply to this email to contact the student directly.</p>`),
   });
@@ -981,7 +1002,7 @@ async function mailOrderCreated(o, tutor) {
     html: wrap(
       `<h2 style="margin:0 0 6px;font-size:18px">Hi ${h(sName)}, thank you! 😊</h2>
        <p>Your request for <b>${h(en)}</b> with <b>${h(tName)}</b> has been received. We're so happy you're learning Korean with us!</p>
-       ${tbl([["Plan", h(en)], ["Lessons", String(o.credits)], ["Amount", usd(o.price)], ["Validity", `${o.validDays} days from payment`]])}
+       ${tbl([["Plan", h(en)], ["Lessons", String(o.credits)], ["Amount", amt], ["Validity", `${o.validDays} days from payment`]])}
        <p><b>What happens next?</b><br>
        Within <b>24 hours</b>, your tutor will email you a <b>WISE payment link</b>. When you receive it, simply follow the instructions in the link to complete your payment.
        Your lesson credits will be added as soon as the payment is confirmed — then you can book your lessons right away.</p>
@@ -991,7 +1012,7 @@ async function mailOrderCreated(o, tutor) {
        <p>See you in class soon! 🇰🇷</p>`,
       `<h2 style="margin:0 0 6px;font-size:18px">${h(sName)}님, 감사합니다! 😊</h2>
        <p><b>${h(tName)}</b> 선생님과의 <b>${h(ko)}</b> 수강 신청이 잘 접수되었습니다. 함께 한국어를 공부하게 되어 정말 기뻐요!</p>
-       ${tbl([["수강권", h(ko)], ["수업 횟수", `${o.credits}회`], ["결제 금액", usd(o.price)], ["유효기간", `결제 확인 후 ${o.validDays}일`]])}
+       ${tbl([["수강권", h(ko)], ["수업 횟수", `${o.credits}회`], ["결제 금액", amt], ["유효기간", `결제 확인 후 ${o.validDays}일`]])}
        <p><b>다음 단계 안내</b><br>
        <b>24시간 이내</b>에 선생님이 <b>WISE 결제 링크</b>를 이메일로 보내 드릴 예정입니다. 링크를 받으시면 안내에 따라 입금해 주세요.
        결제가 확인되는 대로 수업권이 지급되고, 바로 수업을 예약하실 수 있습니다.</p>
@@ -1468,3 +1489,82 @@ exports.lessonReminders = onSchedule({ schedule: "*/5 * * * *", timeZone: "Asia/
   }
   if (lessons || expiry) logger.info(`lessonReminders: lessons=${lessons} expiry=${expiry}`);
 });
+
+/* ═══════════════════════════════════════════════════════════════════
+ *  결제 통화 (USD · EUR · CHF · AUD · JPY · KRW)
+ *  - 튜터 가격은 USD로 정하고, 학생이 고른 통화로 환산해 그 통화로 결제합니다.
+ *  - 환율: 유럽중앙은행(ECB) 기준, 하루 1번 갱신 (Frankfurter, 무료·키 없음).
+ *    settings/fx 문서에 저장해 화면과 서버가 같은 환율을 씁니다 (6시간마다 갱신 확인).
+ *  - 튜터 수익(price)은 USD: 신청 때는 견적 환율, 결제 확인한 날의 환율로 다시 계산해 저장합니다.
+ * ═══════════════════════════════════════════════════════════════════ */
+const PAY_CURRENCIES = ["USD", "EUR", "CHF", "AUD", "JPY", "KRW"];
+const FX_MAX_AGE = 6 * HOUR;
+const fxRef = () => db.doc("settings/fx");
+async function fetchFx() {
+  const sym = PAY_CURRENCIES.filter((c) => c !== "USD").join(",");
+  const sources = [
+    `https://api.frankfurter.dev/v1/latest?base=USD&symbols=${sym}`,
+    `https://api.frankfurter.app/latest?from=USD&to=${sym}`,
+    "https://open.er-api.com/v6/latest/USD",
+  ];
+  for (const u of sources) {
+    try {
+      const ctl = new AbortController();
+      const tm = setTimeout(() => ctl.abort(), 8000);
+      const r = await fetch(u, { signal: ctl.signal });
+      clearTimeout(tm);
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const j = await r.json();
+      const rates = { USD: 1 };
+      for (const c of PAY_CURRENCIES) {
+        if (c === "USD") continue;
+        const v = Number(j.rates && j.rates[c]);
+        if (!(v > 0)) throw new Error("missing " + c);
+        rates[c] = v;
+      }
+      const date = j.date || (j.time_last_update_utc ? new Date(j.time_last_update_utc).toISOString().slice(0, 10) : "");
+      return { rates, date, source: new URL(u).hostname };
+    } catch (e) { logger.warn("fx fetch failed", u, e.message); }
+  }
+  return null;
+}
+async function getFx(force) {
+  const snap = await fxRef().get();
+  const cur = snap.exists ? snap.data() : null;
+  if (cur && !force && cur.fetchedAt && Date.now() - cur.fetchedAt.toMillis() < FX_MAX_AGE) return cur;
+  const got = await fetchFx();
+  if (got) {
+    const doc = { base: "USD", ...got, fetchedAt: Timestamp.now() };
+    await fxRef().set(doc);
+    return doc;
+  }
+  return cur;   // 새로 못 받아오면 마지막 환율 사용
+}
+const zeroDec = (cur) => cur === "JPY" || cur === "KRW";
+const roundCur = (n, cur) => (cur === "KRW" ? Math.round(n / 100) * 100 : cur === "JPY" ? Math.round(n) : r2(n));
+function fmtCur(n, cur) {
+  cur = cur || "USD";
+  try {
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: cur, minimumFractionDigits: zeroDec(cur) ? 0 : 2, maximumFractionDigits: zeroDec(cur) ? 0 : 2 }).format(Number(n || 0)) + " " + cur;
+  } catch (e) { return `${cur} ${n}`; }
+}
+const payOf = (o) => (o.payAmount != null ? o.payAmount : o.price);
+const payListOf = (o) => (o.payList != null ? o.payList : o.listPrice);
+const curOf = (o) => o.currency || "USD";
+// USD 가격(pr.price, pr.list)을 학생이 고른 통화로 환산
+async function quote(pr, currency) {
+  const cur = PAY_CURRENCIES.includes(currency) ? currency : "USD";
+  if (cur === "USD") return { currency: "USD", payAmount: pr.price, payList: pr.list, fxRate: 1, fxDate: null };
+  const fx = await getFx();
+  const rate = fx && fx.rates && Number(fx.rates[cur]);
+  if (!(rate > 0)) throw new HttpsError("unavailable", "Exchange rates are temporarily unavailable. Please try again later or choose USD.");
+  return { currency: cur, payAmount: roundCur(pr.price * rate, cur), payList: roundCur(pr.list * rate, cur), fxRate: rate, fxDate: fx.date || null };
+}
+// 결제 확인 시: 그날 환율로 USD 수익 확정 (USD 결제는 그대로)
+function fxPaid(o, fx) {
+  const cur = curOf(o);
+  if (cur === "USD") return {};
+  const rate = Number(fx && fx.rates && fx.rates[cur]) || num(o.fxRate, 0);
+  if (!(rate > 0)) return {};
+  return { price: r2(payOf(o) / rate), priceQuoteUsd: o.price, fxRatePaid: rate, fxDatePaid: (fx && fx.date) || o.fxDate || null };
+}
