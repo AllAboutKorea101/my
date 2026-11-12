@@ -14,15 +14,36 @@
 
   /* ============ ✏️ 여기만 수정하세요 ============ */
   var MENU_LINKS = [
-    { key: 'home',        icon: '🏠', label: 'Home',         url: 'https://www.businesskorean.com/' },
-    { key: 'homestay',    icon: '🏡', label: 'Homestay',     url: 'https://www.businesskorean.com/homestay/homestay.html' },
-    { key: 'tour',        icon: '🧭', label: 'Guided Tour',  url: 'https://www.businesskorean.com/guidedtour/guidedtour.html' },
-    { key: 'tutor',       icon: '👩‍🏫', label: 'Korean Tutor', url: 'https://www.businesskorean.com/tutor/tutor.html' },
-    { key: 'blog',        icon: '📝', label: 'Korean Blog',  url: 'https://www.businesskorean.com/blog/blog.html' },
-    { key: 'masterclass', icon: '🎓', label: 'Masterclass',  url: 'https://www.businesskorean.com/masterclass/masterclass.html' },
-    { key: 'books',       icon: '📚', label: 'Korean Books', url: 'https://www.businesskorean.com/bookstore/bookstore.html' }
+    { key: 'home',        icon: 'home', label: 'Home',         url: 'https://www.businesskorean.com/' },
+    { key: 'homestay',    icon: 'bed', label: 'Homestay',     url: 'https://www.businesskorean.com/homestay/homestay.html' },
+    { key: 'tour',        icon: 'compass', label: 'Guided Tour',  url: 'https://www.businesskorean.com/guidedtour/guidedtour.html' },
+    { key: 'tutor',       icon: 'person', label: 'Korean Tutor', url: 'https://www.businesskorean.com/tutor/tutor.html' },
+    { key: 'blog',        icon: 'article', label: 'Korean Blog',  url: 'https://www.businesskorean.com/blog/blog.html' },
+    { key: 'masterclass', icon: 'school', label: 'Masterclass',  url: 'https://www.businesskorean.com/masterclass/masterclass.html' },
+    { key: 'books',       icon: 'books', label: 'Korean Books', url: 'https://www.businesskorean.com/bookstore/bookstore.html' }
   ];
+  /* icon 에 쓸 수 있는 이름: home, bed, compass, person, article, school, books, pencil, play, book (아래 ICONS) */
   /* ============================================= */
+
+  // 애플 스타일 라인 아이콘 (선 굵기 1.6, 글자 색을 따라감)
+  var ICONS = {
+    home:    '<path d="M3.5 10.2 12 3.5l8.5 6.7"/><path d="M5.5 8.8V19a1.5 1.5 0 0 0 1.5 1.5h3.2V15h3.6v5.5H17a1.5 1.5 0 0 0 1.5-1.5V8.8"/>',
+    bed:     '<path d="M3 5.5v14"/><path d="M3 15h18v4.5"/><path d="M21 15v-2.5A2.5 2.5 0 0 0 18.5 10H11v5"/><circle cx="7" cy="11.6" r="1.9"/>',
+    compass: '<circle cx="12" cy="12" r="8.75"/><path d="m15.4 8.6-1.9 4.9-4.9 1.9 1.9-4.9z"/>',
+    person:  '<circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2c.9-3.6 3.7-5.7 7.2-5.7s6.3 2.1 7.2 5.7"/>',
+    pencil:  '<path d="M11 4.5H6.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V13"/><path d="M17.6 3.9a1.9 1.9 0 0 1 2.7 2.7l-7.6 7.6-3.4.8.8-3.4z"/>',
+    play:    '<rect x="3" y="5" width="18" height="14" rx="3.2"/><path d="m10.2 9.2 4.6 2.8-4.6 2.8z"/>',
+    // article · school · books: Tabler Icons (MIT, tabler.io/icons)
+    article: '<path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M7 8h10M7 12h10M7 16h10"/>',
+    school:  '<path d="M22 9 12 5 2 9l10 4 10-4v6"/><path d="M6 10.6V16a6 3 0 0 0 12 0v-5.4"/>',
+    books:   '<path d="M5 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M9 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/><path d="M5 8h4M9 16h4"/><path d="M13.8 4.56 16 4.03c.56-.14 1.13.19 1.28.73l3.7 13.42a1.02 1.02 0 0 1-.64 1.22l-.13.04-2.18.53c-.56.14-1.13-.19-1.28-.73L13.04 5.82a1.02 1.02 0 0 1 .63-1.22z"/><path d="m14 9 4-1M16 16l3.92-.98"/>',
+    book:    '<path d="M12 6.8C10.4 5.4 7.9 4.8 4 4.8v12.9c3.9 0 6.4.6 8 2 1.6-1.4 4.1-2 8-2V4.8c-3.9 0-6.4.6-8 2z"/><path d="M12 6.8v12.9"/>'
+  };
+  function iconSvg(name) {
+    var d = ICONS[name];
+    if (!d) return name || '';   // 이름이 아니면(예: 이모지) 그대로 표시
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
+  }
 
   // 로그인(공통) — login.html 과 같은 Firebase 프로젝트를 사용합니다.
   var LOGIN_URL   = 'https://www.businesskorean.com/login.html';
@@ -75,10 +96,12 @@
     '.aak-close{all:unset;width:34px;height:34px;border-radius:9px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;cursor:pointer}' +
     '.aak-close:hover{background:#e2e8f0}.aak-close svg{width:16px;height:16px;display:block}' +
     '.aak-nav{padding:10px;margin:0;display:flex;flex-direction:column;gap:2px;overflow-y:auto;flex:1}' +
-    '.aak-link{display:flex;align-items:center;gap:14px;padding:13px 12px;margin:0;border-radius:12px;font-weight:600;font-size:15px;line-height:1.3;color:#0f172a;text-decoration:none;transition:background .15s}' +
-    '.aak-link:hover{background:#f8fafc}' +
-    '.aak-link.aak-active{background:#eef2ff;color:#2563eb}' +
-    '.aak-ico{width:24px;text-align:center;font-size:18px;line-height:1;flex-shrink:0}' +
+    '.aak-link{display:flex;align-items:center;gap:14px;padding:12px 12px;margin:0;border-radius:12px;font-weight:500;font-size:15px;line-height:1.3;letter-spacing:-.1px;color:#1d1d1f;text-decoration:none;transition:background .15s,color .15s}' +
+    '.aak-link:hover{background:#f5f5f7}' +
+    '.aak-link.aak-active{background:#f0f4ff;color:#0071e3;font-weight:600}' +
+    '.aak-ico{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:18px;line-height:1;flex-shrink:0;color:#86868b;transition:color .15s}' +
+    '.aak-ico svg{width:22px;height:22px;display:block}' +
+    '.aak-link:hover .aak-ico{color:#1d1d1f}.aak-link.aak-active .aak-ico{color:#0071e3}' +
     '.aak-foot{padding:14px 16px;border-top:1px solid #e2e8f0;font-size:11.5px;color:#64748b;text-align:center}' +
     '.aak-acct{padding:12px 16px;border-top:1px solid #e2e8f0;display:flex;flex-direction:column;gap:8px}' +
     '.aak-acct-email{font-size:12.5px;color:#475569;word-break:break-all}' +
@@ -148,7 +171,7 @@
       var active = false;
       try { active = normPath(new URL(l.url, location.href).pathname) === here; } catch (e) {}
       html += '<a class="aak-link' + (active ? ' aak-active' : '') + '" href="' + l.url + '"' + (active ? ' aria-current="page"' : '') +
-        ' data-aak-key="' + l.key + '"><span class="aak-ico" aria-hidden="true">' + l.icon + '</span><span class="aak-txt">' + l.label + '</span></a>';
+        ' data-aak-key="' + l.key + '"><span class="aak-ico" aria-hidden="true">' + iconSvg(l.icon) + '</span><span class="aak-txt">' + l.label + '</span></a>';
     });
     html += '</div><div class="aak-acct" id="aak-acct"></div><div class="aak-foot">© ' + new Date().getFullYear() + ' All About Korea</div>';
     drawer.innerHTML = html;
