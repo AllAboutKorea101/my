@@ -109,8 +109,9 @@
 <!-- 공통 버거 메뉴 (링크 수정은 menu.js 한 곳에서) -->
 <script src="https://www.businesskorean.com/menu.js" defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
   <!-- 이메일 알림은 서버(Cloud Functions)에서 발송합니다 -->
 
   <!-- Firebase SDK v10.13.0 -->
@@ -401,13 +402,6 @@
       pointer-events: none; opacity: 0; transition: opacity .2s; }
     .tabs-edge.more .edge-ico { opacity: 1; }
 
-    /* 3단계 진행 표시 */
-    .steps { display: flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 700; color: #94a3b8; flex-wrap: wrap; }
-    .steps b { display: inline-flex; align-items: center; gap: 5px; padding: .3rem .7rem; border-radius: 999px; background: #fff;
-      border: 1px solid #e2e8f0; font-weight: 700; color: #64748b; }
-    .steps b.on { background: #16a34a; border-color: #16a34a; color: #fff; }
-    .steps b.done { background: #dcfce7; border-color: #bbf7d0; color: #15803d; }
-    .steps i.sep { color: #cbd5e1; font-size: .62rem; }
 
     /* 직접 만든 날짜 선택기 */
     .dp { background: #fff; border: 1px solid #e2e8f0; border-radius: .9rem; padding: .75rem; width: 100%; max-width: 320px; }
@@ -474,6 +468,14 @@
   .chat-other .chat-file{background:#f1f5f9}
   .chat-pt{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:9px 11px;border-radius:12px;border:1px solid #e2e8f0;background:#fff}
   .chat-pt.sel{border-color:#16a34a;background:#f0fdf4}
+  .chat-acts{display:flex;gap:2px;opacity:0;transition:opacity .15s}
+  .chat-row:hover .chat-acts,.chat-acts:focus-within{opacity:1}
+  @media (hover:none){.chat-acts{opacity:1}}
+  .chat-acts button{width:26px;height:26px;border-radius:8px;color:#94a3b8;font-size:11px;display:inline-flex;align-items:center;justify-content:center}
+  .chat-acts button:hover{background:#e2e8f0;color:#475569}
+  .chat-del{background:#f1f5f9;color:#94a3b8;font-style:italic;border:1px dashed #cbd5e1}
+  .chat-editing{outline:2px solid #f59e0b;outline-offset:2px}
+  .chat-read{font-weight:700}
   .stepper button{width:30px;height:30px;border-radius:9px;border:1px solid #cbd5e1;background:#fff;font-weight:800;color:#0f172a}
   .stepper button:disabled{opacity:.35}
   .stepper input{width:52px;text-align:center;border:1px solid #cbd5e1;border-radius:9px;padding:4px 0;font-weight:800;color:#0f172a}
@@ -481,7 +483,7 @@
   .recur-row select{color:#0f172a;border-radius:8px;padding:3px 6px;font-size:12px}
   </style>
 <!-- Tailwind CSS (미리 만든 버전 · 이 페이지에서 쓰는 디자인만 포함) -->
-<style id="tw-prebuilt">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-bottom-1{bottom:-.25rem}.-bottom-12{bottom:-3rem}.-right-1{right:-.25rem}.-right-6{right:-1.5rem}.-top-2\.5{top:-.625rem}.right-3{right:.75rem}.top-0{top:0}.z-10{z-index:10}.col-span-full{grid-column:1/-1}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:.25rem;margin-bottom:.25rem}.-mt-2{margin-top:-.5rem}.mb-0{margin-bottom:0}.mb-1{margin-bottom:.25rem}.mb-1\.5{margin-bottom:.375rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-5{margin-bottom:1.25rem}.ml-1{margin-left:.25rem}.mr-1{margin-right:.25rem}.mr-1\.5{margin-right:.375rem}.mr-2{margin-right:.5rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-1\.5{margin-top:.375rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-auto{margin-top:auto}.block{display:block}.inline{display:inline}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.hidden{display:none}.aspect-video{aspect-ratio:16/9}.h-1\.5{height:.375rem}.h-11{height:2.75rem}.h-14{height:3.5rem}.h-20{height:5rem}.h-28{height:7rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-8{height:2rem}.h-full{height:100%}.max-h-72{max-height:18rem}.min-h-screen{min-height:100vh}.w-11{width:2.75rem}.w-14{width:3.5rem}.w-20{width:5rem}.w-28{width:7rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-8{width:2rem}.w-full{width:100%}.min-w-0{min-width:0}.min-w-\[600px\]{min-width:600px}.min-w-\[620px\]{min-width:620px}.min-w-\[640px\]{min-width:640px}.min-w-\[680px\]{min-width:680px}.min-w-\[700px\]{min-width:700px}.min-w-\[720px\]{min-width:720px}.min-w-\[760px\]{min-width:760px}.min-w-\[820px\]{min-width:820px}.min-w-\[860px\]{min-width:860px}.max-w-6xl{max-width:72rem}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.flex-shrink{flex-shrink:1}.flex-shrink-0{flex-shrink:0}.shrink{flex-shrink:1}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.resize-none{resize:none}.resize{resize:both}.list-decimal{list-style-type:decimal}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-\[90px_1fr\]{grid-template-columns:90px 1fr}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-y-1\.5{row-gap:.375rem}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem*var(--tw-space-y-reverse))}.self-center{align-self:center}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis}.truncate,.whitespace-nowrap{white-space:nowrap}.whitespace-pre-line{white-space:pre-line}.break-all{word-break:break-all}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-green-300{--tw-border-opacity:1;border-color:rgb(134 239 172/var(--tw-border-opacity,1))}.border-green-500\/30{border-color:rgba(34,197,94,.3)}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225/var(--tw-border-opacity,1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-slate-900{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231/var(--tw-bg-opacity,1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244/var(--tw-bg-opacity,1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.bg-green-500\/20{background-color:rgba(34,197,94,.2)}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74/var(--tw-bg-opacity,1))}.bg-green-700{--tw-bg-opacity:1;background-color:rgb(21 128 61/var(--tw-bg-opacity,1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255/var(--tw-bg-opacity,1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229/var(--tw-bg-opacity,1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242/var(--tw-bg-opacity,1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-slate-800\/70{background-color:rgba(30,41,59,.7)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-gradient-to-tr{background-image:linear-gradient(to top right,var(--tw-gradient-stops))}.from-green-700{--tw-gradient-from:#15803d var(--tw-gradient-from-position);--tw-gradient-to:rgba(21,128,61,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.to-teal-500{--tw-gradient-to:#14b8a6 var(--tw-gradient-to-position)}.object-cover{-o-object-fit:cover;object-fit:cover}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-1{padding-bottom:.25rem}.pb-2{padding-bottom:.5rem}.pl-4{padding-left:1rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-8xl{font-size:6rem;line-height:1}.text-\[10\.5px\]{font-size:10.5px}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.capitalize{text-transform:capitalize}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-wider{letter-spacing:.05em}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-green-100{--tw-text-opacity:1;color:rgb(220 252 231/var(--tw-text-opacity,1))}.text-green-300{--tw-text-opacity:1;color:rgb(134 239 172/var(--tw-text-opacity,1))}.text-green-400{--tw-text-opacity:1;color:rgb(74 222 128/var(--tw-text-opacity,1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74/var(--tw-text-opacity,1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61/var(--tw-text-opacity,1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52/var(--tw-text-opacity,1))}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241/var(--tw-text-opacity,1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229/var(--tw-text-opacity,1))}.text-indigo-700{--tw-text-opacity:1;color:rgb(67 56 202/var(--tw-text-opacity,1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113/var(--tw-text-opacity,1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72/var(--tw-text-opacity,1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248/var(--tw-text-opacity,1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.text-teal-500{--tw-text-opacity:1;color:rgb(20 184 166/var(--tw-text-opacity,1))}.text-teal-600{--tw-text-opacity:1;color:rgb(13 148 136/var(--tw-text-opacity,1))}.text-teal-700{--tw-text-opacity:1;color:rgb(15 118 110/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.line-through{text-decoration-line:line-through}.accent-green-600{accent-color:#16a34a}.opacity-70{opacity:.7}.opacity-80{opacity:.8}.opacity-\[\.06\]{opacity:.06}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-lg{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.outline{outline-style:solid}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-green-400{--tw-ring-opacity:1;--tw-ring-color:rgb(74 222 128/var(--tw-ring-opacity,1))}.ring-green-500{--tw-ring-opacity:1;--tw-ring-color:rgb(34 197 94/var(--tw-ring-opacity,1))}.blur{--tw-blur:blur(8px)}.blur,.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-filter{-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.hover\:border-green-500:hover{--tw-border-opacity:1;border-color:rgb(34 197 94/var(--tw-border-opacity,1))}.hover\:bg-green-500:hover{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.disabled\:opacity-40:disabled{opacity:.4}@media (min-width:640px){.sm\:col-span-2{grid-column:span 2/span 2}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}.sm\:items-center{align-items:center}.sm\:gap-4{gap:1rem}.sm\:p-4{padding:1rem}.sm\:p-5{padding:1.25rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-9xl{font-size:8rem;line-height:1}}@media (min-width:768px){.md\:inline{display:inline}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-\[1fr_320px\]{grid-template-columns:1fr 320px}.md\:grid-cols-\[240px_1fr\]{grid-template-columns:240px 1fr}.md\:grid-cols-\[320px_1fr\]{grid-template-columns:320px 1fr}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.lg\:grid-cols-\[250px_1fr\]{grid-template-columns:250px 1fr}}</style>
+<style id="tw-prebuilt">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-bottom-1{bottom:-.25rem}.-bottom-12{bottom:-3rem}.-right-1{right:-.25rem}.-right-6{right:-1.5rem}.-top-2\.5{top:-.625rem}.right-3{right:.75rem}.top-0{top:0}.z-10{z-index:10}.col-span-full{grid-column:1/-1}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:.25rem;margin-bottom:.25rem}.-mt-2{margin-top:-.5rem}.mb-0{margin-bottom:0}.mb-1{margin-bottom:.25rem}.mb-1\.5{margin-bottom:.375rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-5{margin-bottom:1.25rem}.ml-1{margin-left:.25rem}.mr-1{margin-right:.25rem}.mr-1\.5{margin-right:.375rem}.mr-2{margin-right:.5rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-1\.5{margin-top:.375rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-auto{margin-top:auto}.block{display:block}.inline{display:inline}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.hidden{display:none}.aspect-video{aspect-ratio:16/9}.h-1\.5{height:.375rem}.h-11{height:2.75rem}.h-14{height:3.5rem}.h-20{height:5rem}.h-28{height:7rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-8{height:2rem}.h-full{height:100%}.max-h-72{max-height:18rem}.min-h-screen{min-height:100vh}.w-11{width:2.75rem}.w-14{width:3.5rem}.w-20{width:5rem}.w-28{width:7rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-8{width:2rem}.w-full{width:100%}.min-w-0{min-width:0}.min-w-\[600px\]{min-width:600px}.min-w-\[620px\]{min-width:620px}.min-w-\[640px\]{min-width:640px}.min-w-\[680px\]{min-width:680px}.min-w-\[700px\]{min-width:700px}.min-w-\[720px\]{min-width:720px}.min-w-\[760px\]{min-width:760px}.min-w-\[820px\]{min-width:820px}.min-w-\[860px\]{min-width:860px}.max-w-6xl{max-width:72rem}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.flex-shrink{flex-shrink:1}.flex-shrink-0{flex-shrink:0}.shrink{flex-shrink:1}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.resize-none{resize:none}.resize{resize:both}.list-decimal{list-style-type:decimal}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-\[90px_1fr\]{grid-template-columns:90px 1fr}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-y-1\.5{row-gap:.375rem}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem*var(--tw-space-y-reverse))}.self-center{align-self:center}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis}.truncate,.whitespace-nowrap{white-space:nowrap}.whitespace-pre-line{white-space:pre-line}.break-all{word-break:break-all}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-green-300{--tw-border-opacity:1;border-color:rgb(134 239 172/var(--tw-border-opacity,1))}.border-green-500\/30{border-color:rgba(34,197,94,.3)}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225/var(--tw-border-opacity,1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-slate-900{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231/var(--tw-bg-opacity,1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244/var(--tw-bg-opacity,1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.bg-green-500\/20{background-color:rgba(34,197,94,.2)}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74/var(--tw-bg-opacity,1))}.bg-green-700{--tw-bg-opacity:1;background-color:rgb(21 128 61/var(--tw-bg-opacity,1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255/var(--tw-bg-opacity,1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229/var(--tw-bg-opacity,1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242/var(--tw-bg-opacity,1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-slate-800\/70{background-color:rgba(30,41,59,.7)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-gradient-to-tr{background-image:linear-gradient(to top right,var(--tw-gradient-stops))}.from-green-700{--tw-gradient-from:#15803d var(--tw-gradient-from-position);--tw-gradient-to:rgba(21,128,61,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.to-teal-500{--tw-gradient-to:#14b8a6 var(--tw-gradient-to-position)}.object-cover{-o-object-fit:cover;object-fit:cover}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-1{padding-bottom:.25rem}.pb-2{padding-bottom:.5rem}.pl-4{padding-left:1rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-8xl{font-size:6rem;line-height:1}.text-\[10\.5px\]{font-size:10.5px}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.capitalize{text-transform:capitalize}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-wider{letter-spacing:.05em}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14/var(--tw-text-opacity,1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-green-100{--tw-text-opacity:1;color:rgb(220 252 231/var(--tw-text-opacity,1))}.text-green-300{--tw-text-opacity:1;color:rgb(134 239 172/var(--tw-text-opacity,1))}.text-green-400{--tw-text-opacity:1;color:rgb(74 222 128/var(--tw-text-opacity,1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74/var(--tw-text-opacity,1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61/var(--tw-text-opacity,1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52/var(--tw-text-opacity,1))}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241/var(--tw-text-opacity,1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229/var(--tw-text-opacity,1))}.text-indigo-700{--tw-text-opacity:1;color:rgb(67 56 202/var(--tw-text-opacity,1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113/var(--tw-text-opacity,1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72/var(--tw-text-opacity,1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248/var(--tw-text-opacity,1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.text-teal-500{--tw-text-opacity:1;color:rgb(20 184 166/var(--tw-text-opacity,1))}.text-teal-600{--tw-text-opacity:1;color:rgb(13 148 136/var(--tw-text-opacity,1))}.text-teal-700{--tw-text-opacity:1;color:rgb(15 118 110/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.line-through{text-decoration-line:line-through}.accent-green-600{accent-color:#16a34a}.opacity-70{opacity:.7}.opacity-80{opacity:.8}.opacity-\[\.06\]{opacity:.06}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-lg{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.outline{outline-style:solid}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-green-400{--tw-ring-opacity:1;--tw-ring-color:rgb(74 222 128/var(--tw-ring-opacity,1))}.ring-green-500{--tw-ring-opacity:1;--tw-ring-color:rgb(34 197 94/var(--tw-ring-opacity,1))}.blur{--tw-blur:blur(8px)}.blur,.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-filter{-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.hover\:border-green-500:hover{--tw-border-opacity:1;border-color:rgb(34 197 94/var(--tw-border-opacity,1))}.hover\:bg-green-500:hover{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.disabled\:opacity-40:disabled{opacity:.4}@media (min-width:640px){.sm\:col-span-2{grid-column:span 2/span 2}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}.sm\:items-center{align-items:center}.sm\:gap-4{gap:1rem}.sm\:p-4{padding:1rem}.sm\:p-5{padding:1.25rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-9xl{font-size:8rem;line-height:1}}@media (min-width:768px){.md\:inline{display:inline}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-\[1fr_320px\]{grid-template-columns:1fr 320px}.md\:grid-cols-\[240px_1fr\]{grid-template-columns:240px 1fr}.md\:grid-cols-\[320px_1fr\]{grid-template-columns:320px 1fr}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.lg\:grid-cols-\[250px_1fr\]{grid-template-columns:250px 1fr}}</style>
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -542,7 +544,6 @@
     </div>
   </div>
 
-  <div id="stepStrip" class="steps"></div>
 
   <!-- ── Tutor (프로필 · 선택 · 수업 안내) ── -->
   <div id="ssec-tutor" class="hidden space-y-5">
@@ -1031,7 +1032,7 @@ const T = {
   recurHint: ['Unavailable weeks are marked in red — pick another time that day or skip them. Nothing is booked twice.', '予約できない週は赤で表示されます。その日の別の時間を選ぶかスキップしてください。二重予約はされません。', '无法预约的周以红色显示，可选择当天其他时间或跳过。不会重复预约。', 'Las semanas no disponibles aparecen en rojo: elige otra hora ese día u omítelas. Nunca se reserva dos veces.', 'Les semaines indisponibles sont en rouge : choisissez une autre heure ce jour-là ou passez-les. Aucune double réservation.', 'Nicht verfügbare Wochen sind rot markiert – wählen Sie eine andere Uhrzeit oder überspringen Sie sie. Es wird nichts doppelt gebucht.', 'Niedostępne tygodnie są oznaczone na czerwono — wybierz inną godzinę lub pomiń. Nic nie zostanie zarezerwowane podwójnie.', '예약할 수 없는 주는 빨간색으로 표시됩니다. 그 날 다른 시간을 고르거나 건너뛰세요. 중복 예약은 되지 않습니다.'],
   recurDone: ['{ok} lessons booked.', '{ok}回のレッスンを予約しました。', '已预约{ok}节课。', 'Se reservaron {ok} clases.', '{ok} cours réservés.', '{ok} Stunden gebucht.', 'Zarezerwowano {ok} lekcji.', '{ok}회 예약되었습니다.'],
   recurFail: ['These could not be booked:', '次の時間は予約できませんでした：', '以下时间未能预约：', 'No se pudieron reservar:', "Ces créneaux n'ont pas pu être réservés :", 'Diese konnten nicht gebucht werden:', 'Nie udało się zarezerwować:', '다음 시간은 예약되지 않았습니다:'],
-  r_lead: ['Less than 12 h ahead', '12時間前を過ぎています', '距开始不足12小时', 'Menos de 12 h de antelación', "Moins de 12 h à l'avance", 'Weniger als 12 Std. vorher', 'Mniej niż 12 godz. wcześniej', '12시간 이내'],
+  r_lead: ['Less than 24 h ahead', '24時間前を過ぎています', '距开始不足24小时', 'Menos de 24 h de antelación', "Moins de 24 h à l'avance", 'Weniger als 24 Std. vorher', 'Mniej niż 24 godz. wcześniej', '24시간 이내'],
   r_closed: ['Tutor not available', '講師の受付時間外', '老师该时段不可约', 'Tutor no disponible', 'Tuteur indisponible', 'Tutor nicht verfügbar', 'Lektor niedostępny', '튜터 수업 불가 시간'],
   r_busy: ['Already booked', '予約済み', '已被预约', 'Ya reservado', 'Déjà réservé', 'Bereits gebucht', 'Już zarezerwowane', '이미 예약된 시간'],
   r_mine: ['You have another lesson', '他のレッスンと重複', '与您的其他课程冲突', 'Tienes otra clase', 'Vous avez un autre cours', 'Sie haben eine andere Stunde', 'Masz inną lekcję', '내 다른 수업과 겹침'],
@@ -1048,6 +1049,16 @@ const T = {
   chatSend: ['Send', '送信', '发送', 'Enviar', 'Envoyer', 'Senden', 'Wyślij', '보내기'],
   chatFail: ['Could not send. Please try again.', '送信できませんでした。もう一度お試しください。', '发送失败，请重试。', 'No se pudo enviar. Inténtalo de nuevo.', "Échec de l'envoi. Réessayez.", 'Senden fehlgeschlagen. Bitte erneut versuchen.', 'Nie udało się wysłać. Spróbuj ponownie.', '전송하지 못했습니다. 다시 시도해 주세요.'],
   chatDel30: ['Auto-deletes in {n} days', 'あと{n}日で自動削除', '{n}天后自动删除', 'Se elimina en {n} días', 'Supprimé dans {n} jours', 'Wird in {n} Tagen gelöscht', 'Usunięcie za {n} dni', '{n}일 후 자동 삭제'],
+  chatEdit: ['Edit', '編集', '编辑', 'Editar', 'Modifier', 'Bearbeiten', 'Edytuj', '수정'],
+  chatDelete: ['Delete', '削除', '删除', 'Eliminar', 'Supprimer', 'Löschen', 'Usuń', '삭제'],
+  chatDeleted: ['This message was deleted', 'このメッセージは削除されました', '此消息已删除', 'Este mensaje fue eliminado', 'Ce message a été supprimé', 'Diese Nachricht wurde gelöscht', 'Ta wiadomość została usunięta', '삭제된 메시지입니다'],
+  chatEdited: ['edited', '編集済み', '已编辑', 'editado', 'modifié', 'bearbeitet', 'edytowano', '수정됨'],
+  chatRead: ['Read', '既読', '已读', 'Leído', 'Lu', 'Gelesen', 'Przeczytano', '읽음'],
+  chatEditing: ['Editing message (text only)', 'メッセージを編集中（テキストのみ）', '正在编辑消息（仅文字）', 'Editando mensaje (solo texto)', 'Modification du message (texte uniquement)', 'Nachricht wird bearbeitet (nur Text)', 'Edycja wiadomości (tylko tekst)', '메시지 수정 중 (글자만 수정됩니다)'],
+  chatCancel: ['Cancel', 'キャンセル', '取消', 'Cancelar', 'Annuler', 'Abbrechen', 'Anuluj', '취소'],
+  chatDelAsk: ['Delete this message?', 'このメッセージを削除しますか？', '要删除这条消息吗？', '¿Eliminar este mensaje?', 'Supprimer ce message ?', 'Diese Nachricht löschen?', 'Usunąć tę wiadomość?', '이 메시지를 삭제할까요?'],
+  chatDelAskFile: ['Delete this message? The attached file will be deleted too.', 'このメッセージを削除しますか？添付ファイルも削除されます。', '要删除这条消息吗？附件也会一并删除。', '¿Eliminar este mensaje? El archivo adjunto también se eliminará.', 'Supprimer ce message ? Le fichier joint sera aussi supprimé.', 'Diese Nachricht löschen? Der Anhang wird ebenfalls gelöscht.', 'Usunąć tę wiadomość? Załączony plik również zostanie usunięty.', '이 메시지를 삭제할까요? 첨부 파일도 함께 삭제됩니다.'],
+  chatEditEmpty: ['Please enter a message. To remove it, use the trash button.', 'メッセージを入力してください。削除する場合はゴミ箱ボタンを押してください。', '请输入内容。如需删除，请点击垃圾桶按钮。', 'Escribe un mensaje. Para quitarlo, usa el botón de papelera.', 'Saisissez un message. Pour le retirer, utilisez la corbeille.', 'Bitte gib eine Nachricht ein. Zum Entfernen den Papierkorb verwenden.', 'Wpisz wiadomość. Aby ją usunąć, użyj kosza.', '내용을 입력해 주세요. 메시지를 지우려면 휴지통 버튼을 눌러 주세요.'],
   signIn: ['Sign In', 'ログイン', '登录', 'Iniciar sesión', 'Se connecter', 'Anmelden', 'Zaloguj się', '로그인'],
   signOut: ['Sign Out', 'ログアウト', '退出登录', 'Cerrar sesión', 'Se déconnecter', 'Abmelden', 'Wyloguj się', '로그아웃'],
   myAccount: ['My Account', 'マイアカウント', '我的账户', 'Mi cuenta', 'Mon compte', 'Mein Konto', 'Moje konto', '내 계정'],
@@ -1102,7 +1113,7 @@ const T = {
   creditsAvail: ['{n} credits available', '残り{n}クレジット', '可用{n}个课时', '{n} créditos disponibles', '{n} crédits disponibles', '{n} Credits verfügbar', 'Dostępne kredyty: {n}', '사용 가능 {n}개'],
   buyPlan: ['Buy a Plan', 'プランを購入', '购买课程', 'Comprar plan', 'Acheter un forfait', 'Paket kaufen', 'Kup pakiet', '수강권 구매하기'],
   step2: ['2. Pick a Date & Time', '2. 日時を選択', '2. 选择日期和时间', '2. Elige fecha y hora', '2. Choisissez la date et l’heure', '2. Datum & Uhrzeit wählen', '2. Wybierz datę i godzinę', '2. 날짜·시간 선택'],
-  slotsNote: ['Times are shown in your local time ({tz}). Book at least 12 hours ahead.', '時間はあなたの現地時間（{tz}）で表示されます。12時間前までに予約してください。', '时间以您的当地时间（{tz}）显示，请至少提前12小时预约。', 'Horas en tu hora local ({tz}). Reserva con al menos 12 h de antelación.', 'Heures dans votre fuseau ({tz}). Réservez au moins 12 h à l’avance.', 'Zeiten in deiner Ortszeit ({tz}). Mindestens 12 Std. im Voraus buchen.', 'Godziny w Twojej strefie ({tz}). Rezerwuj co najmniej 12 h wcześniej.', '현지 시간({tz}) 기준으로 표시됩니다. 최소 12시간 전에 예약하세요.'],
+  slotsNote: ['Times are shown in your local time ({tz}). Book at least 24 hours ahead.', '時間はあなたの現地時間（{tz}）で表示されます。24時間前までに予約してください。', '时间以您的当地时间（{tz}）显示，请至少提前24小时预约。', 'Horas en tu hora local ({tz}). Reserva con al menos 24 h de antelación.', 'Heures dans votre fuseau ({tz}). Réservez au moins 24 h à l’avance.', 'Zeiten in deiner Ortszeit ({tz}). Mindestens 24 Std. im Voraus buchen.', 'Godziny w Twojej strefie ({tz}). Rezerwuj co najmniej 24 h wcześniej.', '현지 시간({tz}) 기준으로 표시됩니다. 최소 24시간 전에 예약하세요.'],
   date: ['Date', '日付', '日期', 'Fecha', 'Date', 'Datum', 'Data', '날짜'],
   slots: ['Available Slots', '予約可能な時間', '可预约时段', 'Horarios disponibles', 'Créneaux disponibles', 'Freie Termine', 'Dostępne terminy', '예약 가능 시간'],
   noSlots: ['No available slots on this date.', 'この日は予約可能な時間がありません。', '该日期没有可预约时段。', 'No hay horarios disponibles ese día.', 'Aucun créneau disponible ce jour-là.', 'An diesem Tag keine freien Termine.', 'Brak wolnych terminów w tym dniu.', '이 날짜에는 예약 가능한 시간이 없습니다.'],
@@ -1140,7 +1151,7 @@ const T = {
   del: ['Delete', '削除', '删除', 'Eliminar', 'Supprimer', 'Löschen', 'Usuń', '삭제'],
   changeLesson: ['Change', '変更', '更改', 'Cambiar', 'Modifier', 'Ändern', 'Zmień', '시간 변경'],
   changeTitle: ['Change lesson time', 'レッスン時間の変更', '更改上课时间', 'Cambiar horario', 'Modifier l’horaire', 'Termin ändern', 'Zmień termin lekcji', '수업 시간 변경'],
-  changeRule: ['New bookings and time changes are possible up to 12 hours before the lesson.', '新規予約と時間変更はレッスン開始12時間前まで可能です。', '新预约和改期须在课前12小时以上。', 'Reservas y cambios hasta 12 h antes de la clase.', 'Réservations et modifications jusqu’à 12 h avant le cours.', 'Buchungen und Änderungen bis 12 Std. vor der Stunde.', 'Rezerwacje i zmiany do 12 h przed lekcją.', '새 예약과 시간 변경은 수업 시작 12시간 전까지 가능합니다.'],
+  changeRule: ['New bookings and time changes are possible up to 24 hours before the lesson.', '新規予約と時間変更はレッスン開始24時間前まで可能です。', '新预约和改期须在课前24小时以上。', 'Reservas y cambios hasta 24 h antes de la clase.', 'Réservations et modifications jusqu’à 24 h avant le cours.', 'Buchungen und Änderungen bis 24 Std. vor der Stunde.', 'Rezerwacje i zmiany do 24 h przed lekcją.', '새 예약과 시간 변경은 수업 시작 24시간 전까지 가능합니다.'],
   changeConfirm: ['Change to this time', 'この時間に変更', '改到此时间', 'Cambiar a esta hora', 'Choisir cet horaire', 'Auf diese Zeit ändern', 'Zmień na ten termin', '이 시간으로 변경'],
   changeDone: ['Lesson time changed.', 'レッスン時間を変更しました。', '上课时间已更改。', 'Horario cambiado.', 'Horaire modifié.', 'Termin geändert.', 'Termin zmieniony.', '수업 시간이 변경되었습니다.'],
   currentTime: ['Current', '現在', '当前', 'Actual', 'Actuel', 'Aktuell', 'Obecnie', '현재'],
@@ -1160,7 +1171,6 @@ const T = {
   matNotice: ['Files can be downloaded for 7 days after upload and are then deleted automatically.', 'アップロード後7日間ダウンロードでき、その後自動削除されます。', '文件上传后7天内可下载，之后自动删除。', 'Los archivos se pueden descargar durante 7 días y luego se eliminan automáticamente.', 'Les fichiers sont téléchargeables 7 jours, puis supprimés automatiquement.', 'Dateien sind 7 Tage abrufbar und werden danach automatisch gelöscht.', 'Pliki można pobierać przez 7 dni, potem są automatycznie usuwane.', '업로드 후 7일간 다운로드할 수 있으며, 이후 자동 삭제됩니다.'],
   download: ['Download', 'ダウンロード', '下载', 'Descargar', 'Télécharger', 'Herunterladen', 'Pobierz', '다운로드'],
   expiresIn: ['Deleted in {n} day(s)', 'あと{n}日で削除', '{n}天后删除', 'Se elimina en {n} día(s)', 'Supprimé dans {n} jour(s)', 'Gelöscht in {n} Tag(en)', 'Usunięcie za {n} dni', '{n}일 후 삭제'],
-  noMat: ['No materials yet.', 'まだ教材はありません。', '暂无资料。', 'Aún no hay materiales.', 'Aucun support pour l’instant.', 'Noch keine Materialien.', 'Brak materiałów.', '아직 자료가 없습니다.'],
   reviews: ['Reviews', 'レビュー', '评价', 'Reseñas', 'Avis', 'Bewertungen', 'Opinie', '리뷰'],
   reviewsCount: ['reviews', '件のレビュー', '条评价', 'reseñas', 'avis', 'Bewertungen', 'opinii', '개 리뷰'],
   writeReview: ['Write a Review', 'レビューを書く', '写评价', 'Escribir reseña', 'Écrire un avis', 'Bewertung schreiben', 'Napisz opinię', '리뷰 작성'],
@@ -1216,14 +1226,14 @@ const T = {
     'Wybierz datę i wolny termin. Wszystkie godziny są w Twojej strefie czasowej. Każda rezerwacja zużywa jeden kredyt, a zmienisz ją lub anulujesz w swoim pulpicie.',
     '날짜와 비어 있는 시간을 선택합니다. 모든 시간은 학생의 현지 시간으로 표시됩니다. 예약 1건에 크레딧 1개가 사용되며, 대시보드에서 변경·취소할 수 있습니다.'],
   how3T: ['3. Take the lesson', '3. レッスンを受ける', '3. 开始上课', '3. Toma la clase', '3. Suivez le cours', '3. Stunde nehmen', '3. Weź udział w lekcji', '3. 수업 듣기'],
-  how3D: ['Add the lesson to your calendar and join with the Google Meet link on your dashboard. After class the tutor sends notes and materials to the Materials tab.',
-    'レッスンをカレンダーに追加し、ダッシュボードのGoogle Meetリンクから参加します。授業後は講師がノートや教材を「教材」タブに送ります。',
-    '将课程加入日历，通过主页的Google Meet链接进入教室。课后老师会把笔记和学习资料发送到"学习资料"页。',
-    'Añade la clase a tu calendario y entra con el enlace de Google Meet de tu panel. Después, el tutor te envía notas y materiales a la pestaña Materiales.',
-    'Ajoutez le cours à votre agenda et rejoignez-le via le lien Google Meet de votre tableau de bord. Après le cours, le tuteur envoie notes et supports dans l’onglet Supports.',
-    'Trage die Stunde in deinen Kalender ein und tritt über den Google-Meet-Link im Dashboard bei. Danach schickt die Lehrkraft Notizen und Materialien in den Tab „Materialien".',
-    'Dodaj lekcję do kalendarza i dołącz przez link Google Meet w pulpicie. Po zajęciach lektor wysyła notatki i materiały do zakładki Materiały.',
-    '수업을 캘린더에 추가하고 대시보드의 Google Meet 링크로 입장합니다. 수업이 끝나면 튜터가 노트와 자료를 학습 자료 탭으로 보내드립니다.'],
+  how3D: ['Add the lesson to your calendar and join with the Google Meet link on your dashboard. You can exchange notes and materials with your tutor in the Messages tab.',
+    'レッスンをカレンダーに追加し、ダッシュボードのGoogle Meetリンクから参加します。ノートや教材は「メッセージ」タブで講師とやり取りできます。',
+    '将课程加入日历，通过主页的Google Meet链接进入教室。笔记和学习资料可以在"消息"页与老师互相发送。',
+    'Añade la clase a tu calendario y entra con el enlace de Google Meet de tu panel. Puedes intercambiar notas y materiales con tu tutor en la pestaña Mensajes.',
+    'Ajoutez le cours à votre agenda et rejoignez-le via le lien Google Meet de votre tableau de bord. Vous pouvez échanger notes et supports avec votre tuteur dans l’onglet Messages.',
+    'Trage die Stunde in deinen Kalender ein und tritt über den Google-Meet-Link im Dashboard bei. Notizen und Materialien tauschst du mit deiner Lehrkraft im Tab „Nachrichten“ aus.',
+    'Dodaj lekcję do kalendarza i dołącz przez link Google Meet w pulpicie. Notatki i materiały wymieniasz z lektorem w zakładce Wiadomości.',
+    '수업을 캘린더에 추가하고 대시보드의 Google Meet 링크로 입장합니다. 노트와 자료는 메시지 탭에서 튜터와 주고받을 수 있습니다.'],
   pickTutor: ['Select this tutor', 'この講師を選ぶ', '选择这位老师', 'Elegir este tutor', 'Choisir ce tuteur', 'Diese Lehrkraft wählen', 'Wybierz tego lektora', '이 튜터로 선택'],
   pickedTutor: ['Your tutor', '担当講師', '您的老师', 'Tu tutor', 'Votre tuteur', 'Deine Lehrkraft', 'Twój lektor', '내 튜터'],
   pickTutorNote: ['Plans you buy and lessons you book apply to the tutor selected here. Switching tutors affects new purchases and bookings only.',
@@ -1445,7 +1455,7 @@ const DAY_KO = { Mon: '월', Tue: '화', Wed: '수', Thu: '목', Fri: '금', Sat
 const HOURS = Array.from({ length: 16 }, (_, i) => String(i + 7).padStart(2, '0') + ':00'); // 07:00 ~ 22:00
 // 가능 시간 = 30분 칸 ("08:00","08:30",…). availStep 없는 예전 데이터는 1시간 → 2칸으로 해석
 const HALF = Array.from({ length: 48 }, (_, i) => String(Math.floor(i / 2)).padStart(2, '0') + ':' + (i % 2 ? '30' : '00'));
-const LEAD_MS = 12 * 3600000;   // 예약·변경 최소 12시간 전
+const LEAD_MS = 24 * 3600000;   // 새 예약·시간 변경·취소 모두 최소 24시간 전
 function availCellsOf(tu, wd) {
   const a = ((tu.availability || {})[wd] || []).map(String);
   if (tu.availStep === 30) return new Set(a);
@@ -1617,7 +1627,7 @@ const S = {
   user: null, email: null, role: null, myTutorId: null, view: 'student',
   allTutors: [], tutors: [], tutorMap: {}, selTutorId: null,
   customRate: null, busy: new Set(), gBusy: [], gBusyT: [],
-  orders: [], bookings: [], logs: [], materials: [], myMats: [], allMats: [],
+  orders: [], bookings: [], logs: [],
   selPkg: 'pack5', selType: 'regular', selSlot: null, selDate: null, dpMonth: null,
   studentTab: 'plans', dashTab: 'upcoming',
   // tutor console
@@ -1661,7 +1671,7 @@ window.onFirebaseReady = async (user, r) => {
 
 window.onFirebaseSignedOut = () => {
   stopWatching();
-  Object.assign(S, { user: null, email: null, role: null, myTutorId: null, orders: [], bookings: [], logs: [], materials: [], myMats: [], allMats: [], customRate: null });
+  Object.assign(S, { user: null, email: null, role: null, myTutorId: null, orders: [], bookings: [], logs: [], customRate: null });
   $('signInBtn').classList.remove('hidden');
   $('acctWrap').classList.add('hidden');
   $('roleSwitcher').classList.remove('visible');
@@ -1736,16 +1746,14 @@ async function loadTutorExtras() {
 async function loadStudentData() {
   if (!S.email || !window.FB) return;
   const safe = p => p.catch(e => { console.warn(e); return []; });
-  const [orders, bookings, logs, m1, m2] = await Promise.all([
+  const [orders, bookings, logs] = await Promise.all([
     safe(FB.list('orders', ['studentEmail', '==', S.email])),
     safe(FB.list('bookings', ['studentEmail', '==', S.email])),
-    safe(FB.list('creditLogs', ['studentEmail', '==', S.email])),
-    Promise.resolve([]), Promise.resolve([])   // (학습 자료 탭은 채팅으로 바뀌었습니다)
+    safe(FB.list('creditLogs', ['studentEmail', '==', S.email]))
   ]);
   S.orders = orders.sort((a, b) => (toDate(b.createdAt) || 0) - (toDate(a.createdAt) || 0));
   S.bookings = bookings.sort((a, b) => toDate(a.startAt) - toDate(b.startAt));
   S.logs = logs.sort((a, b) => (toDate(b.at) || 0) - (toDate(a.at) || 0));
-  S.myMats = m1; S.allMats = m2; mergeMaterials();
 }
 /* 실시간 구독 — 튜터가 결제를 확인하거나 수업이 끝나면 새로고침 없이 바로 반영됩니다. */
 let unsubs = [], reRenderTimer = null;
@@ -1768,10 +1776,6 @@ function watchStudentData() {
     S.logs = rows.sort((a, b) => byDate(a, b, 'at')); scheduleRender();
   }));
   watchChats('s');   // 채팅 목록 (읽지 않은 메시지 표시)
-}
-function mergeMaterials() {
-  S.materials = [...(S.myMats || []), ...(S.allMats || [])]
-    .sort((a, b) => (toDate(b.createdAt) || 0) - (toDate(a.createdAt) || 0));
 }
 // 끝난 수업이 자동으로 '완료'로 넘어가도록 1분마다 가볍게 다시 그립니다.
 setInterval(() => { if (S.view === 'student' && S.email && endedBookings().length) scheduleRender(); }, 60000);
@@ -1808,17 +1812,6 @@ function renderMobileTabs() {
       <i class="fa ${STAB_ICON[x]}"></i><span>${esc(t(STAB_SHORT[x]))}${x === 'materials' ? '<span class="chat-dot chat-dot-s hidden"></span>' : ''}</span></button>`).join('');
   paintChatDots();
 }
-function renderSteps() {
-  const s = creditSummary(S.orders);
-  const done = { plans: s.paid > 0, reserve: s.reserved > 0 || liveUsed() > 0, lesson: liveUsed() > 0 };
-  const cur = S.studentTab === 'plans' ? 'plans' : S.studentTab === 'reserve' ? 'reserve' : null;
-  const chip = (key, label, icon) =>
-    `<b class="${cur === key ? 'on' : (done[key] ? 'done' : '')}"><i class="fa ${done[key] && cur !== key ? 'fa-circle-check' : icon}"></i>${esc(label)}</b>`;
-  $('stepStrip').innerHTML =
-    chip('plans', t('navPlans'), 'fa-tags') + '<i class="fa fa-chevron-right sep"></i>' +
-    chip('reserve', t('navReserve'), 'fa-calendar-plus') + '<i class="fa fa-chevron-right sep"></i>' +
-    chip('lesson', t('how3T').replace(/^3\.\s*/, ''), 'fa-video');
-}
 function switchStudentTab(tab, silent) {
   if (!STABS.includes(tab)) tab = 'plans';
   S.studentTab = tab;
@@ -1827,7 +1820,6 @@ function switchStudentTab(tab, silent) {
     $('ssec-' + x).classList.toggle('hidden', x !== tab);
     const m = $('mtab-' + x); if (m) m.classList.toggle('active', x === tab);
   });
-  renderSteps();
   if (tab === 'materials') renderStudentChat();
   paintChatDots();
   if (!silent) {
@@ -2257,7 +2249,6 @@ function renderDash() {
         ${next.meetLink ? `<a href="${esc(next.meetLink)}" target="_blank" rel="noopener" class="btn btn-green"><i class="fa fa-video"></i>${esc(t('join'))}</a>` : `<span class="text-xs text-slate-400 self-center">${esc(t('linkPending'))}</span>`}
       </div></div>` : '';
   dashSub(S.dashTab);
-  renderSteps();
 }
 function statCard(key, val, color, icon, sub, click) {
   return `<div class="card stat ${click ? 'click' : ''}" ${click ? `onclick="${click}"` : ''}>
@@ -2303,7 +2294,7 @@ function renderUpcoming() {
     }).join('') : `<tr><td colspan="7" class="empty-row">${esc(t('noUpcoming'))}</td></tr>`}
     </tbody></table></div><p class="text-[11px] text-slate-400 mt-2"><i class="fa fa-circle-info mr-1"></i>${esc(t('changeRule'))} ${esc(t('cancelRule'))}</p>`;
 }
-/* 수업 시간 변경 (학생: 12시간 전까지, 새 시간도 12시간 이후) */
+/* 수업 시간 변경 (학생: 24시간 전까지, 새 시간도 24시간 이후) */
 let RS = null;
 async function openReschedule(id) {
   const b = S.bookings.find(x => x.id === id), tu = b && S.tutorMap[b.tutorId]; if (!tu) return;
@@ -2434,12 +2425,16 @@ function renderHistory() {
    MESSAGES — 튜터 ↔ 학생 채팅 (학생: Messages 탭 / 튜터: 메시지 탭)
    · 채팅 상대: 결제 대기·유효한 수강권·예정된 수업이 있는 튜터/학생
    · 파일: 형식 무관, 1개당 최대 5MB · 메시지와 파일은 30일 후 서버가 자동 삭제
+   · 자기가 보낸 메시지만 수정(글자만)·삭제 — 서버 함수 editChatMessage / deleteChatMessage 가 처리 (상대방 알림 없음)
+   · 읽음 표시: 상대방이 채팅을 연 시각(tutorReadAt / studentReadAt) 이전에 보낸 내 메시지는 '읽음'
 ════════════════════════════════════════════════════════════════ */
 const CHAT_MAX = 5 * 1024 * 1024, CHAT_DAYS = 30;
 const CH = {
-  s: { sel: null, chatId: null, msgs: [], unsub: null, chats: {}, unsubChats: null, file: null, opening: null },
-  t: { sel: null, chatId: null, msgs: [], unsub: null, chats: {}, unsubChats: null, file: null, opening: null }
+  s: { sel: null, chatId: null, msgs: [], unsub: null, chats: {}, unsubChats: null, file: null, opening: null, editId: null },
+  t: { sel: null, chatId: null, msgs: [], unsub: null, chats: {}, unsubChats: null, file: null, opening: null, editId: null }
 };
+const CHAT_DEL = '__deleted__';   // 마지막 메시지가 삭제되면 서버가 미리보기에 넣는 표시
+const chatL = (side, ko, key, vars) => side === 't' ? ko : t(key, vars);
 const chatBox = side => $(side === 's' ? 'studentChat' : 'tutorChat');
 const chatVisible = side => side === 's' ? (S.view === 'student' && S.studentTab === 'materials') : (S.view === 'tutor' && S.tTab === 'materials');
 const isLive = (o, b, now) => o ? (o.status === 'pending' || (o.status === 'paid' && toDate(o.expiresAt) && toDate(o.expiresAt).getTime() > now))
@@ -2479,7 +2474,7 @@ function watchChats(side) {
   c.unsubChats = FB.watch('chats', cond, rows => {
     c.chats = Object.fromEntries(rows.map(r => [r.id, r]));
     paintChatDots();
-    if (chatVisible(side)) { renderChatList(side); markChatRead(side); }
+    if (chatVisible(side)) { renderChatList(side); renderChatMsgs(side); markChatRead(side); }   // 읽음 표시 갱신
   });
 }
 
@@ -2505,10 +2500,11 @@ function chatShell(side) {
         <div id="chatHead-${side}" class="px-4 py-2.5 border-b border-slate-200 font-bold text-sm truncate"></div>
         <div id="chatMsgs-${side}" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2 bg-slate-50"></div>
         <div class="border-t border-slate-200 p-2.5 space-y-2">
+          <div id="chatEditBar-${side}" class="hidden text-xs bg-amber-50 text-amber-800 rounded-lg px-3 py-1.5 flex items-center gap-2"><i class="fa fa-pen"></i><span class="flex-1">${ko ? '메시지 수정 중 (글자만 수정됩니다)' : esc(t('chatEditing'))}</span><button class="font-semibold underline" onclick="chatEditCancel('${side}')">${ko ? '취소' : esc(t('chatCancel'))}</button></div>
           <div id="chatFile-${side}" class="hidden text-xs bg-slate-100 rounded-lg px-3 py-1.5 flex items-center gap-2"></div>
           <div id="chatProg-${side}" class="hidden h-1.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-green-500" style="width:0%"></div></div>
           <div class="flex items-end gap-2">
-            <label class="btn btn-ghost cursor-pointer" title="${ko ? '파일 첨부' : esc(t('chatAttach'))}"><i class="fa fa-paperclip"></i><input type="file" class="hidden" id="chatFileIn-${side}" onchange="chatPickFile('${side}', this)"></label>
+            <label id="chatAttach-${side}" class="btn btn-ghost cursor-pointer" title="${ko ? '파일 첨부' : esc(t('chatAttach'))}"><i class="fa fa-paperclip"></i><input type="file" class="hidden" id="chatFileIn-${side}" onchange="chatPickFile('${side}', this)"></label>
             <textarea id="chatText-${side}" rows="2" maxlength="4000" class="inp flex-1 resize-none" placeholder="${ko ? '메시지를 입력하세요… (Enter 보내기, Shift+Enter 줄바꿈)' : esc(t('chatPh'))}" onkeydown="chatKey(event, '${side}')"></textarea>
             <button id="chatSend-${side}" class="btn btn-green" onclick="chatSend('${side}')" title="${ko ? '보내기' : esc(t('chatSend'))}"><i class="fa fa-paper-plane"></i></button>
           </div>
@@ -2537,12 +2533,13 @@ function renderChatList(side) {
     return `<button class="chat-pt ${c.sel === p.key ? 'sel' : ''}" onclick="chatSelect('${side}', ${jsq(p.key)})">
       ${p.photo ? `<img src="${esc(p.photo)}" alt="" class="w-8 h-8 rounded-full object-cover flex-shrink-0">` : `<span class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 flex-shrink-0">${esc((p.label || '?').slice(0, 1).toUpperCase())}</span>`}
       <span class="min-w-0 flex-1"><span class="block text-sm font-semibold truncate">${esc(p.label)}${un ? '<span class="chat-dot"></span>' : ''}</span>
-      <span class="block text-[11px] text-slate-400 truncate">${esc((ch && ch.lastText) || p.sub || '')}</span></span></button>`;
+      <span class="block text-[11px] text-slate-400 truncate">${ch && ch.lastText === CHAT_DEL ? esc(chatL(side, '삭제된 메시지입니다', 'chatDeleted')) : esc((ch && ch.lastText) || p.sub || '')}</span></span></button>`;
   }).join('');
 }
 async function chatSelect(side, key) {
   const c = CH[side];
   if (c.unsub) { try { c.unsub(); } catch (e) {} c.unsub = null; }
+  if (c.editId) chatEditCancel(side);
   c.sel = key; c.msgs = []; c.chatId = null;
   const p = chatPartners(side).find(x => x.key === key);
   $(`chatHead-${side}`).innerHTML = p ? `${esc(p.label)}${side === 't' && p.sub ? ` <span class="text-[11px] font-normal text-slate-400">${esc(p.sub)}</span>` : ''}` : '';
@@ -2572,16 +2569,28 @@ function renderChatMsgs(side) {
   if (!c.msgs.length) { el.innerHTML = `<p class="text-xs text-slate-400 text-center py-10">${side === 't' ? '아직 메시지가 없습니다.' : esc(t('chatEmpty'))}</p>`; return; }
   const stick = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
   let lastDay = '';
+  const ch = c.chats[c.chatId] || {};
+  const otherRead = toDate(ch[side === 's' ? 'tutorReadAt' : 'studentReadAt']);
   el.innerHTML = c.msgs.map(m => {
     const d = toDate(m.createdAt) || new Date(), mine = m.from === me;
     const day = side === 't' ? kYMD(d) : lYMD(d), hm = side === 't' ? kHM(d) : lHM(d);
     const sep = day !== lastDay ? `<div class="text-center text-[10px] text-slate-400 py-1">${day}</div>` : ''; lastDay = day;
+    if (m.deleted) {   // 삭제된 메시지는 흔적만 남깁니다
+      return `${sep}<div class="flex ${mine ? 'justify-end' : 'justify-start'}"><div class="chat-bub chat-del"><i class="fa fa-ban mr-1"></i>${esc(chatL(side, '삭제된 메시지입니다', 'chatDeleted'))}<div class="text-[10px] mt-1 text-slate-400 text-right">${hm}</div></div></div>`;
+    }
     const exp = toDate(m.expireAt), left = exp ? daysLeft(exp) : null;
     const f = m.file;
     const file = f && f.url ? `<a class="chat-file" href="${esc(f.url)}" target="_blank" rel="noopener" download="${esc(f.name || '')}"><i class="fa fa-file-arrow-down"></i><span class="min-w-0"><span class="block font-semibold truncate" style="max-width:220px">${esc(f.name || 'file')}</span><span class="block text-[10px] opacity-80">${fileSize(f.size || 0)}</span></span></a>` : '';
-    return `${sep}<div class="flex ${mine ? 'justify-end' : 'justify-start'}"><div class="chat-bub ${mine ? 'chat-me' : 'chat-other'}">`
+    const sent = toDate(m.createdAt);
+    const read = mine && otherRead && sent && otherRead.getTime() >= sent.getTime();
+    const meta = [m.editedAt ? esc(chatL(side, '수정됨', 'chatEdited')) : '', hm,
+      read ? `<span class="chat-read"><i class="fa fa-check-double"></i> ${esc(chatL(side, '읽음', 'chatRead'))}</span>` : '',
+      left != null && left <= 5 ? (side === 't' ? left + '일 후 삭제' : esc(t('chatDel30', { n: left }))) : ''].filter(Boolean).join(' · ');
+    const lbE = esc(chatL(side, '수정', 'chatEdit')), lbD = esc(chatL(side, '삭제', 'chatDelete'));
+    const acts = mine && m.id ? `<div class="chat-acts">${m.text || !f ? `<button onclick="chatEditStart('${side}', ${jsq(m.id)})" title="${lbE}" aria-label="${lbE}"><i class="fa fa-pen"></i></button>` : ''}<button onclick="chatDelete('${side}', ${jsq(m.id)}, this)" title="${lbD}" aria-label="${lbD}"><i class="fa fa-trash-can"></i></button></div>` : '';
+    return `${sep}<div class="chat-row flex items-center gap-1.5 ${mine ? 'justify-end' : 'justify-start'}">${acts}<div class="chat-bub ${mine ? 'chat-me' : 'chat-other'}${c.editId === m.id ? ' chat-editing' : ''}">`
       + (m.text ? `<span class="chat-txt">${linkify(m.text)}</span>` : '') + file
-      + `<div class="text-[10px] mt-1 ${mine ? 'text-green-100' : 'text-slate-400'} text-right">${hm}${left != null && left <= 5 ? ` · ${side === 't' ? left + '일 후 삭제' : esc(t('chatDel30', { n: left }))}` : ''}</div></div></div>`;
+      + `<div class="text-[10px] mt-1 ${mine ? 'text-green-100' : 'text-slate-400'} text-right">${meta}</div></div></div>`;
   }).join('');
   if (stick || !el.dataset.init) { el.scrollTop = el.scrollHeight; el.dataset.init = '1'; }
 }
@@ -2601,8 +2610,48 @@ function chatPickFile(side, input) {
   box.innerHTML = `<i class="fa fa-paperclip text-slate-500"></i><span class="truncate flex-1">${esc(f.name)} · ${fileSize(f.size)}</span><button class="text-slate-500 hover:text-red-600" onclick="chatClearFile('${side}')" aria-label="remove"><i class="fa fa-xmark"></i></button>`;
 }
 function chatClearFile(side) { CH[side].file = null; const i = $(`chatFileIn-${side}`); if (i) i.value = ''; $(`chatFile-${side}`).classList.add('hidden'); }
-function chatKey(e, side) { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); chatSend(side); } }
+function chatKey(e, side) {
+  if (e.key === 'Escape' && CH[side].editId) { e.preventDefault(); chatEditCancel(side); return; }
+  if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); chatSend(side); }
+}
+/* ── 내 메시지 수정·삭제 (상대방에게 알림은 가지 않습니다) ── */
+function chatEditStart(side, id) {
+  const c = CH[side], m = c.msgs.find(x => x.id === id);
+  if (!m || m.deleted) return;
+  chatClearFile(side);
+  c.editId = id;
+  const ta = $(`chatText-${side}`); ta.value = m.text || ''; ta.focus();
+  $(`chatEditBar-${side}`).classList.remove('hidden');
+  const a = $(`chatAttach-${side}`); if (a) a.classList.add('hidden');
+  renderChatMsgs(side);
+}
+function chatEditCancel(side) {
+  const c = CH[side]; c.editId = null;
+  const ta = $(`chatText-${side}`); if (ta) ta.value = '';
+  const b = $(`chatEditBar-${side}`); if (b) b.classList.add('hidden');
+  const a = $(`chatAttach-${side}`); if (a) a.classList.remove('hidden');
+  renderChatMsgs(side);
+}
+async function chatSaveEdit(side) {
+  const c = CH[side], id = c.editId, m = c.msgs.find(x => x.id === id), ta = $(`chatText-${side}`);
+  const text = (ta.value || '').trim().slice(0, 4000);
+  if (!m || m.deleted) { chatEditCancel(side); return; }
+  if (!text && !m.file) { toast(chatL(side, '내용을 입력해 주세요. 메시지를 지우려면 휴지통 버튼을 눌러 주세요.', 'chatEditEmpty'), 'err'); return; }
+  if (text === (m.text || '')) { chatEditCancel(side); return; }
+  const btn = $(`chatSend-${side}`); busyBtn(btn, true);
+  try { await callFn('editChatMessage', { id, text }); chatEditCancel(side); }
+  catch (e) {} finally { busyBtn(btn, false); }
+}
+async function chatDelete(side, id, btn) {
+  const m = CH[side].msgs.find(x => x.id === id); if (!m) return;
+  const ask = m.file ? chatL(side, '이 메시지를 삭제할까요? 첨부 파일도 함께 삭제됩니다.', 'chatDelAskFile') : chatL(side, '이 메시지를 삭제할까요?', 'chatDelAsk');
+  if (!confirm(ask)) return;
+  if (CH[side].editId === id) chatEditCancel(side);
+  busyBtn(btn, true);
+  try { await callFn('deleteChatMessage', { id }); } catch (e) {} finally { busyBtn(btn, false); }
+}
 async function chatSend(side) {
+  if (CH[side].editId) return chatSaveEdit(side);
   const c = CH[side], ta = $(`chatText-${side}`), text = (ta.value || '').trim().slice(0, 4000), file = c.file;
   if (!c.chatId || (!text && !file)) return;
   if (file && file.size > CHAT_MAX) { toast(t('chatTooBig'), 'err'); return; }
@@ -2696,8 +2745,21 @@ setInterval(updateClocks, 15000);
    TUTOR CONSOLE (한국어)
 ════════════════════════════════════════════════════════════════ */
 const charts = {};
+// Chart.js는 차트가 필요할 때(수익·매출 화면)만 불러옵니다 → 학생 화면이 더 빨리 열립니다.
+let chartJsP = null;
+function loadChartJs() {
+  if (window.Chart) return Promise.resolve();
+  if (!chartJsP) chartJsP = new Promise((res, rej) => {
+    const el = document.createElement('script');
+    el.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
+    el.onload = () => res(); el.onerror = () => { chartJsP = null; rej(new Error('Chart.js load failed')); };
+    document.head.appendChild(el);
+  });
+  return chartJsP;
+}
 function drawBar(id, labels, datasets) {
-  if (!window.Chart || !$(id)) return;
+  if (!$(id)) return;
+  if (!window.Chart) { loadChartJs().then(() => drawBar(id, labels, datasets)).catch(e => console.warn(e)); return; }
   charts[id] && charts[id].destroy();
   charts[id] = new Chart($(id), {
     type: 'bar', data: { labels, datasets },
@@ -3246,8 +3308,6 @@ async function deleteCustomRate(id) {
   try { await FB.del('customRates', id); await loadTutorData(); renderPricing(); } catch (e) { toast('삭제 실패: ' + e.message, 'err'); }
 }
 
-/* ── 자료·피드백 ── */
-const MAX_FILE = 10 * 1024 * 1024;
 
 /* ── 학생 히스토리 ── */
 function initTutorHistory() {
