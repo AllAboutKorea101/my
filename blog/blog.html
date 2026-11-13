@@ -286,6 +286,8 @@
                 </button>
                 
                 <div class="flex items-center space-x-2">
+                    <button id="aakEditBtn" onclick="editCurrentPost()" style="display:none" class="px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors shadow-sm text-sm" title="수정"><i class="fa-solid fa-pen"></i></button>
+                    <button id="aakDeleteBtn" onclick="deleteCurrentPost()" style="display:none" class="px-3 py-2 rounded-xl border border-rose-200 bg-white text-rose-600 hover:bg-rose-50 transition-colors shadow-sm text-sm" title="삭제"><i class="fa-solid fa-trash-can"></i></button>
                     <button onclick="toggleBookmarkCurrentPost()" id="bookmarkBtn" class="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors shadow-sm" title="북마크">
                         <i class="fa-regular fa-bookmark text-base"></i>
                     </button>
@@ -361,7 +363,7 @@
             <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-code text-brand-600 text-lg"></i>
-                    <h3 class="font-bold text-slate-800 text-lg" data-i18n="writeModalTitle">새 한국어 블로그 글 작성 (HTML)</h3>
+                    <h3 id="writeModalH" class="font-bold text-slate-800 text-lg" data-i18n="writeModalTitle">새 한국어 블로그 글 작성 (HTML)</h3>
                 </div>
                 <button onclick="closeWriteModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
                     <i class="fa-solid fa-xmark text-xl"></i>
@@ -420,7 +422,7 @@
             <!-- Modal Footer -->
             <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-end space-x-3">
                 <button onclick="closeWriteModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-100" data-i18n="cancelBtn">취소</button>
-                <button onclick="saveNewPost()" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold shadow-md shadow-brand-600/20" data-i18n="submitBtn">업로드 및 발행</button>
+                <button id="writeSubmitBtn" onclick="saveNewPost()" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold shadow-md shadow-brand-600/20" data-i18n="submitBtn">업로드 및 발행</button>
             </div>
         </div>
     </div>
@@ -454,10 +456,26 @@
         <span id="toastMessage" class="text-sm font-medium">메시지 내용</span>
     </div>
 
-    <!-- Application Logic Script -->
-    <script>
-        // Internationalization (i18n) Dictionaries
-        const i18n = {
+    <!-- Application Logic + Firebase (Firestore 저장 / 고유 URL / SEO) -->
+    <script type="module">
+      import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+      import { getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+      const cfg = {
+        apiKey: "AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8",
+        authDomain: "all-about-korea-login.firebaseapp.com",
+        projectId: "all-about-korea-login",
+        storageBucket: "all-about-korea-login.firebasestorage.app",
+        messagingSenderId: "20771155142",
+        appId: "1:20771155142:web:bbfeb19541625e750cbbc7"
+      };
+      const app = getApps().length ? getApp() : initializeApp(cfg);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // ===== i18n dictionary (UI 번역) =====
+      const i18n = {
             ko: {
                 searchPlaceholder: "제목, 키워드 검색...",
                 writeBtn: "글쓰기",
@@ -796,10 +814,8 @@
             }
         };
 
-        let currentLang = 'en'; // 기본 언어: 영어 (?lang=ko 로 한국어)
-
-        // Initial Sample Blog Posts with Native Interactive HTML Content
-        const initialPosts = [
+      // ===== 초기 샘플 글 (Firestore 비어있을 때 admin 로그인 시 1회 자동 등록) =====
+      const initialPosts = [
             {
                 id: 1,
                 title: "원어민이 매일 쓰는 필수 표현! '~해 봤어?' 완벽 정복 🎯",
@@ -942,534 +958,439 @@
             }
         ];
 
-        // State Management
-        let posts = JSON.parse(localStorage.getItem('korean_blog_posts')) || initialPosts;
-        let currentCategory = 'ALL';
-        let currentLevel = 'ALL';
-        let currentPostId = null;
-        let vocabList = JSON.parse(localStorage.getItem('korean_vocab_list')) || [];
-        let bookmarkedPostIds = JSON.parse(localStorage.getItem('korean_bookmarks')) || [];
-        let likedPostIds = JSON.parse(localStorage.getItem('korean_liked_posts')) || [];
+      // ===== 상태 =====
+      let currentLang = 'en';
+      let posts = [];
+      let user = null, isAdmin = false, usingFallback = false;
+      let userData = { vocab:[], bookmarks:[], liked:[], completed:[] };
+      let currentCategory='ALL', currentLevel='ALL', currentPostId=null, editingId=null;
 
-        // Save State to LocalStorage
-        function saveState() {
-            localStorage.setItem('korean_blog_posts', JSON.stringify(posts));
-            localStorage.setItem('korean_vocab_list', JSON.stringify(vocabList));
-            localStorage.setItem('korean_bookmarks', JSON.stringify(bookmarkedPostIds));
-            localStorage.setItem('korean_liked_posts', JSON.stringify(likedPostIds));
+      const BASE_URL = 'https://www.businesskorean.com/blog/blog.html';
+      const DEFAULT_TITLE = document.title;
+      const DEFAULT_DESC = (document.querySelector('meta[name="description"]')||{}).content || '';
+      const H1MAP = {en:"Learn Korean Blog",ko:"한국어 배움터",es:"Blog para aprender coreano",zh:"韩语学习博客",ja:"韓国語学習ブログ",fr:"Blog pour apprendre le coréen",de:"Koreanisch-Lernblog",pl:"Blog do nauki koreańskiego"};
+
+      // ===== i18n =====
+      function applyLanguage(langKey){
+        const dict = i18n[langKey] || i18n.en;
+        document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n'); if(dict[k])el.textContent=dict[k];});
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.getAttribute('data-i18n-placeholder'); if(dict[k])el.placeholder=dict[k];});
+      }
+      function syncH1(l){ document.documentElement.lang=l; const h=document.getElementById('aakH1'); if(h)h.textContent=H1MAP[l]||H1MAP.en; }
+      function translateLabel(str){
+        const dict = i18n[currentLang]; if(!dict) return str;
+        const map={'초급':dict.beginner,'중급':dict.intermediate,'고급':dict.advanced,'말하기':dict.catSpeaking,'듣기':dict.catListening,'읽기':dict.catReading,'쓰기':dict.catWriting,'문법':dict.catGrammar,'비즈니스 한국어':dict.catBusiness,'단어':dict.catVocab,'기타':dict.catEtc};
+        return map[str]||str;
+      }
+      function changeLanguage(langKey){ currentLang=langKey; applyLanguage(langKey); syncH1(langKey); renderBlogPosts(); }
+
+      // ===== 사용자 데이터 (로그인=Firestore / 비로그인=localStorage) =====
+      function emptyUser(){ return {vocab:[],bookmarks:[],liked:[],completed:[]}; }
+      async function loadUserData(){
+        if(user){
+          try{ const s=await getDoc(doc(db,'blog_users',user.uid)); userData=Object.assign(emptyUser(), s.exists()?s.data():{}); }
+          catch(e){ userData=emptyUser(); }
+        }else{
+          let u=null; try{ u=JSON.parse(localStorage.getItem('korean_blog_user')); }catch(e){}
+          if(!u){ u=emptyUser();
+            try{ u.vocab=JSON.parse(localStorage.getItem('korean_vocab_list'))||[]; }catch(e){}
+            try{ u.bookmarks=JSON.parse(localStorage.getItem('korean_bookmarks'))||[]; }catch(e){}
+            try{ u.liked=JSON.parse(localStorage.getItem('korean_liked_posts'))||[]; }catch(e){}
+          }
+          userData=Object.assign(emptyUser(), u);
         }
+      }
+      async function saveUserData(){
+        if(user){ try{ await setDoc(doc(db,'blog_users',user.uid), userData, {merge:true}); }catch(e){} }
+        else{ localStorage.setItem('korean_blog_user', JSON.stringify(userData)); }
+      }
 
-        // Initialize App
-        window.onload = function() {
-            renderBlogPosts();
-            updateVocabBadge();
-            applyLanguage(currentLang);
-        };
-
-        // Language Switcher Function
-        function changeLanguage(langKey) {
-            currentLang = langKey;
-            applyLanguage(langKey);
-            renderBlogPosts();
+      // ===== 글 로딩 =====
+      async function loadPosts(){
+        try{
+          const snap=await getDocs(query(collection(db,'blog_posts'), orderBy('createdAt','desc')));
+          posts=snap.docs.map(d=>Object.assign({}, d.data(), {id:d.id}));
+          usingFallback=false;
+        }catch(e){ posts=[]; }
+        if(posts.length===0 && isAdmin){
+          await seedPosts();
+          try{
+            const snap=await getDocs(query(collection(db,'blog_posts'), orderBy('createdAt','desc')));
+            posts=snap.docs.map(d=>Object.assign({}, d.data(), {id:d.id}));
+          }catch(e){}
         }
-
-        function applyLanguage(langKey) {
-            const dict = i18n[langKey] || i18n['ko'];
-            
-            // Translate static elements with data-i18n
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (dict[key]) {
-                    el.textContent = dict[key];
-                }
-            });
-
-            // Translate placeholders
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (dict[key]) {
-                    el.placeholder = dict[key];
-                }
-            });
+        if(posts.length===0){
+          posts=initialPosts.map((p,i)=>Object.assign({}, p, {id:'local-'+i}));
+          usingFallback=true;
         }
-
-        // Helper to translate Dynamic Category/Level Text according to current language
-        function translateLabel(str) {
-            const dict = i18n[currentLang];
-            if (!dict) return str;
-
-            const map = {
-                '초급': dict.beginner,
-                '중급': dict.intermediate,
-                '고급': dict.advanced,
-                '말하기': dict.catSpeaking,
-                '듣기': dict.catListening,
-                '읽기': dict.catReading,
-                '쓰기': dict.catWriting,
-                '문법': dict.catGrammar,
-                '비즈니스 한국어': dict.catBusiness,
-                '단어': dict.catVocab,
-                '기타': dict.catEtc
-            };
-
-            return map[str] || str;
+      }
+      async function seedPosts(){
+        const arr=[...initialPosts].reverse(); // 오래된 글부터 넣어 최신순 정렬 유지
+        for(const p of arr){
+          const {id, ...rest}=p;
+          const cd=new Date(String(p.date).replace(/\./g,'-'));
+          try{ await addDoc(collection(db,'blog_posts'), Object.assign({}, rest, {createdAt: isNaN(cd)?serverTimestamp():cd})); }catch(e){}
         }
+      }
 
-        // Render Blog Cards List
-        function renderBlogPosts() {
-            const grid = document.getElementById('postsGrid');
-            const emptyState = document.getElementById('emptyState');
-            const searchVal = (document.getElementById('searchInput').value || '').toLowerCase();
-            const sortVal = document.getElementById('sortSelect').value;
+      // ===== 목록 렌더 =====
+      function renderBlogPosts(){
+        const grid=document.getElementById('postsGrid');
+        const emptyState=document.getElementById('emptyState');
+        const searchVal=(document.getElementById('searchInput').value||'').toLowerCase();
+        const sortVal=document.getElementById('sortSelect').value;
+        let filtered=posts.filter(post=>{
+          const matchLevel=(currentLevel==='ALL')||(post.level===currentLevel);
+          const matchCat=(currentCategory==='ALL')||(post.category===currentCategory);
+          const matchSearch=(post.title||'').toLowerCase().includes(searchVal)||(post.summary||'').toLowerCase().includes(searchVal);
+          return matchLevel&&matchCat&&matchSearch;
+        });
+        if(sortVal==='popular') filtered.sort((a,b)=>(b.views||0)-(a.views||0));
+        else if(sortVal==='likes') filtered.sort((a,b)=>(b.likes||0)-(a.likes||0));
+        grid.innerHTML='';
+        if(filtered.length===0){ emptyState.classList.remove('hidden'); return; }
+        emptyState.classList.add('hidden');
+        filtered.forEach(post=>{
+          const isLiked=userData.liked.includes(post.id);
+          let lb="bg-emerald-100 text-emerald-800";
+          if(post.level==="중급") lb="bg-amber-100 text-amber-800";
+          if(post.level==="고급") lb="bg-rose-100 text-rose-800";
+          grid.innerHTML += `
+            <div class="group bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between hover:shadow-xl hover:border-brand-500/30 transition-all duration-300 relative overflow-hidden">
+              <div onclick="openPostDetail('${post.id}')" class="cursor-pointer">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <div class="flex items-center space-x-1.5">
+                    <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${lb}">${translateLabel(post.level)}</span>
+                    <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200">${translateLabel(post.category)}</span>
+                  </div>
+                  <div class="text-xs text-slate-400"><span><i class="fa-regular fa-eye"></i> ${post.views||0}</span></div>
+                </div>
+                <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-brand-600 transition-colors leading-snug line-clamp-2 mb-2">${post.title}</h3>
+                <p class="text-xs sm:text-sm text-slate-500 line-clamp-3 leading-relaxed mb-4">${post.summary}</p>
+              </div>
+              <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                <button onclick="toggleCardLike(event,'${post.id}')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full border transition-all ${isLiked?'bg-rose-50 border-rose-200 text-rose-600':'bg-slate-50 border-slate-200 text-slate-500 hover:bg-rose-50 hover:text-rose-500'}">
+                  <i class="${isLiked?'fa-solid':'fa-regular'} fa-heart text-xs"></i><span class="font-bold">${post.likes||0}</span>
+                </button>
+                <div onclick="openPostDetail('${post.id}')" class="cursor-pointer flex items-center space-x-2">
+                  ${userData.completed.includes(post.id)?'<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i></span>':''}
+                  <span class="font-bold text-brand-600 group-hover:translate-x-1 transition-transform">공부하기 →</span>
+                </div>
+              </div>
+            </div>`;
+        });
+      }
 
-            // Filter by level, category and search query
-            let filtered = posts.filter(post => {
-                const matchLevel = (currentLevel === 'ALL') || (post.level === currentLevel);
-                const matchCat = (currentCategory === 'ALL') || (post.category === currentCategory);
-                const matchSearch = post.title.toLowerCase().includes(searchVal) || post.summary.toLowerCase().includes(searchVal);
-                return matchLevel && matchCat && matchSearch;
-            });
+      // ===== SEO 메타 (글별 동적 주입) =====
+      function setMeta(attr,key,val){
+        let m=document.head.querySelector('meta['+attr+'="'+key+'"]');
+        if(!m){ m=document.createElement('meta'); m.setAttribute(attr,key); document.head.appendChild(m); }
+        m.setAttribute('content',val);
+      }
+      function setCanonical(href){
+        let c=document.head.querySelector('link[rel="canonical"]');
+        if(!c){ c=document.createElement('link'); c.rel='canonical'; document.head.appendChild(c); }
+        c.href=href;
+      }
+      function isoDate(d){ try{ const x=new Date(String(d).replace(/\./g,'-')); return isNaN(x)?'':x.toISOString().split('T')[0]; }catch(e){ return ''; } }
+      function setPostMeta(post){
+        const url=BASE_URL+'?id='+post.id;
+        const desc=(post.summary||'').substring(0,160);
+        document.title=post.title+' | Learn Korean Blog';
+        setMeta('name','description',desc);
+        setMeta('property','og:title',post.title);
+        setMeta('property','og:description',desc);
+        setMeta('property','og:url',url);
+        setMeta('property','og:type','article');
+        setMeta('name','twitter:title',post.title);
+        setMeta('name','twitter:description',desc);
+        setCanonical(url);
+        let s=document.getElementById('aakPostSchema');
+        if(!s){ s=document.createElement('script'); s.type='application/ld+json'; s.id='aakPostSchema'; document.head.appendChild(s); }
+        s.textContent=JSON.stringify({"@context":"https://schema.org","@type":"Article","headline":post.title,"description":desc,"datePublished":isoDate(post.date),"author":{"@type":"Organization","name":post.author||"All About Korea"},"publisher":{"@type":"Organization","name":"All About Korea"},"mainEntityOfPage":url,"inLanguage":"ko"});
+      }
+      function clearPostMeta(){
+        document.title=DEFAULT_TITLE;
+        setMeta('name','description',DEFAULT_DESC);
+        setMeta('property','og:title',DEFAULT_TITLE);
+        setMeta('property','og:description',DEFAULT_DESC);
+        setMeta('property','og:url',BASE_URL);
+        setMeta('property','og:type','website');
+        setCanonical(currentLang&&currentLang!=='en'?BASE_URL+'?lang='+currentLang:BASE_URL);
+        const s=document.getElementById('aakPostSchema'); if(s)s.textContent='';
+      }
 
-            // Sort
-            if (sortVal === 'popular') {
-                filtered.sort((a, b) => b.views - a.views);
-            } else if (sortVal === 'likes') {
-                filtered.sort((a, b) => b.likes - a.likes);
-            } else {
-                filtered.sort((a, b) => b.id - a.id);
-            }
+      // ===== 라우팅 (?id=xxx) =====
+      function qWith(id){ const p=new URLSearchParams(location.search); p.set('id',id); return p.toString(); }
+      function qWithout(){ const p=new URLSearchParams(location.search); p.delete('id'); const s=p.toString(); return s?('?'+s):''; }
 
-            grid.innerHTML = '';
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
-
-            filtered.forEach(post => {
-                const isLiked = likedPostIds.includes(post.id);
-                
-                // Color mapping for level badge
-                let levelBadgeClass = "bg-emerald-100 text-emerald-800";
-                if(post.level === "중급") levelBadgeClass = "bg-amber-100 text-amber-800";
-                if(post.level === "고급") levelBadgeClass = "bg-rose-100 text-rose-800";
-
-                const cardHtml = `
-                    <div class="group bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between hover:shadow-xl hover:border-brand-500/30 transition-all duration-300 relative overflow-hidden">
-                        
-                        <div onclick="openPostDetail(${post.id})" class="cursor-pointer">
-                            <!-- Top Badges -->
-                            <div class="flex items-center justify-between gap-2 mb-3">
-                                <div class="flex items-center space-x-1.5">
-                                    <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${levelBadgeClass}">
-                                        ${translateLabel(post.level)}
-                                    </span>
-                                    <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                                        ${translateLabel(post.category)}
-                                    </span>
-                                </div>
-                                <div class="text-xs text-slate-400">
-                                    <span><i class="fa-regular fa-eye"></i> ${post.views}</span>
-                                </div>
-                            </div>
-
-                            <!-- Title (Attractive Hook) -->
-                            <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-brand-600 transition-colors leading-snug line-clamp-2 mb-2">
-                                ${post.title}
-                            </h3>
-
-                            <!-- Summary (Max 150 chars) -->
-                            <p class="text-xs sm:text-sm text-slate-500 line-clamp-3 leading-relaxed mb-4">
-                                ${post.summary}
-                            </p>
-                        </div>
-
-                        <!-- Card Footer -->
-                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                            <!-- Clickable Heart Like Button on Card -->
-                            <button onclick="toggleCardLike(event, ${post.id})" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full border transition-all ${isLiked ? 'bg-rose-50 border-rose-200 text-rose-600' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-rose-50 hover:text-rose-500'}">
-                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
-                                <span class="font-bold">${post.likes}</span>
-                            </button>
-
-                            <div onclick="openPostDetail(${post.id})" class="cursor-pointer flex items-center space-x-2">
-                                ${post.completed ? '<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i></span>' : ''}
-                                <span class="font-bold text-brand-600 group-hover:translate-x-1 transition-transform">공부하기 →</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += cardHtml;
-            });
+      function openPostDetail(id, fromRoute){
+        const post=posts.find(p=>p.id===id);
+        if(!post){ showListView(); return; }
+        currentPostId=id;
+        if(!usingFallback && !String(id).startsWith('local-')){
+          post.views=(post.views||0)+1;
+          try{ updateDoc(doc(db,'blog_posts',id), {views:increment(1)}); }catch(e){}
         }
+        document.getElementById('detailTitle').textContent=post.title;
+        document.getElementById('detailLevel').textContent=translateLabel(post.level);
+        document.getElementById('detailCategory').textContent=translateLabel(post.category);
+        document.getElementById('detailViews').innerHTML='<i class="fa-regular fa-eye"></i> 조회 '+(post.views||0);
+        document.getElementById('detailAuthor').textContent=post.author||"한국어 배움터";
+        document.getElementById('detailDate').textContent=post.date||'';
+        document.getElementById('detailLikeCount').textContent=post.likes||0;
+        document.getElementById('htmlRenderer').innerHTML=post.htmlContent;
+        updateBookmarkButtonUI();
+        updateLikeBtnUI();
+        updateCompleteBtn(post);
+        updateAdminDetailButtons();
+        setPostMeta(post);
+        const url=location.pathname+'?'+qWith(id);
+        if(fromRoute) history.replaceState({id},'',url); else history.pushState({id},'',url);
+        document.getElementById('listView').classList.add('hidden');
+        document.getElementById('detailView').classList.remove('hidden');
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+      function showListView(){
+        document.getElementById('detailView').classList.add('hidden');
+        document.getElementById('listView').classList.remove('hidden');
+        currentPostId=null;
+        clearPostMeta();
+        history.pushState({},'',location.pathname+qWithout());
+        renderBlogPosts();
+      }
+      function routeFromUrl(){
+        const id=new URLSearchParams(location.search).get('id');
+        if(id){ const post=posts.find(p=>p.id===id); if(post){ openPostDetail(id,true); return; } }
+        document.getElementById('detailView').classList.add('hidden');
+        document.getElementById('listView').classList.remove('hidden');
+        clearPostMeta();
+        renderBlogPosts();
+      }
+      window.addEventListener('popstate', ()=>routeFromUrl());
 
-        // Toggle Like on Landing Card
-        function toggleCardLike(event, postId) {
-            event.stopPropagation(); // Prevent opening detail view
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
+      // ===== 좋아요 (로그인 필요) =====
+      function updateLikeBtnUI(){
+        const liked=userData.liked.includes(currentPostId);
+        const btn=document.getElementById('likeBtn'); if(!btn)return;
+        const cnt=document.getElementById('detailLikeCount').textContent;
+        btn.className="flex items-center space-x-1.5 px-4 py-2 rounded-xl border transition-colors shadow-sm font-medium text-sm "+(liked?'border-rose-200 bg-rose-50 text-rose-600':'border-slate-200 bg-white text-rose-500 hover:bg-rose-50');
+        btn.innerHTML='<i class="'+(liked?'fa-solid':'fa-regular')+' fa-heart"></i><span id="detailLikeCount">'+cnt+'</span>';
+      }
+      async function toggleLike(id){
+        if(!user){ showToast("로그인 후 좋아요를 누를 수 있어요."); return; }
+        const post=posts.find(p=>p.id===id); if(!post)return;
+        const idx=userData.liked.indexOf(id); let delta;
+        if(idx>-1){ userData.liked.splice(idx,1); post.likes=Math.max(0,(post.likes||0)-1); delta=-1; }
+        else{ userData.liked.push(id); post.likes=(post.likes||0)+1; delta=1; showToast("좋아요를 눌렀습니다! ❤️"); }
+        saveUserData();
+        if(!String(id).startsWith('local-')){ try{ updateDoc(doc(db,'blog_posts',id), {likes:increment(delta)}); }catch(e){} }
+        renderBlogPosts();
+        if(currentPostId===id){ document.getElementById('detailLikeCount').textContent=post.likes; updateLikeBtnUI(); }
+      }
+      function toggleCardLike(event,id){ event.stopPropagation(); toggleLike(id); }
+      function likeCurrentPost(){ if(currentPostId) toggleLike(currentPostId); }
 
-            const idx = likedPostIds.indexOf(postId);
-            if (idx > -1) {
-                likedPostIds.splice(idx, 1);
-                post.likes = Math.max(0, post.likes - 1);
-            } else {
-                likedPostIds.push(postId);
-                post.likes += 1;
-                showToast("좋아요를 눌렀습니다! ❤️");
-            }
-            saveState();
-            renderBlogPosts();
-            if (currentPostId === postId) {
-                document.getElementById('detailLikeCount').textContent = post.likes;
-            }
+      // ===== 북마크 =====
+      function toggleBookmarkCurrentPost(){
+        const i=userData.bookmarks.indexOf(currentPostId);
+        if(i>-1){ userData.bookmarks.splice(i,1); showToast("북마크가 해제되었습니다."); }
+        else{ userData.bookmarks.push(currentPostId); showToast("북마크에 추가되었습니다! 🔖"); }
+        saveUserData(); updateBookmarkButtonUI();
+      }
+      function updateBookmarkButtonUI(){
+        const btn=document.getElementById('bookmarkBtn'); if(!btn)return;
+        if(userData.bookmarks.includes(currentPostId)){
+          btn.className="p-2.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-600 shadow-sm";
+          btn.innerHTML='<i class="fa-solid fa-bookmark text-base"></i>';
+        }else{
+          btn.className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors shadow-sm";
+          btn.innerHTML='<i class="fa-regular fa-bookmark text-base"></i>';
         }
+      }
 
-        // Category & Level Filter Actions
-        function filterCategory(cat) {
-            currentCategory = cat;
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => {
-                if(btn.onclick.toString().includes(`'${cat}'`)) {
-                    btn.className = "category-btn active border px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-brand-600 text-white border-brand-600 shadow-sm";
-                } else {
-                    btn.className = "category-btn border px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-white text-slate-600 border-slate-200 hover:bg-slate-100";
-                }
-            });
-            renderBlogPosts();
+      // ===== 학습 완료 =====
+      function updateCompleteBtn(post){
+        const b=document.getElementById('completeBtn'); if(!b)return;
+        const dict=i18n[currentLang];
+        if(userData.completed.includes(post.id)){
+          b.className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-sm shadow-md shrink-0";
+          b.textContent="공부 완료 됨! ✓";
+        }else{
+          b.className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-brand-600 transition-all shadow-md active:scale-95 shrink-0";
+          b.textContent=dict?dict.completeBtn:"공부 완료! ☑️";
         }
+      }
+      function markPostCompleted(){
+        if(!currentPostId)return;
+        const i=userData.completed.indexOf(currentPostId);
+        if(i>-1){ userData.completed.splice(i,1); }
+        else{ userData.completed.push(currentPostId); showToast("학습 완료! 축하합니다 🎉"); }
+        saveUserData();
+        const post=posts.find(p=>p.id===currentPostId); if(post)updateCompleteBtn(post);
+      }
 
-        function filterLevel(lvl) {
-            currentLevel = lvl;
-            const buttons = document.querySelectorAll('.level-btn');
-            buttons.forEach(btn => {
-                if(btn.onclick.toString().includes(`'${lvl}'`)) {
-                    btn.className = "level-btn active border px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-800 text-white border-slate-800";
-                } else {
-                    btn.className = "level-btn border px-3 py-1 rounded-full text-xs font-semibold transition-all bg-white text-slate-600 border-slate-200 hover:bg-slate-100";
-                }
-            });
-            renderBlogPosts();
+      // ===== 필터 / 검색 =====
+      function filterCategory(cat){
+        currentCategory=cat;
+        document.querySelectorAll('.category-btn').forEach(btn=>{
+          const oc=btn.getAttribute('onclick')||'';
+          if(oc.includes("'"+cat+"'")) btn.className="category-btn active border px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-brand-600 text-white border-brand-600 shadow-sm";
+          else btn.className="category-btn border px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-white text-slate-600 border-slate-200 hover:bg-slate-100";
+        });
+        renderBlogPosts();
+      }
+      function filterLevel(lvl){
+        currentLevel=lvl;
+        document.querySelectorAll('.level-btn').forEach(btn=>{
+          const oc=btn.getAttribute('onclick')||'';
+          if(oc.includes("'"+lvl+"'")) btn.className="level-btn active border px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-800 text-white border-slate-800";
+          else btn.className="level-btn border px-3 py-1 rounded-full text-xs font-semibold transition-all bg-white text-slate-600 border-slate-200 hover:bg-slate-100";
+        });
+        renderBlogPosts();
+      }
+      function filterPosts(){ renderBlogPosts(); }
+      function syncMobileSearch(val){ document.getElementById('searchInput').value=val; renderBlogPosts(); }
+
+      // ===== 음성 / 퀴즈 / 단어장 =====
+      function speakText(text){
+        if('speechSynthesis' in window){ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='ko-KR'; u.rate=0.85; window.speechSynthesis.speak(u); }
+        else showToast("음성 합성을 지원하지 않는 브라우저입니다.");
+      }
+      function readAloudTitleAndSummary(){ const post=posts.find(p=>p.id===currentPostId); if(post)speakText(post.title+". "+post.summary); }
+      function checkQuizAnswer(btn,isCorrect){
+        const fb=document.getElementById('quizFeedback'); if(!fb)return;
+        fb.classList.remove('hidden');
+        if(isCorrect){ fb.className="p-3 rounded-xl text-xs font-bold bg-emerald-500 text-white"; fb.textContent="🎉 정답입니다! 아주 잘하셨어요!"; }
+        else{ fb.className="p-3 rounded-xl text-xs font-bold bg-rose-500 text-white"; fb.textContent="❌ 아쉬운네요. 다시 한번 생각해보세요!"; }
+      }
+      function updateCharCount(el){
+        const c=document.getElementById('charCounter'); const len=el.value.length; c.textContent=len+" / 150";
+        c.className=len>=150?"text-[11px] font-semibold text-rose-500":"text-[11px] font-semibold text-slate-400";
+      }
+      function addVocab(word,meaning){
+        if(userData.vocab.some(v=>v.word===word)){ showToast("이미 단어장에 등록되어 있습니다."); return; }
+        userData.vocab.push({word,meaning}); saveUserData(); updateVocabBadge(); showToast("'"+word+"' 단어장에 저장됨! 📖");
+      }
+      function removeVocab(word){ userData.vocab=userData.vocab.filter(v=>v.word!==word); saveUserData(); updateVocabBadge(); renderVocabList(); }
+      function updateVocabBadge(){
+        const b=document.getElementById('vocabBadge');
+        if(userData.vocab.length>0){ b.textContent=userData.vocab.length; b.classList.remove('hidden'); }
+        else b.classList.add('hidden');
+      }
+      function toggleVocabModal(){
+        const m=document.getElementById('vocabModal');
+        if(m.classList.contains('hidden')){ renderVocabList(); m.classList.remove('hidden'); }
+        else m.classList.add('hidden');
+      }
+      function renderVocabList(){
+        const c=document.getElementById('vocabList'); c.innerHTML='';
+        if(userData.vocab.length===0){ c.innerHTML='<div class="text-center py-8 text-slate-400 text-sm">저장된 단어가 없습니다.</div>'; return; }
+        userData.vocab.forEach(item=>{
+          c.innerHTML += '<div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl"><div><span class="font-bold text-slate-800 text-sm">'+item.word+'</span><span class="text-xs text-slate-500 ml-2">'+item.meaning+'</span></div><div class="flex items-center space-x-2"><button onclick="speakText(\''+item.word+'\')" class="text-slate-500 hover:text-brand-600 p-1"><i class="fa-solid fa-volume-high text-xs"></i></button><button onclick="removeVocab(\''+item.word+'\')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can text-xs"></i></button></div></div>';
+        });
+      }
+
+      // ===== 운영자 글쓰기 / 수정 / 삭제 =====
+      function updateAdminDetailButtons(){
+        const e=document.getElementById('aakEditBtn'), d=document.getElementById('aakDeleteBtn');
+        const show=isAdmin && currentPostId && !String(currentPostId).startsWith('local-');
+        if(e)e.style.display=show?'':'none';
+        if(d)d.style.display=show?'':'none';
+      }
+      function setModalMode(mode){
+        const h=document.getElementById('writeModalH'), b=document.getElementById('writeSubmitBtn');
+        if(mode==='edit'){ if(h)h.textContent="블로그 글 수정 (HTML)"; if(b)b.textContent="수정 저장"; }
+        else{ if(h)h.textContent="새 한국어 블로그 글 작성 (HTML)"; if(b)b.textContent="업로드 및 발행"; }
+      }
+      function clearForm(){
+        document.getElementById('inputTitle').value='';
+        document.getElementById('inputSummary').value='';
+        document.getElementById('inputHtmlCode').value='';
+        document.getElementById('inputLevel').value='초급';
+        document.getElementById('inputCategory').value='말하기';
+        document.getElementById('charCounter').textContent='0 / 150';
+      }
+      function openWriteModal(){ if(!isAdmin)return; editingId=null; setModalMode('create'); clearForm(); document.getElementById('writeModal').classList.remove('hidden'); }
+      function editCurrentPost(){
+        if(!isAdmin||!currentPostId)return;
+        const p=posts.find(x=>x.id===currentPostId); if(!p)return;
+        editingId=currentPostId;
+        document.getElementById('inputTitle').value=p.title||'';
+        document.getElementById('inputSummary').value=p.summary||'';
+        document.getElementById('inputHtmlCode').value=p.htmlContent||'';
+        document.getElementById('inputLevel').value=p.level||'초급';
+        document.getElementById('inputCategory').value=p.category||'말하기';
+        document.getElementById('charCounter').textContent=(p.summary||'').length+' / 150';
+        setModalMode('edit');
+        document.getElementById('writeModal').classList.remove('hidden');
+      }
+      function closeWriteModal(){ document.getElementById('writeModal').classList.add('hidden'); editingId=null; }
+      async function saveNewPost(){
+        if(!isAdmin)return;
+        const title=document.getElementById('inputTitle').value.trim();
+        const level=document.getElementById('inputLevel').value;
+        const category=document.getElementById('inputCategory').value;
+        const summary=document.getElementById('inputSummary').value.trim();
+        const htmlContent=document.getElementById('inputHtmlCode').value.trim();
+        if(!title||!summary||!htmlContent){ showToast("제목, 요약, HTML 본문 내용을 모두 입력해주세요."); return; }
+        if(editingId){
+          const kept=editingId;
+          try{ await updateDoc(doc(db,'blog_posts',kept), {title,level,category,summary:summary.substring(0,150),htmlContent}); showToast("수정되었습니다! ✏️"); }
+          catch(e){ showToast("수정에 실패했습니다."); return; }
+          closeWriteModal(); await loadPosts();
+          if(currentPostId===kept) openPostDetail(kept,true); else renderBlogPosts();
+        }else{
+          try{ await addDoc(collection(db,'blog_posts'), {title,level,category,author:"한국어 배움터",date:todayDot(),views:0,likes:0,summary:summary.substring(0,150),htmlContent,createdAt:serverTimestamp()}); showToast("새 블로그 글이 발행되었습니다! 🎉"); }
+          catch(e){ showToast("발행에 실패했습니다."); return; }
+          closeWriteModal(); await loadPosts(); renderBlogPosts();
         }
+      }
+      async function deleteCurrentPost(){
+        if(!isAdmin||!currentPostId)return;
+        if(String(currentPostId).startsWith('local-'))return;
+        if(!confirm("이 글을 삭제할까요? 되돌릴 수 없습니다."))return;
+        try{ await deleteDoc(doc(db,'blog_posts',currentPostId)); showToast("삭제되었습니다."); }
+        catch(e){ showToast("삭제에 실패했습니다."); return; }
+        await loadPosts(); showListView();
+      }
+      function todayDot(){ return new Date().toISOString().split('T')[0].replace(/-/g,'.'); }
 
-        // Search Synchronization
-        function filterPosts() {
-            renderBlogPosts();
-        }
-        function syncMobileSearch(val) {
-            document.getElementById('searchInput').value = val;
-            renderBlogPosts();
-        }
+      // ===== 토스트 =====
+      function showToast(msg){
+        const t=document.getElementById('toast');
+        document.getElementById('toastMessage').textContent=msg;
+        t.classList.remove('translate-y-20','opacity-0'); t.classList.add('translate-y-0','opacity-100');
+        clearTimeout(window.__aakToastT);
+        window.__aakToastT=setTimeout(()=>{ t.classList.remove('translate-y-0','opacity-100'); t.classList.add('translate-y-20','opacity-0'); },3000);
+      }
 
-        // Open Detail View & Safely Render HTML Code
-        function openPostDetail(id) {
-            const post = posts.find(p => p.id === id);
-            if (!post) return;
+      // ===== inline onclick 핸들러 전역 노출 =====
+      Object.assign(window,{showListView,changeLanguage,filterPosts,syncMobileSearch,toggleVocabModal,openWriteModal,closeWriteModal,saveNewPost,filterLevel,filterCategory,renderBlogPosts,openPostDetail,toggleBookmarkCurrentPost,likeCurrentPost,readAloudTitleAndSummary,markPostCompleted,toggleCardLike,speakText,checkQuizAnswer,updateCharCount,addVocab,removeVocab,editCurrentPost,deleteCurrentPost});
 
-            currentPostId = id;
-            post.views += 1;
-            saveState();
+      // ===== 초기 언어 =====
+      (function initLang(){
+        const q=window.AAK_PAGE_LANG, B=window.AAK_BASE_LANG||'en';
+        currentLang=q||B;
+        const s=document.getElementById('langSelect'); if(s)s.value=currentLang;
+        applyLanguage(currentLang); syncH1(currentLang);
+      })();
 
-            document.getElementById('detailTitle').textContent = post.title;
-            document.getElementById('detailLevel').textContent = translateLabel(post.level);
-            document.getElementById('detailCategory').textContent = translateLabel(post.category);
-            document.getElementById('detailViews').innerHTML = `<i class="fa-regular fa-eye"></i> 조회 ${post.views}`;
-            document.getElementById('detailAuthor').textContent = post.author || "한국어 배움터";
-            document.getElementById('detailDate').textContent = post.date;
-            document.getElementById('detailLikeCount').textContent = post.likes;
-
-            // Render uploaded HTML dynamically into renderer container
-            const renderer = document.getElementById('htmlRenderer');
-            renderer.innerHTML = post.htmlContent;
-
-            // Update Bookmark button UI
-            updateBookmarkButtonUI();
-
-            // Update Completed button UI
-            const completeBtn = document.getElementById('completeBtn');
-            const dict = i18n[currentLang];
-            if (post.completed) {
-                completeBtn.className = "w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-sm shadow-md shrink-0";
-                completeBtn.textContent = "공부 완료 됨! ✓";
-            } else {
-                completeBtn.className = "w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-brand-600 transition-all shadow-md active:scale-95 shrink-0";
-                completeBtn.textContent = dict ? dict.completeBtn : "공부 완료! ☑️";
-            }
-
-            // Switch Views
-            document.getElementById('listView').classList.add('hidden');
-            document.getElementById('detailView').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showListView() {
-            document.getElementById('detailView').classList.add('hidden');
-            document.getElementById('listView').classList.remove('hidden');
-            renderBlogPosts();
-        }
-
-        // Like Functionality inside detail view
-        function likeCurrentPost() {
-            if (currentPostId) {
-                toggleCardLike(new Event('click'), currentPostId);
-            }
-        }
-
-        // Bookmark Toggle
-        function toggleBookmarkCurrentPost() {
-            const index = bookmarkedPostIds.indexOf(currentPostId);
-            if (index > -1) {
-                bookmarkedPostIds.splice(index, 1);
-                showToast("북마크가 해제되었습니다.");
-            } else {
-                bookmarkedPostIds.push(currentPostId);
-                showToast("북마크에 추가되었습니다! 🔖");
-            }
-            saveState();
-            updateBookmarkButtonUI();
-        }
-
-        function updateBookmarkButtonUI() {
-            const btn = document.getElementById('bookmarkBtn');
-            if (bookmarkedPostIds.includes(currentPostId)) {
-                btn.className = "p-2.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-600 shadow-sm";
-                btn.innerHTML = `<i class="fa-solid fa-bookmark text-base"></i>`;
-            } else {
-                btn.className = "p-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors shadow-sm";
-                btn.innerHTML = `<i class="fa-regular fa-bookmark text-base"></i>`;
-            }
-        }
-
-        // Mark Post Completed
-        function markPostCompleted() {
-            const post = posts.find(p => p.id === currentPostId);
-            if (post) {
-                post.completed = !post.completed;
-                saveState();
-                const completeBtn = document.getElementById('completeBtn');
-                if (post.completed) {
-                    completeBtn.className = "w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-sm shadow-md shrink-0";
-                    completeBtn.textContent = "공부 완료 됨! ✓";
-                    showToast("학습 완료! 축하합니다 🎉");
-                } else {
-                    completeBtn.className = "w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-brand-600 transition-all shadow-md active:scale-95 shrink-0";
-                    completeBtn.textContent = "공부 완료! ☑️";
-                }
-            }
-        }
-
-        // Text To Speech (Native Speech Synthesis API)
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'ko-KR';
-                utterance.rate = 0.85;
-                window.speechSynthesis.speak(utterance);
-            } else {
-                showToast("음성 합성을 지원하지 않는 브라우저입니다.");
-            }
-        }
-
-        function readAloudTitleAndSummary() {
-            const post = posts.find(p => p.id === currentPostId);
-            if (post) {
-                speakText(post.title + ". " + post.summary);
-            }
-        }
-
-        // Interactive Quiz Helper function
-        function checkQuizAnswer(btn, isCorrect) {
-            const feedback = document.getElementById('quizFeedback');
-            feedback.classList.remove('hidden');
-            if (isCorrect) {
-                feedback.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500 text-white";
-                feedback.textContent = "🎉 정답입니다! 아주 잘하셨어요!";
-            } else {
-                feedback.className = "p-3 rounded-xl text-xs font-bold bg-rose-500 text-white";
-                feedback.textContent = "❌ 아쉽네요. 다시 한번 생각해보세요!";
-            }
-        }
-
-        // Character Counter for 150-char Limit
-        function updateCharCount(el) {
-            const counter = document.getElementById('charCounter');
-            const len = el.value.length;
-            counter.textContent = `${len} / 150`;
-            if (len >= 150) {
-                counter.className = "text-[11px] font-semibold text-rose-500";
-            } else {
-                counter.className = "text-[11px] font-semibold text-slate-400";
-            }
-        }
-
-        // Vocabulary Book Modal Management
-        function addVocab(word, meaning) {
-            if (vocabList.some(v => v.word === word)) {
-                showToast("이미 단어장에 등록되어 있습니다.");
-                return;
-            }
-            vocabList.push({ word, meaning });
-            saveState();
-            updateVocabBadge();
-            showToast(`'${word}' 단어장에 저장됨! 📖`);
-        }
-
-        function removeVocab(word) {
-            vocabList = vocabList.filter(v => v.word !== word);
-            saveState();
-            updateVocabBadge();
-            renderVocabList();
-        }
-
-        function updateVocabBadge() {
-            const badge = document.getElementById('vocabBadge');
-            if (vocabList.length > 0) {
-                badge.textContent = vocabList.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        function toggleVocabModal() {
-            const modal = document.getElementById('vocabModal');
-            if (modal.classList.contains('hidden')) {
-                renderVocabList();
-                modal.classList.remove('hidden');
-            } else {
-                modal.classList.add('hidden');
-            }
-        }
-
-        function renderVocabList() {
-            const container = document.getElementById('vocabList');
-            container.innerHTML = '';
-
-            if (vocabList.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-slate-400 text-sm">
-                        저장된 단어가 없습니다.
-                    </div>
-                `;
-                return;
-            }
-
-            vocabList.forEach(item => {
-                const itemHtml = `
-                    <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
-                        <div>
-                            <span class="font-bold text-slate-800 text-sm">${item.word}</span>
-                            <span class="text-xs text-slate-500 ml-2">${item.meaning}</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="speakText('${item.word}')" class="text-slate-500 hover:text-brand-600 p-1">
-                                <i class="fa-solid fa-volume-high text-xs"></i>
-                            </button>
-                            <button onclick="removeVocab('${item.word}')" class="text-slate-400 hover:text-rose-500 p-1">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += itemHtml;
-            });
-        }
-
-        // New Post Modal Handling
-        function openWriteModal() {
-            if (!window.__aakIsAdmin) return;   // 운영자만
-            document.getElementById('writeModal').classList.remove('hidden');
-        }
-
-        function closeWriteModal() {
-            document.getElementById('writeModal').classList.add('hidden');
-        }
-
-        function saveNewPost() {
-            if (!window.__aakIsAdmin) return;   // 운영자만
-            const title = document.getElementById('inputTitle').value.trim();
-            const level = document.getElementById('inputLevel').value;
-            const category = document.getElementById('inputCategory').value;
-            const summary = document.getElementById('inputSummary').value.trim();
-            const htmlContent = document.getElementById('inputHtmlCode').value.trim();
-
-            if (!title || !summary || !htmlContent) {
-                showToast("제목, 요약, HTML 본문 내용을 모두 입력해주세요.");
-                return;
-            }
-
-            const newPost = {
-                id: Date.now(),
-                title: title,
-                level: level,
-                category: category,
-                author: "한국어 배움터",
-                date: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
-                views: 0,
-                likes: 0,
-                summary: summary.substring(0, 150),
-                completed: false,
-                htmlContent: htmlContent
-            };
-
-            posts.unshift(newPost);
-            saveState();
-            renderBlogPosts();
-            closeWriteModal();
-
-            // Clear inputs
-            document.getElementById('inputTitle').value = '';
-            document.getElementById('inputSummary').value = '';
-            document.getElementById('inputHtmlCode').value = '';
-            document.getElementById('charCounter').textContent = '0 / 150';
-
-            showToast("새 블로그 글이 업로드 되었습니다! 🎉");
-        }
-
-        // Floating Toast Notification System
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
+      // ===== 인증 + 초기 로딩 =====
+      onAuthStateChanged(auth, async (u)=>{
+        user=u; isAdmin=false;
+        if(u){ try{ const a=await getDoc(doc(db,'admins',u.uid)); isAdmin=a.exists()&&a.data().role==='admin'; }catch(e){} }
+        window.__aakIsAdmin=isAdmin;
+        const wb=document.getElementById('aakWriteBtn'); if(wb)wb.style.display=isAdmin?'':'none';
+        await loadUserData();
+        await loadPosts();
+        updateVocabBadge();
+        routeFromUrl();
+        updateAdminDetailButtons();
+      });
     </script>
 
-<!-- 운영자 확인: 관리자(admins/{uid})로 로그인한 경우에만 글쓰기 버튼 표시 -->
-<script type="module">
-  import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-  const cfg = { apiKey: "AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8", authDomain: "all-about-korea-login.firebaseapp.com",
-    projectId: "all-about-korea-login", storageBucket: "all-about-korea-login.firebasestorage.app",
-    messagingSenderId: "20771155142", appId: "1:20771155142:web:bbfeb19541625e750cbbc7" };
-  const app = getApps().length ? getApp() : initializeApp(cfg);
-  const db = getFirestore(app);
-  onAuthStateChanged(getAuth(app), async (user) => {
-    let ok = false;
-    if (user) { try { const a = await getDoc(doc(db, 'admins', user.uid)); ok = a.exists() && a.data().role === 'admin'; } catch (e) {} }
-    window.__aakIsAdmin = ok;
-    const b = document.getElementById('aakWriteBtn');
-    if (b) b.style.display = ok ? '' : 'none';
-  });
-</script>
-<!-- 하단 사이트 링크 (menu.js 의 MENU_LINKS 로 자동 갱신) -->
 <nav data-site-footer class="aak-sitefoot" aria-label="Site links"><p class="aak-sitefoot-title">Explore All About Korea</p><ul class="aak-sitefoot-links"><li><a href="https://www.businesskorean.com/">Home</a></li><li><a href="https://www.businesskorean.com/homestay/homestay.html">Homestay</a></li><li><a href="https://www.businesskorean.com/guidedtour/guidedtour.html">Guided Tour</a></li><li><a href="https://www.businesskorean.com/tutor/tutor.html">Korean Tutor</a></li><li><a href="https://www.businesskorean.com/blog/blog.html">Korean Blog</a></li><li><a href="https://www.businesskorean.com/masterclass/masterclass.html">Masterclass</a></li><li><a href="https://www.businesskorean.com/bookstore/bookstore.html">Korean Books</a></li></ul><p class="aak-sitefoot-copy">© 2026 All About Korea</p></nav>
 
-<script>
-/* SEO: ?lang=xx 주소로 접속 시 해당 언어로 표시 + 언어 전환 시 <html lang>·제목(H1) 동기화 */
-(function(){var q=window.AAK_PAGE_LANG,B=window.AAK_BASE_LANG,H={"en": "Learn Korean Blog", "ko": "한국어 배움터", "es": "Blog para aprender coreano", "zh": "韩语学习博客", "ja": "韓国語学習ブログ", "fr": "Blog pour apprendre le coréen", "de": "Koreanisch-Lernblog", "pl": "Blog do nauki koreańskiego"};function sync(l){document.documentElement.lang=l;var h=document.getElementById("aakH1");if(h&&H)h.textContent=H[l]||H.en;}
-var o=window.changeLanguage;if(typeof o==='function'){window.changeLanguage=function(l){try{o(l);}finally{sync(l);}};}
-window.addEventListener('load',function(){var s=document.getElementById('langSelect');if(s)s.value=(q&&q!==B)?q:B;if(q&&q!==B){window.changeLanguage(q);}});
-})();
-</script>
 </body>
 </html>
