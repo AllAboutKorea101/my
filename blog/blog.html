@@ -1002,6 +1002,19 @@
       const DEFAULT_DESC = (document.querySelector('meta[name="description"]')||{}).content || '';
       const H1MAP = {en:"Learn Korean Blog",ko:"한국어 배움터",es:"Blog para aprender coreano",zh:"韩语学习博客",ja:"韓国語学習ブログ",fr:"Blog pour apprendre le coréen",de:"Koreanisch-Lernblog",pl:"Blog do nauki koreańskiego"};
 
+      // ===== i18nx (방문자용 동적 라벨) =====
+      const i18nx = {
+        ko:{studyNow:"공부하기 →",views:"조회",completedDone:"공부 완료 됨! ✓",likedToast:"좋아요를 눌렀습니다! ❤️",completedToast:"학습 완료! 축하합니다 🎉",vocabDup:"이미 단어장에 등록되어 있습니다.",vocabAdded:"'%s' 단어장에 저장됨! 📖",speakUnsupported:"음성 합성을 지원하지 않는 브라우저입니다.",favEmptyTitle:"좋아요한 글이 없습니다",favEmptySub:"마음에 드는 글에 ❤️를 눌러보세요.",vocabEmpty:"저장된 단어가 없습니다.",quizCorrect:"🎉 정답입니다! 아주 잘하셨어요!",quizWrong:"❌ 아쉽네요. 다시 한번 생각해보세요!"},
+        en:{studyNow:"Study →",views:"Views",completedDone:"Completed! ✓",likedToast:"Liked! ❤️",completedToast:"Lesson complete! 🎉",vocabDup:"Already in your word list.",vocabAdded:"'%s' saved to your word list! 📖",speakUnsupported:"Your browser does not support speech synthesis.",favEmptyTitle:"No liked posts yet",favEmptySub:"Tap ❤️ on posts you like.",vocabEmpty:"No saved words yet.",quizCorrect:"🎉 Correct! Well done!",quizWrong:"❌ Not quite. Try again!"},
+        es:{studyNow:"Estudiar →",views:"Vistas",completedDone:"¡Completado! ✓",likedToast:"¡Me gusta! ❤️",completedToast:"¡Lección completada! 🎉",vocabDup:"Ya está en tu lista.",vocabAdded:"¡'%s' guardado en tu lista! 📖",speakUnsupported:"Tu navegador no admite síntesis de voz.",favEmptyTitle:"Aún no hay favoritos",favEmptySub:"Pulsa ❤️ en los artículos que te gusten.",vocabEmpty:"No hay palabras guardadas.",quizCorrect:"🎉 ¡Correcto! ¡Muy bien!",quizWrong:"❌ Casi. ¡Inténtalo de nuevo!"},
+        zh:{studyNow:"开始学习 →",views:"浏览",completedDone:"已完成! ✓",likedToast:"已点赞! ❤️",completedToast:"学习完成！🎉",vocabDup:"已在生词本中。",vocabAdded:"'%s' 已保存到生词本! 📖",speakUnsupported:"您的浏览器不支持语音合成。",favEmptyTitle:"还没有点赞的文章",favEmptySub:"在喜欢的文章上点 ❤️。",vocabEmpty:"还没有保存的生词。",quizCorrect:"🎉 回答正确！做得好！",quizWrong:"❌ 不对哦，再想想！"},
+        ja:{studyNow:"勉強する →",views:"閲覧",completedDone:"学習完了! ✓",likedToast:"いいね! ❤️",completedToast:"学習完了！🎉",vocabDup:"すでに単語帳にあります。",vocabAdded:"'%s' を単語帳に保存しました! 📖",speakUnsupported:"このブラウザは音声合成に対応していません。",favEmptyTitle:"いいねした記事がありません",favEmptySub:"気に入った記事に ❤️ を押しましょう。",vocabEmpty:"保存した単語がありません。",quizCorrect:"🎉 正解です！よくできました！",quizWrong:"❌ 惜しい！もう一度考えてみて！"},
+        fr:{studyNow:"Étudier →",views:"Vues",completedDone:"Terminé ! ✓",likedToast:"J'aime ! ❤️",completedToast:"Leçon terminée ! 🎉",vocabDup:"Déjà dans votre liste.",vocabAdded:"« %s » enregistré ! 📖",speakUnsupported:"Votre navigateur ne prend pas en charge la synthèse vocale.",favEmptyTitle:"Aucun article aimé",favEmptySub:"Appuyez sur ❤️ sur vos articles préférés.",vocabEmpty:"Aucun mot enregistré.",quizCorrect:"🎉 Correct ! Bravo !",quizWrong:"❌ Presque ! Réessayez !"},
+        de:{studyNow:"Lernen →",views:"Aufrufe",completedDone:"Abgeschlossen! ✓",likedToast:"Gefällt mir! ❤️",completedToast:"Lektion abgeschlossen! 🎉",vocabDup:"Bereits in der Wortliste.",vocabAdded:"\u201e%s\u201c gespeichert! 📖",speakUnsupported:"Ihr Browser unterstützt keine Sprachsynthese.",favEmptyTitle:"Noch keine Favoriten",favEmptySub:"Tippe auf ❤️ bei Beiträgen, die dir gefallen.",vocabEmpty:"Keine gespeicherten Wörter.",quizCorrect:"🎉 Richtig! Gut gemacht!",quizWrong:"❌ Fast! Versuch es nochmal!"},
+        pl:{studyNow:"Ucz się →",views:"Wyświetlenia",completedDone:"Ukończono! ✓",likedToast:"Polubiono! ❤️",completedToast:"Lekcja ukończona! 🎉",vocabDup:"Już na liście słówek.",vocabAdded:"Zapisano \u201e%s\u201d! 📖",speakUnsupported:"Twoja przeglądarka nie obsługuje syntezy mowy.",favEmptyTitle:"Brak polubionych wpisów",favEmptySub:"Kliknij ❤️ przy wpisach, które lubisz.",vocabEmpty:"Brak zapisanych słówek.",quizCorrect:"🎉 Poprawnie! Świetnie!",quizWrong:"❌ Prawie! Spróbuj ponownie!"}
+      };
+      function tx(k){ const d=i18nx[currentLang]||i18nx.en; return d[k]||i18nx.en[k]||k; }
+
       // ===== i18n =====
       function applyLanguage(langKey){
         const dict = i18n[langKey] || i18n.en;
@@ -1014,7 +1027,7 @@
         const map={'초급':dict.beginner,'중급':dict.intermediate,'고급':dict.advanced,'말하기':dict.catSpeaking,'듣기':dict.catListening,'읽기':dict.catReading,'쓰기':dict.catWriting,'문법':dict.catGrammar,'비즈니스 한국어':dict.catBusiness,'단어':dict.catVocab,'기타':dict.catEtc};
         return map[str]||str;
       }
-      function changeLanguage(langKey){ currentLang=langKey; applyLanguage(langKey); syncH1(langKey); renderBlogPosts(); }
+      function changeLanguage(langKey){ currentLang=langKey; applyLanguage(langKey); syncH1(langKey); if(currentPostId){ const p=posts.find(x=>x.id===currentPostId); if(p){ document.getElementById('detailLevel').textContent=translateLabel(p.level); document.getElementById('detailCategory').textContent=translateLabel(p.category); document.getElementById('detailViews').innerHTML='<i class="fa-regular fa-eye"></i> '+tx('views')+' '+(p.views||0); updateCompleteBtn(p); } } renderBlogPosts(); }
 
       // ===== 사용자 데이터 =====
       function blankUser(){ return {vocab:[],liked:[],completed:[]}; }
@@ -1081,7 +1094,7 @@
         if(filtered.length===0){
           emptyState.classList.remove('hidden');
           const t=emptyState.querySelector('h3'), s=emptyState.querySelector('p');
-          if(favMode){ if(t)t.textContent="좋아요한 글이 없습니다"; if(s)s.textContent="마음에 드는 글에 ❤️ 를 눌러보세요."; }
+          if(favMode){ if(t)t.textContent=tx('favEmptyTitle'); if(s)s.textContent=tx('favEmptySub'); }
           else{ const d=i18n[currentLang]||i18n.en; if(t)t.textContent=d.noResultTitle; if(s)s.textContent=d.noResultSub; }
           return;
         }
@@ -1110,7 +1123,7 @@
                 </button>
                 <div onclick="openPostDetail('${post.id}')" class="cursor-pointer flex items-center space-x-2">
                   ${userData.completed.includes(post.id)?'<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i></span>':''}
-                  <span class="font-bold text-brand-600 group-hover:translate-x-1 transition-transform">공부하기 →</span>
+                  <span class="font-bold text-brand-600 group-hover:translate-x-1 transition-transform">${tx('studyNow')}</span>
                 </div>
               </div>
             </div>`;
@@ -1120,6 +1133,7 @@
       // ===== 본문 iframe 렌더 (붙여넣은 HTML 그대로: style/script/full-doc 지원) =====
       function buildSrcdoc(content){
         content = content || '';
+        const qc=JSON.stringify(tx('quizCorrect')), qw=JSON.stringify(tx('quizWrong'));
         const full = /<html[\s>]/i.test(content) || /<!doctype/i.test(content);
         const head = '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
           + '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">'
@@ -1127,9 +1141,10 @@
           + '<' + 'script src="https://cdn.tailwindcss.com"><' + '/script>'
           + '<style>body{font-family:\'Noto Sans KR\',sans-serif;margin:0;padding:4px;color:#1e293b;background:#fff}</style>';
         const bridge = '<' + 'script>(function(){'
+          + 'var QC='+qc+',QW='+qw+';'
           + 'window.speakText=function(t){try{if("speechSynthesis" in window){speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";u.rate=0.85;speechSynthesis.speak(u);}}catch(e){}};'
           + 'window.addVocab=function(w,m){try{window.parent.addVocab(w,m);}catch(e){}};'
-          + 'window.checkQuizAnswer=function(btn,ok){var fb=document.getElementById("quizFeedback");if(!fb)return;fb.classList.remove("hidden");fb.style.padding="12px";fb.style.borderRadius="12px";fb.style.fontWeight="700";fb.style.fontSize="13px";fb.style.color="#fff";if(ok){fb.style.background="#10b981";fb.textContent="🎉 정답입니다! 아주 잘하셨어요!";}else{fb.style.background="#f43f5e";fb.textContent="❌ 아쉬운네요. 다시 한번 생각해보세요!";}};'
+          + 'window.checkQuizAnswer=function(btn,ok){var fb=document.getElementById("quizFeedback");if(!fb)return;fb.classList.remove("hidden");fb.style.padding="12px";fb.style.borderRadius="12px";fb.style.fontWeight="700";fb.style.fontSize="13px";fb.style.color="#fff";if(ok){fb.style.background="#10b981";fb.textContent=QC;}else{fb.style.background="#f43f5e";fb.textContent=QW;}};'
           + 'function ph(){try{parent.postMessage({__aakFrame:1,h:document.documentElement.scrollHeight},"*");}catch(e){}}'
           + 'window.addEventListener("load",ph);setInterval(ph,700);if(window.ResizeObserver){try{new ResizeObserver(ph).observe(document.body||document.documentElement);}catch(e){}}'
           + '})();<' + '/script>';
@@ -1194,7 +1209,7 @@
         document.getElementById('detailTitle').textContent=post.title;
         document.getElementById('detailLevel').textContent=translateLabel(post.level);
         document.getElementById('detailCategory').textContent=translateLabel(post.category);
-        document.getElementById('detailViews').innerHTML='<i class="fa-regular fa-eye"></i> 조회 '+(post.views||0);
+        document.getElementById('detailViews').innerHTML='<i class="fa-regular fa-eye"></i> '+tx('views')+' '+(post.views||0);
         document.getElementById('detailAuthor').textContent=post.author||"한국어 배움터";
         document.getElementById('detailDate').textContent=post.date||'';
         document.getElementById('detailLikeCount').textContent=post.likes||0;
@@ -1242,7 +1257,7 @@
         const post=posts.find(p=>p.id===id); if(!post)return;
         const idx=userData.liked.indexOf(id); let delta;
         if(idx>-1){ userData.liked.splice(idx,1); post.likes=Math.max(0,(post.likes||0)-1); delta=-1; }
-        else{ userData.liked.push(id); post.likes=(post.likes||0)+1; delta=1; showToast("좋아요를 눌렀습니다! ❤️"); }
+        else{ userData.liked.push(id); post.likes=(post.likes||0)+1; delta=1; showToast(tx('likedToast')); }
         saveUserData();
         if(!String(id).startsWith('local-')){ try{ updateDoc(doc(db,'blog_posts',id), {likes:increment(delta)}); }catch(e){} }
         if(favMode && delta<0){ renderBlogPosts(); } else { renderBlogPosts(); }
@@ -1257,7 +1272,7 @@
         const dict=i18n[currentLang];
         if(userData.completed.includes(post.id)){
           b.className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-sm shadow-md shrink-0";
-          b.textContent="공부 완료 됨! ✓";
+          b.textContent=tx('completedDone');
         }else{
           b.className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-brand-600 transition-all shadow-md active:scale-95 shrink-0";
           b.textContent=dict?dict.completeBtn:"공부 완료! ☑️";
@@ -1267,7 +1282,7 @@
         if(!currentPostId)return;
         const i=userData.completed.indexOf(currentPostId);
         if(i>-1){ userData.completed.splice(i,1); }
-        else{ userData.completed.push(currentPostId); showToast("학습 완료! 축하합니다 🎉"); }
+        else{ userData.completed.push(currentPostId); showToast(tx('completedToast')); }
         saveUserData();
         const post=posts.find(p=>p.id===currentPostId); if(post)updateCompleteBtn(post);
       }
@@ -1293,17 +1308,17 @@
       function syncMobileSearch(val){ document.getElementById('searchInput').value=val; renderBlogPosts(); }
 
       // ===== 음성 / 퀴즈 / 단어장 =====
-      function speakText(text){ if('speechSynthesis' in window){ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='ko-KR'; u.rate=0.85; window.speechSynthesis.speak(u); } else showToast("음성 합성을 지원하지 않는 브라우저입니다."); }
+      function speakText(text){ if('speechSynthesis' in window){ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='ko-KR'; u.rate=0.85; window.speechSynthesis.speak(u); } else showToast(tx('speakUnsupported')); }
       function readAloudTitleAndSummary(){ const post=posts.find(p=>p.id===currentPostId); if(post)speakText(post.title+". "+post.summary); }
-      function checkQuizAnswer(btn,isCorrect){ const fb=document.getElementById('quizFeedback'); if(!fb)return; fb.classList.remove('hidden'); if(isCorrect){ fb.className="p-3 rounded-xl text-xs font-bold bg-emerald-500 text-white"; fb.textContent="🎉 정답입니다! 아주 잘하셨어요!"; } else{ fb.className="p-3 rounded-xl text-xs font-bold bg-rose-500 text-white"; fb.textContent="❌ 아쉬운네요. 다시 한번 생각해보세요!"; } }
+      function checkQuizAnswer(btn,isCorrect){ const fb=document.getElementById('quizFeedback'); if(!fb)return; fb.classList.remove('hidden'); if(isCorrect){ fb.className="p-3 rounded-xl text-xs font-bold bg-emerald-500 text-white"; fb.textContent=tx('quizCorrect'); } else{ fb.className="p-3 rounded-xl text-xs font-bold bg-rose-500 text-white"; fb.textContent=tx('quizWrong'); } }
       function updateCharCount(el){ const c=document.getElementById('charCounter'); const len=el.value.length; c.textContent=len+" / 150"; c.className=len>=150?"text-[11px] font-semibold text-rose-500":"text-[11px] font-semibold text-slate-400"; }
-      function addVocab(word,meaning){ if(userData.vocab.some(v=>v.word===word)){ showToast("이미 단어장에 등록되어 있습니다."); return; } userData.vocab.push({word,meaning}); saveUserData(); updateVocabBadge(); showToast("'"+word+"' 단어장에 저장됨! 📖"); }
+      function addVocab(word,meaning){ if(userData.vocab.some(v=>v.word===word)){ showToast(tx('vocabDup')); return; } userData.vocab.push({word,meaning}); saveUserData(); updateVocabBadge(); showToast(tx('vocabAdded').replace('%s',word)); }
       function removeVocab(word){ userData.vocab=userData.vocab.filter(v=>v.word!==word); saveUserData(); updateVocabBadge(); renderVocabList(); }
       function updateVocabBadge(){ const b=document.getElementById('vocabBadge'); if(userData.vocab.length>0){ b.textContent=userData.vocab.length; b.classList.remove('hidden'); } else b.classList.add('hidden'); }
       function toggleVocabModal(){ const m=document.getElementById('vocabModal'); if(m.classList.contains('hidden')){ renderVocabList(); m.classList.remove('hidden'); } else m.classList.add('hidden'); }
       function renderVocabList(){
         const c=document.getElementById('vocabList'); c.innerHTML='';
-        if(userData.vocab.length===0){ c.innerHTML='<div class="text-center py-8 text-slate-400 text-sm">저장된 단어가 없습니다.</div>'; return; }
+        if(userData.vocab.length===0){ c.innerHTML='<div class="text-center py-8 text-slate-400 text-sm">'+tx('vocabEmpty')+'</div>'; return; }
         userData.vocab.forEach(item=>{ c.innerHTML += '<div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl"><div><span class="font-bold text-slate-800 text-sm">'+item.word+'</span><span class="text-xs text-slate-500 ml-2">'+item.meaning+'</span></div><div class="flex items-center space-x-2"><button onclick="speakText(\''+item.word+'\')" class="text-slate-500 hover:text-brand-600 p-1"><i class="fa-solid fa-volume-high text-xs"></i></button><button onclick="removeVocab(\''+item.word+'\')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can text-xs"></i></button></div></div>'; });
       }
 
