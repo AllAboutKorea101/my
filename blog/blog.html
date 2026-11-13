@@ -151,6 +151,10 @@
   .aak-navbtn.on{color:#4f46e5}
   html,body{overflow-x:hidden;max-width:100%}
   body.aak-haspad{padding-bottom:76px}
+  @media(max-width:639px){
+    .aak-main{padding-left:10px!important;padding-right:10px!important}
+    .aak-card{padding:14px!important}
+  }
   @media(max-width:639px){#toast{bottom:88px}}
   @media(min-width:640px){
     .aak-blognav{position:static;margin:0 0 20px;padding:0;justify-content:flex-start;gap:8px;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;border:0}
@@ -169,11 +173,14 @@
             <div data-site-menu style="width:40px;height:40px;flex-shrink:0"></div>
             <!-- Logo -->
             <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer min-w-0" onclick="showListView()">
-                <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
-                    <span class="font-black text-xl tracking-tighter">한</span>
+                <div class="hidden sm:block">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                        <span class="font-black text-xl tracking-tighter">한</span>
+                    </div>
                 </div>
+                <span class="sm:hidden" style="font-weight:800;font-size:17px;color:#0f172a;white-space:nowrap">Korean Blog</span>
                 <div class="min-w-0 hidden sm:block">
-                    <h1 id="aakH1" class="font-bold text-base sm:text-lg text-slate-900 leading-tight truncate">Learn Korean Blog</h1>
+                    <h1 id="aakH1" class="font-bold text-lg text-slate-900 leading-tight">Learn Korean Blog</h1>
                     <p class="text-xs text-brand-600 font-medium">Korean Learning Hub</p>
                 </div>
             </div>
@@ -184,7 +191,7 @@
                 <div data-site-auth style="min-height:34px;display:flex;align-items:center"></div>
                 <!-- Language Selector -->
                 <div class="relative">
-                    <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-full px-2 sm:px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer transition-colors">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" style="padding-left:16px;padding-right:16px" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-full py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer transition-colors">
                         <option value="ko">🇰🇷 한국어</option>
                         <option value="en" selected>🇺🇸 English</option>
                         <option value="es">🇪🇸 Español</option>
@@ -202,7 +209,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="aak-main flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <!-- Blog 내비게이션 (데스크톱 상단 / 모바일 하단) -->
         <nav class="aak-blognav" aria-label="Blog navigation">
@@ -215,7 +222,7 @@
         <!-- ================= VIEW 1: BLOG LIST ================= -->
         <section id="listView" class="space-y-8">
             <!-- Hero Banner -->
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-900 via-indigo-900 to-slate-900 text-white p-6 sm:p-10 shadow-xl">
+            <div class="aak-card relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-900 via-indigo-900 to-slate-900 text-white p-6 sm:p-10 shadow-xl">
                 <div class="absolute -right-10 -bottom-10 opacity-10 text-[180px] font-black pointer-events-none select-none">
                     한
                 </div>
@@ -230,8 +237,8 @@
 
             <!-- Search Bar -->
             <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" oninput="filterPosts()" data-i18n-placeholder="searchPlaceholder" placeholder="제목, 키워드 검색..." class="w-full pl-11 pr-4 py-3 text-sm rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all">
+                <i class="fa-solid fa-magnifying-glass absolute text-slate-400" style="left:18px;top:50%;transform:translateY(-50%)"></i>
+                <input type="text" id="searchInput" oninput="filterPosts()" data-i18n-placeholder="searchPlaceholder" placeholder="제목, 키워드 검색..." class="w-full text-sm rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all" style="padding:12px 16px 12px 46px">
             </div>
 
             <!-- Filter Controls Section -->
@@ -307,7 +314,7 @@
             </div>
 
             <!-- Article Card Header -->
-            <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-sm space-y-6">
+            <div class="aak-card bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-sm space-y-6">
                 <div class="space-y-3">
                     <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
                         <span id="detailLevel" class="px-2.5 py-0.5 bg-slate-900 text-white rounded-md">초급</span>
@@ -1066,7 +1073,7 @@
           if(post.level==="중급") lb="bg-amber-100 text-amber-800";
           if(post.level==="고급") lb="bg-rose-100 text-rose-800";
           grid.innerHTML += `
-            <div class="group bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between hover:shadow-xl hover:border-brand-500/30 transition-all duration-300 relative overflow-hidden">
+            <div class="aak-card group bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between hover:shadow-xl hover:border-brand-500/30 transition-all duration-300 relative overflow-hidden">
               <div onclick="openPostDetail('${post.id}')" class="cursor-pointer">
                 <div class="flex items-center justify-between gap-2 mb-3">
                   <div class="flex items-center space-x-1.5">
