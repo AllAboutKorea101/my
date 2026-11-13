@@ -152,8 +152,10 @@
   html,body{overflow-x:hidden;max-width:100%}
   body.aak-haspad{padding-bottom:76px}
   @media(max-width:639px){
-    .aak-main{padding-left:10px!important;padding-right:10px!important}
-    .aak-card{padding:14px!important}
+    .aak-main{padding-left:0!important;padding-right:0!important}
+    .aak-card{padding:10px!important}
+    .aak-hpad{padding-left:8px!important;padding-right:8px!important}
+    .aak-lgroup{gap:4px!important}
   }
   @media(max-width:639px){#toast{bottom:88px}}
   @media(min-width:640px){
@@ -168,8 +170,8 @@
 
     <!-- Header Navigation -->
     <header class="sticky top-0 z-40 w-full glass border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+        <div class="aak-hpad max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="aak-lgroup flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             <div data-site-menu style="width:40px;height:40px;flex-shrink:0"></div>
             <!-- Logo -->
             <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer min-w-0" onclick="showListView()">
@@ -191,7 +193,7 @@
                 <div data-site-auth style="min-height:34px;display:flex;align-items:center"></div>
                 <!-- Language Selector -->
                 <div class="relative">
-                    <select id="langSelect" onchange="changeLanguage(this.value)" style="padding-left:16px;padding-right:16px" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-full py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer transition-colors">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" style="padding-left:12px;padding-right:12px" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-full py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer transition-colors">
                         <option value="ko">🇰🇷 한국어</option>
                         <option value="en" selected>🇺🇸 English</option>
                         <option value="es">🇪🇸 Español</option>
@@ -1074,7 +1076,7 @@
           if(post.level==="고급") lb="bg-rose-100 text-rose-800";
           grid.innerHTML += `
             <div class="aak-card group bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between hover:shadow-xl hover:border-brand-500/30 transition-all duration-300 relative overflow-hidden">
-              <div onclick="openPostDetail('${post.id}')" class="cursor-pointer">
+              <a href="${BASE_URL}?id=${post.id}" onclick="openPostDetail('${post.id}');return false;" class="cursor-pointer block">
                 <div class="flex items-center justify-between gap-2 mb-3">
                   <div class="flex items-center space-x-1.5">
                     <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${lb}">${translateLabel(post.level)}</span>
@@ -1084,15 +1086,15 @@
                 </div>
                 <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-brand-600 transition-colors leading-snug line-clamp-2 mb-2">${post.title}</h3>
                 <p class="text-xs sm:text-sm text-slate-500 line-clamp-3 leading-relaxed mb-4">${post.summary}</p>
-              </div>
+              </a>
               <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
                 <button onclick="toggleCardLike(event,'${post.id}')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full border transition-all ${isLiked?'bg-rose-50 border-rose-200 text-rose-600':'bg-slate-50 border-slate-200 text-slate-500 hover:bg-rose-50 hover:text-rose-500'}">
                   <i class="${isLiked?'fa-solid':'fa-regular'} fa-heart text-xs"></i><span class="font-bold">${post.likes||0}</span>
                 </button>
-                <div onclick="openPostDetail('${post.id}')" class="cursor-pointer flex items-center space-x-2">
+                <a href="${BASE_URL}?id=${post.id}" onclick="openPostDetail('${post.id}');return false;" class="cursor-pointer flex items-center space-x-2">
                   ${userData.completed.includes(post.id)?'<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i></span>':''}
                   <span class="font-bold text-brand-600 group-hover:translate-x-1 transition-transform">${tx('studyNow')}</span>
-                </div>
+                </a>
               </div>
             </div>`;
         });
