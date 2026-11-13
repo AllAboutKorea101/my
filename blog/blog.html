@@ -144,11 +144,12 @@
   .aak-spin{animation:aakspin .8s linear infinite}
   #procOverlay{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(15,23,42,.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
   #procOverlay.show{display:flex}
-  .aak-ph-frame{width:100%;border:0;display:block;min-height:120px}
+  .aak-ph-frame{width:100%;max-width:100%;border:0;display:block;min-height:120px}
   .aak-blognav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;gap:8px;justify-content:space-around;align-items:center;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-top:1px solid #e2e8f0;padding:8px 12px}
   .aak-navbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:12px;font-size:12px;font-weight:700;color:#64748b;background:transparent;border:0;cursor:pointer;transition:.15s}
   .aak-navbtn i{font-size:16px}
   .aak-navbtn.on{color:#4f46e5}
+  html,body{overflow-x:hidden;max-width:100%}
   body.aak-haspad{padding-bottom:76px}
   @media(max-width:639px){#toast{bottom:88px}}
   @media(min-width:640px){
@@ -163,7 +164,7 @@
 
     <!-- Header Navigation -->
     <header class="sticky top-0 z-40 w-full glass border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             <div data-site-menu style="width:40px;height:40px;flex-shrink:0"></div>
             <!-- Logo -->
@@ -171,9 +172,9 @@
                 <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
                     <span class="font-black text-xl tracking-tighter">한</span>
                 </div>
-                <div class="min-w-0">
+                <div class="min-w-0 hidden sm:block">
                     <h1 id="aakH1" class="font-bold text-base sm:text-lg text-slate-900 leading-tight truncate">Learn Korean Blog</h1>
-                    <p class="text-xs text-brand-600 font-medium hidden sm:block">Korean Learning Hub</p>
+                    <p class="text-xs text-brand-600 font-medium">Korean Learning Hub</p>
                 </div>
             </div>
             </div>
@@ -195,23 +196,7 @@
                     </select>
                 </div>
 
-                <!-- Search Bar -->
-                <div class="relative hidden sm:block">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="searchInput" oninput="filterPosts()" data-i18n-placeholder="searchPlaceholder" placeholder="제목, 키워드 검색..." class="w-40 md:w-56 pl-9 pr-4 py-1.5 text-sm rounded-full bg-slate-100 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all">
-                </div>
-
-                <!-- My Vocab Button -->
-                <button onclick="toggleVocabModal()" class="relative p-2 rounded-full text-slate-600 hover:bg-slate-100 transition-colors" title="내 단어장">
-                    <i class="fa-solid fa-book-bookmark text-lg"></i>
-                    <span id="vocabBadge" class="hidden absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">0</span>
-                </button>
-
                 <!-- New Post Button (Modal Trigger) -->
-                <button id="aakWriteBtn" style="display:none" onclick="openWriteModal()" class="flex items-center space-x-1.5 px-4 py-2 rounded-full bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-md shadow-brand-600/20 transition-all active:scale-95">
-                    <i class="fa-solid fa-pen text-xs"></i>
-                    <span data-i18n="writeBtn">글쓰기</span>
-                </button>
             </div>
         </div>
     </header>
@@ -223,17 +208,10 @@
         <nav class="aak-blognav" aria-label="Blog navigation">
             <button id="navPosts" class="aak-navbtn on" onclick="showAllPosts()"><i class="fa-solid fa-newspaper"></i><span>Blog Posts</span></button>
             <button id="navFav" class="aak-navbtn" onclick="showFavorites()"><i class="fa-solid fa-heart"></i><span>My Favorites</span></button>
+            <button id="navWrite" class="aak-navbtn" style="display:none" onclick="openWriteModal()"><i class="fa-solid fa-pen"></i><span>Write</span></button>
         </nav>
 
         
-        <!-- Mobile Search Bar -->
-        <div class="sm:hidden mb-6">
-            <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                <input type="text" id="mobileSearchInput" oninput="syncMobileSearch(this.value)" data-i18n-placeholder="searchPlaceholder" placeholder="제목, 키워드 검색..." class="w-full pl-9 pr-4 py-2 text-sm rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-            </div>
-        </div>
-
         <!-- ================= VIEW 1: BLOG LIST ================= -->
         <section id="listView" class="space-y-8">
             <!-- Hero Banner -->
@@ -248,6 +226,12 @@
                         외국인을 위해 가장 쉽고 재미있게 구성된 한국어 블로그 포스팅으로 실전 한국어를 완벽하게 습득해보세요.
                     </p>
                 </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="searchInput" oninput="filterPosts()" data-i18n-placeholder="searchPlaceholder" placeholder="제목, 키워드 검색..." class="w-full pl-11 pr-4 py-3 text-sm rounded-xl bg-white border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all">
             </div>
 
             <!-- Filter Controls Section -->
@@ -447,29 +431,6 @@
             <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-end space-x-3">
                 <button onclick="closeWriteModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-100" data-i18n="cancelBtn">취소</button>
                 <button id="writeSubmitBtn" onclick="saveNewPost()" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold shadow-md shadow-brand-600/20" data-i18n="submitBtn">업로드 및 발행</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MODAL 2: MY VOCABULARY BOOK ================= -->
-    <div id="vocabModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[80vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-amber-50">
-                <div class="flex items-center space-x-2 text-amber-800">
-                    <i class="fa-solid fa-bookmark text-lg"></i>
-                    <h3 class="font-bold text-lg" data-i18n="vocabModalTitle">나만의 단어장 (Saved Words)</h3>
-                </div>
-                <button onclick="toggleVocabModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-            
-            <div id="vocabList" class="p-6 overflow-y-auto space-y-3 custom-scrollbar flex-grow">
-                <!-- Saved items rendered here -->
-            </div>
-
-            <div class="px-6 py-3 border-t border-slate-100 bg-slate-50 text-right">
-                <span class="text-xs text-slate-400" data-i18n="vocabHint">포스팅에서 + 단어장 저장 버튼을 클릭해 단어를 추가하세요.</span>
             </div>
         </div>
     </div>
@@ -1135,6 +1096,7 @@
         content = content || '';
         const qc=JSON.stringify(tx('quizCorrect')), qw=JSON.stringify(tx('quizWrong'));
         const full = /<html[\s>]/i.test(content) || /<!doctype/i.test(content);
+        const ovr = '<style>html,body{height:auto!important;min-height:0!important;overflow-x:hidden!important}img,svg,video,table,pre{max-width:100%!important}</style>';
         const head = '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
           + '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">'
           + '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">'
@@ -1143,16 +1105,16 @@
         const bridge = '<' + 'script>(function(){'
           + 'var QC='+qc+',QW='+qw+';'
           + 'window.speakText=function(t){try{if("speechSynthesis" in window){speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";u.rate=0.85;speechSynthesis.speak(u);}}catch(e){}};'
-          + 'window.addVocab=function(w,m){try{window.parent.addVocab(w,m);}catch(e){}};'
+          + 'window.addVocab=function(){};'
           + 'window.checkQuizAnswer=function(btn,ok){var fb=document.getElementById("quizFeedback");if(!fb)return;fb.classList.remove("hidden");fb.style.padding="12px";fb.style.borderRadius="12px";fb.style.fontWeight="700";fb.style.fontSize="13px";fb.style.color="#fff";if(ok){fb.style.background="#10b981";fb.textContent=QC;}else{fb.style.background="#f43f5e";fb.textContent=QW;}};'
-          + 'function ph(){try{var b=document.body;var hh=Math.max(b.scrollHeight,b.offsetHeight);parent.postMessage({__aakFrame:1,h:hh},"*");}catch(e){}}'
-          + 'window.addEventListener("load",ph);setInterval(ph,700);if(window.ResizeObserver){try{new ResizeObserver(ph).observe(document.body||document.documentElement);}catch(e){}}'
+          + 'var __lh=0;function ph(){try{var b=document.body;var hh=Math.max(b.scrollHeight,b.offsetHeight);if(Math.abs(hh-__lh)>2){__lh=hh;parent.postMessage({__aakFrame:1,h:hh},"*");}}catch(e){}}'
+          + 'window.addEventListener("load",ph);[150,500,1200,2500].forEach(function(t){setTimeout(ph,t);});if(window.ResizeObserver){try{new ResizeObserver(function(){clearTimeout(window.__rt);window.__rt=setTimeout(ph,160);}).observe(document.body);}catch(e){}}'
           + '})();<' + '/script>';
         if(full){
-          if(/<\/body>/i.test(content)) return content.replace(/<\/body>/i, bridge+'</body>');
-          return content + bridge;
+          if(/<\/body>/i.test(content)) return content.replace(/<\/body>/i, ovr+bridge+'</body>');
+          return content + ovr + bridge;
         }
-        return '<!doctype html><html><head>'+head+'</head><body>'+content+bridge+'</body></html>';
+        return '<!doctype html><html><head>'+head+ovr+'</head><body>'+content+bridge+'</body></html>';
       }
       function renderContent(post){
         const host=document.getElementById('htmlRenderer');
@@ -1167,7 +1129,7 @@
       window.addEventListener('message',(e)=>{
         if(e.data && e.data.__aakFrame){
           const f=document.querySelector('#htmlRenderer iframe');
-          if(f && e.data.h) f.style.height=(e.data.h+10)+'px';
+          if(f && e.data.h){ const nh=(e.data.h+10)+'px'; if(f.style.height!==nh) f.style.height=nh; }
         }
       });
 
@@ -1312,16 +1274,6 @@
       function readAloudTitleAndSummary(){ const post=posts.find(p=>p.id===currentPostId); if(post)speakText(post.title+". "+post.summary); }
       function checkQuizAnswer(btn,isCorrect){ const fb=document.getElementById('quizFeedback'); if(!fb)return; fb.classList.remove('hidden'); if(isCorrect){ fb.className="p-3 rounded-xl text-xs font-bold bg-emerald-500 text-white"; fb.textContent=tx('quizCorrect'); } else{ fb.className="p-3 rounded-xl text-xs font-bold bg-rose-500 text-white"; fb.textContent=tx('quizWrong'); } }
       function updateCharCount(el){ const c=document.getElementById('charCounter'); const len=el.value.length; c.textContent=len+" / 150"; c.className=len>=150?"text-[11px] font-semibold text-rose-500":"text-[11px] font-semibold text-slate-400"; }
-      function addVocab(word,meaning){ if(userData.vocab.some(v=>v.word===word)){ showToast(tx('vocabDup')); return; } userData.vocab.push({word,meaning}); saveUserData(); updateVocabBadge(); showToast(tx('vocabAdded').replace('%s',word)); }
-      function removeVocab(word){ userData.vocab=userData.vocab.filter(v=>v.word!==word); saveUserData(); updateVocabBadge(); renderVocabList(); }
-      function updateVocabBadge(){ const b=document.getElementById('vocabBadge'); if(userData.vocab.length>0){ b.textContent=userData.vocab.length; b.classList.remove('hidden'); } else b.classList.add('hidden'); }
-      function toggleVocabModal(){ const m=document.getElementById('vocabModal'); if(m.classList.contains('hidden')){ renderVocabList(); m.classList.remove('hidden'); } else m.classList.add('hidden'); }
-      function renderVocabList(){
-        const c=document.getElementById('vocabList'); c.innerHTML='';
-        if(userData.vocab.length===0){ c.innerHTML='<div class="text-center py-8 text-slate-400 text-sm">'+tx('vocabEmpty')+'</div>'; return; }
-        userData.vocab.forEach(item=>{ c.innerHTML += '<div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl"><div><span class="font-bold text-slate-800 text-sm">'+item.word+'</span><span class="text-xs text-slate-500 ml-2">'+item.meaning+'</span></div><div class="flex items-center space-x-2"><button onclick="speakText(\''+item.word+'\')" class="text-slate-500 hover:text-brand-600 p-1"><i class="fa-solid fa-volume-high text-xs"></i></button><button onclick="removeVocab(\''+item.word+'\')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can text-xs"></i></button></div></div>'; });
-      }
-
       // ===== 운영자 글쓰기 / 수정 / 삭제 =====
       function updateAdminDetailButtons(){
         const e=document.getElementById('aakEditBtn'), d=document.getElementById('aakDeleteBtn');
@@ -1403,7 +1355,7 @@
       }
 
       // ===== 전역 노출 =====
-      Object.assign(window,{showListView,changeLanguage,filterPosts,syncMobileSearch,toggleVocabModal,openWriteModal,closeWriteModal,saveNewPost,filterLevel,filterCategory,renderBlogPosts,openPostDetail,likeCurrentPost,readAloudTitleAndSummary,markPostCompleted,toggleCardLike,speakText,checkQuizAnswer,updateCharCount,addVocab,removeVocab,editCurrentPost,deleteCurrentPost,showAllPosts,showFavorites});
+      Object.assign(window,{showListView,changeLanguage,filterPosts,syncMobileSearch,openWriteModal,closeWriteModal,saveNewPost,filterLevel,filterCategory,renderBlogPosts,openPostDetail,likeCurrentPost,readAloudTitleAndSummary,markPostCompleted,toggleCardLike,speakText,checkQuizAnswer,updateCharCount,editCurrentPost,deleteCurrentPost,showAllPosts,showFavorites});
 
       // ===== 초기 언어 =====
       (function initLang(){
@@ -1415,7 +1367,7 @@
 
       // ===== 빠른 첫 렌더 (인증과 병렬) =====
       loadLocalUserData();
-      (async ()=>{ await loadPosts(); updateVocabBadge(); updateNav(); routeFromUrl(); })();
+      (async ()=>{ await loadPosts(); updateNav(); routeFromUrl(); })();
 
       // ===== 인증 후 보정 =====
       onAuthStateChanged(auth, async (u)=>{
@@ -1427,9 +1379,8 @@
           loadLocalUserData();
         }
         window.__aakIsAdmin=isAdmin;
-        const wb=document.getElementById('aakWriteBtn'); if(wb)wb.style.display=isAdmin?'':'none';
+        const wb=document.getElementById('navWrite'); if(wb)wb.style.display=isAdmin?'':'none';
         if(isAdmin && (posts.length===0 || usingFallback)){ await loadPosts(); }
-        updateVocabBadge();
         if(currentPostId){ updateAdminDetailButtons(); updateLikeBtnUI(); } else { renderBlogPosts(); }
       });
     </script>
