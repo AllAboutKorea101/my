@@ -139,9 +139,9 @@
     <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-apple-border/40 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <!-- Burger menu button -->
-            <div data-site-menu style="width:40px;height:40px;flex-shrink:0;margin-right:2rem"></div>
+            <div data-site-menu style="width:40px;height:40px;flex-shrink:0"></div>
             <!-- Top Navigation without Emojis -->
-            <nav class="hidden sm:flex items-center space-x-4 sm:space-x-8 text-xs sm:text-sm font-medium text-apple-secondary">
+            <nav class="hidden sm:flex items-center space-x-4 sm:space-x-8 text-xs sm:text-sm font-medium text-apple-secondary" style="margin-left:2rem">
                 <button onclick="switchTab('store')" class="text-apple-text font-semibold transition hover:text-apple-accent py-2" data-i18n="navStore">
                     Store
                 </button>
@@ -170,6 +170,7 @@
                         <button onclick="applyLang('es')" class="lang-item w-full text-left px-4 py-2 text-xs hover:bg-zinc-50 flex items-center gap-2" data-lang="es"><span>🇪🇸</span><span>Español</span></button>
                         <button onclick="applyLang('zh')" class="lang-item w-full text-left px-4 py-2 text-xs hover:bg-zinc-50 flex items-center gap-2" data-lang="zh"><span>🇨🇳</span><span>中文</span></button>
                         <button onclick="applyLang('ja')" class="lang-item w-full text-left px-4 py-2 text-xs hover:bg-zinc-50 flex items-center gap-2" data-lang="ja"><span>🇯🇵</span><span>日本語</span></button>
+                        <button onclick="applyLang('ko')" class="lang-item w-full text-left px-4 py-2 text-xs hover:bg-zinc-50 flex items-center gap-2" data-lang="ko"><span>🇰🇷</span><span>한국어</span></button>
                         <button onclick="applyLang('fr')" class="lang-item w-full text-left px-4 py-2 text-xs hover:bg-zinc-50 flex items-center gap-2" data-lang="fr"><span>🇫🇷</span><span>Français</span></button>
                         <button onclick="applyLang('de')" class="lang-item w-full text-left px-4 py-2 text-xs hover:bg-zinc-50 flex items-center gap-2" data-lang="de"><span>🇩🇪</span><span>Deutsch</span></button>
                         <button onclick="applyLang('pl')" class="lang-item w-full text-left px-4 py-2 text-xs hover:bg-zinc-50 flex items-center gap-2" data-lang="pl"><span>🇵🇱</span><span>Polski</span></button>
@@ -346,7 +347,10 @@
                         <label class="block text-xs font-semibold uppercase tracking-wider text-apple-secondary">Cover Image (URL or File Upload)</label>
                         <div class="space-y-2">
                             <input type="url" id="admin-image" placeholder="https://images.unsplash.com/..." class="w-full px-4 py-3 bg-zinc-50 border border-apple-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-apple-accent">
-                            <input type="file" id="admin-file-input" accept="image/*" onchange="previewAdminCover(event)" class="w-full text-xs text-apple-secondary file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-100 file:text-zinc-700 hover:file:bg-zinc-200">
+                            <div class="rounded-xl p-2 transition" style="border:2px dashed rgb(210 210 215)" ondragover="event.preventDefault();this.style.borderColor='#0066cc';this.style.background='#eff6ff'" ondragleave="this.style.borderColor='rgb(210 210 215)';this.style.background=''" ondrop="handleFileDrop(event,this)">
+                                <input type="file" id="admin-file-input" accept="image/*" onchange="previewAdminCover(event)" class="w-full text-xs text-apple-secondary file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-100 file:text-zinc-700 hover:file:bg-zinc-200">
+                                <p class="text-[10px] text-apple-secondary mt-1">또는 파일을 여기로 끌어다 놓기 (drag &amp; drop)</p>
+                            </div>
                             <p id="admin-cover-status" class="text-[11px] text-apple-secondary"></p>
                         </div>
                     </div>
@@ -1051,7 +1055,7 @@
             const mainCls = (p <= 0 && o.freeLabel) ? 'text-emerald-600' : 'text-zinc-900';
             const pct = discountPercent(p, originalPrice);
             if (!pct) return `<span class="${o.mainSize || 'text-xl'} font-bold ${mainCls}">${main}</span>`;
-            return `<span class="inline-flex items-baseline flex-wrap gap-x-1.5">`
+            return `<span class="inline-flex items-baseline gap-x-1.5">`
                 + `<span class="${o.origSize || 'text-sm'} text-apple-secondary line-through">$${Number(originalPrice).toFixed(2)}</span>`
                 + `<span class="${o.mainSize || 'text-xl'} font-bold ${mainCls}">${main}</span>`
                 + `<span class="text-[10px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded-full">-${pct}%</span></span>`;
@@ -1115,11 +1119,11 @@
                     <div id="detail-options-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         ${options.map(opt => `
                             <label class="flex items-center justify-between gap-2 p-3.5 rounded-2xl border cursor-pointer transition ${selectedOptionByBook[id] === opt.id ? 'border-apple-accent bg-blue-50/60 ring-1 ring-apple-accent' : 'border-apple-border bg-white hover:bg-zinc-50'}">
-                                <span class="flex items-center gap-2">
+                                <span class="flex items-center gap-2 min-w-0">
                                     <input type="radio" name="purchase-option" value="${escapeHtml(opt.id)}" ${selectedOptionByBook[id] === opt.id ? 'checked' : ''} onchange="selectPurchaseOption(${jsArg(id)},${jsArg(opt.id)})" class="text-apple-accent focus:ring-apple-accent">
                                     <span class="text-xs sm:text-sm font-semibold text-zinc-800">${escapeHtml(opt.label)}</span>
                                 </span>
-                                <span class="text-right">${priceHtml(opt.price, opt.originalPrice, { mainSize: 'text-xs sm:text-sm', origSize: 'text-[11px]', freeLabel: true })}</span>
+                                <span class="text-right flex-shrink-0">${priceHtml(opt.price, opt.originalPrice, { mainSize: 'text-xs sm:text-sm', origSize: 'text-[11px]', freeLabel: true })}</span>
                             </label>
                         `).join('')}
                     </div>
@@ -1788,16 +1792,15 @@
                 card.className = "bg-white p-6 rounded-3xl border border-apple-border shadow-sm flex flex-col justify-between space-y-4";
                 card.innerHTML = `
                     <div class="flex items-start space-x-4">
-                        <img src="${safeImg(coverFor(p.bookId, p.thumbnail))}" onclick="openPurchasedBook(${jsArg(p.bookId)})" class="w-16 h-20 object-cover rounded-xl shadow-sm flex-shrink-0 cursor-pointer hover:opacity-80 transition" onerror="this.src='https://placehold.co/100x130/1D1D1F/FFFFFF?text=Book'">
+                        <img src="${safeImg(coverFor(p.bookId, p.thumbnail))}" onclick="openPurchasedBook(${jsArg(p.bookId)})" class="w-28 h-16 object-cover rounded-xl shadow-sm flex-shrink-0 cursor-pointer hover:opacity-80 transition" onerror="this.src='https://placehold.co/160x100/1D1D1F/FFFFFF?text=Book'">
                         <div class="space-y-1 overflow-hidden flex-1">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full">${t('verifiedPurchase')}</span>
                             <h4 onclick="openPurchasedBook(${jsArg(p.bookId)})" class="font-bold text-sm sm:text-base leading-snug break-words cursor-pointer hover:text-apple-accent transition">${escapeHtml(p.bookTitle)}</h4>
                             <p class="text-xs text-apple-secondary">${escapeHtml(p.optionLabel || 'Standard PDF')} • <span class="font-semibold text-zinc-700">$${Number(p.price || 0).toFixed(2)}</span></p>
-                            <p class="text-[11px] text-apple-secondary">${t('orderLabel')} ${escapeHtml(p.orderId)} • ${p.purchaseDate ? new Date(p.purchaseDate).toLocaleDateString() : ''}</p>
                         </div>
                     </div>
                     <div class="pt-2 border-t border-apple-border/40 space-y-2">
-                        <p class="text-[11px] ${expired ? 'text-red-600 font-semibold' : 'text-apple-secondary'}">
+                        <p class="text-red-600 font-semibold" style="font-size:16.5px">
                             ${expired ? t('downloadExpiredOn') : t('downloadableUntil')} ${expiresLabel}
                         </p>
                         <div class="flex items-center justify-between gap-2">
@@ -1873,6 +1876,18 @@
 
         let uploadedThumbnailUrl = "";
 
+        // 드래그앤드롭으로 파일 선택 (파일 선택 버튼과 동일하게 동작)
+        function handleFileDrop(ev, zone){
+            ev.preventDefault();
+            zone.style.borderColor = 'rgb(210 210 215)'; zone.style.background = '';
+            const file = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+            if(!file) return;
+            const input = zone.querySelector('input[type=file]');
+            if(!input) return;
+            try { const dt = new DataTransfer(); dt.items.add(file); input.files = dt.files; } catch(e) {}
+            input.dispatchEvent(new Event('change', { bubbles:true }));
+        }
+
         let coverUploading = false;
 
         // Cover images go to Firebase Storage; only the short download URL is saved with the book.
@@ -1930,7 +1945,7 @@
                     <input type="number" step="0.01" min="0" class="opt-sale-price px-3 py-2 bg-white border border-apple-border rounded-xl text-xs" placeholder="Sale price (optional)" oninput="updateOptionDiscount(this)" value="${existing && existing.originalPrice ? existing.price : ''}">
                 </div>
                 <p class="opt-discount text-[11px] font-semibold text-apple-secondary">No discount — original price only.</p>
-                <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center justify-between gap-3 rounded-xl p-2 transition" style="border:2px dashed rgb(210 210 215)" ondragover="event.preventDefault();this.style.borderColor='#0066cc';this.style.background='#eff6ff'" ondragleave="this.style.borderColor='rgb(210 210 215)';this.style.background=''" ondrop="handleFileDrop(event,this)">
                     <input type="file" class="opt-file text-[11px] text-apple-secondary flex-1" onchange="handleOptionFileSelected(this)">
                     <span class="opt-file-current text-[11px] text-apple-secondary truncate max-w-[140px]">${existing && existing.fileName ? escapeHtml(existing.fileName) : 'No file uploaded'}</span>
                     <button type="button" onclick="this.closest('[id^=row-]').remove()" class="text-red-500 hover:text-red-700 p-1 flex-shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
@@ -2549,6 +2564,11 @@
 
         // ---- i18n (site chrome only — book titles/descriptions are admin-entered and not auto-translated) ----
         const I18N = {
+            ko: { navStore:"스토어", navBag:"장바구니", navPurchases:"내 구매", navAdmin:"관리자", signIn:"로그인", myAccount:"내 계정", signOut:"로그아웃",
+                  heroTag:"외국인 맞춤 커리큘럼", heroTitle:"한국어를 자연스럽게,<br>차근차근 마스터하세요.", heroSub:"전 세계 학습자를 위한 엄선된 PDF 전자책. 기초 문법부터 TOPIK 완성, 비즈니스 한국어까지.", heroCta:"컬렉션 둘러보기",
+                  purchasesTitle:"내 구매 & 다운로드", purchasesSignInRequired:"구매 내역을 보려면 로그인해 주세요.",
+                  bagTitle:"장바구니", bagNoticeReturns:"구매하신 상품은 환불되지 않습니다.", bagNoticeWindow:"구매하신 상품은 구매일로부터 3개월간 다운로드할 수 있습니다.",
+                  purchaseOptionsLabel:"구매 옵션", deleteConfirmTitle:"정말 삭제하시겠어요?", deleteConfirmWarning:"삭제하면 이 전자책을 더 이상 다운로드할 수 없습니다. 신중히 결정해 주세요 🙏", cancel:"취소", deleteConfirmBtn:"네, 삭제합니다" },
             en: { navStore:"Store", navBag:"Shopping Bag", navPurchases:"My Purchases", navAdmin:"Admin", signIn:"Sign In", myAccount:"My Account", signOut:"Sign Out",
                   heroTag:"Foreigner-Friendly Curriculum", heroTitle:"Master Korean Naturally, <br>Step by Step.", heroSub:"Curated PDF eBooks designed for global learners. From foundational grammar to TOPIK mastery and business fluency.", heroCta:"Explore Collection",
                   purchasesTitle:"My Purchases & Downloads", purchasesSignInRequired:"Please sign in to view your purchases.",
@@ -2587,6 +2607,38 @@
         };
         // ---- Extended UI strings (customer-facing screens; admin panel stays English) ----
         const I18N_MORE = {
+            ko: {
+                searchPlaceholder:"제목, 주제, 키워드로 검색...",
+                lvlAll:"전체 레벨", lvlBeginner:"초급", lvlIntermediate:"중급", lvlAdvanced:"고급",
+                catAll:"전체 카테고리", catGrammar:"문법", catVocabulary:"어휘", catReading:"읽기", catWriting:"쓰기", catListening:"듣기", catSpeaking:"말하기", catBusiness:"비즈니스 한국어", catTopik:"TOPIK", catEtc:"기타",
+                cartTotal:"합계:", checkoutPaypal:"PayPal로 결제", checkoutTitle:"안전한 PayPal 결제", checkoutSub:"PayPal이 제공하는 안전한 결제입니다. PayPal 계정 또는 직불/신용카드로 결제하세요.",
+                noBooksTitle:"전자책을 찾을 수 없습니다", noBooksSub:"검색 필터나 카테고리를 조정해 보세요.",
+                addToBag:"장바구니 담기", buyNow:"바로 구매", badgeBest:"베스트셀러", badgeNew:"신상품", badgeUnavailable:"현재 구매 불가", free:"무료",
+                tocTitle:"목차", tocFallback:"자기주도 학습을 위한 체계적인 커리큘럼.",
+                reviewsTitle:"고객 리뷰", loadingReviews:"리뷰 불러오는 중…", reviewCountOne:"리뷰 {n}개", reviewCountMany:"리뷰 {n}개", noReviews:"이 전자책에 아직 리뷰가 없습니다.",
+                edit:"수정", delete:"삭제", editWindowClosed:"수정 가능 기간(구매 후 {d}일)이 지났습니다.",
+                reviewSignInPrompt:"로그인 후 이 전자책을 구매하면 리뷰를 쓸 수 있습니다.", reviewOnlyPurchasers:"이 전자책을 구매한 고객만 리뷰를 쓸 수 있습니다.",
+                reviewWindowClosed:"리뷰는 이 전자책을 가장 최근 구매한 날로부터 {d}일 이내에만 작성·수정·삭제할 수 있습니다. 해당 기간이 지났습니다.",
+                reviewNoCredits:"이 전자책 구매당 리뷰를 하나씩 작성하셨습니다. 다시 구매하면 리뷰를 또 쓸 수 있습니다.",
+                reviewRemaining:"남은 리뷰: {n}개",
+                editYourReview:"리뷰 수정", writeReview:"리뷰 쓰기 (구매 확인됨)", starsLabel:"{n}/5점", reviewPlaceholder:"이 전자책에 대한 경험을 공유해 주세요...", update:"수정", submit:"등록",
+                bagEmpty:"장바구니가 비어 있습니다", bagEmptySub:"한국어 전자책을 둘러보고 장바구니에 담아보세요.",
+                itemsCount:"상품 {n}개", getForFree:"무료로 받기", paypalLoadFail:"PayPal을 불러오지 못했습니다. 연결을 확인하고 다시 시도해 주세요.",
+                processingPayment:"결제를 처리하는 중…", paymentSaveFail:"결제는 되었지만 주문 저장에 실패했습니다. 고객센터에 문의해 주세요.", paypalError:"PayPal 처리 중 문제가 발생했습니다. 다시 시도해 주세요.", cardDeclined:"카드가 거절되었습니다. 다른 카드나 결제수단으로 다시 시도해 주세요.",
+                noPurchases:"아직 구매 내역이 없습니다", noPurchasesSub:"전자책을 구매하면 안전한 다운로드 링크와 함께 여기에 표시됩니다.",
+                verifiedPurchase:"구매 확인됨", orderLabel:"주문", downloadExpiredOn:"다운로드 기간 만료일", downloadableUntil:"다운로드 가능 기한", download:"다운로드",
+                toastAdminsOnly:"관리자 전용", toastTryAgain:"잠시 후 다시 시도해 주세요", toastSignedIn:"로그인되었습니다", toastSignInFailed:"로그인에 실패했습니다. 다시 시도해 주세요.", toastSignedOut:"로그아웃되었습니다",
+                toastEditWindow:"구매 후 {d}일 이내에만 수정할 수 있습니다", toastSignInFirst:"먼저 로그인해 주세요", toastOnlyPurchasers:"구매자만 리뷰를 쓸 수 있습니다",
+                toastReviewWindow:"리뷰는 구매 후 {d}일 이내에만 작성할 수 있습니다", toastEnterComment:"리뷰 내용을 입력해 주세요",
+                toastReviewUpdated:"리뷰가 수정되었습니다", toastReviewPosted:"리뷰가 등록되었습니다!", toastReviewSaveFail:"리뷰를 저장하지 못했습니다 — 다시 시도해 주세요",
+                confirmDeleteReview:"이 리뷰를 삭제할까요? 되돌릴 수 없습니다.", toastDeleteWindow:"구매 후 {d}일 이내에만 리뷰를 삭제할 수 있습니다",
+                toastReviewDeleted:"리뷰가 삭제되었습니다", toastReviewDeleteFail:"리뷰를 삭제하지 못했습니다",
+                toastInBag:"이미 장바구니에 담긴 상품입니다", toastAddedBag:"전자책을 장바구니에 담았습니다", toastSignInCheckout:"결제하려면 로그인해 주세요",
+                toastPaymentSuccess:"구매 완료 되었습니다. My Purchases에서 구매하신 제품을 확인해 보세요.", toastDownloadExpired:"이 상품의 다운로드 기간이 만료되었습니다",
+                toastPreparingDownload:"안전한 다운로드를 준비하는 중: {title}", toastPurchaseDeleted:"구매 항목이 삭제되었습니다. 더 이상 다운로드할 수 없습니다.", toastDeleteError:"삭제 중 문제가 발생했습니다. 다시 시도해 주세요.",
+                toastNoCredits:"이 전자책에 대한 리뷰 작성 횟수를 모두 사용하셨습니다. 다시 구매하면 또 쓸 수 있습니다.",
+                toastFreeClaimed:"이미 이 전자책의 무료 버전을 받으셨습니다.", toastFreeOnePerBook:"전자책당 무료 옵션은 하나만 받을 수 있습니다."
+            },
             en: {
                 searchPlaceholder:"Search by title, topic, or keyword...",
                 lvlAll:"All Levels", lvlBeginner:"Beginner", lvlIntermediate:"Intermediate", lvlAdvanced:"Advanced",
@@ -2614,7 +2666,7 @@
                 confirmDeleteReview:"Delete this review? This cannot be undone.", toastDeleteWindow:"You can only delete your review within {d} days of purchase",
                 toastReviewDeleted:"Review deleted", toastReviewDeleteFail:"Could not delete review",
                 toastInBag:"Item is already in your shopping bag", toastAddedBag:"Added eBook to shopping bag", toastSignInCheckout:"Please sign in to checkout",
-                toastPaymentSuccess:"Payment successful! Your order has been recorded.", toastDownloadExpired:"Download window has expired for this item",
+                toastPaymentSuccess:"Purchase complete! Check your item in My Purchases.", toastDownloadExpired:"Download window has expired for this item",
                 toastPreparingDownload:"Preparing secure download for: {title}", toastPurchaseDeleted:"Purchase removed. It can no longer be downloaded.", toastDeleteError:"Something went wrong while deleting. Please try again.",
                 toastNoCredits:"You've used all your reviews for this eBook. Purchase it again to write another.",
                 toastFreeClaimed:"You've already received the free version of this eBook.", toastFreeOnePerBook:"Only one free option per eBook can be received."
@@ -2813,6 +2865,7 @@
             }
         };
         const I18N_MORE2 = {
+            ko: { loadingBooks:"전자책 불러오는 중…", toastUnavailable:"이 전자책은 현재 구매할 수 없습니다.", toastBookGone:"이 전자책은 더 이상 스토어에서 판매하지 않습니다." },
             en: { loadingBooks:"Loading eBooks…", toastUnavailable:"This eBook is currently unavailable.", toastBookGone:"This eBook is no longer available in the store." },
             es: { loadingBooks:"Cargando eBooks…", toastUnavailable:"Este eBook no está disponible en este momento.", toastBookGone:"Este eBook ya no está disponible en la tienda." },
             zh: { loadingBooks:"正在加载电子书…", toastUnavailable:"这本电子书暂不可售。", toastBookGone:"这本电子书已不在商店中。" },
@@ -2822,6 +2875,7 @@
             pl: { loadingBooks:"Ładowanie eBooków…", toastUnavailable:"Ten eBook jest obecnie niedostępny.", toastBookGone:"Ten eBook nie jest już dostępny w sklepie." }
         };
         const I18N_SORT = {
+            ko: { sortLabel:"정렬", sortFeatured:"추천순", sortSales:"판매순", sortNewest:"최신순", sortPriceHigh:"가격 높은순", sortPriceLow:"가격 낮은순", sortRating:"평점 높은순", sortReviews:"리뷰 많은순" },
             en: { sortLabel:"Sort by", sortFeatured:"Recommended", sortSales:"Best Selling", sortNewest:"Newest", sortPriceHigh:"Price: High to Low", sortPriceLow:"Price: Low to High", sortRating:"Highest Rated", sortReviews:"Most Reviewed" },
             es: { sortLabel:"Ordenar por", sortFeatured:"Recomendados", sortSales:"Más vendidos", sortNewest:"Más recientes", sortPriceHigh:"Precio: de mayor a menor", sortPriceLow:"Precio: de menor a mayor", sortRating:"Mejor valorados", sortReviews:"Más opiniones" },
             zh: { sortLabel:"排序", sortFeatured:"推荐", sortSales:"销量最高", sortNewest:"最新", sortPriceHigh:"价格从高到低", sortPriceLow:"价格从低到高", sortRating:"评分最高", sortReviews:"评价最多" },
@@ -2833,7 +2887,7 @@
         Object.keys(I18N_SORT).forEach(l => Object.assign(I18N_MORE2[l], I18N_SORT[l]));
         Object.keys(I18N_MORE2).forEach(l => Object.assign(I18N_MORE[l], I18N_MORE2[l]));
         Object.keys(I18N_MORE).forEach(l => { I18N[l] = Object.assign(I18N[l] || {}, I18N_MORE[l]); });
-        const LANG_LABELS = { en:"English", es:"Español", zh:"中文", ja:"日本語", fr:"Français", de:"Deutsch", pl:"Polski" };
+        const LANG_LABELS = { en:"English", es:"Español", zh:"中文", ja:"日本語", ko:"한국어", fr:"Français", de:"Deutsch", pl:"Polski" };
         let currentLang = 'en';
 
         // Translate a UI string; {name} placeholders are filled from vars. Falls back to English.
