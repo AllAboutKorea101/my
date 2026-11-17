@@ -312,47 +312,10 @@
       <a href="https://www.businesskorean.com/tutor/tutor.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span data-i18n="nav_tutor_top">Tutor</span></a>
       <a href="https://www.businesskorean.com/blog/blog.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg><span data-i18n="nav_blog_top">Blog</span></a>
     </nav>
-    <div class="lang-wrap">
-      <button class="lang-btn" onclick="toggleLangMenu()" id="langBtn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20"/></svg>
-        <span id="langLabel">EN</span>
-      </button>
-      <div class="lang-menu" id="langMenu"></div>
-    </div>
-    <button class="signin-btn" id="signInBtn" onclick="location.href='https://www.businesskorean.com/login.html'" data-i18n="nav_signin">Sign In</button>
-    <button class="signin-btn" id="myAccountBtn" onclick="location.href='https://www.businesskorean.com/mypage.html'" style="display:none;">My Account</button>
+    <!-- 공통 헤더 위젯(번역 + My Account/Sign In)은 menu.js 가 채웁니다 -->
+    <div data-site-auth style="min-height:34px;display:flex;align-items:center"></div>
   </div>
 </header>
-
-<!-- 로그인 상태에 따라 Sign In ↔ My Account 버튼 전환 -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8",
-    authDomain: "all-about-korea-login.firebaseapp.com",
-    projectId: "all-about-korea-login",
-    storageBucket: "all-about-korea-login.firebasestorage.app",
-    messagingSenderId: "20771155142",
-    appId: "1:20771155142:web:bbfeb19541625e750cbbc7"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  onAuthStateChanged(auth, (user) => {
-    const signInBtn = document.getElementById('signInBtn');
-    const myAccountBtn = document.getElementById('myAccountBtn');
-    if (user) {
-      signInBtn.style.display = 'none';
-      myAccountBtn.style.display = 'inline-flex';
-    } else {
-      signInBtn.style.display = '';
-      myAccountBtn.style.display = 'none';
-    }
-  });
-</script>
 
 
 <main class="wrap">
@@ -639,15 +602,6 @@ pl:{nav_tour_top:"Wycieczki",nav_books:"Książki",nav_masterclass_top:"Mastercl
 
 let currentLang = 'en';
 
-function buildLangMenu(){
-  const menu = document.getElementById('langMenu');
-  menu.innerHTML = LANGS.map(l =>
-    `<button class="lang-item${l.code===currentLang?' active':''}" data-code="${l.code}" onclick="setLang('${l.code}')">${l.flag} ${l.label}</button>`
-  ).join('');
-}
-function toggleLangMenu(){
-  document.getElementById('langMenu').classList.toggle('open');
-}
 function setLang(code){
   currentLang = code;
   const dict = T[code] || T.en;
@@ -655,17 +609,12 @@ function setLang(code){
     const key = el.getAttribute('data-i18n');
     if(dict[key]!==undefined) el.innerHTML = dict[key];
   });
-  document.getElementById('langLabel').textContent = code.toUpperCase();
   document.documentElement.lang = code;
-  document.getElementById('langMenu').classList.remove('open');
-  buildLangMenu();
 }
-document.addEventListener('click', (e)=>{
-  const w = document.querySelector('.lang-wrap');
-  if(w && !w.contains(e.target)) document.getElementById('langMenu').classList.remove('open');
-});
-
-buildLangMenu();
+/* 언어 선택은 상단 공통 위젯(menu.js)에서 제공. 언어 변경 신호를 받아 본문을 다시 번역.
+   index 번역 사전에 없는 언어(예: 한국어)는 영어로 표시됩니다. */
+window.addEventListener('aak:langchange', function(e){ setLang((e.detail && e.detail.lang) || 'en'); });
+if (window.AAK_LANG) setLang(window.AAK_LANG);
 
 /* ---------- Hero image slider ---------- */
 const HERO_IMAGES = [

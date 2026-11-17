@@ -142,21 +142,8 @@
       <a href="https://www.businesskorean.com/" class="logo">All About <span>Korea</span></a>
     </div>
 
-    <div class="lang-wrap">
-      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>
-        <span id="langBtnLabel">English</span>
-      </button>
-      <div class="lang-menu" id="langMenu" role="menu">
-        <div class="lang-item active" data-lang="en"><span class="flag">🇬🇧</span> English</div>
-        <div class="lang-item" data-lang="es"><span class="flag">🇪🇸</span> Español</div>
-        <div class="lang-item" data-lang="zh"><span class="flag">🇨🇳</span> 中文</div>
-        <div class="lang-item" data-lang="ja"><span class="flag">🇯🇵</span> 日本語</div>
-        <div class="lang-item" data-lang="fr"><span class="flag">🇫🇷</span> Français</div>
-        <div class="lang-item" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</div>
-        <div class="lang-item" data-lang="pl"><span class="flag">🇵🇱</span> Polski</div>
-      </div>
-    </div>
+    <!-- 공통 헤더 위젯(번역 + My Account/Sign In)은 menu.js 가 채웁니다 -->
+    <div data-site-auth style="min-height:34px;display:flex;align-items:center"></div>
   </div>
 </header>
 
@@ -203,25 +190,12 @@
       if (I18N[currentLang][key]) el.textContent = I18N[currentLang][key];
     });
     document.getElementById('htmlRoot').lang = currentLang;
-    document.getElementById('langBtnLabel').textContent = LANG_LABELS[currentLang];
-    document.querySelectorAll('.lang-item').forEach(it => it.classList.toggle('active', it.dataset.lang === currentLang));
   }
 
-  const langBtn = document.getElementById('langBtn');
-  const langMenu = document.getElementById('langMenu');
-  langBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const open = langMenu.classList.toggle('open');
-    langBtn.setAttribute('aria-expanded', open);
-  });
-  document.querySelectorAll('.lang-item').forEach(item => {
-    item.addEventListener('click', () => {
-      applyLang(item.dataset.lang);
-      langMenu.classList.remove('open');
-      langBtn.setAttribute('aria-expanded', 'false');
-    });
-  });
-  document.addEventListener('click', () => langMenu.classList.remove('open'));
+  /* 공통 헤더 위젯(menu.js)에서 언어가 바뀌면 이 페이지를 다시 번역합니다.
+     payment 번역 사전에 없는 언어(예: 한국어)는 영어로 표시합니다. */
+  window.addEventListener('aak:langchange', (e) => applyLang((e.detail && e.detail.lang) || 'en'));
+  if (window.AAK_LANG) applyLang(window.AAK_LANG);
 </script>
 
 <!-- 하단 사이트 링크 (menu.js 의 MENU_LINKS 로 자동 갱신) -->
