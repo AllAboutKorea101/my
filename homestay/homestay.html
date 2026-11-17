@@ -294,20 +294,7 @@
 
 <main class="wrap">
 
-  <!-- ===== Language + intro ===== -->
-  <div class="lang-row">
-    <label for="langSelect">🌐 Language</label>
-    <select id="langSelect">
-      <option value="en">English</option>
-      <option value="es">Español</option>
-      <option value="zh">中文</option>
-      <option value="ja">日本語</option>
-      <option value="fr">Français</option>
-      <option value="de">Deutsch</option>
-      <option value="pl">Polski</option>
-    </select>
-  </div>
-
+  <!-- ===== Intro ===== (언어 선택은 상단 공통 위젯(menu.js)에서 제공) -->
   <section class="intro-card">
     <span class="eyebrow">✦ Women-Only Homestay</span>
     <h1 id="t-headline"></h1>
@@ -506,8 +493,14 @@ function renderLang(code){
   document.getElementById('t-emailFallback').innerHTML=r.emailFallback;
   document.getElementById('t-footer').innerHTML=r.footer;
 }
-document.getElementById('langSelect').addEventListener('change',e=>renderLang(e.target.value));
 renderLang('en');
+/* 공통 헤더 위젯(menu.js)에서 언어가 바뀌면 이 페이지를 다시 그립니다.
+   homestay 번역 사전에 없는 언어(예: 한국어)는 영어로 표시합니다. */
+window.addEventListener('aak:langchange', function(e){
+  var code = e.detail && e.detail.lang;
+  renderLang(T[code] ? code : 'en');
+});
+if (window.AAK_LANG) renderLang(T[window.AAK_LANG] ? window.AAK_LANG : 'en');
 
 /* ---------- Booking form template + preview ---------- */
 const fEmail=document.getElementById('email'),fCountry=document.getElementById('country'),fName=document.getElementById('name'),
@@ -552,9 +545,8 @@ refreshPreview();
 
 <script>
 /* SEO: ?lang=xx 주소로 접속 시 해당 언어로 표시 + 언어 전환 시 <html lang>·제목(H1) 동기화 */
-(function(){var q=window.AAK_PAGE_LANG,B=window.AAK_BASE_LANG,H=null;function sync(l){document.documentElement.lang=l;var h=document.getElementById("aakH1");if(h&&H)h.textContent=H[l]||H.en;}
-var s=document.getElementById('langSelect');s.addEventListener('change',function(){sync(s.value);});
-if(q&&q!==B){s.value=q;renderLang(q);}
+(function(){var q=window.AAK_PAGE_LANG,B=window.AAK_BASE_LANG;
+if(q&&q!==B){document.documentElement.lang=q;renderLang(T[q]?q:'en');}
 })();
 </script>
 </body>
