@@ -14,7 +14,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
   import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-functions.js";
 
   const firebaseConfig = {
@@ -29,142 +29,439 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  const functions = getFunctions(app);
-  const cancelSubscription = httpsCallable(functions, "cancelSubscription");
+  // 구독 함수(verifyPaypalSubscription·cancelSubscription)는 기본 리전(us-central1),
+  // 전자책 다운로드 함수(getBookDownloadUrl)는 asia-northeast3 리전에 배포되어 있습니다.
+  const fnsDefault = getFunctions(app);
+  const fnsSeoul = getFunctions(app, "asia-northeast3");
+  const cancelSubscription = httpsCallable(fnsDefault, "cancelSubscription");
+  const getBookDownloadUrl = httpsCallable(fnsSeoul, "getBookDownloadUrl");
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      location.href = "https://www.businesskorean.com/login.html?redirect=mypage.html";
-      return;
-    }
+  const BASE = "https://www.businesskorean.com";
+  const CONTACT_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSdKyDAu5zfke52sS_e5M2jxfpzQ9zq8QC4BHUylUq-i80QM6Q/viewform";
 
-    document.getElementById('userEmail').textContent = user.email || '';
+  /* ── helpers ── */
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  const jsq = s => esc(JSON.stringify(String(s)));
+  const toDate = v => !v ? null : (typeof v.toDate === 'function' ? v.toDate() : (v.seconds != null ? new Date(v.seconds*1000) : new Date(v)));
+  const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  const fmtYMD = (d,tz) => new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+  const fmtHM  = (d,tz) => new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(d);
+  const lYMD = d => fmtYMD(d,userTZ), lHM = d => fmtHM(d,userTZ), kHM = d => fmtHM(d,'Asia/Seoul');
+  const longDate = v => { const d = toDate(v); return d && !isNaN(d) ? new Intl.DateTimeFormat('en-US',{year:'numeric',month:'long',day:'numeric'}).format(d) : null; };
+  const firstName = v => { const s = String(v||'').trim(); if(!s) return ''; if(/^[가-힣]{2,4}$/.test(s)) return s; const p = s.split(/\s+/).filter(Boolean); return (p[0]==='선생님'||p[0]==='Teacher')?(p[1]||p[0]):p[0]; };
 
-    const snap = await getDoc(doc(db, "users", user.uid));
-    const data = snap.exists() ? snap.data() : {};
-    renderStatus(data.subscriptionActive === true);
+  let user = null, tutorMap = {}, bookMap = {};
 
-    document.getElementById('gate-loading').style.display = 'none';
-    document.getElementById('gate-content').style.display = 'flex';
-  });
-
-  // onAuthStateChanged 밖에 한 번만 등록 (재실행돼도 리스너 중복 등록 방지)
-  document.getElementById('signOutBtn').addEventListener('click', async () => {
-    await signOut(auth);
-    location.href = "https://www.businesskorean.com/";
-  });
-
-  function renderStatus(isActive) {
-    const badge = document.getElementById('statusBadge');
-    const cancelSection = document.getElementById('cancelSection');
-    const subscribeSection = document.getElementById('subscribeSection');
-
-    if (isActive) {
-      badge.textContent = 'Active';
-      badge.className = 'badge badge-active';
-      cancelSection.style.display = 'block';
-      subscribeSection.style.display = 'none';
-    } else {
-      badge.textContent = 'Not subscribed';
-      badge.className = 'badge badge-inactive';
-      cancelSection.style.display = 'none';
-      subscribeSection.style.display = 'block';
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const cancelBtn = document.getElementById('cancelBtn');
-    const confirmBox = document.getElementById('confirmBox');
-    const confirmYes = document.getElementById('confirmYes');
-    const confirmNo = document.getElementById('confirmNo');
-    const cancelMsg = document.getElementById('cancelMsg');
-
-    cancelBtn.addEventListener('click', () => {
-      confirmBox.style.display = 'block';
-      cancelBtn.style.display = 'none';
-    });
-
-    confirmNo.addEventListener('click', () => {
-      confirmBox.style.display = 'none';
-      cancelBtn.style.display = '';
-    });
-
-    confirmYes.addEventListener('click', async () => {
-      confirmYes.disabled = true;
-      confirmYes.textContent = 'Cancelling…';
-      cancelMsg.style.display = 'none';
-      try {
-        await cancelSubscription();
-        renderStatus(false);
-        cancelMsg.textContent = 'Your subscription has been cancelled. You\u2019ll keep access until the current billing period ends.';
-        cancelMsg.style.color = 'var(--gray)';
-        cancelMsg.style.display = 'block';
-        confirmBox.style.display = 'none';
-      } catch (err) {
-        console.error(err);
-        cancelMsg.textContent = 'Something went wrong. Please try again or contact support.';
-        cancelMsg.style.color = 'var(--coral)';
-        cancelMsg.style.display = 'block';
-        confirmYes.disabled = false;
-        confirmYes.textContent = 'Yes, cancel';
+  /* ════════ credit summary (튜터 앱과 동일 규칙) ════════ */
+  function endedBookings(list){ const now=Date.now(); return (list||[]).filter(b=>b.status==='reserved'&&toDate(b.endAt)&&toDate(b.endAt).getTime()<=now); }
+  function creditSummary(orders, bookings){
+    const now=Date.now();
+    const s={pending:0,paid:0,reserved:0,used:0,expired:0,available:0,avTrial:0,avReg:0};
+    orders.forEach(o=>{
+      if(o.status==='pending'){ s.pending+=o.credits||0; return; }
+      if(o.status!=='paid'&&o.status!=='expired') return;
+      s.paid+=o.credits||0; s.reserved+=o.reserved||0; s.used+=o.used||0; s.expired+=o.expiredCredits||0;
+      const exp=toDate(o.expiresAt);
+      if(o.status==='paid'&&(!exp||exp.getTime()>now)){
+        const a=Math.max(0,(o.credits||0)-(o.used||0)-(o.reserved||0));
+        s.available+=a; if(o.creditType==='trial') s.avTrial+=a; else s.avReg+=a;
       }
     });
+    const ids=new Set(orders.map(o=>o.id));
+    const pend=endedBookings(bookings).filter(b=>ids.has(b.orderId)).length;
+    if(pend){ s.reserved=Math.max(0,s.reserved-pend); s.used+=pend; }
+    return s;
+  }
+
+  /* ════════ auth gate ════════ */
+  onAuthStateChanged(auth, async (u) => {
+    if (!u) { location.href = `${BASE}/login.html?redirect=mypage.html`; return; }
+    user = u;
+    $('userEmail').textContent = u.email || '';
+    $('gate-loading').style.display = 'none';
+    $('gate-content').style.display = 'block';
+    // 각 섹션을 병렬로 로드 — 하나가 느려도 나머지는 먼저 표시됩니다.
+    loadSubscription();
+    loadTutor();
+    loadFavorites();
+    loadPurchases();
   });
+
+  $('signOutBtn').addEventListener('click', async () => { await signOut(auth); location.href = `${BASE}/`; });
+
+  /* ════════ 1. KOREAN TUTOR ════════ */
+  async function loadTutor(){
+    const box = $('tutorBody');
+    try {
+      const email = (user.email||'').toLowerCase();
+      const [tutorsSnap, ordersSnap, bookingsSnap] = await Promise.all([
+        getDocs(collection(db,'tutors')).catch(()=>({docs:[]})),
+        getDocs(query(collection(db,'orders'),   where('studentEmail','==',email))).catch(()=>({docs:[]})),
+        getDocs(query(collection(db,'bookings'), where('studentEmail','==',email))).catch(()=>({docs:[]}))
+      ]);
+      tutorMap = {}; tutorsSnap.docs.forEach(d=>tutorMap[d.id]={id:d.id,...d.data()});
+      const orders   = ordersSnap.docs.map(d=>({id:d.id,...d.data()}));
+      const bookings = bookingsSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>toDate(a.startAt)-toDate(b.startAt));
+      const tuName = b => firstName((tutorMap[b.tutorId]||{}).name || b.tutorName || b.tutorId || '');
+
+      const s = creditSummary(orders, bookings);
+      const now = Date.now();
+      const upcoming = bookings.filter(b=>b.status==='reserved' && toDate(b.endAt) && toDate(b.endAt).getTime()>now);
+
+      if(!orders.length && !bookings.length){
+        box.innerHTML = emptyBlock('You have no tutoring activity yet.',
+          `<a class="btn btn-primary" href="${BASE}/tutor/tutor.html">Explore 1:1 Tutoring</a>`);
+        return;
+      }
+
+      const stat = (label, val, sub, color) => `<div class="stat">
+        <p class="stat-label">${esc(label)}</p>
+        <p class="stat-val" style="color:${color}">${val}</p>${sub?`<p class="stat-sub">${sub}</p>`:''}</div>`;
+
+      const next = upcoming[0];
+      const nextBox = next ? `<div class="next-lesson">
+        <div>
+          <p class="mini-label">Next Lesson</p>
+          <p class="next-main">${lYMD(toDate(next.startAt))} ${lHM(toDate(next.startAt))} · ${next.creditType==='trial'?'25-min Trial':'50-min Lesson'} · ${esc(tuName(next))}</p>
+          <p class="next-sub">${kHM(toDate(next.startAt))} KST</p>
+        </div>
+        ${next.meetLink?`<a class="btn btn-green" href="${esc(next.meetLink)}" target="_blank" rel="noopener">Join</a>`:`<span class="pill-muted">Link pending</span>`}
+      </div>` : '';
+
+      const rows = upcoming.map(b=>{
+        const st = toDate(b.startAt);
+        return `<tr>
+          <td class="td-strong">${b.creditType==='trial'?'25-min Trial':'50-min Lesson'}</td>
+          <td class="td-teal">${lYMD(st)} ${lHM(st)}</td>
+          <td>${kHM(st)} KST</td>
+          <td>${esc(tuName(b))}</td>
+          <td>${b.meetLink?`<a class="btn btn-green btn-sm" href="${esc(b.meetLink)}" target="_blank" rel="noopener">Join</a>`:`<span class="pill-muted">Link pending</span>`}</td>
+        </tr>`;
+      }).join('');
+
+      box.innerHTML = `
+        <div class="stat-grid">
+          ${stat('Remaining Credits', s.available, `after booked lessons · Trial ${s.avTrial} / Lesson ${s.avReg}`, '#15803d')}
+          ${stat('Booked Lessons', s.reserved, '', '#2563eb')}
+        </div>
+        ${nextBox}
+        <div class="tbl-wrap">
+          <table class="tbl"><thead><tr><th>Type</th><th>Your Time</th><th>Tutor (KST)</th><th>Tutor</th><th>Classroom</th></tr></thead>
+          <tbody>${rows || `<tr><td colspan="5" class="empty-row">No upcoming lessons.</td></tr>`}</tbody></table>
+        </div>
+        <div class="card-foot">
+          <a class="btn btn-ghost" href="${BASE}/tutor/tutor.html">Open My Dashboard</a>
+          <span class="foot-note">Book, change or cancel lessons in the full dashboard.</span>
+        </div>`;
+    } catch(e){ console.warn('tutor', e); box.innerHTML = errBlock(); }
+  }
+
+  /* ════════ 2. BLOG FAVORITES ════════ */
+  async function loadFavorites(){
+    const box = $('favBody');
+    try {
+      const uSnap = await getDoc(doc(db,'blog_users',user.uid)).catch(()=>null);
+      const liked = (uSnap && uSnap.exists() && Array.isArray(uSnap.data().liked)) ? uSnap.data().liked : [];
+      if(!liked.length){
+        box.innerHTML = emptyBlock('No favorite posts yet.',
+          `<a class="btn btn-primary" href="${BASE}/blog/blog.html">Browse the Korean Blog</a>`);
+        return;
+      }
+      const postsSnap = await getDocs(collection(db,'blog_posts')).catch(()=>({docs:[]}));
+      const posts = postsSnap.docs.map(d=>({id:d.id,...d.data()}));
+      const favs = posts.filter(p=>liked.includes(p.id));
+      if(!favs.length){
+        box.innerHTML = emptyBlock('Your favorite posts are no longer available.',
+          `<a class="btn btn-primary" href="${BASE}/blog/blog.html">Browse the Korean Blog</a>`);
+        return;
+      }
+      box.innerHTML = `<div class="fav-grid">${favs.map(p=>`
+        <a class="fav-card" href="${BASE}/blog/blog.html?id=${encodeURIComponent(p.id)}">
+          <div class="fav-tags">
+            ${p.level?`<span class="tag tag-amber">${esc(p.level)}</span>`:''}
+            ${p.category?`<span class="tag tag-gray">${esc(p.category)}</span>`:''}
+          </div>
+          <h4 class="fav-title">${esc(p.title||'Untitled')}</h4>
+          ${p.summary?`<p class="fav-sum">${esc(p.summary)}</p>`:''}
+          <div class="fav-meta">
+            <span>❤ ${Number(p.likes||0)}</span>
+            <span class="fav-go">Study →</span>
+          </div>
+        </a>`).join('')}</div>`;
+    } catch(e){ console.warn('favorites', e); box.innerHTML = errBlock(); }
+  }
+
+  /* ════════ 3. MASTERCLASS SUBSCRIPTION ════════ */
+  let subData = {};
+  async function loadSubscription(){
+    const box = $('subBody');
+    try {
+      const snap = await getDoc(doc(db,'users',user.uid)).catch(()=>null);
+      subData = (snap && snap.exists()) ? snap.data() : {};
+      renderSubscription();
+    } catch(e){ console.warn('subscription', e); box.innerHTML = errBlock(); }
+  }
+
+  function renderSubscription(){
+    const box = $('subBody');
+    const now = Date.now();
+    const active = subData.subscriptionActive === true;
+    const endsAt = toDate(subData.subscriptionEndsAt);
+    const cancelled = subData.subscriptionCancelled === true || !!subData.subscriptionCancelledAt;
+    const nextBilling = subData.subscriptionNextBilling;
+    const endLabel = endsAt ? longDate(endsAt) : null;
+
+    // 상태 3가지: 해지 예정(이용 가능) / 구독 중 / 미구독
+    // 해지했지만 만료일이 아직 안 지난 경우 — active 플래그와 무관하게 안내를 우선 표시
+    if (cancelled && endsAt && endsAt.getTime() > now) {
+      box.innerHTML = `
+        <div class="status-row"><span class="status-label">Subscription status</span><span class="badge badge-warn">Cancelled</span></div>
+        <div class="notice notice-amber">
+          Your subscription has been cancelled.${endLabel?` You can keep using all Premium content freely until <b>${esc(endLabel)}</b>.`:' You can keep using all Premium content until the end of the current billing period.'} It will not renew after that.
+        </div>`;
+      return;
+    }
+    if (active && !cancelled) {
+      box.innerHTML = `
+        <div class="status-row"><span class="status-label">Subscription status</span><span class="badge badge-active">Active</span></div>
+        <p class="plan-name">Plan: <b>All About Korea Premium – $4.99/month</b></p>
+        ${nextBilling?`<p class="plan-sub">Next renewal: <b>${esc(longDate(nextBilling)||'—')}</b></p>`:''}
+        <button class="btn btn-outline" id="cancelBtn">Cancel Subscription</button>
+        <div id="confirmBox" class="confirm-box" style="display:none">
+          <p>Are you sure? You'll keep access until the end of your current billing period${nextBilling?` (<b>${esc(longDate(nextBilling)||'')}</b>)`:''}, then it won't renew.</p>
+          <div class="confirm-actions">
+            <button id="confirmNo" class="btn btn-ghost">Keep my subscription</button>
+            <button id="confirmYes" class="btn btn-danger">Yes, cancel</button>
+          </div>
+        </div>
+        <p id="cancelMsg" class="cancel-msg"></p>`;
+      wireCancel();
+      return;
+    }
+    box.innerHTML = `
+      <div class="status-row"><span class="status-label">Subscription status</span><span class="badge badge-inactive">Not subscribed</span></div>
+      <p class="plan-name">You don't have an active subscription.</p>
+      <a href="${BASE}/payment.html"><button class="btn btn-primary">Subscribe – $4.99/month</button></a>`;
+  }
+
+  function wireCancel(){
+    const cancelBtn=$('cancelBtn'), confirmBox=$('confirmBox'), confirmNo=$('confirmNo'), confirmYes=$('confirmYes'), msg=$('cancelMsg');
+    cancelBtn.addEventListener('click', ()=>{ confirmBox.style.display='block'; cancelBtn.style.display='none'; });
+    confirmNo.addEventListener('click', ()=>{ confirmBox.style.display='none'; cancelBtn.style.display=''; });
+    confirmYes.addEventListener('click', async ()=>{
+      confirmYes.disabled=true; confirmYes.textContent='Cancelling…'; msg.style.display='none';
+      try {
+        await cancelSubscription();
+        // 최신 상태(해지 만료일 등)를 다시 읽어 안내를 갱신합니다.
+        const snap = await getDoc(doc(db,'users',user.uid)).catch(()=>null);
+        subData = (snap && snap.exists()) ? snap.data() : subData;
+        if(subData.subscriptionActive !== true && !subData.subscriptionEndsAt){
+          // 백엔드가 아직 만료일을 저장하지 않는 경우의 일반 안내
+          $('subBody').innerHTML = `
+            <div class="status-row"><span class="status-label">Subscription status</span><span class="badge badge-warn">Cancelled</span></div>
+            <div class="notice notice-amber">Your subscription has been cancelled. You'll keep access until the end of your current billing period, then it won't renew.</div>`;
+        } else {
+          renderSubscription();
+        }
+      } catch(err){
+        console.error(err);
+        msg.textContent='Something went wrong. Please try again or contact support.';
+        msg.style.color='var(--coral)'; msg.style.display='block';
+        confirmYes.disabled=false; confirmYes.textContent='Yes, cancel';
+      }
+    });
+  }
+
+  /* ════════ 4. KOREAN BOOKS — PURCHASES ════════ */
+  const purchaseCache = {};
+  async function loadPurchases(){
+    const box = $('bookBody');
+    try {
+      const [pSnap, bSnap] = await Promise.all([
+        getDocs(query(collection(db,'purchases'), where('uid','==',user.uid))).catch(()=>({docs:[]})),
+        getDocs(collection(db,'books')).catch(()=>({docs:[]}))
+      ]);
+      bookMap = {}; bSnap.docs.forEach(d=>bookMap[d.id]={id:d.id,...d.data()});
+      const purchases = pSnap.docs.map(d=>({id:d.id,...d.data()}))
+        .filter(p=>!p.hidden)
+        .sort((a,b)=> new Date(b.purchaseDate||0) - new Date(a.purchaseDate||0));
+      if(!purchases.length){
+        box.innerHTML = emptyBlock('No purchases yet.',
+          `<a class="btn btn-primary" href="${BASE}/bookstore/bookstore.html">Visit the Bookstore</a>`);
+        return;
+      }
+      box.innerHTML = `<div class="book-grid">${purchases.map(p=>{
+        purchaseCache[p.id]=p;
+        const bk = bookMap[p.bookId]||{};
+        const title = p.bookTitle || bk.title || 'Book';
+        const cover = bk.thumbnail || p.thumbnail || 'https://placehold.co/160x100/1D1D1F/FFFFFF?text=Book';
+        const exp = toDate(p.downloadExpiresAt);
+        const expired = exp && Date.now() > exp.getTime();
+        const expLbl = exp && !isNaN(exp) ? exp.toLocaleDateString() : '-';
+        return `<div class="book-card">
+          <div class="book-top">
+            <img class="book-cover" src="${esc(cover)}" onerror="this.src='https://placehold.co/160x100/1D1D1F/FFFFFF?text=Book'" alt="">
+            <div class="book-info">
+              <span class="tag tag-green">Verified purchase</span>
+              <h4 class="book-title">${esc(title)}</h4>
+              <p class="book-opt">${esc(p.optionLabel||'Standard PDF')} • <b>$${Number(p.price||0).toFixed(2)}</b></p>
+            </div>
+          </div>
+          <p class="book-exp">${expired?'Download expired on':'Downloadable until'} ${esc(expLbl)}</p>
+          <button class="btn ${expired?'btn-disabled':'btn-dark'}" ${expired?'disabled':''} data-dl="${esc(p.id)}">Download</button>
+        </div>`;
+      }).join('')}</div>
+      <div class="card-foot"><a class="btn btn-ghost" href="${BASE}/bookstore/bookstore.html">Open My Purchases</a></div>`;
+      box.querySelectorAll('[data-dl]').forEach(btn=>btn.addEventListener('click', ()=>downloadBook(btn.getAttribute('data-dl'), btn)));
+    } catch(e){ console.warn('purchases', e); box.innerHTML = errBlock(); }
+  }
+
+  async function downloadBook(pid, btn){
+    const p = purchaseCache[pid]; if(!p) return;
+    const exp = toDate(p.downloadExpiresAt);
+    if(exp && Date.now()>exp.getTime()){ alert('This download link has expired.'); return; }
+    const prev = btn.textContent; btn.disabled=true; btn.textContent='Preparing…';
+    try {
+      const res = await getBookDownloadUrl({ bookId: p.bookId });
+      if(res && res.data && res.data.url){ window.location.href = res.data.url; }
+      else throw new Error('No download link');
+    } catch(e){ console.error(e); alert((e && e.message) || 'Download failed.'); }
+    finally { btn.disabled=false; btn.textContent=prev; }
+  }
+
+  /* ════════ shared blocks ════════ */
+  function emptyBlock(text, cta){ return `<div class="empty-block"><p>${esc(text)}</p>${cta||''}</div>`; }
+  function errBlock(){ return `<div class="empty-block"><p>Couldn't load this section. Please refresh the page.</p></div>`; }
 </script>
 
 <style>
   :root{
-    --ink:#222222; --gray:#6b6b6b; --gray-soft:#f7f7f7; --border:#e8e8e8;
+    --ink:#222; --gray:#6b6b6b; --gray-soft:#f7f7f7; --border:#e8e8e8;
     --blue:#3d5afe; --coral:#ff385c; --green:#1aa568; --green-soft:#e7f7ef; --coral-soft:#ffeef1;
-    --white:#ffffff; --radius:16px; --radius-sm:10px;
-    --shadow:0 6px 20px rgba(0,0,0,.08);
+    --amber:#b45309; --amber-soft:#fff7ed; --amber-border:#fed7aa;
+    --white:#fff; --radius:16px; --radius-sm:10px; --shadow:0 6px 20px rgba(0,0,0,.08);
   }
   *{box-sizing:border-box;}
   body{margin:0;font-family:'Inter',sans-serif;color:var(--ink);background:var(--gray-soft);}
-  h1{font-family:'Poppins',sans-serif;margin:0;letter-spacing:-.01em;}
+  h1,h2,h3{font-family:'Poppins',sans-serif;margin:0;letter-spacing:-.01em;}
   a{color:inherit;text-decoration:none;}
   button{font:inherit;cursor:pointer;}
 
   .topbar{background:var(--white);border-bottom:1px solid var(--border);}
-  .topbar-inner{max-width:1120px;margin:0 auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .topbar-inner{max-width:900px;margin:0 auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
   .logo{font-family:'Poppins',sans-serif;font-weight:700;font-size:19px;color:var(--ink);}
   .logo span{color:var(--blue);}
   .signout{font-size:13px;font-weight:600;color:var(--gray);background:none;border:none;}
   .signout:hover{color:var(--ink);}
 
-  #gate-loading{min-height:calc(100vh - 65px);display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:14px;}
-  #gate-content{display:none;min-height:calc(100vh - 65px);align-items:center;justify-content:center;padding:40px 20px;}
+  #gate-loading{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:14px;}
+  #gate-content{display:none;max-width:900px;margin:0 auto;padding:28px 18px 60px;}
 
-  .card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
-        width:100%;max-width:440px;padding:36px 32px;}
-  .card h1{font-size:20px;margin-bottom:4px;}
-  .email{color:var(--gray);font-size:13px;margin:0 0 24px;}
+  .page-head{margin-bottom:18px;}
+  .page-head h1{font-size:24px;}
+  .page-head .email{color:var(--gray);font-size:13px;margin-top:4px;}
 
-  .status-row{display:flex;align-items:center;justify-content:space-between;background:var(--gray-soft);
-        border-radius:var(--radius-sm);padding:16px 18px;margin-bottom:20px;}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;margin-bottom:18px;}
+  .card-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .card-head .ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .card-head h2{font-size:16px;}
+  .card-head .sub{font-size:12px;color:var(--gray);margin-top:1px;}
+  .ico-blue{background:#eef1ff;color:var(--blue);}
+  .ico-pink{background:var(--coral-soft);color:var(--coral);}
+  .ico-green{background:var(--green-soft);color:var(--green);}
+  .ico-amber{background:var(--amber-soft);color:var(--amber);}
+  .ico-gray{background:#f1f1f3;color:#555;}
+
+  .mini-load{color:var(--gray);font-size:13px;padding:6px 0;}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:600;border:none;transition:.15s;}
+  .btn-sm{padding:6px 12px;font-size:12px;border-radius:8px;}
+  .btn-primary{background:var(--blue);color:#fff;} .btn-primary:hover{opacity:.9;}
+  .btn-green{background:var(--green);color:#fff;} .btn-green:hover{opacity:.9;}
+  .btn-dark{background:#18181b;color:#fff;} .btn-dark:hover{background:#27272a;}
+  .btn-ghost{background:var(--gray-soft);color:#333;border:1px solid var(--border);} .btn-ghost:hover{background:#eee;}
+  .btn-outline{background:var(--white);border:1px solid var(--border);color:var(--coral);} .btn-outline:hover{background:var(--coral-soft);}
+  .btn-danger{background:var(--coral);color:#fff;} .btn-danger:disabled{opacity:.6;}
+  .btn-disabled{background:#e5e5e5;color:#aaa;cursor:not-allowed;}
+
+  /* stat cards */
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+  .stat{background:var(--gray-soft);border-radius:var(--radius-sm);padding:14px 16px;}
+  .stat-label{font-size:12px;color:var(--gray);font-weight:600;margin:0;}
+  .stat-val{font-size:26px;font-weight:800;margin:4px 0 0;font-family:'Poppins',sans-serif;}
+  .stat-sub{font-size:10.5px;color:#9a9a9a;margin:2px 0 0;}
+
+  .next-lesson{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#eef1ff;border:1px solid #dbe1ff;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;flex-wrap:wrap;}
+  .mini-label{font-size:11px;color:var(--gray);margin:0;font-weight:600;}
+  .next-main{font-weight:700;margin:3px 0 0;font-size:14px;}
+  .next-sub{font-size:11px;color:var(--gray);margin:2px 0 0;}
+  .pill-muted{font-size:12px;color:#9a9a9a;}
+
+  .tbl-wrap{overflow-x:auto;}
+  .tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:520px;}
+  .tbl thead{background:var(--gray-soft);}
+  .tbl th{text-align:left;padding:9px 12px;font-size:11px;color:#555;font-weight:700;}
+  .tbl td{padding:10px 12px;border-top:1px solid #f1f1f1;vertical-align:middle;}
+  .td-strong{font-weight:700;} .td-teal{font-weight:700;color:#0f766e;}
+  .empty-row{text-align:center;color:#9a9a9a;padding:18px;}
+
+  .card-foot{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap;}
+  .foot-note{font-size:11.5px;color:var(--gray);}
+
+  /* tags */
+  .tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:999px;}
+  .tag-amber{background:#fef3c7;color:#92400e;} .tag-gray{background:#f1f1f3;color:#555;}
+  .tag-green{background:var(--green-soft);color:#15803d;text-transform:uppercase;letter-spacing:.03em;}
+
+  /* favorites */
+  .fav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;}
+  .fav-card{display:block;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;transition:.15s;}
+  .fav-card:hover{border-color:var(--blue);box-shadow:0 4px 14px rgba(0,0,0,.06);}
+  .fav-tags{display:flex;gap:5px;margin-bottom:8px;}
+  .fav-title{font-size:15px;font-family:'Inter',sans-serif;font-weight:700;margin:0;line-height:1.3;}
+  .fav-sum{font-size:12px;color:var(--gray);margin:5px 0 0;line-height:1.45;max-height:52px;overflow:hidden;}
+  .fav-meta{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--coral);}
+  .fav-go{color:var(--blue);font-weight:600;}
+
+  /* subscription */
+  .status-row{display:flex;align-items:center;justify-content:space-between;background:var(--gray-soft);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px;}
   .status-label{font-size:13px;color:var(--gray);font-weight:600;}
   .badge{font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;}
   .badge-active{background:var(--green-soft);color:var(--green);}
   .badge-inactive{background:var(--coral-soft);color:var(--coral);}
-
-  .plan-name{font-size:14px;color:var(--ink);margin:0 0 20px;}
-  .plan-name b{font-weight:700;}
-
-  .btn{width:100%;padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;border:none;}
-  .btn-outline{background:var(--white);border:1px solid var(--border);color:var(--coral);}
-  .btn-outline:hover{background:var(--coral-soft);}
-  .btn-primary{background:var(--blue);color:#fff;}
-  .btn-primary:hover{opacity:.9;}
-
-  #confirmBox{display:none;background:var(--coral-soft);border-radius:var(--radius-sm);padding:16px;margin-top:12px;}
-  #confirmBox p{font-size:13px;color:var(--ink);margin:0 0 14px;line-height:1.5;}
+  .badge-warn{background:var(--amber-soft);color:var(--amber);}
+  .plan-name{font-size:14px;margin:0 0 6px;} .plan-name b{font-weight:700;}
+  .plan-sub{font-size:13px;color:var(--gray);margin:0 0 16px;}
+  .notice{border-radius:var(--radius-sm);padding:14px 16px;font-size:13px;line-height:1.55;}
+  .notice-amber{background:var(--amber-soft);border:1px solid var(--amber-border);color:#7c2d12;}
+  .confirm-box{background:var(--coral-soft);border-radius:var(--radius-sm);padding:16px;margin-top:12px;}
+  .confirm-box p{font-size:13px;margin:0 0 14px;line-height:1.5;}
   .confirm-actions{display:flex;gap:8px;}
-  .confirm-actions button{flex:1;padding:10px;font-size:13px;font-weight:600;border-radius:8px;border:none;}
-  #confirmYes{background:var(--coral);color:#fff;}
-  #confirmYes:disabled{opacity:.6;}
-  #confirmNo{background:var(--white);border:1px solid var(--border);color:var(--ink);}
+  .confirm-actions .btn{flex:1;}
+  .cancel-msg{font-size:13px;margin-top:14px;display:none;line-height:1.5;}
 
-  #cancelMsg{font-size:13px;margin-top:14px;display:none;line-height:1.5;}
+  /* books */
+  .book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+  .book-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;display:flex;flex-direction:column;gap:12px;}
+  .book-top{display:flex;gap:12px;align-items:flex-start;}
+  .book-cover{width:92px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0;}
+  .book-info{min-width:0;}
+  .book-title{font-size:14px;font-family:'Inter',sans-serif;font-weight:700;margin:5px 0 3px;line-height:1.3;word-break:break-word;}
+  .book-opt{font-size:12px;color:var(--gray);margin:0;}
+  .book-exp{color:var(--coral);font-weight:600;font-size:12.5px;margin:0;}
+
+  .empty-block{text-align:center;padding:26px 12px;color:var(--gray);}
+  .empty-block p{font-size:14px;margin:0 0 14px;}
+
+  .contact-text{font-size:14px;color:var(--ink);line-height:1.6;margin:0 0 14px;}
+
+  @media(max-width:560px){
+    .stat-grid{grid-template-columns:1fr;}
+    .fav-grid,.book-grid{grid-template-columns:1fr;}
+    #gate-content{padding:20px 14px 50px;}
+  }
 </style>
 </head>
 <body>
@@ -182,36 +479,57 @@
 <div id="gate-loading">Loading…</div>
 
 <div id="gate-content">
-  <div class="card">
+  <div class="page-head">
     <h1>My Account</h1>
     <p class="email" id="userEmail"></p>
-
-    <div class="status-row">
-      <span class="status-label">Subscription status</span>
-      <span class="badge" id="statusBadge">—</span>
-    </div>
-
-    <div id="cancelSection">
-      <p class="plan-name">Plan: <b>All About Korea Premium – $4.99/month</b></p>
-      <button class="btn btn-outline" id="cancelBtn">Cancel Subscription</button>
-      <div id="confirmBox">
-        <p>Are you sure? You'll keep access until the end of your current billing period, then it won't renew.</p>
-        <div class="confirm-actions">
-          <button id="confirmNo">Keep my subscription</button>
-          <button id="confirmYes">Yes, cancel</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="subscribeSection" style="display:none;">
-      <p class="plan-name">You don't have an active subscription.</p>
-      <a href="https://www.businesskorean.com/payment.html"><button class="btn btn-primary">Subscribe – $4.99/month</button></a>
-    </div>
-
-    <p id="cancelMsg"></p>
   </div>
-</div>
 
+  <!-- 1. Korean Tutor -->
+  <section class="card">
+    <div class="card-head">
+      <div class="ico ico-blue">🎓</div>
+      <div><h2>Korean Tutor</h2><p class="sub">Your lessons &amp; credits</p></div>
+    </div>
+    <div id="tutorBody"><p class="mini-load">Loading…</p></div>
+  </section>
+
+  <!-- 2. Blog Favorites -->
+  <section class="card">
+    <div class="card-head">
+      <div class="ico ico-pink">❤</div>
+      <div><h2>Korean Blog — My Favorites</h2><p class="sub">Posts you liked</p></div>
+    </div>
+    <div id="favBody"><p class="mini-load">Loading…</p></div>
+  </section>
+
+  <!-- 3. Masterclass subscription -->
+  <section class="card">
+    <div class="card-head">
+      <div class="ico ico-green">★</div>
+      <div><h2>Masterclass Subscription</h2><p class="sub">Premium membership</p></div>
+    </div>
+    <div id="subBody"><p class="mini-load">Loading…</p></div>
+  </section>
+
+  <!-- 4. Korean Books -->
+  <section class="card">
+    <div class="card-head">
+      <div class="ico ico-amber">📚</div>
+      <div><h2>Korean Books — My Purchases</h2><p class="sub">Downloads &amp; e-books</p></div>
+    </div>
+    <div id="bookBody"><p class="mini-load">Loading…</p></div>
+  </section>
+
+  <!-- 5. Contact -->
+  <section class="card">
+    <div class="card-head">
+      <div class="ico ico-gray">✉</div>
+      <div><h2>Contact</h2><p class="sub">Questions for the team</p></div>
+    </div>
+    <p class="contact-text">Have a question for the administrator? Please reach us through the link below and we'll get back to you.</p>
+    <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdKyDAu5zfke52sS_e5M2jxfpzQ9zq8QC4BHUylUq-i80QM6Q/viewform" target="_blank" rel="noopener">Contact the team</a>
+  </section>
+</div>
 
 <!-- 하단 사이트 링크 (menu.js 의 MENU_LINKS 로 자동 갱신) -->
 <nav data-site-footer class="aak-sitefoot" aria-label="Site links"><p class="aak-sitefoot-title">Explore All About Korea</p><ul class="aak-sitefoot-links"><li><a href="https://www.businesskorean.com/">Home</a></li><li><a href="https://www.businesskorean.com/homestay/homestay.html">Homestay</a></li><li><a href="https://www.businesskorean.com/guidedtour/guidedtour.html">Guided Tour</a></li><li><a href="https://www.businesskorean.com/tutor/tutor.html">Korean Tutor</a></li><li><a href="https://www.businesskorean.com/blog/blog.html">Korean Blog</a></li><li><a href="https://www.businesskorean.com/masterclass/masterclass.html">Masterclass</a></li><li><a href="https://www.businesskorean.com/bookstore/bookstore.html">Korean Books</a></li></ul><p class="aak-sitefoot-copy">© 2026 All About Korea</p></nav>
