@@ -139,7 +139,7 @@
     <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-apple-border/40 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <!-- Burger menu button -->
-            <div data-site-menu class="mr-3 sm:mr-6" style="width:40px;height:40px;flex-shrink:0"></div>
+            <div data-site-menu class="mr-4 sm:mr-8" style="width:40px;height:40px;flex-shrink:0"></div>
             <!-- Top Navigation without Emojis -->
             <nav class="hidden sm:flex items-center space-x-4 sm:space-x-8 text-xs sm:text-sm font-medium text-apple-secondary">
                 <button onclick="switchTab('store')" class="text-apple-text font-semibold transition hover:text-apple-accent py-2" data-i18n="navStore">
@@ -371,11 +371,6 @@
                     <textarea id="admin-desc" rows="3" maxlength="150" required oninput="updateAdminDescCount()" placeholder="Comprehensive guide with audio links and practice exercises..." class="w-full px-4 py-3 bg-zinc-50 border border-apple-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-apple-accent"></textarea>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-apple-secondary">Table of Contents (Comma separated)</label>
-                    <input type="text" id="admin-toc" placeholder="Chapter 1: Basics, Chapter 2: Particles, Chapter 3: Verbs" class="w-full px-4 py-3 bg-zinc-50 border border-apple-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-apple-accent">
-                </div>
-
                 <!-- Purchase Options Builder -->
                 <div class="space-y-3 border-t border-apple-border pt-6">
                     <div class="flex items-center justify-between">
@@ -474,12 +469,10 @@
     <!-- MODAL: BOOK DETAIL (Description, Table of Contents, Reviews with customizable stars) -->
     <div id="modal-detail" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-apple-border p-6 sm:p-8 space-y-6 relative">
-            <!-- Close button stays pinned to the top-right while the modal scrolls -->
-            <div class="sticky top-0 z-20 h-0 flex justify-end">
-                <button onclick="closeModal('modal-detail')" class="p-2 rounded-full bg-zinc-100/95 hover:bg-zinc-200 shadow-md transition" aria-label="Close">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+            <!-- Close button sits inside the card, top-right -->
+            <button onclick="closeModal('modal-detail')" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-zinc-100/95 hover:bg-zinc-200 shadow-md transition" aria-label="Close">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
             <div id="detail-content" class="space-y-6 !mt-0">
                 <!-- Injected via JS -->
             </div>
@@ -1129,18 +1122,6 @@
                                 <span class="text-right">${priceHtml(opt.price, opt.originalPrice, { mainSize: 'text-xs sm:text-sm', origSize: 'text-[11px]', freeLabel: true })}</span>
                             </label>
                         `).join('')}
-                    </div>
-                </div>
-
-                <div class="border-t border-apple-border pt-6 space-y-3">
-                    <h4 class="font-semibold text-sm uppercase tracking-wider text-zinc-900">
-                        ${t('tocTitle')}
-                    </h4>
-                    <div class="bg-zinc-50 border border-apple-border rounded-2xl p-4 space-y-2 text-sm text-zinc-700">
-                        ${book.tableOfContents && book.tableOfContents.length > 0 
-                            ? book.tableOfContents.map(chap => `<p class="flex items-center space-x-2"><span>•</span><span>${escapeHtml(chap)}</span></p>`).join('')
-                            : `<p class="text-xs text-apple-secondary">${t('tocFallback')}</p>`
-                        }
                     </div>
                 </div>
 
@@ -2024,7 +2005,6 @@
             updateDisplayDiscount();
             document.getElementById('admin-image').value = book.thumbnail;
             document.getElementById('admin-desc').value = book.description;
-            document.getElementById('admin-toc').value = (book.tableOfContents || []).join(', ');
             document.getElementById('admin-bestseller').checked = !!book.isBestSeller;
             document.getElementById('admin-new').checked = !!book.isNew;
             updateAdminDescCount();
@@ -2487,10 +2467,9 @@
             }
             const thumbnail = document.getElementById('admin-image').value || uploadedThumbnailUrl || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600";
             const description = document.getElementById('admin-desc').value.trim().slice(0, 150);
-            const tocInput = document.getElementById('admin-toc').value;
             const isBestSeller = document.getElementById('admin-bestseller').checked;
             const isNew = document.getElementById('admin-new').checked;
-            const tableOfContents = tocInput ? tocInput.split(',').map(s => s.trim()).filter(Boolean) : ["Chapter 1: Introduction", "Chapter 2: Core Lessons"];
+            const tableOfContents = [];
 
             const submitBtn = document.getElementById('admin-submit-btn');
             submitBtn.disabled = true;
