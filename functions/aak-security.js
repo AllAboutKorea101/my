@@ -52,6 +52,9 @@ async function isSiteAdmin(uid) {
 async function isSubscriber(uid) {
   const s = await fdb().doc(`users/${uid}`).get();
   if (!s.exists) return false;
+  // 해지 후 결제 기간이 끝났으면(만료일 경과) 더 이상 구독자가 아님
+  const ends = s.get('subscriptionEndsAt');
+  if (ends && Date.now() >= new Date(ends).getTime()) return false;
   return s.get('subscriptionStatus') === 'active' || s.get('subscriptionActive') === true;
 }
 
