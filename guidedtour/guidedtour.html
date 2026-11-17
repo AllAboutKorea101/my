@@ -293,10 +293,6 @@ footer{text-align:center;padding:24px;font-size:12.5px;color:var(--gray);border-
 <main class="wrap">
   <div class="eyebrow-row">
     <div class="eyebrow" data-i18n="eyebrow_tag">Private Tours: Travel Like a Local</div>
-    <select id="langSel" aria-label="Language">
-      <option value="en">EN</option><option value="es">ES</option><option value="zh">中文</option>
-      <option value="ja">日本語</option><option value="fr">FR</option><option value="de">DE</option><option value="pl">PL</option>
-    </select>
   </div>
   <h1 class="title" data-i18n="title">Seoul Sunset Hike + Temple &amp; K-Food Adventure</h1>
 
@@ -516,7 +512,9 @@ function setLang(l){
     el.textContent = (l==='en' ? el.dataset.en : (i18n[l]&&i18n[l][k])) || el.dataset.en;
   });
 }
-document.getElementById('langSel').onchange=e=>setLang(e.target.value);
+/* 공통 헤더 위젯(menu.js)에서 언어가 바뀌면 다시 번역 (사전에 없는 언어는 영어) */
+window.addEventListener('aak:langchange', function(e){ setLang((e.detail && e.detail.lang) || 'en'); });
+if (window.AAK_LANG) setLang(window.AAK_LANG);
 
 document.getElementById('bookingForm').addEventListener('submit', async e=>{
   e.preventDefault();
@@ -538,9 +536,8 @@ document.getElementById('bookingForm').addEventListener('submit', async e=>{
 
 <script>
 /* SEO: ?lang=xx 주소로 접속 시 해당 언어로 표시 + 언어 전환 시 <html lang>·제목(H1) 동기화 */
-(function(){var q=window.AAK_PAGE_LANG,B=window.AAK_BASE_LANG,H=null;function sync(l){document.documentElement.lang=l;var h=document.getElementById("aakH1");if(h&&H)h.textContent=H[l]||H.en;}
-var s=document.getElementById('langSel');s.addEventListener('change',function(){sync(s.value);});
-if(q&&q!==B){s.value=q;setLang(q);}
+(function(){var q=window.AAK_PAGE_LANG,B=window.AAK_BASE_LANG;
+if(q&&q!==B){document.documentElement.lang=q;setLang(q);}
 })();
 </script>
 </body>
