@@ -191,19 +191,7 @@
             <!-- Header Right Menu -->
             <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
                 <div data-site-auth style="min-height:34px;display:flex;align-items:center"></div>
-                <!-- Language Selector -->
-                <div class="relative">
-                    <select id="langSelect" onchange="changeLanguage(this.value)" style="padding-left:12px;padding-right:12px" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-full py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer transition-colors">
-                        <option value="ko">🇰🇷 한국어</option>
-                        <option value="en" selected>🇺🇸 English</option>
-                        <option value="es">🇪🇸 Español</option>
-                        <option value="zh">🇨🇳 中文</option>
-                        <option value="ja">🇯🇵 日本語</option>
-                        <option value="fr">🇫🇷 Français</option>
-                        <option value="de">🇩🇪 Deutsch</option>
-                        <option value="pl">🇵🇱 Polski</option>
-                    </select>
-                </div>
+                <!-- 언어 선택은 상단 공통 위젯(menu.js)에서 제공 -->
 
                 <!-- New Post Button (Modal Trigger) -->
             </div>
@@ -1370,9 +1358,12 @@
       (function initLang(){
         const q=window.AAK_PAGE_LANG, B=window.AAK_BASE_LANG||'en';
         currentLang=q||B;
-        const s=document.getElementById('langSelect'); if(s)s.value=currentLang;
         applyLanguage(currentLang); syncH1(currentLang);
       })();
+
+      // ===== 공통 헤더 위젯(menu.js) 언어 연동 =====
+      window.addEventListener('aak:langchange', function(e){ changeLanguage((e.detail && e.detail.lang) || 'en'); });
+      if (window.AAK_LANG) changeLanguage(window.AAK_LANG);
 
       // ===== 빠른 첫 렌더 (인증과 병렬) =====
       loadLocalUserData();
