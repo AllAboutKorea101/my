@@ -157,8 +157,10 @@
                 </button>
             </nav>
 
-            <!-- Right Edge: Language switcher + Auth -->
-            <div class="ml-auto flex items-center space-x-2 sm:space-x-3">
+            <!-- 공통 헤더 위젯(번역 + My Account/Sign In)은 menu.js 가 채웁니다 -->
+            <div class="ml-auto" data-site-auth style="min-height:34px;display:flex;align-items:center"></div>
+            <!-- Right Edge: Language switcher + Auth (공통 위젯으로 대체 — 숨김) -->
+            <div class="flex items-center space-x-2 sm:space-x-3" style="display:none">
                 <!-- Language Switcher -->
                 <div class="relative">
                     <button id="lang-btn" onclick="toggleLangMenu()" type="button" class="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 px-3 py-1.5 rounded-full text-xs font-semibold border border-apple-border/60 transition">
@@ -2928,6 +2930,9 @@
             if(labelEl) labelEl.textContent = LANG_LABELS[currentLang];
             document.getElementById('lang-menu')?.classList.add('hidden');
         }
+        /* 공통 헤더 위젯(menu.js) 언어 연동 */
+        window.addEventListener('aak:langchange', function(e){ applyLang((e.detail && e.detail.lang) || 'en'); });
+        if (window.AAK_LANG) applyLang(window.AAK_LANG);
     </script>
 <!-- 하단 사이트 링크 (menu.js 의 MENU_LINKS 로 자동 갱신) -->
 <nav data-site-footer class="aak-sitefoot" aria-label="Site links"><p class="aak-sitefoot-title">Explore All About Korea</p><ul class="aak-sitefoot-links"><li><a href="https://www.businesskorean.com/">Home</a></li><li><a href="https://www.businesskorean.com/homestay/homestay.html">Homestay</a></li><li><a href="https://www.businesskorean.com/guidedtour/guidedtour.html">Guided Tour</a></li><li><a href="https://www.businesskorean.com/tutor/tutor.html">Korean Tutor</a></li><li><a href="https://www.businesskorean.com/blog/blog.html">Korean Blog</a></li><li><a href="https://www.businesskorean.com/masterclass/masterclass.html">Masterclass</a></li><li><a href="https://www.businesskorean.com/bookstore/bookstore.html">Korean Books</a></li></ul><p class="aak-sitefoot-copy">© 2026 All About Korea</p></nav>
