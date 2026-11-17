@@ -507,7 +507,8 @@
     <span class="text-sm font-semibold text-slate-600 hidden md:inline whitespace-nowrap">1:1 Korean Tutoring</span>
     <div class="flex-1"></div>
 
-    <div class="lang-wrap">
+    <!-- 번역은 공통 헤더 위젯(menu.js)으로 대체 — 숨김 (JS 참조 유지를 위해 요소는 남겨둠) -->
+    <div class="lang-wrap" style="display:none">
       <button class="lang-btn-ui" onclick="togglePop('langMenuUi', event)" aria-label="Language">
         <i class="fa fa-globe"></i><span id="langLabelUi">EN</span>
       </button>
@@ -520,9 +521,10 @@
       <button id="roleBtn-admin" data-role="admin" class="role-pill-btn hidden" onclick="switchView('admin')"><i class="fa fa-user-shield text-amber-600"></i><span class="rl">Admin</span><i class="fa fa-check chk"></i></button>
     </div>
 
-    <button class="signin-btn-ui" id="signInBtn" onclick="handleSignIn()"><i class="fa-brands fa-google mr-1.5"></i><span data-i18n="signIn">Sign In</span></button>
+    <!-- 로그인/계정 버튼은 공통 헤더 위젯(menu.js)으로 대체 — 숨김 (JS 참조 유지) -->
+    <button class="signin-btn-ui" id="signInBtn" onclick="handleSignIn()" style="display:none"><i class="fa-brands fa-google mr-1.5"></i><span data-i18n="signIn">Sign In</span></button>
 
-    <div class="acct-wrap hidden" id="acctWrap">
+    <div class="acct-wrap hidden" id="acctWrap" style="display:none">
       <button class="acct-btn" onclick="togglePop('acctMenu', event)">
         <img id="acctAvatar" src="" alt="" onerror="this.style.display='none'">
         <span class="acct-label" data-i18n="myAccount">My Account</span><i class="fa fa-chevron-down text-[10px]"></i>
@@ -532,6 +534,9 @@
         <button onclick="handleSignOut()" class="text-red-600"><i class="fa fa-arrow-right-from-bracket mr-2"></i><span data-i18n="signOut">Sign Out</span></button>
       </div>
     </div>
+
+    <!-- 공통 헤더 위젯(번역 + My Account/Sign In)은 menu.js 가 채웁니다 -->
+    <div data-site-auth style="display:flex;align-items:center;flex-shrink:0"></div>
   </div>
 </header>
 
@@ -3918,6 +3923,9 @@ function renderRevenue() {
 (function(){var q=window.AAK_PAGE_LANG,B=window.AAK_BASE_LANG,H={"en": "1:1 Korean Tutor Online — Learn Korean with a Native Korean Teacher", "es": "Tutor de coreano 1:1 online — aprende coreano con un profesor nativo", "zh": "一对一在线韩语家教——跟韩国母语老师学韩语", "ja": "オンライン韓国語マンツーマン — ネイティブ講師と韓国語を学ぶ", "fr": "Tuteur de coréen en ligne 1:1 — apprenez le coréen avec un professeur natif", "de": "Koreanisch-Tutor online 1:1 – Koreanisch lernen mit einem Muttersprachler", "pl": "Korepetytor koreańskiego online 1:1 – ucz się koreańskiego z native speakerem"};function sync(l){document.documentElement.lang=l;var h=document.getElementById("aakH1");if(h&&H)h.textContent=H[l]||H.en;}
 var o=window.setLanguage;if(typeof o==='function'){window.setLanguage=function(l){try{o(l);}finally{sync(l);}};}
 window.addEventListener('load',function(){if(q&&q!==B){window.setLanguage(q);}else if(typeof currentLang==='string'){sync(currentLang);}});
+/* 공통 헤더 위젯(menu.js) 언어 연동 — tutor 는 8개 언어 모두 지원 */
+window.addEventListener('aak:langchange',function(e){var l=e.detail&&e.detail.lang;if(l&&typeof window.setLanguage==='function')window.setLanguage(l);});
+if(window.AAK_LANG&&typeof window.setLanguage==='function')window.setLanguage(window.AAK_LANG);
 })();
 </script>
 </body>
