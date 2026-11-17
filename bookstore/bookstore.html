@@ -2004,7 +2004,10 @@
             if(coverStatus) coverStatus.textContent = '';
             updateAdminDescCount();
             updateDisplayDiscount();
-            addAdminOptionRow();
+            addAdminOptionRow({ label: 'Sample PDF', price: 0, originalPrice: 0, type: 'pdf' });
+            addAdminOptionRow({ label: 'Full Version PDF', price: '', originalPrice: '', type: 'pdf' });
+            addAdminOptionRow({ label: 'Sample WebApp', price: 0, originalPrice: 0, type: 'webapp' });
+            addAdminOptionRow({ label: 'Full Version WebApp', price: '', originalPrice: '', type: 'webapp' });
         }
 
         function adminEditBook(id) {
@@ -2115,7 +2118,8 @@
                 }
 
                 listEl.innerHTML = sales.map(s => {
-                    const email = s.uid ? (s.uid.substring(0, 6) + '****') : '—';
+                    const raw = s.email || s.userEmail || s.buyerEmail || s.studentEmail || s.userId || '';
+                    const email = raw && raw.indexOf('@') > -1 ? raw.split('@')[0] : (raw || (s.uid ? (s.uid.substring(0, 6) + '****') : '—'));
                     const dateStr = s.purchaseDate ? new Date(s.purchaseDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '—';
                     return `
                         <div class="flex items-center justify-between bg-zinc-50 border border-apple-border rounded-2xl px-4 py-3 gap-3">
@@ -2148,7 +2152,7 @@
             container.innerHTML = ordered.map(book => `
                 <div class="admin-product-card bg-white p-4 rounded-2xl border border-apple-border flex items-center gap-4 sm:cursor-grab active:cursor-grabbing" draggable="true" data-book-id="${escapeHtml(book.id)}">
                     <i data-lucide="grip-vertical" class="hidden sm:block w-4 h-4 text-apple-secondary flex-shrink-0"></i>
-                    <img src="${safeImg(book.thumbnail)}" draggable="false" class="w-12 h-14 object-cover rounded-lg flex-shrink-0" onerror="this.src='https://placehold.co/100x130/1D1D1F/FFFFFF?text=Book'">
+                    <img src="${safeImg(book.thumbnail)}" draggable="false" class="w-20 h-12 object-cover rounded-lg flex-shrink-0" onerror="this.src='https://placehold.co/160x100/1D1D1F/FFFFFF?text=Book'">
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold truncate">${escapeHtml(book.title)}</p>
                         <p class="text-[11px] text-apple-secondary">${book.originalPrice ? `<span class="line-through">$${Number(book.originalPrice).toFixed(2)}</span> ` : ''}$${Number(book.price).toFixed(2)}${discountPercent(book.price, book.originalPrice) ? ` <span class="text-red-600 font-semibold">-${discountPercent(book.price, book.originalPrice)}%</span>` : ''} • ${escapeHtml(book.category)} • ${book.status === 'paused' ? '<span class="text-red-600 font-semibold">Paused</span>' : '<span class="text-emerald-600 font-semibold">Active</span>'}</p>
