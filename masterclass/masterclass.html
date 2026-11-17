@@ -188,7 +188,9 @@
         </button>
       </nav>
     </div>
-    <div class="flex items-center space-x-3">
+    <!-- 공통 헤더 위젯(번역 + My Account/Sign In)은 menu.js 가 채웁니다 -->
+    <div data-site-auth style="min-height:34px;display:flex;align-items:center"></div>
+    <div class="flex items-center space-x-3" style="display:none">
       <!-- Language Switcher -->
       <div class="relative">
         <button id="langBtn" onclick="toggleLangDropdown()" style="background:var(--accent-light);color:var(--text-primary);" class="text-xs font-medium px-3 py-2 rounded-full flex items-center space-x-2 hover:opacity-80">
@@ -723,6 +725,9 @@ function applyTranslations(){
   if(vl) vl.textContent=onlyFavorites?t('nav_favorites'):t('nav_playlist');
 }
 function setLang(lg){currentLang=lg;closeDropdowns();applyTranslations();renderCourses();}
+/* 공통 헤더 위젯(menu.js) 언어 연동 (사전에 없는 언어는 영어로 표시) */
+window.addEventListener('aak:langchange',function(e){setLang((e.detail&&e.detail.lang)||'en');});
+if(window.AAK_LANG) setLang(window.AAK_LANG);
 function toggleLangDropdown(){document.getElementById('langDropdown').classList.toggle('open');}
 function closeDropdowns(){
   document.getElementById('langDropdown').classList.remove('open');
