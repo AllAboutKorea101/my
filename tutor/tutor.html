@@ -1115,6 +1115,8 @@ const T = {
   location: ['Seoul, South Korea', '韓国・ソウル', '韩国首尔', 'Seúl, Corea del Sur', 'Séoul, Corée du Sud', 'Seoul, Südkorea', 'Seul, Korea Płd.', '대한민국 서울'],
   chooseTutor: ['Choose Your Tutor', '講師を選択', '选择老师', 'Elige tu tutor', 'Choisissez votre tuteur', 'Lehrkraft wählen', 'Wybierz lektora', '튜터 선택'],
   noTutor: ['No tutors are available yet.', '現在予約できる講師はいません。', '暂无可预约的老师。', 'Aún no hay tutores disponibles.', 'Aucun tuteur disponible pour l’instant.', 'Noch keine Lehrkräfte verfügbar.', 'Brak dostępnych lektorów.', '아직 예약 가능한 튜터가 없습니다.'],
+  loadingNow: ['Loading…', '読み込み中…', '加载中…', 'Cargando…', 'Chargement…', 'Wird geladen…', 'Ładowanie…', '불러오는 중…'],
+  loadingWait: ['Please wait a moment — this usually loads within 5–10 seconds.', '少々お待ちください。通常5〜10秒で読み込まれます。', '请稍候，通常会在5〜10秒内加载完成。', 'Espera un momento — suele cargarse en 5–10 segundos.', 'Veuillez patienter — le chargement prend généralement 5 à 10 secondes.', 'Bitte einen Moment Geduld — lädt meist in 5–10 Sekunden.', 'Proszę czekać — zwykle ładuje się w 5–10 sekund.', '잠시만 기다려 주세요. 보통 5~10초 안에 로딩됩니다.'],
   tzTutor: ['Tutor', '講師', '老师', 'Tutor', 'Tuteur', 'Lehrkraft', 'Lektor', '튜터'],
   tzYou: ['You', 'あなた', '您', 'Tú', 'Vous', 'Du', 'Ty', '나'],
   step1: ['1. Select Your Lesson Plan', '1. レッスンプランを選択', '1. 选择课程方案', '1. Elige tu plan', '1. Choisissez votre forfait', '1. Paket wählen', '1. Wybierz pakiet', '1. 수강 플랜 선택'],
@@ -1714,6 +1716,7 @@ const toEmbed = url => {
 ════════════════════════════════════════════════════════════════ */
 const S = {
   user: null, email: null, role: null, myTutorId: null, view: 'student',
+  tutorsLoaded: false, showWaitMsg: false,
   allTutors: [], tutors: [], tutorMap: {}, selTutorId: null,
   customRate: null, busy: new Set(), gBusy: [], gBusyT: [],
   orders: [], bookings: [], logs: [],
@@ -1816,6 +1819,25 @@ async function loadTutors() {
   if (!S.selTutorId) { try { S.selTutorId = localStorage.getItem('aak_tutor') || null; } catch (e) {} }
   if (!S.selTutorId || !S.tutors.find(x => x.id === S.selTutorId)) S.selTutorId = S.tutors[0]?.id || null;
   await loadTutorExtras();
+  S.tutorsLoaded = true;   // 최초 로딩 완료 — 이후로는 "No tutors" 메시지만 (로딩 표시 아님)
+}
+
+/* 튜터 데이터 로딩 중 표시 (0.5초 넘으면 대기 안내로 전환) */
+function plansLoadingHTML() {
+  const msg = S.showWaitMsg ? tk('loadingWait') : tk('loadingNow');
+  return `<div class="col-span-full card text-sm text-slate-500 text-center"><i class="fa fa-spinner fa-spin mr-2"></i>${msg}</div>`;
+}
+let tutorWaitTimer = null;
+function startTutorLoadingTimer() {
+  if (tutorWaitTimer || S.tutorsLoaded) return;
+  // 0.5초 이상 지연되면 "잠시만 기다려 주세요" 안내 표시
+  tutorWaitTimer = setTimeout(() => {
+    if (!S.tutorsLoaded && S.view === 'student') { S.showWaitMsg = true; renderStudentAll(); }
+  }, 500);
+  // 안전장치: 15초가 지나도 로딩이 안 끝나면 일반 상태로 해제
+  setTimeout(() => {
+    if (!S.tutorsLoaded) { S.tutorsLoaded = true; if (S.view === 'student') renderStudentAll(); }
+  }, 15000);
 }
 /* Google 캘린더 바쁜 시간 (학생·튜터 화면 공용) */
 async function loadCalBusy(tid) {
@@ -1937,7 +1959,7 @@ function renderTutorChooser() {
 function renderHero() {
   const tu = curTutor();
   $('heroPhoto').src = tu?.photo || PLACEHOLDER;
-  $('heroName').textContent = tu ? tutorLabel(tu) : t('noTutor');
+  $('heroName').textContent = tu ? tutorLabel(tu) : (S.tutorsLoaded ? t('noTutor') : t('loadingNow'));
   $('heroRating').innerHTML = tu?.reviewCount
     ? `<span class="stars">${'<i class="fa fa-star"></i>'.repeat(Math.round(tu.rating || 0))}</span> ${Number(tu.rating || 0).toFixed(2)} · ${tu.reviewCount} ${esc(t('reviewsCount'))}`
     : (tu ? `<span class="badge b-green">${esc(t('newTutor'))}</span>` : '');
@@ -1954,7 +1976,7 @@ function renderHow() {
 /* Tutor 탭 본문: 프로필 전체 + 구사 언어 + 리뷰 */
 function renderTutorPanel() {
   const tu = curTutor(), box = $('tutorPanel'); if (!box) return;
-  if (!tu) { box.innerHTML = `<div class="card text-sm text-slate-500 text-center">${tk('noTutor')}</div>`; return; }
+  if (!tu) { box.innerHTML = S.tutorsLoaded ? `<div class="card text-sm text-slate-500 text-center">${tk('noTutor')}</div>` : plansLoadingHTML(); return; }
   const sec = (k, v) => v ? `<div><h4 class="text-xs font-bold text-slate-500 uppercase mb-1">${esc(t(k))}</h4><p class="text-sm text-slate-700 whitespace-pre-line">${esc(v)}</p></div>` : '';
   const langs = (tu.languages || []).filter(x => x && x.code);
   box.innerHTML = `<div class="card space-y-5">
@@ -2012,7 +2034,7 @@ function calcPrices(tu, cr) {
 const visiblePkgs = () => S.customRate ? PKG_KEYS.filter(k => k !== 'trial') : PKG_KEYS;
 function renderPackages() {
   const tu = curTutor();
-  if (!tu) { $('pkgGrid').innerHTML = `<div class="col-span-full card text-sm text-slate-500 text-center">${tk('noTutor')}</div>`; return; }
+  if (!tu) { $('pkgGrid').innerHTML = S.tutorsLoaded ? `<div class="col-span-full card text-sm text-slate-500 text-center">${tk('noTutor')}</div>` : plansLoadingHTML(); return; }
   const keys = visiblePkgs();
   if (!keys.includes(S.selPkg)) S.selPkg = keys[0];
   const pr = calcPrices(tu, S.customRate), tb = pkgTable(tu, S.customRate);
@@ -2116,7 +2138,7 @@ function renderReserve() {
   $('reserveMain').classList.toggle('hidden', !logged);
   if (!logged) { $('reserveLogin').innerHTML = loginBox(); return; }
   const tu = curTutor();
-  if (!tu) { $('creditBal').innerHTML = `<p class="text-sm text-slate-500">${esc(t('noTutor'))}</p>`; $('rSlots').innerHTML = ''; return; }
+  if (!tu) { $('creditBal').innerHTML = `<p class="text-sm text-slate-500">${esc(S.tutorsLoaded ? t('noTutor') : t('loadingNow'))}</p>`; $('rSlots').innerHTML = ''; return; }
   const s = creditSummary(S.orders.filter(o => o.tutorId === tu.id));
   if (S.selType === 'regular' && s.avReg === 0 && s.avTrial > 0) S.selType = 'trial';
   const opt = (type, n, icon) => `<div class="credit-opt ${S.selType === type ? 'sel' : ''}" onclick="S.selType='${type}';S.selSlot=null;renderReserve()">
@@ -3905,6 +3927,7 @@ function renderRevenue() {
 (function init() {
   buildLangDropdown();
   applyI18n();
+  startTutorLoadingTimer();   // 튜터 데이터 로딩 표시(0.5초↑ 지연 시 대기 안내)
   S.selDate = lYMD(new Date(Date.now() + 86400000));
   renderMobileTabs();
   switchStudentTab('plans', true);
