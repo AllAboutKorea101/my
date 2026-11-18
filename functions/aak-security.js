@@ -260,7 +260,18 @@ exports.getLessonContent = onCall({ region: REGION, memory: '512MiB' }, async (r
   }
 
   const c = await fdb().doc(`masterclassContent/${id}`).get();
-  return { html: c.exists ? String(c.get('htmlContent') || '') : '', full };
+  let html = '';
+  if (c.exists) {
+    const path = c.get('htmlPath');
+    if (path) {
+      // 큰 HTML 은 Firestore(1MiB 제한) 대신 Storage 에 저장 → Admin SDK 로 읽기
+      try { html = (await admin.storage().bucket().file(String(path)).download())[0].toString('utf8'); }
+      catch (e) { throw new HttpsError('internal', 'Lesson content could not be loaded.'); }
+    } else {
+      html = String(c.get('htmlContent') || '');
+    }
+  }
+  return { html, full };
 });
 
 // ───────────────────────── 4. 1회 이전 작업 (관리자) ─────────────────────────
@@ -377,4 +388,88 @@ exports.recordLessonView = onCall({ region: REGION }, async (req) => {
     tx.update(lessonRef, { views: FieldValue.increment(1), lastViewedAt: FieldValue.serverTimestamp() });
     return { views: views + 1, counted: true };
   });
+});
+
+// ───────────────────────── 7. 무료 구독 부여 (관리자) ─────────────────────────
+// 이미 가입한 사용자(gmail)에게 만료일까지 유료 구독과 동일한 접근 권한을 부여합니다.
+exports.grantFreeSubscription = onCall({ region: REGION }, async (req) => {
+  const auth = requireUser(req);
+  if (!(await isSiteAdmin(auth.uid))) throw new HttpsError('permission-denied', 'Admins only.');
+
+  const email = String((req.data && req.data.email) || '').trim().toLowerCase();
+  const endsAtRaw = String((req.data && req.data.endsAt) || '').trim();   // 'YYYY-MM-DD'
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new HttpsError('invalid-argument', 'Invalid email.');
+  const m = endsAtRaw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) throw new HttpsError('invalid-argument', 'Invalid expiry date.');
+  // 해당 날짜의 23:59:59 까지 접근 허용 (KST 기준으로 넉넉하게 UTC 로 저장)
+  const endsAt = new Date(`${endsAtRaw}T23:59:59+09:00`);
+  if (isNaN(endsAt.getTime())) throw new HttpsError('invalid-argument', 'Invalid expiry date.');
+  if (endsAt.getTime() <= Date.now()) throw new HttpsError('invalid-argument', 'Expiry date must be in the future.');
+
+  let userRec;
+  try { userRec = await admin.auth().getUserByEmail(email); }
+  catch (e) { throw new HttpsError('not-found', 'No account found for this email. The user must sign up first.'); }
+  const uid = userRec.uid;
+
+  const ref = fdb().doc(`users/${uid}`);
+  const cur = await ref.get();
+  const update = {
+    subscriptionActive: true,
+    subscriptionCancelled: false,
+    subscriptionFree: true,
+    subscriptionEndsAt: endsAt.toISOString(),
+    subscriptionNextBilling: null,
+    subscriptionEmail: email,
+    subscriptionGrantedBy: auth.token.email || auth.uid,
+    subscriptionGrantedAt: FieldValue.serverTimestamp(),
+  };
+  // 최초 구독 시작일이 없으면 지금으로 기록
+  if (!cur.exists || !cur.get('subscriptionStartedAt')) update.subscriptionStartedAt = new Date().toISOString();
+  await ref.set(update, { merge: true });
+
+  return { ok: true, uid, email, endsAt: endsAt.toISOString() };
+});
+
+// ───────────────────────── 8. 구독자 목록 (관리자) ─────────────────────────
+// 이메일 · 최초 구독일 · 갱신일 · 구독 기간(개월) · 상태(해지 여부) · 무료 여부
+exports.listSubscribers = onCall({ region: REGION, memory: '512MiB' }, async (req) => {
+  const auth = requireUser(req);
+  if (!(await isSiteAdmin(auth.uid))) throw new HttpsError('permission-denied', 'Admins only.');
+
+  const snap = await fdb().collection('users').get();
+  const rows = [];
+  for (const d of snap.docs) {
+    const u = d.data();
+    const hasSub = u.subscriptionStartedAt || u.subscriptionID || u.subscriptionActive === true || u.subscriptionFree === true;
+    if (!hasSub) continue;
+
+    let email = u.subscriptionEmail || '';
+    if (!email) { try { email = (await admin.auth().getUser(d.id)).email || ''; } catch (e) { email = ''; } }
+
+    const started = u.subscriptionStartedAt ? new Date(u.subscriptionStartedAt) : null;
+    const ends = u.subscriptionEndsAt ? new Date(u.subscriptionEndsAt) : null;
+    const expired = !!(ends && Date.now() >= ends.getTime());
+    const active = !expired && (u.subscriptionActive === true || u.subscriptionStatus === 'active');
+    // 구독 기간(개월): 시작일 ~ (만료일 또는 현재) 사이 개월 수
+    let months = 0;
+    if (started) {
+      const end = ends ? ends : new Date();
+      months = Math.max(0, (end.getFullYear() - started.getFullYear()) * 12 + (end.getMonth() - started.getMonth()));
+      if (end.getDate() >= started.getDate()) months += 0; // 보수적으로 완료 개월만
+    }
+
+    rows.push({
+      email,
+      startedAt: u.subscriptionStartedAt || null,
+      nextBilling: u.subscriptionNextBilling || null,
+      endsAt: u.subscriptionEndsAt || null,
+      months,
+      cancelled: u.subscriptionCancelled === true,
+      free: u.subscriptionFree === true,
+      active,
+      expired,
+    });
+  }
+  rows.sort((a, b) => String(b.startedAt || '').localeCompare(String(a.startedAt || '')));
+  return { subscribers: rows, count: rows.length };
 });
