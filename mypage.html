@@ -13,7 +13,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
   import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-functions.js";
 
@@ -75,8 +75,13 @@
   }
 
   /* ════════ auth gate ════════ */
-  onAuthStateChanged(auth, async (u) => {
-    if (!u) { location.href = `${BASE}/login.html?redirect=mypage.html`; return; }
+  // 로그인 상태를 로컬에 유지(브라우저 재방문·뒤로가기에도 유지)
+  await setPersistence(auth, browserLocalPersistence).catch(()=>{});
+
+  let appStarted = false;
+  function startApp(u){
+    if (appStarted) return;
+    appStarted = true;
     user = u;
     $('userEmail').textContent = u.email || '';
     $('gate-loading').style.display = 'none';
@@ -86,6 +91,23 @@
     loadTutor();
     loadFavorites();
     loadPurchases();
+  }
+  function gotoLogin(){ location.href = `${BASE}/login.html?redirect=mypage.html`; }
+
+  // 복원된 로그인 상태가 확정된 뒤에 판단 — 뒤로가기/새로고침 시 로그인이 풀리지 않도록
+  await auth.authStateReady();
+  if (auth.currentUser) startApp(auth.currentUser);
+  else gotoLogin();
+
+  // 이후 상태 변경(로그아웃 등)만 반영. 일시적 null 로 오판하지 않도록 currentUser 재확인
+  onAuthStateChanged(auth, (u) => {
+    if (u) { startApp(u); }
+    else if (!auth.currentUser) { gotoLogin(); }
+  });
+
+  // bfcache(뒤로가기) 로 복원됐는데 세션이 없으면 새로고침해 인증을 다시 확인
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted && !auth.currentUser) location.reload();
   });
 
   $('signOutBtn').addEventListener('click', async () => { await signOut(auth); location.href = `${BASE}/`; });
@@ -220,6 +242,15 @@
         <div class="notice notice-amber">
           Your subscription has been cancelled.${endLabel?` You can keep using all Premium content freely until <b>${esc(endLabel)}</b>.`:' You can keep using all Premium content until the end of the current billing period.'} It will not renew after that.
         </div>`;
+      return;
+    }
+    // 무료(관리자 부여) 구독 — 결제/해지 없이 만료일까지 이용
+    if (subData.subscriptionFree === true && (!endsAt || endsAt.getTime() > now)) {
+      box.innerHTML = `
+        <div class="status-row"><span class="status-label">Subscription status</span><span class="badge badge-active">Complimentary</span></div>
+        <p class="plan-name">You have a <b>complimentary membership</b>.</p>
+        ${endLabel?`<p class="plan-sub">Access until: <b>${esc(endLabel)}</b></p>`:''}
+        <div class="notice notice-amber" style="background:#eef1ff;border-color:#dbe1ff;color:#1e3a8a;">Enjoy full Premium access${endLabel?` until <b>${esc(endLabel)}</b>`:''}. No payment required.</div>`;
       return;
     }
     if (active && !cancelled) {
@@ -457,6 +488,8 @@
 
   .contact-text{font-size:14px;color:var(--ink);line-height:1.6;margin:0 0 14px;}
 
+  .back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--border);color:#333;font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;margin-bottom:16px;transition:.15s;}
+  .back-btn:hover{background:var(--gray-soft);}
   @media(max-width:560px){
     .stat-grid{grid-template-columns:1fr;}
     .fav-grid,.book-grid{grid-template-columns:1fr;}
@@ -479,6 +512,7 @@
 <div id="gate-loading">Loading…</div>
 
 <div id="gate-content">
+  <button type="button" class="back-btn" onclick="(window.history.length>1)?window.history.back():(location.href='https://www.businesskorean.com/')">← Back to previous page</button>
   <div class="page-head">
     <h1>My Account</h1>
     <p class="email" id="userEmail"></p>
