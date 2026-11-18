@@ -127,8 +127,8 @@
     .modal-backdrop{background:rgba(15,23,42,0.85);backdrop-filter:blur(6px)}
     .hero-slide{display:none}.hero-slide.active{display:block}
     /* Hero carousel: fixed height so all 3 slides are same size */
-    .hero-inner{height:220px}
-    @media(min-width:640px){.hero-inner{height:260px}}
+    .hero-inner{min-height:220px}
+    @media(min-width:640px){.hero-inner{min-height:260px}}
     #langDropdown{display:none}#langDropdown.open{display:block}
     #langDropdown2{display:none}#langDropdown2.open{display:block}
     #accountDropdown{display:none}#accountDropdown.open{display:block}
@@ -300,7 +300,13 @@ function mtabActive(btn){document.querySelectorAll('#mobile-tabbar .mtab').forEa
       <div id="heroSlide2" class="hero-slide">
         <span class="inline-block bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-3" data-i18n="hero3_tag">UNLIMITED SUBSCRIPTION</span>
         <h2 class="text-xl sm:text-3xl font-extrabold tracking-tight mb-2 leading-tight" data-i18n="hero3_title">Subscribe for Unlimited Access to All Content</h2>
-        <p class="text-slate-300 text-xs sm:text-sm mb-4 leading-relaxed max-w-2xl" data-i18n="hero3_desc">Unlock every playlist, lesson, and practice material with one simple subscription.</p>
+        <p class="text-slate-300 text-xs sm:text-sm mb-2 leading-relaxed max-w-2xl" data-i18n="hero3_desc">Unlock every playlist, lesson, and practice material with one simple subscription.</p>
+        <div class="flex flex-wrap gap-1.5 mb-3 max-w-2xl">
+          <span class="inline-flex items-center gap-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full"><i class="fa-solid fa-infinity text-[9px]"></i><span data-i18n="hero3_perk1">All-level unlimited access</span></span>
+          <span class="inline-flex items-center gap-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full"><i class="fa-solid fa-tag text-[9px]"></i><span data-i18n="hero3_perk2">50% off trial lesson</span></span>
+          <span class="inline-flex items-center gap-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full"><i class="fa-solid fa-tag text-[9px]"></i><span data-i18n="hero3_perk3">15% off group tours</span></span>
+          <span class="inline-flex items-center gap-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full"><i class="fa-solid fa-tag text-[9px]"></i><span data-i18n="hero3_perk4">10% off 4-week course</span></span>
+        </div>
         <a href="https://www.businesskorean.com/payment.html" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-5 py-2.5 rounded-full shadow-lg inline-flex items-center space-x-2">
           <span data-i18n="hero3_btn">Subscribe Now</span><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
         </a>
@@ -437,10 +443,11 @@ function mtabActive(btn){document.querySelectorAll('#mobile-tabbar .mtab').forEa
             <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-circle-check"></i></div>
             <div><p class="font-black text-base text-emerald-600">Active Subscription</p><p class="text-xs" style="color:var(--text-secondary);">You have unlimited access to all content.</p></div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="p-4 rounded-2xl" style="background:var(--bg);"><p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--text-secondary);">Status</p><p class="font-bold text-emerald-600" id="subStatusLabel">Active</p></div>
-            <div class="p-4 rounded-2xl" style="background:var(--bg);"><p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--text-secondary);">Access Until</p><p class="font-bold text-sm" style="color:var(--text-primary);" id="subAccessUntil">—</p></div>
             <div class="p-4 rounded-2xl" style="background:var(--bg);"><p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--text-secondary);">Subscribed Since</p><p class="font-bold text-sm" style="color:var(--text-primary);" id="subStartDate">—</p></div>
+            <div class="p-4 rounded-2xl" style="background:var(--bg);"><p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--text-secondary);">Next Renewal</p><p class="font-bold text-sm" style="color:var(--text-primary);" id="subNextBilling">—</p></div>
+            <div class="p-4 rounded-2xl" style="background:var(--bg);"><p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--text-secondary);">Access Until</p><p class="font-bold text-sm" style="color:var(--text-primary);" id="subAccessUntil">—</p></div>
           </div>
           <div id="subCancelledNotice" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-800 text-sm"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Your subscription is cancelled. Access continues until <strong id="subCancelledUntil">—</strong>.</div>
           <div id="subCancelBtnWrap">
@@ -448,7 +455,15 @@ function mtabActive(btn){document.querySelectorAll('#mobile-tabbar .mtab').forEa
               <i class="fa-solid fa-circle-xmark"></i><span>Cancel Subscription (access continues until billing period ends)</span>
             </button>
           </div>
+          <div id="subFreeNotice" class="hidden p-4 bg-blue-50 border border-blue-200 rounded-2xl text-blue-800 text-sm"><i class="fa-solid fa-gift mr-2"></i>You have a complimentary membership. Access continues until <strong id="subFreeUntil">—</strong>.</div>
         </div>
+      </div>
+    </section>
+    <section>
+      <h2 class="text-xl font-black mb-4" style="color:var(--text-primary);">✉️ Contact / Questions for the team</h2>
+      <div style="background:var(--surface);border:1px solid var(--border);" class="rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <p class="text-sm" style="color:var(--text-secondary);">Have a question about your subscription or content? Send it directly to our team.</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdKyDAu5zfke52sS_e5M2jxfpzQ9zq8QC4BHUylUq-i80QM6Q/viewform" target="_blank" rel="noopener" class="flex-shrink-0 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-6 py-3 rounded-full shadow"><i class="fa-solid fa-paper-plane"></i><span>Contact the team</span></a>
       </div>
     </section>
   </div>
@@ -640,6 +655,26 @@ function mtabActive(btn){document.querySelectorAll('#mobile-tabbar .mtab').forEa
       </div>
     </div>
 
+    <!-- Free subscription grant (관리자) -->
+    <div style="background:var(--surface);border:1px solid var(--border);" class="rounded-3xl p-5 sm:p-6 shadow-sm mb-5">
+      <div class="mb-4">
+        <h3 class="text-sm font-black" style="color:var(--text-primary);">🎁 무료 구독 부여</h3>
+        <p class="text-xs mt-0.5" style="color:var(--text-secondary);">이미 가입한 사용자의 Gmail 주소와 만료일을 입력하면 해당 날짜까지 유료 구독과 동일한 접근 권한을 부여합니다.</p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 sm:items-end">
+        <div class="flex-1">
+          <label class="block text-xs font-bold mb-1" style="color:var(--text-secondary);">사용자 Gmail</label>
+          <input type="email" id="freeSubEmail" placeholder="user@gmail.com" style="background:var(--bg);border:1px solid var(--border);color:var(--text-primary);" class="w-full px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1" style="color:var(--text-secondary);">만료일</label>
+          <input type="date" id="freeSubDate" style="background:var(--bg);border:1px solid var(--border);color:var(--text-primary);" class="px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <button onclick="grantFreeSubscriptionAdmin()" id="freeSubBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow flex-shrink-0">부여하기</button>
+      </div>
+      <p id="freeSubStatus" class="hidden text-xs mt-3"></p>
+    </div>
+
     <!-- Cancelled-but-still-active subscribers -->
     <div style="background:var(--surface);border:1px solid var(--border);" class="rounded-3xl p-5 sm:p-6 shadow-sm">
       <div class="flex items-center justify-between mb-4">
@@ -651,6 +686,20 @@ function mtabActive(btn){document.querySelectorAll('#mobile-tabbar .mtab').forEa
       </div>
       <div id="cancelledPendingList" class="space-y-2">
         <p class="text-xs text-center py-6" style="color:var(--text-secondary);">데이터 로딩 중…</p>
+      </div>
+    </div>
+
+    <!-- All subscribers list (load on click) -->
+    <div style="background:var(--surface);border:1px solid var(--border);" class="rounded-3xl p-5 sm:p-6 shadow-sm mt-5">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-sm font-black" style="color:var(--text-primary);">📋 구독자 목록</h3>
+          <p class="text-xs mt-0.5" style="color:var(--text-secondary);">이메일 · 최초 구독일 · 갱신일 · 구독 기간(개월) · 상태</p>
+        </div>
+        <button onclick="loadSubscribersList()" id="subListBtn" class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-xl hover:opacity-80 flex-shrink-0">불러오기</button>
+      </div>
+      <div id="subscribersList">
+        <p class="text-xs text-center py-6" style="color:var(--text-secondary);">[불러오기]를 눌러 구독자 목록을 조회하세요.</p>
       </div>
     </div>
   </div>
@@ -671,7 +720,7 @@ function mtabActive(btn){document.querySelectorAll('#mobile-tabbar .mtab').forEa
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, query, where, orderBy, serverTimestamp, increment, limit } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, deleteField, query, where, orderBy, serverTimestamp, increment, limit } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-functions.js";
 const firebaseConfig={apiKey:"AIzaSyA-qZfGlrEEAQRpl4KQzJmU7f4j1R0Usl8",authDomain:"all-about-korea-login.firebaseapp.com",projectId:"all-about-korea-login",storageBucket:"all-about-korea-login.firebasestorage.app",messagingSenderId:"20771155142",appId:"1:20771155142:web:bbfeb19541625e750cbbc7"};
@@ -679,11 +728,12 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 const storage=getStorage(app);
-const functions=getFunctions(app,"asia-northeast3"); // 강의 내용은 서버에서 권한 확인 후 전달
+const functions=getFunctions(app,"asia-northeast3"); // 강의 내용·구독자 관리는 서버(서울 리전)에서 처리
+const functionsDefault=getFunctions(app);            // 구독 결제/해지 함수(index.js, us-central1)
 // Admin identity verified only via Firebase ID token — never hard-coded email string in JS
 window.fb={auth,db,storage,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,
-  collection,doc,getDoc,getDocs,setDoc,deleteDoc,query,where,orderBy,serverTimestamp,increment,limit,
-  ref,uploadBytes,getDownloadURL,functions,httpsCallable};
+  collection,doc,getDoc,getDocs,setDoc,deleteDoc,deleteField,query,where,orderBy,serverTimestamp,increment,limit,
+  ref,uploadBytes,getDownloadURL,functions,functionsDefault,httpsCallable};
 await setPersistence(auth,browserLocalPersistence).catch(()=>{});
 onAuthStateChanged(auth,user=>{window.currentUser=user;window.dispatchEvent(new CustomEvent('authchange',{detail:{user}}));});
 </script>
@@ -702,13 +752,14 @@ const LVL_KEYS={
   'Beginner':'level_beginner','Intermediate':'level_intermediate','Advanced':'level_advanced'
 };
 const TRANSLATIONS={
-  en:{flag:'🇬🇧',label:'English',nav_playlist:'Playlist',nav_favorites:'My Favorites',nav_progress:'My Progress',nav_admin:'Admin',nav_signin:'Sign In',nav_signout:'Sign Out',sidebar_home:'Home',sidebar_contents:'Korean Contents',sidebar_homestay:'Homestay',sidebar_tour:'Guided Tour',sidebar_admin:'Admin Portal',hero1_tag:'KOREAN PLAYLIST',hero1_title:'Master Korean, From Grammar to Business',hero1_desc:'Explore a complete Korean learning playlist—covering grammar, vocabulary, reading, TOPIK exam prep, and business fluency.',hero1_btn:'Explore Playlist',hero2_tag:'1-MIN FREE PREVIEW',hero2_title:'Try the First 1 Minute of Every Lesson Free',hero2_desc:"Not sure where to start? Preview 1 minute of any Korean learning content for free.",hero2_btn:'Watch Free Preview',hero3_tag:'UNLIMITED SUBSCRIPTION',hero3_title:'Subscribe for Unlimited Access to All Content',hero3_desc:'Unlock every playlist, lesson, and practice material with one simple subscription.',hero3_btn:'Subscribe Now',search_placeholder:'Search by title, topic, or keyword…',level_all:'All Levels',level_beginner:'Beginner',level_intermediate:'Intermediate',level_advanced:'Advanced',cat_all:'All',cat_grammar:'Grammar',cat_vocabulary:'Vocabulary',cat_reading:'Reading',cat_writing:'Writing',cat_listening:'Listening',cat_speaking:'Speaking',cat_business:'Business Korean',cat_etc:'ETC',sort_by:'Sort by',sort_recommended:'Recommended',sort_popular:'Most Popular',empty_title:'No contents found',empty_desc:"We couldn't find any contents matching your criteria.",empty_reset:'Reset Filters',btn_start_learning:'Start Learning',btn_free_preview:'Watch Free Preview',btn_subscribe_now:'Subscribe Now →',back_playlist:'Back to Playlist',modal_active:'Interactive Learning Mode Active',modal_close:'Close Window',preview_warning:'This preview will close in 10 seconds. Subscribe to continue learning.',progress_title:'My Progress',progress_subtitle:'Track your learning journey and manage your subscription.',card_best:'BEST',card_new:'NEW',card_views:'views'},
-  es:{flag:'🇪🇸',label:'Español',nav_playlist:'Lista',nav_favorites:'Mis Favoritos',nav_progress:'Mi Progreso',nav_admin:'Admin',nav_signin:'Iniciar Sesión',nav_signout:'Cerrar Sesión',sidebar_home:'Inicio',sidebar_contents:'Contenido Coreano',sidebar_homestay:'Homestay',sidebar_tour:'Tour Guiado',sidebar_admin:'Portal Admin',hero1_tag:'LISTA DE REPRODUCCIÓN',hero1_title:'Domina el Coreano, de Gramática a Negocios',hero1_desc:'Explora una lista completa de aprendizaje de coreano.',hero1_btn:'Explorar Lista',hero2_tag:'VISTA PREVIA GRATIS',hero2_title:'Prueba el Primer Minuto Gratis',hero2_desc:'Vista previa de 1 minuto de cualquier contenido.',hero2_btn:'Ver Vista Previa',hero3_tag:'SUSCRIPCIÓN ILIMITADA',hero3_title:'Suscríbete para Acceso Ilimitado',hero3_desc:'Desbloquea todo con una suscripción.',hero3_btn:'Suscribirse',search_placeholder:'Buscar por título, tema o palabra clave…',level_all:'Todos los Niveles',level_beginner:'Principiante',level_intermediate:'Intermedio',level_advanced:'Avanzado',cat_all:'Todas',cat_grammar:'Gramática',cat_vocabulary:'Vocabulario',cat_reading:'Lectura',cat_writing:'Escritura',cat_listening:'Escucha',cat_speaking:'Habla',cat_business:'Coreano de Negocios',cat_etc:'Otros',sort_by:'Ordenar por',sort_recommended:'Recomendado',sort_popular:'Más Popular',empty_title:'Sin contenidos',empty_desc:'No encontramos contenidos.',empty_reset:'Restablecer',btn_start_learning:'Comenzar',btn_free_preview:'Ver Vista Previa',btn_subscribe_now:'Suscribirse →',back_playlist:'Volver',modal_active:'Modo Aprendizaje Activo',modal_close:'Cerrar',preview_warning:'Esta vista previa se cerrará en 10 segundos.',progress_title:'Mi Progreso',progress_subtitle:'Sigue tu viaje y gestiona tu suscripción.',card_best:'MEJOR',card_new:'NUEVO',card_views:'vistas'},
-  zh:{flag:'🇨🇳',label:'中文',nav_playlist:'播放列表',nav_favorites:'我的收藏',nav_progress:'我的进度',nav_admin:'管理',nav_signin:'登录',nav_signout:'退出',sidebar_home:'首页',sidebar_contents:'韩语内容',sidebar_homestay:'寄宿家庭',sidebar_tour:'导览',sidebar_admin:'管理门户',hero1_tag:'韩语播放列表',hero1_title:'从语法到商务，全面掌握韩语',hero1_desc:'探索完整的韩语学习列表。',hero1_btn:'浏览',hero2_tag:'1分钟免费预览',hero2_title:'免费试看第一分钟',hero2_desc:'不知道从哪里开始？',hero2_btn:'观看预览',hero3_tag:'无限订阅',hero3_title:'订阅以无限访问',hero3_desc:'一次订阅解锁所有内容。',hero3_btn:'立即订阅',search_placeholder:'按标题、主题或关键词搜索…',level_all:'所有级别',level_beginner:'初级',level_intermediate:'中级',level_advanced:'高级',cat_all:'全部',cat_grammar:'语法',cat_vocabulary:'词汇',cat_reading:'阅读',cat_writing:'写作',cat_listening:'听力',cat_speaking:'口语',cat_business:'商务韩语',cat_etc:'其他',sort_by:'排序',sort_recommended:'推荐',sort_popular:'最受欢迎',empty_title:'未找到内容',empty_desc:'找不到符合条件的内容。',empty_reset:'重置',btn_start_learning:'开始学习',btn_free_preview:'观看预览',btn_subscribe_now:'立即订阅 →',back_playlist:'返回',modal_active:'学习模式已激活',modal_close:'关闭',preview_warning:'此预览将在10秒后关闭。',progress_title:'我的进度',progress_subtitle:'跟踪学习并管理订阅。',card_best:'精选',card_new:'新',card_views:'浏览'},
-  ja:{flag:'🇯🇵',label:'日本語',nav_playlist:'プレイリスト',nav_favorites:'お気に入り',nav_progress:'マイ進捗',nav_admin:'管理',nav_signin:'サインイン',nav_signout:'サインアウト',sidebar_home:'ホーム',sidebar_contents:'韓国語コンテンツ',sidebar_homestay:'ホームステイ',sidebar_tour:'ガイドツアー',sidebar_admin:'管理ポータル',hero1_tag:'韓国語プレイリスト',hero1_title:'文法からビジネスまで韓国語をマスター',hero1_desc:'文法・語彙・読解・TOPIK・ビジネス韓国語を網羅。',hero1_btn:'プレイリストを見る',hero2_tag:'1分無料プレビュー',hero2_title:'最初の1分を無料で',hero2_desc:'どこから始めるかわかりませんか？',hero2_btn:'無料プレビューを見る',hero3_tag:'無制限サブスクリプション',hero3_title:'すべてのコンテンツに無制限アクセス',hero3_desc:'1つのサブスクリプションですべてをアンロック。',hero3_btn:'今すぐ登録',search_placeholder:'タイトル・トピック・キーワードで検索…',level_all:'全レベル',level_beginner:'初級',level_intermediate:'中級',level_advanced:'上級',cat_all:'全て',cat_grammar:'文法',cat_vocabulary:'語彙',cat_reading:'読解',cat_writing:'ライティング',cat_listening:'リスニング',cat_speaking:'スピーキング',cat_business:'ビジネス韓国語',cat_etc:'その他',sort_by:'並び替え',sort_recommended:'おすすめ',sort_popular:'人気順',empty_title:'コンテンツが見つかりません',empty_desc:'条件に一致するコンテンツがありません。',empty_reset:'リセット',btn_start_learning:'学習開始',btn_free_preview:'無料プレビューを見る',btn_subscribe_now:'今すぐ登録 →',back_playlist:'戻る',modal_active:'学習モード有効',modal_close:'閉じる',preview_warning:'このプレビューは10秒後に閉じます。',progress_title:'マイ進捗',progress_subtitle:'学習の旅を追跡し、サブスクリプションを管理します。',card_best:'ベスト',card_new:'新着',card_views:'回視聴'},
-  fr:{flag:'🇫🇷',label:'Français',nav_playlist:'Liste de lecture',nav_favorites:'Mes Favoris',nav_progress:'Ma Progression',nav_admin:'Admin',nav_signin:'Se Connecter',nav_signout:'Se Déconnecter',sidebar_home:'Accueil',sidebar_contents:'Contenu Coréen',sidebar_homestay:'Séjour en Famille',sidebar_tour:'Visite Guidée',sidebar_admin:'Portail Admin',hero1_tag:'LISTE DE LECTURE',hero1_title:'Maîtrisez le Coréen, de la Grammaire aux Affaires',hero1_desc:"Explorez une liste complète d'apprentissage du coréen.",hero1_btn:'Explorer',hero2_tag:'APERÇU GRATUIT 1 MIN',hero2_title:'Essayez la Première Minute Gratuitement',hero2_desc:"Aperçu d'1 minute de tout contenu.",hero2_btn:"Voir l'Aperçu",hero3_tag:'ABONNEMENT ILLIMITÉ',hero3_title:'Abonnez-vous pour un Accès Illimité',hero3_desc:"Débloquez tout avec un simple abonnement.",hero3_btn:"S'abonner",search_placeholder:'Rechercher…',level_all:'Tous Niveaux',level_beginner:'Débutant',level_intermediate:'Intermédiaire',level_advanced:'Avancé',cat_all:'Toutes',cat_grammar:'Grammaire',cat_vocabulary:'Vocabulaire',cat_reading:'Lecture',cat_writing:'Écriture',cat_listening:'Écoute',cat_speaking:'Expression Orale',cat_business:'Coréen des Affaires',cat_etc:'Autres',sort_by:'Trier par',sort_recommended:'Recommandé',sort_popular:'Plus Populaire',empty_title:'Aucun contenu',empty_desc:'Aucun contenu ne correspond.',empty_reset:'Réinitialiser',btn_start_learning:'Commencer',btn_free_preview:"Voir l'Aperçu",btn_subscribe_now:"S'abonner →",back_playlist:'Retour',modal_active:'Mode Apprentissage Actif',modal_close:'Fermer',preview_warning:"Cet aperçu se fermera dans 10 secondes.",progress_title:'Ma Progression',progress_subtitle:'Suivez votre parcours.',card_best:'MEILLEUR',card_new:'NOUVEAU',card_views:'vues'},
-  de:{flag:'🇩🇪',label:'Deutsch',nav_playlist:'Wiedergabeliste',nav_favorites:'Meine Favoriten',nav_progress:'Mein Fortschritt',nav_admin:'Admin',nav_signin:'Anmelden',nav_signout:'Abmelden',sidebar_home:'Startseite',sidebar_contents:'Koreanische Inhalte',sidebar_homestay:'Gastfamilie',sidebar_tour:'Geführte Tour',sidebar_admin:'Admin-Portal',hero1_tag:'KOREANISCHE PLAYLIST',hero1_title:'Koreanisch Meistern, von Grammatik bis Geschäft',hero1_desc:'Entdecken Sie eine vollständige Lernliste.',hero1_btn:'Playlist Erkunden',hero2_tag:'1-MIN KOSTENLOS',hero2_title:'Erste Minute Kostenlos Testen',hero2_desc:'Kostenlose 1-Minuten-Vorschau für alle Inhalte.',hero2_btn:'Vorschau Ansehen',hero3_tag:'UNBEGRENZTES ABO',hero3_title:'Unbegrenzten Zugang Abonnieren',hero3_desc:'Alle Inhalte mit einem Abonnement freischalten.',hero3_btn:'Jetzt Abonnieren',search_placeholder:'Suchen…',level_all:'Alle Stufen',level_beginner:'Anfänger',level_intermediate:'Mittelstufe',level_advanced:'Fortgeschritten',cat_all:'Alle',cat_grammar:'Grammatik',cat_vocabulary:'Vokabular',cat_reading:'Lesen',cat_writing:'Schreiben',cat_listening:'Hören',cat_speaking:'Sprechen',cat_business:'Business Koreanisch',cat_etc:'Sonstiges',sort_by:'Sortieren',sort_recommended:'Empfohlen',sort_popular:'Beliebteste',empty_title:'Keine Inhalte',empty_desc:'Keine Inhalte gefunden.',empty_reset:'Zurücksetzen',btn_start_learning:'Lernen',btn_free_preview:'Vorschau',btn_subscribe_now:'Jetzt Abonnieren →',back_playlist:'Zurück',modal_active:'Lernmodus Aktiv',modal_close:'Schließen',preview_warning:'Diese Vorschau schließt in 10 Sekunden.',progress_title:'Mein Fortschritt',progress_subtitle:'Verfolgen Sie Ihre Lernreise.',card_best:'BEST',card_new:'NEU',card_views:'Aufrufe'},
-  pl:{flag:'🇵🇱',label:'Polski',nav_playlist:'Lista odtwarzania',nav_favorites:'Moje Ulubione',nav_progress:'Mój Postęp',nav_admin:'Admin',nav_signin:'Zaloguj się',nav_signout:'Wyloguj się',sidebar_home:'Strona główna',sidebar_contents:'Treści Koreańskie',sidebar_homestay:'Rodzina Goszcząca',sidebar_tour:'Wycieczka',sidebar_admin:'Portal Administratora',hero1_tag:'LISTA ODTWARZANIA',hero1_title:'Opanuj Koreański, od Gramatyki do Biznesu',hero1_desc:'Odkryj kompletną listę nauki koreańskiego.',hero1_btn:'Przeglądaj',hero2_tag:'BEZPŁATNY PODGLĄD',hero2_title:'Wypróbuj Pierwszą Minutę Za Darmo',hero2_desc:'Bezpłatny podgląd 1 minuty.',hero2_btn:'Obejrzyj Podgląd',hero3_tag:'NIEOGRANICZONA SUBSKRYPCJA',hero3_title:'Subskrybuj dla Nieograniczonego Dostępu',hero3_desc:'Odblokuj wszystko jedną subskrypcją.',hero3_btn:'Subskrybuj',search_placeholder:'Szukaj…',level_all:'Wszystkie Poziomy',level_beginner:'Początkujący',level_intermediate:'Średniozaawansowany',level_advanced:'Zaawansowany',cat_all:'Wszystkie',cat_grammar:'Gramatyka',cat_vocabulary:'Słownictwo',cat_reading:'Czytanie',cat_writing:'Pisanie',cat_listening:'Słuchanie',cat_speaking:'Mówienie',cat_business:'Biznesowy Koreański',cat_etc:'Inne',sort_by:'Sortuj',sort_recommended:'Polecane',sort_popular:'Najpopularniejsze',empty_title:'Brak treści',empty_desc:'Nie znaleziono treści.',empty_reset:'Resetuj',btn_start_learning:'Zacznij',btn_free_preview:'Obejrzyj',btn_subscribe_now:'Subskrybuj →',back_playlist:'Powrót',modal_active:'Tryb Nauki Aktywny',modal_close:'Zamknij',preview_warning:'Ten podgląd zamknie się za 10 sekund.',progress_title:'Mój Postęp',progress_subtitle:'Śledź naukę i zarządzaj subskrypcją.',card_best:'NAJLEPSZE',card_new:'NOWE',card_views:'wyświetleń'}
+  en:{flag:'🇬🇧',label:'English',nav_playlist:'Playlist',nav_favorites:'My Favorites',nav_progress:'My Progress',nav_admin:'Admin',nav_signin:'Sign In',nav_signout:'Sign Out',sidebar_home:'Home',sidebar_contents:'Korean Contents',sidebar_homestay:'Homestay',sidebar_tour:'Guided Tour',sidebar_admin:'Admin Portal',hero1_tag:'KOREAN PLAYLIST',hero1_title:'Master Korean, From Grammar to Business',hero1_desc:'Explore a complete Korean learning playlist—covering grammar, vocabulary, reading, TOPIK exam prep, and business fluency.',hero1_btn:'Explore Playlist',hero2_tag:'1-MIN FREE PREVIEW',hero2_title:'Try the First 1 Minute of Every Lesson Free',hero2_desc:"Not sure where to start? Preview 1 minute of any Korean learning content for free.",hero2_btn:'Watch Free Preview',hero3_tag:'UNLIMITED SUBSCRIPTION',hero3_title:'Subscribe for Unlimited Access to All Content',hero3_desc:'Unlock every playlist, lesson, and practice material with one simple subscription.',hero3_btn:'Subscribe Now',search_placeholder:'Search by title, topic, or keyword…',level_all:'All Levels',level_beginner:'Beginner',level_intermediate:'Intermediate',level_advanced:'Advanced',cat_all:'All',cat_grammar:'Grammar',cat_vocabulary:'Vocabulary',cat_reading:'Reading',cat_writing:'Writing',cat_listening:'Listening',cat_speaking:'Speaking',cat_business:'Business Korean',cat_etc:'ETC',sort_by:'Sort by',sort_recommended:'Recommended',sort_popular:'Most Popular',empty_title:'No contents found',empty_desc:"We couldn't find any contents matching your criteria.",empty_reset:'Reset Filters',btn_start_learning:'Start Learning',btn_free_preview:'Watch Free Preview',btn_subscribe_now:'Subscribe Now →',back_playlist:'Back to Playlist',modal_active:'Interactive Learning Mode Active',modal_close:'Close Window',preview_warning:'This preview will close in 10 seconds. Subscribe to continue learning.',progress_title:'My Progress',progress_subtitle:'Track your learning journey and manage your subscription.',card_best:'BEST',card_new:'NEW',card_views:'views',hero3_perk1:'All-level unlimited access',hero3_perk2:'50% off the 25-min trial lesson',hero3_perk3:'15% off group tours',hero3_perk4:'10% off the 4-week course'},
+  es:{flag:'🇪🇸',label:'Español',nav_playlist:'Lista',nav_favorites:'Mis Favoritos',nav_progress:'Mi Progreso',nav_admin:'Admin',nav_signin:'Iniciar Sesión',nav_signout:'Cerrar Sesión',sidebar_home:'Inicio',sidebar_contents:'Contenido Coreano',sidebar_homestay:'Homestay',sidebar_tour:'Tour Guiado',sidebar_admin:'Portal Admin',hero1_tag:'LISTA DE REPRODUCCIÓN',hero1_title:'Domina el Coreano, de Gramática a Negocios',hero1_desc:'Explora una lista completa de aprendizaje de coreano.',hero1_btn:'Explorar Lista',hero2_tag:'VISTA PREVIA GRATIS',hero2_title:'Prueba el Primer Minuto Gratis',hero2_desc:'Vista previa de 1 minuto de cualquier contenido.',hero2_btn:'Ver Vista Previa',hero3_tag:'SUSCRIPCIÓN ILIMITADA',hero3_title:'Suscríbete para Acceso Ilimitado',hero3_desc:'Desbloquea todo con una suscripción.',hero3_btn:'Suscribirse',search_placeholder:'Buscar por título, tema o palabra clave…',level_all:'Todos los Niveles',level_beginner:'Principiante',level_intermediate:'Intermedio',level_advanced:'Avanzado',cat_all:'Todas',cat_grammar:'Gramática',cat_vocabulary:'Vocabulario',cat_reading:'Lectura',cat_writing:'Escritura',cat_listening:'Escucha',cat_speaking:'Habla',cat_business:'Coreano de Negocios',cat_etc:'Otros',sort_by:'Ordenar por',sort_recommended:'Recomendado',sort_popular:'Más Popular',empty_title:'Sin contenidos',empty_desc:'No encontramos contenidos.',empty_reset:'Restablecer',btn_start_learning:'Comenzar',btn_free_preview:'Ver Vista Previa',btn_subscribe_now:'Suscribirse →',back_playlist:'Volver',modal_active:'Modo Aprendizaje Activo',modal_close:'Cerrar',preview_warning:'Esta vista previa se cerrará en 10 segundos.',progress_title:'Mi Progreso',progress_subtitle:'Sigue tu viaje y gestiona tu suscripción.',card_best:'MEJOR',card_new:'NUEVO',card_views:'vistas',hero3_perk1:'Acceso ilimitado a todos los niveles',hero3_perk2:'50% dto. en la clase de prueba de 25 min',hero3_perk3:'15% dto. en tours en grupo',hero3_perk4:'10% dto. en el curso de 4 semanas'},
+  zh:{flag:'🇨🇳',label:'中文',nav_playlist:'播放列表',nav_favorites:'我的收藏',nav_progress:'我的进度',nav_admin:'管理',nav_signin:'登录',nav_signout:'退出',sidebar_home:'首页',sidebar_contents:'韩语内容',sidebar_homestay:'寄宿家庭',sidebar_tour:'导览',sidebar_admin:'管理门户',hero1_tag:'韩语播放列表',hero1_title:'从语法到商务，全面掌握韩语',hero1_desc:'探索完整的韩语学习列表。',hero1_btn:'浏览',hero2_tag:'1分钟免费预览',hero2_title:'免费试看第一分钟',hero2_desc:'不知道从哪里开始？',hero2_btn:'观看预览',hero3_tag:'无限订阅',hero3_title:'订阅以无限访问',hero3_desc:'一次订阅解锁所有内容。',hero3_btn:'立即订阅',search_placeholder:'按标题、主题或关键词搜索…',level_all:'所有级别',level_beginner:'初级',level_intermediate:'中级',level_advanced:'高级',cat_all:'全部',cat_grammar:'语法',cat_vocabulary:'词汇',cat_reading:'阅读',cat_writing:'写作',cat_listening:'听力',cat_speaking:'口语',cat_business:'商务韩语',cat_etc:'其他',sort_by:'排序',sort_recommended:'推荐',sort_popular:'最受欢迎',empty_title:'未找到内容',empty_desc:'找不到符合条件的内容。',empty_reset:'重置',btn_start_learning:'开始学习',btn_free_preview:'观看预览',btn_subscribe_now:'立即订阅 →',back_playlist:'返回',modal_active:'学习模式已激活',modal_close:'关闭',preview_warning:'此预览将在10秒后关闭。',progress_title:'我的进度',progress_subtitle:'跟踪学习并管理订阅。',card_best:'精选',card_new:'新',card_views:'浏览',hero3_perk1:'全级别无限访问',hero3_perk2:'25分钟体验课5折',hero3_perk3:'团体游85折',hero3_perk4:'4周课程9折'},
+  ja:{flag:'🇯🇵',label:'日本語',nav_playlist:'プレイリスト',nav_favorites:'お気に入り',nav_progress:'マイ進捗',nav_admin:'管理',nav_signin:'サインイン',nav_signout:'サインアウト',sidebar_home:'ホーム',sidebar_contents:'韓国語コンテンツ',sidebar_homestay:'ホームステイ',sidebar_tour:'ガイドツアー',sidebar_admin:'管理ポータル',hero1_tag:'韓国語プレイリスト',hero1_title:'文法からビジネスまで韓国語をマスター',hero1_desc:'文法・語彙・読解・TOPIK・ビジネス韓国語を網羅。',hero1_btn:'プレイリストを見る',hero2_tag:'1分無料プレビュー',hero2_title:'最初の1分を無料で',hero2_desc:'どこから始めるかわかりませんか？',hero2_btn:'無料プレビューを見る',hero3_tag:'無制限サブスクリプション',hero3_title:'すべてのコンテンツに無制限アクセス',hero3_desc:'1つのサブスクリプションですべてをアンロック。',hero3_btn:'今すぐ登録',search_placeholder:'タイトル・トピック・キーワードで検索…',level_all:'全レベル',level_beginner:'初級',level_intermediate:'中級',level_advanced:'上級',cat_all:'全て',cat_grammar:'文法',cat_vocabulary:'語彙',cat_reading:'読解',cat_writing:'ライティング',cat_listening:'リスニング',cat_speaking:'スピーキング',cat_business:'ビジネス韓国語',cat_etc:'その他',sort_by:'並び替え',sort_recommended:'おすすめ',sort_popular:'人気順',empty_title:'コンテンツが見つかりません',empty_desc:'条件に一致するコンテンツがありません。',empty_reset:'リセット',btn_start_learning:'学習開始',btn_free_preview:'無料プレビューを見る',btn_subscribe_now:'今すぐ登録 →',back_playlist:'戻る',modal_active:'学習モード有効',modal_close:'閉じる',preview_warning:'このプレビューは10秒後に閉じます。',progress_title:'マイ進捗',progress_subtitle:'学習の旅を追跡し、サブスクリプションを管理します。',card_best:'ベスト',card_new:'新着',card_views:'回視聴',hero3_perk1:'全レベル無制限アクセス',hero3_perk2:'25分体験レッスン50%割引',hero3_perk3:'グループツアー15%割引',hero3_perk4:'4週間コース10%割引'},
+  fr:{flag:'🇫🇷',label:'Français',nav_playlist:'Liste de lecture',nav_favorites:'Mes Favoris',nav_progress:'Ma Progression',nav_admin:'Admin',nav_signin:'Se Connecter',nav_signout:'Se Déconnecter',sidebar_home:'Accueil',sidebar_contents:'Contenu Coréen',sidebar_homestay:'Séjour en Famille',sidebar_tour:'Visite Guidée',sidebar_admin:'Portail Admin',hero1_tag:'LISTE DE LECTURE',hero1_title:'Maîtrisez le Coréen, de la Grammaire aux Affaires',hero1_desc:"Explorez une liste complète d'apprentissage du coréen.",hero1_btn:'Explorer',hero2_tag:'APERÇU GRATUIT 1 MIN',hero2_title:'Essayez la Première Minute Gratuitement',hero2_desc:"Aperçu d'1 minute de tout contenu.",hero2_btn:"Voir l'Aperçu",hero3_tag:'ABONNEMENT ILLIMITÉ',hero3_title:'Abonnez-vous pour un Accès Illimité',hero3_desc:"Débloquez tout avec un simple abonnement.",hero3_btn:"S'abonner",search_placeholder:'Rechercher…',level_all:'Tous Niveaux',level_beginner:'Débutant',level_intermediate:'Intermédiaire',level_advanced:'Avancé',cat_all:'Toutes',cat_grammar:'Grammaire',cat_vocabulary:'Vocabulaire',cat_reading:'Lecture',cat_writing:'Écriture',cat_listening:'Écoute',cat_speaking:'Expression Orale',cat_business:'Coréen des Affaires',cat_etc:'Autres',sort_by:'Trier par',sort_recommended:'Recommandé',sort_popular:'Plus Populaire',empty_title:'Aucun contenu',empty_desc:'Aucun contenu ne correspond.',empty_reset:'Réinitialiser',btn_start_learning:'Commencer',btn_free_preview:"Voir l'Aperçu",btn_subscribe_now:"S'abonner →",back_playlist:'Retour',modal_active:'Mode Apprentissage Actif',modal_close:'Fermer',preview_warning:"Cet aperçu se fermera dans 10 secondes.",progress_title:'Ma Progression',progress_subtitle:'Suivez votre parcours.',card_best:'MEILLEUR',card_new:'NOUVEAU',card_views:'vues',hero3_perk1:'Accès illimité tous niveaux',hero3_perk2:'-50% sur la leçon d’essai de 25 min',hero3_perk3:'-15% sur les visites de groupe',hero3_perk4:'-10% sur le cours de 4 semaines'},
+  de:{flag:'🇩🇪',label:'Deutsch',nav_playlist:'Wiedergabeliste',nav_favorites:'Meine Favoriten',nav_progress:'Mein Fortschritt',nav_admin:'Admin',nav_signin:'Anmelden',nav_signout:'Abmelden',sidebar_home:'Startseite',sidebar_contents:'Koreanische Inhalte',sidebar_homestay:'Gastfamilie',sidebar_tour:'Geführte Tour',sidebar_admin:'Admin-Portal',hero1_tag:'KOREANISCHE PLAYLIST',hero1_title:'Koreanisch Meistern, von Grammatik bis Geschäft',hero1_desc:'Entdecken Sie eine vollständige Lernliste.',hero1_btn:'Playlist Erkunden',hero2_tag:'1-MIN KOSTENLOS',hero2_title:'Erste Minute Kostenlos Testen',hero2_desc:'Kostenlose 1-Minuten-Vorschau für alle Inhalte.',hero2_btn:'Vorschau Ansehen',hero3_tag:'UNBEGRENZTES ABO',hero3_title:'Unbegrenzten Zugang Abonnieren',hero3_desc:'Alle Inhalte mit einem Abonnement freischalten.',hero3_btn:'Jetzt Abonnieren',search_placeholder:'Suchen…',level_all:'Alle Stufen',level_beginner:'Anfänger',level_intermediate:'Mittelstufe',level_advanced:'Fortgeschritten',cat_all:'Alle',cat_grammar:'Grammatik',cat_vocabulary:'Vokabular',cat_reading:'Lesen',cat_writing:'Schreiben',cat_listening:'Hören',cat_speaking:'Sprechen',cat_business:'Business Koreanisch',cat_etc:'Sonstiges',sort_by:'Sortieren',sort_recommended:'Empfohlen',sort_popular:'Beliebteste',empty_title:'Keine Inhalte',empty_desc:'Keine Inhalte gefunden.',empty_reset:'Zurücksetzen',btn_start_learning:'Lernen',btn_free_preview:'Vorschau',btn_subscribe_now:'Jetzt Abonnieren →',back_playlist:'Zurück',modal_active:'Lernmodus Aktiv',modal_close:'Schließen',preview_warning:'Diese Vorschau schließt in 10 Sekunden.',progress_title:'Mein Fortschritt',progress_subtitle:'Verfolgen Sie Ihre Lernreise.',card_best:'BEST',card_new:'NEU',card_views:'Aufrufe',hero3_perk1:'Unbegrenzter Zugang, alle Stufen',hero3_perk2:'50% Rabatt auf die 25-Min-Probestunde',hero3_perk3:'15% Rabatt auf Gruppentouren',hero3_perk4:'10% Rabatt auf den 4-Wochen-Kurs'},
+  pl:{flag:'🇵🇱',label:'Polski',nav_playlist:'Lista odtwarzania',nav_favorites:'Moje Ulubione',nav_progress:'Mój Postęp',nav_admin:'Admin',nav_signin:'Zaloguj się',nav_signout:'Wyloguj się',sidebar_home:'Strona główna',sidebar_contents:'Treści Koreańskie',sidebar_homestay:'Rodzina Goszcząca',sidebar_tour:'Wycieczka',sidebar_admin:'Portal Administratora',hero1_tag:'LISTA ODTWARZANIA',hero1_title:'Opanuj Koreański, od Gramatyki do Biznesu',hero1_desc:'Odkryj kompletną listę nauki koreańskiego.',hero1_btn:'Przeglądaj',hero2_tag:'BEZPŁATNY PODGLĄD',hero2_title:'Wypróbuj Pierwszą Minutę Za Darmo',hero2_desc:'Bezpłatny podgląd 1 minuty.',hero2_btn:'Obejrzyj Podgląd',hero3_tag:'NIEOGRANICZONA SUBSKRYPCJA',hero3_title:'Subskrybuj dla Nieograniczonego Dostępu',hero3_desc:'Odblokuj wszystko jedną subskrypcją.',hero3_btn:'Subskrybuj',search_placeholder:'Szukaj…',level_all:'Wszystkie Poziomy',level_beginner:'Początkujący',level_intermediate:'Średniozaawansowany',level_advanced:'Zaawansowany',cat_all:'Wszystkie',cat_grammar:'Gramatyka',cat_vocabulary:'Słownictwo',cat_reading:'Czytanie',cat_writing:'Pisanie',cat_listening:'Słuchanie',cat_speaking:'Mówienie',cat_business:'Biznesowy Koreański',cat_etc:'Inne',sort_by:'Sortuj',sort_recommended:'Polecane',sort_popular:'Najpopularniejsze',empty_title:'Brak treści',empty_desc:'Nie znaleziono treści.',empty_reset:'Resetuj',btn_start_learning:'Zacznij',btn_free_preview:'Obejrzyj',btn_subscribe_now:'Subskrybuj →',back_playlist:'Powrót',modal_active:'Tryb Nauki Aktywny',modal_close:'Zamknij',preview_warning:'Ten podgląd zamknie się za 10 sekund.',progress_title:'Mój Postęp',progress_subtitle:'Śledź naukę i zarządzaj subskrypcją.',card_best:'NAJLEPSZE',card_new:'NOWE',card_views:'wyświetleń',hero3_perk1:'Nieograniczony dostęp (wszystkie poziomy)',hero3_perk2:'50% zniżki na 25-min lekcję próbną',hero3_perk3:'15% zniżki na wycieczki grupowe',hero3_perk4:'10% zniżki na kurs 4-tygodniowy'},
+  ko:{flag:'🇰🇷',label:'한국어',nav_playlist:'플레이리스트',nav_favorites:'내 즐겨찾기',nav_progress:'내 학습현황',nav_admin:'관리자',nav_signin:'로그인',nav_signout:'로그아웃',sidebar_home:'홈',sidebar_contents:'한국어 콘텐츠',sidebar_homestay:'홈스테이',sidebar_tour:'가이드 투어',sidebar_admin:'관리자 포털',hero1_tag:'한국어 플레이리스트',hero1_title:'문법부터 비즈니스까지, 한국어 마스터',hero1_desc:'문법·어휘·독해·TOPIK 시험 대비·비즈니스 한국어까지 아우르는 완성형 한국어 학습 플레이리스트를 만나보세요.',hero1_btn:'플레이리스트 보기',hero2_tag:'1분 무료 미리보기',hero2_title:'모든 강의의 첫 1분을 무료로',hero2_desc:'어디서 시작할지 고민되시나요? 어떤 콘텐츠든 1분을 무료로 미리 보세요.',hero2_btn:'무료 미리보기',hero3_tag:'무제한 구독',hero3_title:'구독으로 모든 콘텐츠 무제한 이용',hero3_desc:'하나의 구독으로 모든 플레이리스트와 강의, 학습 자료를 이용하세요.',hero3_btn:'지금 구독하기',search_placeholder:'제목, 주제, 키워드로 검색…',level_all:'전체 레벨',level_beginner:'초급',level_intermediate:'중급',level_advanced:'고급',cat_all:'전체',cat_grammar:'문법',cat_vocabulary:'어휘',cat_reading:'독해',cat_writing:'쓰기',cat_listening:'듣기',cat_speaking:'말하기',cat_business:'비즈니스 한국어',cat_etc:'기타',sort_by:'정렬',sort_recommended:'추천순',sort_popular:'인기순',empty_title:'콘텐츠가 없습니다',empty_desc:'조건에 맞는 콘텐츠를 찾지 못했습니다.',empty_reset:'필터 초기화',btn_start_learning:'학습 시작',btn_free_preview:'무료 미리보기',btn_subscribe_now:'지금 구독하기 →',back_playlist:'플레이리스트로',modal_active:'인터랙티브 학습 모드',modal_close:'창 닫기',preview_warning:'이 미리보기는 10초 후 종료됩니다. 계속 학습하려면 구독하세요.',progress_title:'내 학습현황',progress_subtitle:'학습 여정을 확인하고 구독을 관리하세요.',card_best:'베스트',card_new:'신규',card_views:'조회',hero3_perk1:'전 레벨 무제한 이용',hero3_perk2:'25분 체험 레슨 50% 할인',hero3_perk3:'그룹 투어 15% 할인',hero3_perk4:'4주 집중과정 10% 할인'}
 };
 let currentLang='en';
 function t(k){return(TRANSLATIONS[currentLang]||TRANSLATIONS.en)[k]||TRANSLATIONS.en[k]||k;}
@@ -749,7 +800,19 @@ document.addEventListener('click',e=>{
 // ===== HEADER STYLE =====
 const HSM={'dark-navy':'hs-dark-navy','korea-red':'hs-korea-red','forest-green':'hs-forest-green','royal-blue':'hs-royal-blue','warm-beige':'hs-warm-beige','charcoal':'hs-charcoal','deep-purple':'hs-deep-purple','dark':'hs-dark-navy','light':'hs-warm-beige'};
 function getHsClass(s){return HSM[s]||'hs-dark-navy';}
+// 커버 헤더 색상은 난이도별로 자동 지정: 초급=초록, 중급=로열블루, 고급=검정(차콜)
+function getLevelHsClass(level){
+  if(level==='Beginner')return 'hs-forest-green';
+  if(level==='Intermediate')return 'hs-royal-blue';
+  if(level==='Advanced')return 'hs-charcoal';
+  return 'hs-dark-navy';
+}
 function isLight(s){return s==='warm-beige'||s==='light';}
+// 누적 조회수 상위 10개 id 집합 (BEST CONTENTS 자동 표시용)
+function getBestContentIds(){
+  return new Set([...contentsData].filter(x=>(x.views||0)>0)
+    .sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,10).map(x=>x.id));
+}
 document.querySelectorAll('#headerStylePicker input[type=radio]').forEach(r=>{
   r.addEventListener('change',()=>{
     document.querySelectorAll('#headerStylePicker .header-style-opt').forEach(o=>o.style.borderColor='var(--border)');
@@ -814,8 +877,13 @@ async function checkSubscription(uid){
   try{
     const {db,doc,getDoc}=window.fb;
     const s=await getDoc(doc(db,'users',uid));
-    if(s.exists()){const d=s.data();isSubscribed=d.subscriptionStatus==='active';window._subData=d;}
-    else{isSubscribed=false;window._subData=null;}
+    if(s.exists()){
+      const d=s.data();window._subData=d;
+      // 서버 isSubscriber 와 동일 기준: 만료일이 지났으면 비구독, 아니면 active/무료 모두 인정
+      const ends=d.subscriptionEndsAt?new Date(d.subscriptionEndsAt).getTime():0;
+      const expired=ends&&Date.now()>=ends;
+      isSubscribed=!expired&&(d.subscriptionActive===true||d.subscriptionStatus==='active');
+    }else{isSubscribed=false;window._subData=null;}
   }catch(e){isSubscribed=false;}
 }
 
@@ -990,9 +1058,11 @@ function renderCourses(){
   if(filtered.length===0){grid.innerHTML='';empty.classList.remove('hidden');return;}
   empty.classList.add('hidden');
   const canView=isAdmin||isSubscribed;
+  const bestIds=getBestContentIds();
   grid.innerHTML=filtered.map(item=>{
     const isFav=favorites.includes(item.id);
-    const hc=getHsClass(item.headerStyle),li=isLight(item.headerStyle);
+    const hc=getLevelHsClass(item.level),li=false;
+    const showBest=item.isBest||bestIds.has(item.id);
     const catLabel=tCat(item.category);
     const lvlLabel=tLvl(item.level);
     return `<div class="rounded-3xl overflow-hidden border shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col" style="background:var(--surface);border-color:var(--border);">
@@ -1004,7 +1074,7 @@ function renderCourses(){
         </div>
         <div>
           <div class="absolute top-4 right-4 flex items-center space-x-1.5">
-            ${item.isBest?`<span class="bg-amber-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">${t('card_best')}</span>`:''}
+            ${showBest?`<span class="bg-amber-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">${t('card_best')}</span>`:''}
             ${item.isNew?`<span class="bg-blue-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">${t('card_new')}</span>`:''}
             <span class="bg-white/90 text-slate-800 text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">${lvlLabel}</span>
           </div>
@@ -1070,30 +1140,51 @@ async function startLearning(id,isPreview=false){
     window.location.href='https://www.businesskorean.com/login.html?redirect='+encodeURIComponent('masterclass/masterclass.html');
     return;
   }
+
+  // 1) 먼저 학습 화면을 즉시(0.1초 내) 열고 로딩 표시 — 콘텐츠는 뒤이어 주입
+  document.getElementById('modalTitle').textContent = item.titleEn;
+  document.getElementById('modalLevel').textContent = tLvl(item.level).toUpperCase();
+  const container = document.getElementById('modalHtmlContainer');
+  container.innerHTML = `
+    <div id="lessonLoading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-secondary);text-align:center;padding:40px;">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size:2.25rem;color:#3b82f6;margin-bottom:16px;"></i>
+      <p id="lessonLoadingMsg" style="font-weight:700;font-size:0.95rem;color:var(--text-primary);">Loading…</p>
+    </div>`;
+  document.getElementById('userStoreView').classList.add('hidden');
+  document.getElementById('adminPortalView').classList.add('hidden');
+  document.getElementById('progressView').style.display='none';
+  const page = document.getElementById('learningPage');
+  page.classList.add('open');
+  page.style.display='flex';
+  document.getElementById('previewWarning').style.display='none';
+
+  // 0.5초 이상 걸리면 "잠시만 기다려 주세요" 안내로 전환
+  const waitTimer=setTimeout(()=>{const m=document.getElementById('lessonLoadingMsg');if(m)m.textContent='Please wait a moment…';},500);
+
+  // 2) 콘텐츠 로드
   let html='';
   try{
     const res=await window.fb.httpsCallable(window.fb.functions,'getLessonContent')({id:String(id),preview:!!isPreview});
     html=(res&&res.data&&res.data.html)||'';
   }catch(e){
+    clearTimeout(waitTimer);
     console.error(e);
+    closeLearningModal();
     if(e&&e.code==='functions/resource-exhausted'){showToast('Daily free preview limit reached. Subscribe for unlimited access.','info');return;}
     if(e&&e.code==='functions/permission-denied'){window.location.href='https://www.businesskorean.com/payment.html';return;}
     showToast('Could not load this lesson. Please try again.','info');return;
   }
-  document.getElementById('modalTitle').textContent = item.titleEn;
-  document.getElementById('modalLevel').textContent = tLvl(item.level).toUpperCase();
-  const container = document.getElementById('modalHtmlContainer');
+  clearTimeout(waitTimer);
+  if(currentModalItemId!==id)return; // 사용자가 그새 다른 콘텐츠를 열었으면 중단
 
   if(html && html.trim().length > 20){
     // Use a Blob URL so the iframe shares the same origin as the parent page.
-    // srcdoc gives 'about:srcdoc' origin which blocks history.pushState/replaceState.
     const blob = new Blob([html], {type:'text/html;charset=utf-8'});
     const blobUrl = URL.createObjectURL(blob);
     const iframe = document.createElement('iframe');
     iframe.src = blobUrl;
     iframe.style.cssText='width:100%;height:100%;border:none;display:block;background:white;';
     iframe.setAttribute('allowfullscreen','');
-    // Revoke the blob URL once the iframe has loaded to free memory
     iframe.addEventListener('load', () => URL.revokeObjectURL(blobUrl), {once:true});
     container.innerHTML='';
     container.appendChild(iframe);
@@ -1106,15 +1197,6 @@ async function startLearning(id,isPreview=false){
         ${isAdmin?'<p style="font-size:0.75rem;margin-top:16px;color:#d97706;">Admin: 아래 Admin 페이지에서 HTML 파일을 업로드해주세요.</p>':''}
       </div>`;
   }
-
-  // Show full-page view, hide other views
-  document.getElementById('userStoreView').classList.add('hidden');
-  document.getElementById('adminPortalView').classList.add('hidden');
-  document.getElementById('progressView').style.display='none';
-  const page = document.getElementById('learningPage');
-  page.classList.add('open');
-  page.style.display='flex';
-  document.getElementById('previewWarning').style.display='none';
   if(isPreview) startPreviewTimer();
 }
 function closeLearningModal(){
@@ -1166,18 +1248,30 @@ async function loadRecentStudies(uid){
   const c=document.getElementById('progressLastStudied');
   c.innerHTML='<p class="text-sm" style="color:var(--text-secondary);">Loading…</p>';
   try{
-    const {db,collection,getDocs,query,where,orderBy}=window.fb;
-    const snap=await getDocs(query(collection(db,'userProgress'),where('uid','==',uid),orderBy('lastStudiedAt','desc')));
-    const items=[];snap.forEach(d=>items.push({id:d.id,...d.data()}));
+    const {db,collection,getDocs,query,where,orderBy,limit}=window.fb;
+    let items=[];
+    try{
+      // 최근 학습 5개 (인덱스가 있으면 서버 정렬 + limit)
+      const snap=await getDocs(query(collection(db,'userProgress'),where('uid','==',uid),orderBy('lastStudiedAt','desc'),limit(5)));
+      snap.forEach(d=>items.push({id:d.id,...d.data()}));
+    }catch(idxErr){
+      // 복합 인덱스가 아직 없으면 전체를 받아 클라이언트에서 정렬 후 5개만
+      const snap=await getDocs(query(collection(db,'userProgress'),where('uid','==',uid)));
+      snap.forEach(d=>items.push({id:d.id,...d.data()}));
+      items.sort((a,b)=>((b.lastStudiedAt?.toMillis?.()||0)-(a.lastStudiedAt?.toMillis?.()||0)));
+      items=items.slice(0,5);
+    }
     if(!items.length){c.innerHTML='<p class="text-sm" style="color:var(--text-secondary);">No study history yet. Start learning to track your progress!</p>';return;}
     c.innerHTML=items.map(p=>{
-      const hc=getHsClass(p.headerStyle||'dark-navy');
+      const hc=getLevelHsClass(p.level);
       const ts=p.lastStudiedAt?.toDate?.();
       const ds=ts?ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+      const ko=(p.contentTitleKo||'').trim(), en=(p.contentTitle||'').trim();
       return `<div style="background:var(--surface);border:1px solid var(--border);" class="rounded-2xl p-4 flex items-center space-x-4 hover:shadow-md transition-all cursor-pointer" onclick="startLearning('${p.contentId}',false)">
         <div class="${hc} w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center"><i class="fa-solid fa-book-open text-white text-sm"></i></div>
         <div class="min-w-0 flex-1">
-          <h4 class="text-sm font-bold truncate" style="color:var(--text-primary);">${p.contentTitle||''}</h4>
+          <h4 class="text-sm font-bold truncate" style="color:var(--text-primary);">${ko||en||'—'}</h4>
+          ${ko&&en?`<p class="text-xs truncate" style="color:var(--text-secondary);">${en}</p>`:''}
           <div class="flex items-center space-x-2 text-xs mt-0.5"><span class="text-blue-600 font-semibold">${tCat(p.category||'')}</span><span style="color:var(--text-secondary);">•</span><span style="color:var(--text-secondary);">${tLvl(p.level||'')}</span></div>
           <p class="text-[11px] mt-0.5" style="color:var(--text-secondary);">Last studied: ${ds}</p>
         </div>
@@ -1186,6 +1280,12 @@ async function loadRecentStudies(uid){
     }).join('');
   }catch(e){c.innerHTML='<p class="text-sm" style="color:var(--text-secondary);">Could not load progress.</p>';}
 }
+function fmtDate(v){
+  if(!v)return null;
+  const dd=(v&&v.toDate)?v.toDate():new Date(v);
+  if(isNaN(dd.getTime()))return null;
+  return dd.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+}
 async function renderSubscriptionInfo(uid){
   document.getElementById('subLoading').classList.remove('hidden');
   document.getElementById('subNotActive').classList.add('hidden');
@@ -1193,40 +1293,121 @@ async function renderSubscriptionInfo(uid){
   await checkSubscription(uid);
   document.getElementById('subLoading').classList.add('hidden');
   const d=window._subData;
-  const isCancelled=d&&d.subscriptionStatus==='cancelled';
-  if(!isSubscribed&&!isCancelled&&!isAdmin){document.getElementById('subNotActive').classList.remove('hidden');return;}
-  if(isAdmin&&!isSubscribed&&!isCancelled){
-    // Admin sees special message
-    document.getElementById('subActive').classList.remove('hidden');
+  const isCancelled=!!(d&&d.subscriptionCancelled===true);
+  const isFree=!!(d&&d.subscriptionFree===true);
+  const nt=document.getElementById('subCancelledNotice'),ft=document.getElementById('subFreeNotice');
+  // 공통 초기화
+  nt.classList.add('hidden');ft.classList.add('hidden');
+
+  if(!isSubscribed&&!isAdmin){document.getElementById('subNotActive').classList.remove('hidden');return;}
+
+  document.getElementById('subActive').classList.remove('hidden');
+
+  // 관리자 전용 표시
+  if(isAdmin&&!isSubscribed){
     document.getElementById('subStatusLabel').textContent='Admin — Full Access';
     document.getElementById('subStatusLabel').className='font-bold text-blue-600';
-    document.getElementById('subAccessUntil').textContent='Unlimited';
     document.getElementById('subStartDate').textContent='—';
+    document.getElementById('subNextBilling').textContent='—';
+    document.getElementById('subAccessUntil').textContent='Unlimited';
     document.getElementById('subCancelBtnWrap').style.display='none';
-    document.getElementById('subCancelledNotice').classList.add('hidden');
     return;
   }
-  document.getElementById('subActive').classList.remove('hidden');
-  document.getElementById('subStatusLabel').textContent=isCancelled?'Cancelled (active until end of period)':'Active';
-  document.getElementById('subStatusLabel').className=isCancelled?'font-bold text-amber-500':'font-bold text-emerald-600';
-  if(d?.subscriptionEndDate){
-    const dd=d.subscriptionEndDate.toDate?d.subscriptionEndDate.toDate():new Date(d.subscriptionEndDate);
-    const fmt=dd.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
-    document.getElementById('subAccessUntil').textContent=fmt;
-    if(isCancelled){document.getElementById('subCancelledUntil').textContent=fmt;document.getElementById('subCancelledNotice').classList.remove('hidden');}
-    else document.getElementById('subCancelledNotice').classList.add('hidden');
-  }else{document.getElementById('subAccessUntil').textContent='Ongoing';document.getElementById('subCancelledNotice').classList.add('hidden');}
-  if(d?.subscriptionStartDate){
-    const sd=d.subscriptionStartDate.toDate?d.subscriptionStartDate.toDate():new Date(d.subscriptionStartDate);
-    document.getElementById('subStartDate').textContent=sd.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
-  }else document.getElementById('subStartDate').textContent='—';
-  document.getElementById('subCancelBtnWrap').style.display=isCancelled?'none':'block';
+
+  // 상태 라벨
+  let label='Active',cls='font-bold text-emerald-600';
+  if(isFree){label='Complimentary';cls='font-bold text-blue-600';}
+  else if(isCancelled){label='Cancelled (active until end of period)';cls='font-bold text-amber-500';}
+  document.getElementById('subStatusLabel').textContent=label;
+  document.getElementById('subStatusLabel').className=cls;
+
+  // 구독 시작일
+  document.getElementById('subStartDate').textContent=fmtDate(d&&d.subscriptionStartedAt)||'—';
+
+  // 다음 갱신일 (해지/무료는 갱신 없음)
+  if(isCancelled||isFree){document.getElementById('subNextBilling').textContent='—';}
+  else{document.getElementById('subNextBilling').textContent=fmtDate(d&&d.subscriptionNextBilling)||'Ongoing';}
+
+  // 이용 만료일
+  const endsFmt=fmtDate(d&&d.subscriptionEndsAt);
+  if(endsFmt){document.getElementById('subAccessUntil').textContent=endsFmt;}
+  else{document.getElementById('subAccessUntil').textContent=(isCancelled||isFree)?'—':'Ongoing';}
+
+  // 안내 / 해지 버튼
+  if(isFree){
+    document.getElementById('subFreeUntil').textContent=endsFmt||'—';
+    ft.classList.remove('hidden');
+    document.getElementById('subCancelBtnWrap').style.display='none';
+  }else if(isCancelled){
+    document.getElementById('subCancelledUntil').textContent=endsFmt||'—';
+    nt.classList.remove('hidden');
+    document.getElementById('subCancelBtnWrap').style.display='none';
+  }else{
+    document.getElementById('subCancelBtnWrap').style.display='block';
+  }
 }
-function handleCancelSubscription(){
-  if(!confirm('Cancel your subscription? You will keep access until the end of the current billing period.'))return;
-  showToast('Opening PayPal to manage subscription…','info');
-  window.open('https://www.paypal.com/myaccount/autopay','_blank');
+async function handleCancelSubscription(){
+  const d=window._subData;
+  if(!d||!d.subscriptionID){showToast('No active subscription to cancel.','info');return;}
+  if(!confirm('Cancel your subscription?\n\nAuto-renewal will stop, but you keep full access until the end of your current billing period.'))return;
+  try{
+    const fn=window.fb.httpsCallable(window.fb.functionsDefault,'cancelSubscription');
+    const res=await fn({subscriptionID:d.subscriptionID,subscriptionNextBilling:d.subscriptionNextBilling||null});
+    const endsAt=res&&res.data&&res.data.endsAt;
+    const fmt=endsAt?fmtDate(endsAt):null;
+    showToast(fmt?('Cancelled. Access continues until '+fmt+'.'):'Cancellation requested.','success');
+    if(window.currentUser)await renderSubscriptionInfo(window.currentUser.uid);
+  }catch(e){
+    console.error(e);
+    showToast('Could not cancel right now. Please try again or contact the team.','info');
+  }
 }
+
+// ===== ADMIN: 무료 구독 부여 / 구독자 목록 =====
+async function grantFreeSubscriptionAdmin(){
+  if(!isAdmin){showToast('Admins only','info');return;}
+  const email=(document.getElementById('freeSubEmail').value||'').trim();
+  const date=(document.getElementById('freeSubDate').value||'').trim();
+  const st=document.getElementById('freeSubStatus');
+  const show=(msg,ok)=>{st.textContent=msg;st.className='text-xs mt-3 '+(ok?'text-emerald-600':'text-red-600');st.classList.remove('hidden');};
+  if(!email||!date){show('Gmail 주소와 만료일을 모두 입력하세요.',false);return;}
+  const btn=document.getElementById('freeSubBtn');btn.disabled=true;const old=btn.textContent;btn.textContent='처리 중…';
+  try{
+    const fn=window.fb.httpsCallable(window.fb.functions,'grantFreeSubscription');
+    await fn({email,endsAt:date});
+    show('✓ '+email+' 에게 '+date+' 까지 무료 구독을 부여했습니다.',true);
+    document.getElementById('freeSubEmail').value='';document.getElementById('freeSubDate').value='';
+  }catch(e){
+    console.error(e);
+    let m=e&&e.message?e.message:'실패했습니다.';
+    if(e&&e.code==='functions/not-found')m='해당 이메일로 가입된 계정이 없습니다. 사용자가 먼저 로그인/가입해야 합니다.';
+    show('오류: '+m,false);
+  }
+  btn.disabled=false;btn.textContent=old;
+}
+async function loadSubscribersList(){
+  if(!isAdmin){showToast('Admins only','info');return;}
+  const c=document.getElementById('subscribersList');
+  const btn=document.getElementById('subListBtn');btn.disabled=true;const old=btn.textContent;btn.textContent='불러오는 중…';
+  c.innerHTML='<p class="text-xs text-center py-6" style="color:var(--text-secondary);">불러오는 중…</p>';
+  try{
+    const fn=window.fb.httpsCallable(window.fb.functions,'listSubscribers');
+    const res=await fn({});
+    const rows=(res&&res.data&&res.data.subscribers)||[];
+    if(!rows.length){c.innerHTML='<p class="text-xs text-center py-6" style="color:var(--text-secondary);">구독자가 없습니다.</p>';}
+    else{
+      const fmt=v=>{if(!v)return '—';const d=new Date(v);return isNaN(d.getTime())?'—':d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});};
+      c.innerHTML='<div class="overflow-x-auto"><table class="w-full text-xs"><thead><tr style="color:var(--text-secondary);" class="text-left border-b"><th class="py-2 pr-3 font-bold">이메일</th><th class="py-2 pr-3 font-bold">최초 구독일</th><th class="py-2 pr-3 font-bold">갱신일</th><th class="py-2 pr-3 font-bold">기간(개월)</th><th class="py-2 pr-3 font-bold">상태</th></tr></thead><tbody>'
+        +rows.map(r=>{
+          const status=r.free?'<span class="text-blue-600 font-semibold">무료</span>':(r.cancelled?('<span class="text-amber-600 font-semibold">해지'+(r.expired?' · 만료':' 예정')+'</span>'):(r.active?'<span class="text-emerald-600 font-semibold">이용중</span>':'<span style="color:var(--text-secondary);">만료</span>'));
+          return '<tr class="border-b" style="border-color:var(--border);"><td class="py-2 pr-3" style="color:var(--text-primary);">'+(r.email||'—')+'</td><td class="py-2 pr-3" style="color:var(--text-secondary);">'+fmt(r.startedAt)+'</td><td class="py-2 pr-3" style="color:var(--text-secondary);">'+((r.cancelled||r.free)?'—':fmt(r.nextBilling))+'</td><td class="py-2 pr-3" style="color:var(--text-secondary);">'+(r.months||0)+'</td><td class="py-2 pr-3">'+status+'</td></tr>';
+        }).join('')+'</tbody></table></div><p class="text-xs mt-3" style="color:var(--text-secondary);">총 '+rows.length+'명</p>';
+    }
+  }catch(e){console.error(e);c.innerHTML='<p class="text-xs text-center py-6 text-red-600">불러오기 실패: '+(e&&e.message?e.message:'오류')+'</p>';}
+  btn.disabled=false;btn.textContent=old;
+}
+window.grantFreeSubscriptionAdmin=grantFreeSubscriptionAdmin;
+window.loadSubscribersList=loadSubscribersList;
 
 // ===== ADMIN =====
 let currentEditingId=null;
@@ -1272,9 +1453,20 @@ async function handleAdminSubmit(e){
     updatedAt:window.fb.serverTimestamp()};
   if(!currentEditingId)dd.createdAt=window.fb.serverTimestamp();
   try{
-    const {db,doc,setDoc}=window.fb;
+    const {db,doc,setDoc,deleteField,storage,ref,uploadBytes}=window.fb;
     await setDoc(doc(db,'masterclass',contentId),dd,{merge:true});
-    if(finalHtml) await setDoc(doc(db,'masterclassContent',contentId),{htmlContent:finalHtml,updatedAt:window.fb.serverTimestamp()},{merge:true});
+    if(finalHtml){
+      const bytes=new Blob([finalHtml]).size;
+      if(bytes>900000){
+        // Firestore 필드 1MiB 제한 초과 → Storage 에 저장하고 경로(htmlPath)만 문서에 기록
+        btn.textContent='대용량 콘텐츠 업로드 중…';
+        const path='masterclass-html/'+contentId+'.html';
+        await uploadBytes(ref(storage,path),new Blob([finalHtml],{type:'text/html;charset=utf-8'}));
+        await setDoc(doc(db,'masterclassContent',contentId),{htmlPath:path,htmlContent:deleteField(),updatedAt:window.fb.serverTimestamp()},{merge:true});
+      }else{
+        await setDoc(doc(db,'masterclassContent',contentId),{htmlContent:finalHtml,htmlPath:deleteField(),updatedAt:window.fb.serverTimestamp()},{merge:true});
+      }
+    }
     showToast(currentEditingId?'Updated!':'Published!','success');
     window._pendingHtmlContent=null; // clear pending file
     const idx=contentsData.findIndex(c=>c.id===contentId);
@@ -1310,7 +1502,7 @@ function editContent(id){
   document.getElementById('adminIsBest').checked=!!item.isBest;
   document.getElementById('adminIsNew').checked=!!item.isNew;
   document.getElementById('adminHtmlCode').value='';
-  (async()=>{try{const {db,doc,getDoc}=window.fb;const c=await getDoc(doc(db,'masterclassContent',id));if(c.exists()&&currentEditingId===id)document.getElementById('adminHtmlCode').value=c.data().htmlContent||'';}catch(e){console.warn('Load lesson HTML failed',e);}})();
+  (async()=>{try{const {db,doc,getDoc}=window.fb;const c=await getDoc(doc(db,'masterclassContent',id));if(c.exists()&&currentEditingId===id){const cd=c.data();const st=document.getElementById('htmlUploadStatus');if(cd.htmlPath){document.getElementById('adminHtmlCode').value='';if(st){st.textContent='✓ 대용량 HTML이 Storage에 저장되어 있습니다. 교체하려면 새 파일을 올리거나 코드를 붙여넣으세요.';st.className='text-xs text-emerald-600';st.classList.remove('hidden');}}else{document.getElementById('adminHtmlCode').value=cd.htmlContent||'';}}}catch(e){console.warn('Load lesson HTML failed',e);}})();
   document.querySelectorAll('#headerStylePicker .header-style-opt').forEach(o=>o.style.borderColor='var(--border)');
   const r=document.querySelector(`#headerStylePicker input[value="${item.headerStyle}"]`);
   if(r){r.checked=true;r.closest('label').querySelector('.header-style-opt').style.borderColor='#3b82f6';}
