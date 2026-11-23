@@ -420,6 +420,17 @@
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="writeHtmlLabel">HTML 코드 본문</label>
                         <span class="text-[11px] text-slate-400">💡 Tailwind CSS & JS 스크립트 실행 가능</span>
                     </div>
+                    <!-- 파일 드래그앤드랍 / 업로드 영역 -->
+                    <div id="htmlDropZone" style="border:2px dashed #c7d2fe;border-radius:12px;padding:14px 16px;margin-bottom:8px;text-align:center;cursor:pointer;background:#eef2ff;transition:.15s;font-size:13px;color:#4f46e5;font-weight:600"
+                        onclick="document.getElementById('htmlFileInput').click()"
+                        ondragover="event.preventDefault();this.style.background='#e0e7ff'"
+                        ondragleave="this.style.background='#eef2ff'"
+                        ondrop="handleHtmlFileDrop(event)">
+                        <i class="fa-solid fa-file-code" style="font-size:18px;margin-bottom:4px;display:block"></i>
+                        HTML 파일 드래그 &amp; 드랍 또는 클릭해서 업로드
+                        <span style="display:block;font-size:11px;color:#818cf8;font-weight:400;margin-top:2px">업로드 시 아래 코드 영역에 자동으로 채워집니다</span>
+                    </div>
+                    <input type="file" id="htmlFileInput" accept=".html,.htm" style="display:none" onchange="handleHtmlFileSelect(event)">
                     <textarea id="inputHtmlCode" rows="9" placeholder="<h2>오늘 배울 내용</h2>&#10;<p>HTML 코드를 입력하면 블로그 포스팅에 그대로 렌더링됩니다!</p>" class="w-full font-mono text-xs px-4 py-3 rounded-xl border border-slate-200 bg-slate-900 text-emerald-400 focus:outline-none focus:ring-2 focus:ring-brand-500 custom-scrollbar"></textarea>
                 </div>
             </div>
@@ -1063,7 +1074,7 @@
           if(post.level==="중급") lb="bg-amber-100 text-amber-800";
           if(post.level==="고급") lb="bg-rose-100 text-rose-800";
           grid.innerHTML += `
-            <div class="aak-card group bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between hover:shadow-xl hover:border-brand-500/30 transition-all duration-300 relative overflow-hidden">
+            <div class="aak-card group rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between hover:shadow-xl hover:border-brand-500/30 transition-all duration-300 relative overflow-hidden" style="background:#faf8f5">
               <a href="${BASE_URL}?id=${post.id}" onclick="openPostDetail('${post.id}');return false;" class="cursor-pointer block">
                 <div class="flex items-center justify-between gap-2 mb-3">
                   <div class="flex items-center space-x-1.5">
@@ -1160,6 +1171,9 @@
       function openPostDetail(id, fromRoute){
         const post=posts.find(p=>p.id===id);
         if(!post){ showListView(); return; }
+        // detail view에서 nav 숨기기
+        const nav=document.querySelector('.aak-blognav'); if(nav)nav.style.display='none';
+        document.body.classList.remove('aak-haspad');
         currentPostId=id;
         if(!usingFallback && !String(id).startsWith('local-')){
           post.views=(post.views||0)+1;
@@ -1186,6 +1200,9 @@
       function showListView(){
         document.getElementById('detailView').classList.add('hidden');
         document.getElementById('listView').classList.remove('hidden');
+        // 목록으로 돌아올 때 nav 다시 보이기
+        const nav=document.querySelector('.aak-blognav'); if(nav)nav.style.display='';
+        document.body.classList.add('aak-haspad');
         currentPostId=null; clearPostMeta();
         history.pushState({},'',location.pathname+qWithout());
         renderBlogPosts();
@@ -1201,8 +1218,8 @@
 
       // ===== Blog 내비 (Blog Posts / My Favorites) =====
       function updateNav(){ const a=document.getElementById('navPosts'),b=document.getElementById('navFav'); if(a)a.classList.toggle('on',!favMode); if(b)b.classList.toggle('on',favMode); }
-      function showAllPosts(){ favMode=false; currentPostId=null; updateNav(); document.getElementById('detailView').classList.add('hidden'); document.getElementById('listView').classList.remove('hidden'); clearPostMeta(); history.pushState({},'',location.pathname+qWithout()); renderBlogPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
-      function showFavorites(){ favMode=true; currentPostId=null; updateNav(); document.getElementById('detailView').classList.add('hidden'); document.getElementById('listView').classList.remove('hidden'); clearPostMeta(); renderBlogPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
+      function showAllPosts(){ favMode=false; currentPostId=null; updateNav(); document.getElementById('detailView').classList.add('hidden'); document.getElementById('listView').classList.remove('hidden'); const _n=document.querySelector('.aak-blognav'); if(_n)_n.style.display=''; document.body.classList.add('aak-haspad'); clearPostMeta(); history.pushState({},'',location.pathname+qWithout()); renderBlogPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
+      function showFavorites(){ favMode=true; currentPostId=null; updateNav(); document.getElementById('detailView').classList.add('hidden'); document.getElementById('listView').classList.remove('hidden'); const _n=document.querySelector('.aak-blognav'); if(_n)_n.style.display=''; document.body.classList.add('aak-haspad'); clearPostMeta(); renderBlogPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
 
       // ===== 좋아요 (로그인 없이도 가능) =====
       function updateLikeBtnUI(){
@@ -1351,8 +1368,23 @@
         window.__aakToastT=setTimeout(()=>{ t.classList.remove('translate-y-0','opacity-100'); t.classList.add('translate-y-20','opacity-0'); }, type==='ok'?4000:3000);
       }
 
+      // ===== HTML 파일 업로드 =====
+      function loadHtmlFileToTextarea(file){
+        if(!file) return;
+        if(!file.name.match(/\.html?$/i)){ showToast("HTML 파일(.html, .htm)만 업로드 가능합니다.", "err"); return; }
+        const reader=new FileReader();
+        reader.onload=function(e){ document.getElementById('inputHtmlCode').value=e.target.result; };
+        reader.readAsText(file, 'utf-8');
+      }
+      function handleHtmlFileSelect(event){ loadHtmlFileToTextarea(event.target.files[0]); event.target.value=''; }
+      function handleHtmlFileDrop(event){
+        event.preventDefault();
+        const dz=document.getElementById('htmlDropZone'); if(dz)dz.style.background='#eef2ff';
+        const file=event.dataTransfer.files[0]; loadHtmlFileToTextarea(file);
+      }
+
       // ===== 전역 노출 =====
-      Object.assign(window,{showListView,changeLanguage,filterPosts,syncMobileSearch,openWriteModal,closeWriteModal,saveNewPost,filterLevel,filterCategory,renderBlogPosts,openPostDetail,likeCurrentPost,readAloudTitleAndSummary,markPostCompleted,toggleCardLike,speakText,checkQuizAnswer,updateCharCount,editCurrentPost,deleteCurrentPost,showAllPosts,showFavorites});
+      Object.assign(window,{showListView,changeLanguage,filterPosts,syncMobileSearch,openWriteModal,closeWriteModal,saveNewPost,filterLevel,filterCategory,renderBlogPosts,openPostDetail,likeCurrentPost,readAloudTitleAndSummary,markPostCompleted,toggleCardLike,speakText,checkQuizAnswer,updateCharCount,editCurrentPost,deleteCurrentPost,showAllPosts,showFavorites,handleHtmlFileSelect,handleHtmlFileDrop});
 
       // ===== 초기 언어 =====
       (function initLang(){
