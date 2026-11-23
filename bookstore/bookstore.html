@@ -380,9 +380,15 @@
 
             <form id="upload-form" onsubmit="handleAdminUpload(event)" class="bg-white p-6 sm:p-8 rounded-3xl border border-apple-border shadow-sm space-y-6">
                 <input type="hidden" id="admin-editing-id" value="">
-                <div class="space-y-2">
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-apple-secondary">Book Title</label>
-                    <input type="text" id="admin-title" required placeholder="e.g., Essential Korean Grammar for Beginners" class="w-full px-4 py-3 bg-zinc-50 border border-apple-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-apple-accent">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-apple-secondary">Book Title (English)</label>
+                        <input type="text" id="admin-title" required placeholder="e.g., Essential Korean Grammar for Beginners" class="w-full px-4 py-3 bg-zinc-50 border border-apple-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-apple-accent">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-apple-secondary">책 제목 (한국어)</label>
+                        <input type="text" id="admin-title-ko" placeholder="예: 초급자를 위한 필수 한국어 문법" class="w-full px-4 py-3 bg-zinc-50 border border-apple-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-apple-accent">
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -708,6 +714,8 @@
 
         let cart = [];
         let orders = [];
+        // 로그인 필요로 중단된 동작을 저장했다가 로그인 성공 후 자동으로 이어서 실행
+        let pendingPurchaseAction = null;
 
         let currentCategory = 'all';
         let currentLevel = 'all';
@@ -776,6 +784,17 @@
 
         // ---- Auth UI ----
         window.addEventListener('authchange', (e) => updateAuthUI(e.detail.user));
+        // 로그인 성공 직후, 중단됐던 장바구니 담기 / 구매를 자동으로 이어서 실행
+        window.addEventListener('authchange', (e) => {
+            if (e.detail && e.detail.user && pendingPurchaseAction) {
+                const a = pendingPurchaseAction; pendingPurchaseAction = null;
+                setTimeout(() => {
+                    if (a.type === 'add') addToCart(a.id, a.fromCard);
+                    else if (a.type === 'buy') buyNow(a.id, a.fromCard);
+                    else if (a.type === 'checkout') proceedToCheckout();
+                }, 150);
+            }
+        });
 
         function updateAuthUI(user) {
             const signinBtn = document.getElementById('signin-btn');
@@ -997,7 +1016,7 @@
                 card.innerHTML = `
                     <div>
                         <div class="relative h-56 overflow-hidden bg-zinc-100 cursor-pointer" onclick="openBookDetail(${jsArg(book.id)})">
-                            <img src="${safeImg(book.thumbnail)}" alt="${escapeHtml(book.title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/1D1D1F/FFFFFF?text=K-Book'">
+                            <img src="${safeImg(book.thumbnail, generateCover(book))}" alt="${escapeHtml(book.title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/1D1D1F/FFFFFF?text=K-Book'">
                             <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-zinc-900 shadow-sm">${escapeHtml(levelLabel(book.level))}</span>
                             <div class="absolute top-3 left-3 flex flex-col gap-1">
                                 ${book.isBestSeller ? '<span class="bg-amber-500 text-white px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase shadow-sm">' + t('badgeBest') + '</span>' : ''}
@@ -1066,6 +1085,60 @@
             const u = String(url || '').trim();
             if(/^https?:\/\//i.test(u) || /^data:image\/(png|jpe?g|gif|webp|svg\+xml);/i.test(u)) return escapeHtml(u);
             return escapeHtml(fallback || 'https://placehold.co/600x400/1D1D1F/FFFFFF?text=K-Book');
+        }
+
+        // ── 표지 미업로드 시 자동 생성되는 한국어 책 표지 (레벨별 색상 + 한국어/영어 제목) ──
+        function _coverPalette(level) {
+            if (level === 'Beginner')    return { a:'#10b981', b:'#065f46', badge:'초급 · BEGINNER' };     // 초록
+            if (level === 'Advanced')    return { a:'#3f3f46', b:'#000000', badge:'고급 · ADVANCED' };      // 검정
+            return { a:'#3b82f6', b:'#1e3a8a', badge:'중급 · INTERMEDIATE' };                              // 로열블루 (중급/기본)
+        }
+        function _svgEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+        function _wrapText(s, max, maxLines) {
+            s = String(s==null?'':s).trim(); if(!s) return [];
+            const words = s.split(/\s+/), lines = []; let cur = '';
+            const hard = (w) => { while(w.length>max){ lines.push(w.slice(0,max)); w = w.slice(max); } return w; };
+            for (let w of words) {
+                if (w.length>max){ if(cur){lines.push(cur);cur='';} cur = hard(w); continue; }
+                if (!cur) cur = w;
+                else if ((cur+' '+w).length<=max) cur += ' '+w;
+                else { lines.push(cur); cur = w; }
+            }
+            if (cur) lines.push(cur);
+            return lines.slice(0, maxLines);
+        }
+        function generateCover(book) {
+            const level = (book && book.level) || 'Beginner';
+            const ko = (book && book.titleKo ? String(book.titleKo) : '').trim();
+            const en = (book && book.title ? String(book.title) : '').trim();
+            const p = _coverPalette(level);
+            const W = 600, H = 400;
+            const koLines = _wrapText(ko || en, 12, 3);
+            const enLines = ko ? _wrapText(en, 30, 2) : [];
+            const koFs = ko ? 44 : 34, koLh = koFs + 10;
+            const enFs = 22, enLh = enFs + 6;
+            const koH = koLines.length*koLh, enH = enLines.length*enLh, gap = enLines.length?20:0;
+            const blockH = koH + gap + enH;
+            let y = (H - blockH)/2 + koFs*0.78;
+            const koTspans = koLines.map(l => { const o = `<tspan x="${W/2}" y="${y.toFixed(0)}">${_svgEsc(l)}</tspan>`; y += koLh; return o; }).join('');
+            let ey = (H - blockH)/2 + koH + gap + enFs*0.78;
+            const enTspans = enLines.map(l => { const o = `<tspan x="${W/2}" y="${ey.toFixed(0)}">${_svgEsc(l)}</tspan>`; ey += enLh; return o; }).join('');
+            const fam = "'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR','Noto Sans CJK KR',sans-serif";
+            const svg =
+`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p.a}"/><stop offset="1" stop-color="${p.b}"/></linearGradient></defs>
+<rect width="${W}" height="${H}" fill="url(#g)"/>
+<rect x="0" y="0" width="14" height="${H}" fill="#000" opacity="0.18"/>
+<text x="${W-24}" y="${H-28}" font-family="${fam}" font-size="190" font-weight="800" fill="#ffffff" opacity="0.07" text-anchor="end">한</text>
+<rect x="28" y="24" width="${W-56}" height="${H-48}" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1.5" rx="10"/>
+<text x="${W/2}" y="70" font-family="${fam}" font-size="15" font-weight="700" letter-spacing="2" fill="#ffffff" opacity="0.9" text-anchor="middle">KOREAN eBOOK</text>
+<text x="${W/2}" y="94" font-family="${fam}" font-size="13" font-weight="600" letter-spacing="1" fill="#ffffff" opacity="0.7" text-anchor="middle">${_svgEsc(p.badge)}</text>
+<text font-family="${fam}" font-size="${koFs}" font-weight="800" fill="#ffffff" text-anchor="middle">${koTspans}</text>
+<text font-family="${fam}" font-size="${enFs}" font-weight="600" fill="#ffffff" opacity="0.88" text-anchor="middle">${enTspans}</text>
+<text x="${W/2}" y="${H-34}" font-family="${fam}" font-size="13" font-weight="600" letter-spacing="1" fill="#ffffff" opacity="0.85" text-anchor="middle">All About Korea</text>
+</svg>`;
+            try { return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg))); }
+            catch(e){ return 'https://placehold.co/600x400/1D1D1F/FFFFFF?text=K-Book'; }
         }
 
         function escapeHtml(str) {
@@ -1177,7 +1250,7 @@
             const container = document.getElementById('detail-content');
             container.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                    <img src="${safeImg(book.thumbnail)}" alt="${escapeHtml(book.title)}" class="w-full object-cover rounded-2xl shadow-md" style="aspect-ratio:${getCardCoverRatio()}" onerror="this.src='https://placehold.co/600x400/1D1D1F/FFFFFF?text=K-Book'">
+                    <img src="${safeImg(book.thumbnail, generateCover(book))}" alt="${escapeHtml(book.title)}" class="w-full object-cover rounded-2xl shadow-md" style="aspect-ratio:${getCardCoverRatio()}" onerror="this.src='https://placehold.co/600x400/1D1D1F/FFFFFF?text=K-Book'">
                     <div class="space-y-4 min-w-0">
                         <div class="flex items-center space-x-2 flex-wrap gap-y-2">
                             <span class="px-3 py-1 bg-blue-50 text-apple-accent text-xs font-semibold rounded-full">${escapeHtml(categoryLabel(book.category))}</span>
@@ -1518,6 +1591,7 @@
             const book = eBooks.find(b => b.id === id);
             if(!book) return;
             if(book.status === 'paused') { showToast(t('toastUnavailable')); return; }
+            if(!window.currentUser) { pendingPurchaseAction = { type:'add', id, fromCard }; showToast(t('toastSignInCheckout')); handleSignIn(); return; }
             const opt = resolvePurchaseOption(book, fromCard);
             if(!opt) { openBookDetail(id); return; } // no option matches the card price → let the buyer choose
             const cartLineId = id + '::' + opt.id;
@@ -1545,7 +1619,9 @@
         // Current cover uploaded in Admin (falls back to what was stored with the cart line / purchase)
         function coverFor(bookId, fallback) {
             const book = eBooks.find(b => b.id === bookId);
-            return (book && book.thumbnail) || fallback || 'https://placehold.co/100x130/1D1D1F/FFFFFF?text=Book';
+            if (book && book.thumbnail && String(book.thumbnail).trim()) return book.thumbnail;
+            if (book) return generateCover(book);   // 업로드된 표지가 없으면 자동 생성 표지
+            return fallback || 'https://placehold.co/100x130/1D1D1F/FFFFFF?text=Book';
         }
 
         function updateCartBadge() {
@@ -1609,6 +1685,7 @@
             const book = eBooks.find(b => b.id === id);
             if(!book) return;
             if(book.status === 'paused') { showToast(t('toastUnavailable')); return; }
+            if(!window.currentUser) { pendingPurchaseAction = { type:'buy', id, fromCard }; showToast(t('toastSignInCheckout')); handleSignIn(); return; }
             const opt = resolvePurchaseOption(book, fromCard);
             if(!opt) { openBookDetail(id); return; } // no option matches the card price → let the buyer choose
             checkoutTargetItems = [{
@@ -1621,6 +1698,7 @@
 
         function proceedToCheckout() {
             if(cart.length === 0) return;
+            if(!window.currentUser) { pendingPurchaseAction = { type:'checkout' }; showToast(t('toastSignInCheckout')); handleSignIn(); return; }
             checkoutTargetItems = [...cart];
             closeModal('modal-cart');
             showCheckoutModal();
@@ -2093,6 +2171,7 @@
             switchTab('admin');
             document.getElementById('admin-editing-id').value = id;
             document.getElementById('admin-title').value = book.title;
+            document.getElementById('admin-title-ko').value = book.titleKo || '';
             document.getElementById('admin-category').value = book.category;
             document.getElementById('admin-level').value = book.level;
             document.getElementById('admin-price').value = book.originalPrice || book.price;
@@ -2229,7 +2308,7 @@
             container.innerHTML = ordered.map(book => `
                 <div class="admin-product-card bg-white p-4 rounded-2xl border border-apple-border flex items-center gap-4 sm:cursor-grab active:cursor-grabbing" draggable="true" data-book-id="${escapeHtml(book.id)}">
                     <i data-lucide="grip-vertical" class="hidden sm:block w-4 h-4 text-apple-secondary flex-shrink-0"></i>
-                    <img src="${safeImg(book.thumbnail)}" draggable="false" class="w-20 h-12 object-cover rounded-lg flex-shrink-0" onerror="this.src='https://placehold.co/160x100/1D1D1F/FFFFFF?text=Book'">
+                    <img src="${safeImg(book.thumbnail, generateCover(book))}" draggable="false" class="w-20 h-12 object-cover rounded-lg flex-shrink-0" onerror="this.src='https://placehold.co/160x100/1D1D1F/FFFFFF?text=Book'">
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold truncate">${escapeHtml(book.title)}</p>
                         <p class="text-[11px] text-apple-secondary">${book.originalPrice ? `<span class="line-through">$${Number(book.originalPrice).toFixed(2)}</span> ` : ''}$${Number(book.price).toFixed(2)}${discountPercent(book.price, book.originalPrice) ? ` <span class="text-red-600 font-semibold">-${discountPercent(book.price, book.originalPrice)}%</span>` : ''} • ${escapeHtml(book.category)} • ${book.status === 'paused' ? '<span class="text-red-600 font-semibold">Paused</span>' : '<span class="text-emerald-600 font-semibold">Active</span>'}</p>
@@ -2547,6 +2626,7 @@
             const bookId = editingId || adminDraftBookId;
 
             const title = document.getElementById('admin-title').value.trim();
+            const titleKo = (document.getElementById('admin-title-ko').value || '').trim();
             const category = document.getElementById('admin-category').value;
             const level = document.getElementById('admin-level').value;
             const displayPrice = parsePricePair(document.getElementById('admin-price').value, document.getElementById('admin-sale-price').value);
@@ -2561,7 +2641,8 @@
                 const r = parsePricePair(row.querySelector('.opt-price').value || '0', row.querySelector('.opt-sale-price').value);
                 if(r.error) { showToast(`Option "${lbl}": ` + (r.error === 'notLower' ? "sale price must be lower than the original price" : "enter a valid price")); return; }
             }
-            const thumbnail = document.getElementById('admin-image').value || uploadedThumbnailUrl || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600";
+            // 표지 URL/업로드가 모두 없으면 빈 값으로 저장 → 화면에서 레벨·제목 기반 표지를 자동 생성
+            const thumbnail = document.getElementById('admin-image').value || uploadedThumbnailUrl || "";
             const description = document.getElementById('admin-desc').value.trim().slice(0, 150);
             const isBestSeller = document.getElementById('admin-bestseller').checked;
             const isNew = document.getElementById('admin-new').checked;
@@ -2600,7 +2681,7 @@
 
             const existingBook = eBooks.find(b => b.id === bookId);
             const bookData = {
-                id: bookId, title, category, level, price, originalPrice, isBestSeller, isNew,
+                id: bookId, title, titleKo, category, level, price, originalPrice, isBestSeller, isNew,
                 thumbnail, description, tableOfContents, purchaseOptions,
                 status: existingBook ? (existingBook.status || 'active') : 'active',
                 pdfUrl: ''
