@@ -1087,57 +1087,48 @@
             return escapeHtml(fallback || 'https://placehold.co/600x400/1D1D1F/FFFFFF?text=K-Book');
         }
 
-        // ── 표지 미업로드 시 자동 생성되는 한국어 책 표지 (레벨별 색상 + 한국어/영어 제목) ──
+        // ── 표지 미업로드 시 자동 생성되는 애플 스타일 표지 (C-3: 좌측 정렬·북 아이콘·레벨별 색상) ──
         function _coverPalette(level) {
-            if (level === 'Beginner')    return { a:'#10b981', b:'#065f46', badge:'초급 · BEGINNER' };     // 초록
-            if (level === 'Advanced')    return { a:'#3f3f46', b:'#000000', badge:'고급 · ADVANCED' };      // 검정
-            return { a:'#3b82f6', b:'#1e3a8a', badge:'중급 · INTERMEDIATE' };                              // 로열블루 (중급/기본)
+            if (level === 'Beginner')    return { c2:'#1E7F3C', deep:'#0C5A2B', accent:'#34C759' };  // 초록
+            if (level === 'Advanced')    return { c2:'#0A0A0C', deep:'#1A1A1D', accent:'#5A5A5E' };  // 검정
+            return { c2:'#0A52C4', deep:'#06337E', accent:'#0A84FF' };                               // 중급/기본: 로열블루
         }
         function _svgEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-        function _wrapText(s, max, maxLines) {
-            s = String(s==null?'':s).trim(); if(!s) return [];
-            const words = s.split(/\s+/), lines = []; let cur = '';
-            const hard = (w) => { while(w.length>max){ lines.push(w.slice(0,max)); w = w.slice(max); } return w; };
-            for (let w of words) {
-                if (w.length>max){ if(cur){lines.push(cur);cur='';} cur = hard(w); continue; }
-                if (!cur) cur = w;
-                else if ((cur+' '+w).length<=max) cur += ' '+w;
-                else { lines.push(cur); cur = w; }
-            }
-            if (cur) lines.push(cur);
-            return lines.slice(0, maxLines);
-        }
+        function _koFactor(s){ let f=0; for(let i=0;i<s.length;i++){ const ch=s[i]; if(/\s/.test(ch)) f+=0.34; else if(s.charCodeAt(i)<128) f+=0.56; else f+=1.03; } return f||1; }
+        function _enFactor(s){ let f=0; for(let i=0;i<s.length;i++){ f += /\s/.test(s[i])?0.30:0.56; } return f||1; }
         function generateCover(book) {
             const level = (book && book.level) || 'Beginner';
             const ko = (book && book.titleKo ? String(book.titleKo) : '').trim();
             const en = (book && book.title ? String(book.title) : '').trim();
+            const koText = ko || en;   // 한국어 제목이 없으면 영어 제목을 크게
+            const enText = ko ? en : '';
             const p = _coverPalette(level);
-            const W = 600, H = 400;
-            const koLines = _wrapText(ko || en, 12, 3);
-            const enLines = ko ? _wrapText(en, 30, 2) : [];
-            const koFs = ko ? 44 : 34, koLh = koFs + 10;
-            const enFs = 22, enLh = enFs + 6;
-            const koH = koLines.length*koLh, enH = enLines.length*enLh, gap = enLines.length?20:0;
-            const blockH = koH + gap + enH;
-            let y = (H - blockH)/2 + koFs*0.78;
-            const koTspans = koLines.map(l => { const o = `<tspan x="${W/2}" y="${y.toFixed(0)}">${_svgEsc(l)}</tspan>`; y += koLh; return o; }).join('');
-            let ey = (H - blockH)/2 + koH + gap + enFs*0.78;
-            const enTspans = enLines.map(l => { const o = `<tspan x="${W/2}" y="${ey.toFixed(0)}">${_svgEsc(l)}</tspan>`; ey += enLh; return o; }).join('');
-            const fam = "'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR','Noto Sans CJK KR',sans-serif";
+            const W = 600, H = 400, L = 60, aw = W - L - 52;
+            // 한국어·영어 모두 한 줄 — 길이에 맞춰 폰트 크기 자동 축소
+            const koFs = Math.max(18, Math.min(46, aw/_koFactor(koText)));
+            const enFs = enText ? Math.max(13, Math.min(Math.round(koFs*0.60), aw/_enFactor(enText))) : 0;
+            const koLh = koFs, gap = 16, enLh = enFs, total = koLh + (enText?gap+enLh:0);
+            const y0 = (H - total)/2 + 18, barY = y0 - 20;
+            const fam = "-apple-system,'SF Pro Display','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif";
+            // 좌상단 미니멀 펼친 책 아이콘
+            const bx = L+30, by = 54+2;
+            const bookIcon =
+`<g fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.95">
+<path d="M${bx} ${by} C ${bx-14} ${by-5} ${bx-28} ${by-4} ${bx-30} ${by+4} L ${bx-30} ${by+28} C ${bx-28} ${by+20} ${bx-14} ${by+19} ${bx} ${by+24}"/>
+<path d="M${bx} ${by} C ${bx+14} ${by-5} ${bx+28} ${by-4} ${bx+30} ${by+4} L ${bx+30} ${by+28} C ${bx+28} ${by+20} ${bx+14} ${by+19} ${bx} ${by+24}"/>
+<path d="M${bx} ${by} L ${bx} ${by+24}"/></g>`;
+            const enEl = enText ? `<text x="${L}" y="${(y0+koLh+gap+enFs*0.82).toFixed(0)}" font-family="${fam}" font-size="${enFs.toFixed(0)}" font-weight="500" fill="#ffffff" fill-opacity="0.80" text-anchor="start">${_svgEsc(enText)}</text>` : '';
             const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p.a}"/><stop offset="1" stop-color="${p.b}"/></linearGradient></defs>
-<rect width="${W}" height="${H}" fill="url(#g)"/>
-<rect x="0" y="0" width="14" height="${H}" fill="#000" opacity="0.18"/>
-<text x="${W-24}" y="${H-28}" font-family="${fam}" font-size="190" font-weight="800" fill="#ffffff" opacity="0.07" text-anchor="end">한</text>
-<rect x="28" y="24" width="${W-56}" height="${H-48}" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1.5" rx="10"/>
-<text x="${W/2}" y="70" font-family="${fam}" font-size="15" font-weight="700" letter-spacing="2" fill="#ffffff" opacity="0.9" text-anchor="middle">KOREAN eBOOK</text>
-<text x="${W/2}" y="94" font-family="${fam}" font-size="13" font-weight="600" letter-spacing="1" fill="#ffffff" opacity="0.7" text-anchor="middle">${_svgEsc(p.badge)}</text>
-<text font-family="${fam}" font-size="${koFs}" font-weight="800" fill="#ffffff" text-anchor="middle">${koTspans}</text>
-<text font-family="${fam}" font-size="${enFs}" font-weight="600" fill="#ffffff" opacity="0.88" text-anchor="middle">${enTspans}</text>
-<text x="${W/2}" y="${H-34}" font-family="${fam}" font-size="13" font-weight="600" letter-spacing="1" fill="#ffffff" opacity="0.85" text-anchor="middle">All About Korea</text>
+<defs><linearGradient id="gc" x1="0" y1="0" x2="0.45" y2="1"><stop offset="0" stop-color="${p.c2}"/><stop offset="1" stop-color="${p.deep}"/></linearGradient></defs>
+<rect width="${W}" height="${H}" fill="url(#gc)"/>
+<text x="${W-30}" y="${H-22}" font-family="${fam}" font-size="210" font-weight="800" fill="#ffffff" fill-opacity="0.05" text-anchor="end">한</text>
+<rect x="${L}" y="${barY.toFixed(0)}" width="46" height="4" rx="2" fill="${p.accent}"/>
+${bookIcon}
+<text x="${L}" y="${(y0+koFs*0.80).toFixed(0)}" font-family="${fam}" font-size="${koFs.toFixed(0)}" font-weight="700" fill="#ffffff" text-anchor="start">${_svgEsc(koText)}</text>
+${enEl}
 </svg>`;
-            try { return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg))); }
+            try { return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg); }
             catch(e){ return 'https://placehold.co/600x400/1D1D1F/FFFFFF?text=K-Book'; }
         }
 
