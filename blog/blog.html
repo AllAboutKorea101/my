@@ -199,7 +199,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="aak-main flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main id="aakMain" class="aak-main flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <!-- Blog 내비게이션 (데스크톱 상단 / 모바일 하단) -->
         <nav class="aak-blognav" aria-label="Blog navigation">
@@ -267,6 +267,12 @@
                         </select>
                     </div>
                 </div>
+            </div>
+
+            <!-- Loading State (1초 후 표시) -->
+            <div id="loadingState" class="hidden text-center py-16 space-y-3">
+                <div class="w-10 h-10 mx-auto border-4 border-brand-100 border-t-brand-600 rounded-full aak-spin"></div>
+                <p class="text-sm font-semibold text-slate-600">컨텐츠 로딩 중입니다. 최대 5~10초 기다려 주세요.</p>
             </div>
 
             <!-- Post Cards Grid -->
@@ -342,21 +348,6 @@
                     </div>
                 </div>
 
-                <!-- Learning Completion Box -->
-                <div class="mt-12 bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="flex items-center space-x-4 text-center sm:text-left">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900" data-i18n="completedTitle">오늘의 학습 완료 하셨나요?</h4>
-                            <p class="text-xs text-slate-500" data-i18n="completedSub">완료 버튼을 누르면 나의 학습 기록에 저장됩니다.</p>
-                        </div>
-                    </div>
-                    <button onclick="markPostCompleted()" id="completeBtn" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-brand-600 transition-all shadow-md active:scale-95 shrink-0" data-i18n="completeBtn">
-                        공부 완료! ☑️
-                    </button>
-                </div>
             </div>
         </section>
     </main>
@@ -447,7 +438,7 @@
     <div id="procOverlay">
       <div class="bg-white rounded-2xl px-8 py-6 shadow-2xl flex flex-col items-center gap-3 max-w-xs text-center">
         <div class="w-10 h-10 border-4 border-brand-100 border-t-brand-600 rounded-full aak-spin"></div>
-        <p id="procMsg" class="text-sm font-semibold text-slate-700">잠시만 기다려 주세요…</p>
+        <p id="procMsg" class="text-sm font-semibold text-slate-700">업로드 중입니다. 잠시만 기다려 주세요…</p>
       </div>
     </div>
 
@@ -1048,6 +1039,7 @@
       function renderBlogPosts(){
         const grid=document.getElementById('postsGrid');
         const emptyState=document.getElementById('emptyState');
+        const ls=document.getElementById('loadingState'); if(ls)ls.classList.add('hidden');
         const searchVal=(document.getElementById('searchInput').value||'').toLowerCase();
         const sortVal=document.getElementById('sortSelect').value;
         let base = favMode ? posts.filter(p=>userData.liked.includes(p.id)) : posts;
@@ -1070,9 +1062,9 @@
         emptyState.classList.add('hidden');
         filtered.forEach(post=>{
           const isLiked=userData.liked.includes(post.id);
-          let lb="bg-emerald-100 text-emerald-800";
-          if(post.level==="중급") lb="bg-amber-100 text-amber-800";
-          if(post.level==="고급") lb="bg-rose-100 text-rose-800";
+          let lb="bg-amber-50 text-amber-700 border border-amber-200";
+          if(post.level==="중급") lb="bg-stone-100 text-stone-700 border border-stone-300";
+          if(post.level==="고급") lb="bg-orange-100 text-orange-800 border border-orange-300";
           grid.innerHTML += `
             <div class="aak-card group rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between hover:shadow-xl hover:border-brand-500/30 transition-all duration-300 relative overflow-hidden" style="background:#faf8f5">
               <a href="${BASE_URL}?id=${post.id}" onclick="openPostDetail('${post.id}');return false;" class="cursor-pointer block">
@@ -1174,6 +1166,9 @@
         // detail view에서 nav 숨기기
         const nav=document.querySelector('.aak-blognav'); if(nav)nav.style.display='none';
         document.body.classList.remove('aak-haspad');
+        // Study 화면: 좌우 여백 없애기
+        const main=document.getElementById('aakMain');
+        if(main){ main.style.paddingLeft='0'; main.style.paddingRight='0'; }
         currentPostId=id;
         if(!usingFallback && !String(id).startsWith('local-')){
           post.views=(post.views||0)+1;
@@ -1202,6 +1197,9 @@
         document.getElementById('listView').classList.remove('hidden');
         // 목록으로 돌아올 때 nav 다시 보이기
         const nav=document.querySelector('.aak-blognav'); if(nav)nav.style.display='';
+        // 메인 화면: 좌우 여백 복원
+        const main=document.getElementById('aakMain');
+        if(main){ main.style.paddingLeft=''; main.style.paddingRight=''; }
         document.body.classList.add('aak-haspad');
         currentPostId=null; clearPostMeta();
         history.pushState({},'',location.pathname+qWithout());
@@ -1218,8 +1216,8 @@
 
       // ===== Blog 내비 (Blog Posts / My Favorites) =====
       function updateNav(){ const a=document.getElementById('navPosts'),b=document.getElementById('navFav'); if(a)a.classList.toggle('on',!favMode); if(b)b.classList.toggle('on',favMode); }
-      function showAllPosts(){ favMode=false; currentPostId=null; updateNav(); document.getElementById('detailView').classList.add('hidden'); document.getElementById('listView').classList.remove('hidden'); const _n=document.querySelector('.aak-blognav'); if(_n)_n.style.display=''; document.body.classList.add('aak-haspad'); clearPostMeta(); history.pushState({},'',location.pathname+qWithout()); renderBlogPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
-      function showFavorites(){ favMode=true; currentPostId=null; updateNav(); document.getElementById('detailView').classList.add('hidden'); document.getElementById('listView').classList.remove('hidden'); const _n=document.querySelector('.aak-blognav'); if(_n)_n.style.display=''; document.body.classList.add('aak-haspad'); clearPostMeta(); renderBlogPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
+      function showAllPosts(){ favMode=false; currentPostId=null; updateNav(); document.getElementById('detailView').classList.add('hidden'); document.getElementById('listView').classList.remove('hidden'); const _n=document.querySelector('.aak-blognav'); if(_n)_n.style.display=''; document.body.classList.add('aak-haspad'); const _m=document.getElementById('aakMain'); if(_m){_m.style.paddingLeft='';_m.style.paddingRight='';} clearPostMeta(); history.pushState({},'',location.pathname+qWithout()); renderBlogPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
+      function showFavorites(){ favMode=true; currentPostId=null; updateNav(); document.getElementById('detailView').classList.add('hidden'); document.getElementById('listView').classList.remove('hidden'); const _n=document.querySelector('.aak-blognav'); if(_n)_n.style.display=''; document.body.classList.add('aak-haspad'); const _m=document.getElementById('aakMain'); if(_m){_m.style.paddingLeft='';_m.style.paddingRight='';} clearPostMeta(); renderBlogPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
 
       // ===== 좋아요 (로그인 없이도 가능) =====
       function updateLikeBtnUI(){
@@ -1330,7 +1328,7 @@
         const htmlContent=document.getElementById('inputHtmlCode').value.trim();
         if(!title||!summary||!htmlContent){ showToast("제목, 요약, HTML 본문 내용을 모두 입력해주세요."); return; }
         const editing=editingId;
-        procOn(editing?"수정 내용을 저장하고 있어요…":"새 글을 발행하고 있어요…");
+        procOn(editing?"수정 내용을 저장하고 있어요…":"업로드 중입니다. 잠시만 기다려 주세요.");
         try{
           if(editing){ await updateDoc(doc(db,'blog_posts',editing), {title,level,category,summary:summary.substring(0,150),htmlContent}); }
           else{ await addDoc(collection(db,'blog_posts'), {title,level,category,author:"한국어 배움터",date:todayDot(),views:0,likes:0,summary:summary.substring(0,150),htmlContent,createdAt:serverTimestamp()}); }
@@ -1399,7 +1397,20 @@
 
       // ===== 빠른 첫 렌더 (인증과 병렬) =====
       loadLocalUserData();
-      (async ()=>{ await loadPosts(); updateNav(); routeFromUrl(); })();
+      // 1초 후에도 로딩 중이면 메시지 표시
+      let __loadDone = false;
+      const __loadTimer = setTimeout(()=>{
+        if(!__loadDone){
+          const ls=document.getElementById('loadingState'); if(ls)ls.classList.remove('hidden');
+        }
+      }, 1000);
+      (async ()=>{
+        await loadPosts();
+        __loadDone = true;
+        clearTimeout(__loadTimer);
+        const ls=document.getElementById('loadingState'); if(ls)ls.classList.add('hidden');
+        updateNav(); routeFromUrl();
+      })();
 
       // ===== 인증 후 보정 =====
       onAuthStateChanged(auth, async (u)=>{
